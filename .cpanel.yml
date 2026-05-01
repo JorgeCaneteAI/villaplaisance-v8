@@ -1,7 +1,11 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/efkz3012/villaplaisance.fr/
+    # IMPORTANT — repo V8 = environnement de DEV, déploie sur le
+    # sous-domaine v2.villaplaisance.fr.
+    # La prod villaplaisance.fr est servie par le repo `villaplaisance-v7`,
+    # on n'y touche pas tant que la bascule n'a pas été décidée.
+    - export DEPLOYPATH=/home/efkz3012/v2.villaplaisance.fr/
     - /bin/cp -R * $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH/public/.htaccess 2>/dev/null; true
     - chmod -R 755 $DEPLOYPATH
