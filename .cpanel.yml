@@ -7,5 +7,8 @@ deployment:
     # on n'y touche pas tant que la bascule n'a pas été décidée.
     - export DEPLOYPATH=/home/efkz3012/v2.villaplaisance.fr/
     - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp .htaccess $DEPLOYPATH/public/.htaccess 2>/dev/null; true
+    # Le .htaccess racine (125b, juste "redirige vers /public/") sert
+    # uniquement quand le DocumentRoot Apache est à la racine du projet.
+    # Ici le sous-domaine pointe directement sur public/, donc on ne le
+    # copie PAS et on laisse public/.htaccess (le vrai, complet) tranquille.
     - chmod -R 755 $DEPLOYPATH
