@@ -1,0 +1,31 @@
+RewriteEngine On
+RewriteBase /
+
+# ═══ PWA — MIME types + Service Worker scope ═══
+AddType application/manifest+json .webmanifest
+<Files "sw.js">
+    Header set Service-Worker-Allowed "/"
+</Files>
+
+# ═══ Force HTTPS (production) ═══
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# ═══ Redirect www → non-www ═══
+RewriteCond %{HTTP_HOST} ^www\.villaplaisance\.fr$ [NC]
+RewriteRule ^(.*)$ https://villaplaisance.fr/$1 [R=301,L]
+
+# ═══ Old page slugs → new URLs ═══
+RewriteRule ^chambre-hotes-bedarrides/?$ /chambres-d-hotes [R=301,L]
+RewriteRule ^maison-hotes-bedarrides/?$ /location-villa-provence [R=301,L]
+RewriteRule ^recommandations/?$ /sur-place [R=301,L]
+RewriteRule ^politique-confidentialite-bedarrides/?$ /politique-confidentialite [R=301,L]
+RewriteRule ^politique-de-cookies-ue/?$ /politique-confidentialite [R=301,L]
+RewriteRule ^hello-world/?$ / [R=301,L]
+
+# If file or directory exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything through index.php
+RewriteRule ^(.*)$ index.php [QSA,L]

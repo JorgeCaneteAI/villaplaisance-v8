@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.local
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Editeurs
+.idea/
+.vscode/
+*.swp
+
+# Uploads (gérés hors git, transfert manuel)
+public/uploads/
+
+# Logs
+*.log
+logs/
+
+# Dépendances éventuelles
+vendor/
+node_modules/
+
+# Tests/temp
+tmp/
+.cache/
+
+# Dump SQL — gardé hors git, on garde juste un seed propre
+database/*.sql
