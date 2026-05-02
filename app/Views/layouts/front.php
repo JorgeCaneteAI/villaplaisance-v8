@@ -57,10 +57,12 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Caveat:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=EB+Garamond:ital,wght@0,400..600;1,400..500&display=swap" rel="stylesheet">
 
-    <!-- CSS -->
+    <!-- CSS V7 (legacy, à supprimer une fois toutes les pages portées) -->
     <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(ROOT . '/public/assets/css/style.css') ?>">
+    <!-- CSS V8 (design impeccable) -->
+    <link rel="stylesheet" href="/assets/css/style-v8.css?v=<?= filemtime(ROOT . '/public/assets/css/style-v8.css') ?>">
 
     <!-- JSON-LD -->
     <?php foreach (($jsonLd ?? []) as $ld): ?>
@@ -81,31 +83,30 @@
     <!-- Skip to content -->
     <a href="#main-content" class="skip-link">Aller au contenu</a>
 
-    <!-- Header -->
-    <header class="site-header" role="banner">
-        <div class="container header-inner">
-            <a href="<?= LangService::url('accueil') ?>" class="logo" aria-label="Villa Plaisance — Accueil">
-                <img src="/assets/img/logo.svg" alt="Villa Plaisance" class="logo-img" width="44" height="44">
-            </a>
-
-            <nav class="main-nav" role="navigation" aria-label="Navigation principale">
-                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
-                    <span class="nav-toggle-bar"></span>
-                    <span class="nav-toggle-bar"></span>
-                    <span class="nav-toggle-bar"></span>
-                </button>
-                <ul id="nav-menu" class="nav-list">
-                    <li class="nav-close-wrap"><button class="nav-close" aria-label="Fermer le menu"></button></li>
-                    <li><a href="<?= LangService::url('/') ?>"><?= t('nav.home') ?></a></li>
-                    <li><a href="<?= LangService::url('chambres-d-hotes') ?>"><?= t('nav.chambres') ?></a></li>
-                    <li><a href="<?= LangService::url('location-villa-provence') ?>"><?= t('nav.villa') ?></a></li>
-                    <li><a href="<?= LangService::url('espaces-exterieurs') ?>"><?= t('nav.exterieurs') ?></a></li>
-                    <li><a href="<?= LangService::url('journal') ?>"><?= t('nav.journal') ?></a></li>
-                    <li><a href="<?= LangService::url('sur-place') ?>"><?= t('nav.surplace') ?></a></li>
-                    <li><a href="<?= LangService::url('contact') ?>"><?= t('nav.contact') ?></a></li>
-                </ul>
+    <!-- Header V8 (frame : wordmark + nav 7 liens + langues + burger) -->
+    <header class="frame" role="banner">
+        <a class="wordmark" href="<?= LangService::url('/') ?>" aria-label="Villa Plaisance, accueil">
+            <span>Villa</span><span>Plaisance</span>
+        </a>
+        <nav class="frame__nav" aria-label="Navigation principale" data-nav>
+            <a href="<?= LangService::url('/') ?>" data-route="/">Accueil</a>
+            <a href="<?= LangService::url('chambres-d-hotes') ?>" data-route="/chambres-d-hotes/">Chambres</a>
+            <a href="<?= LangService::url('location-villa-provence') ?>" data-route="/location-villa-provence/">Villa</a>
+            <a href="<?= LangService::url('sur-place') ?>" data-route="/sur-place/">Sur place</a>
+            <a href="<?= LangService::url('journal') ?>" data-route="/journal/">Journal</a>
+            <a href="<?= LangService::url('votre-hote') ?>" data-route="/votre-hote/">L'hôte</a>
+            <a href="<?= LangService::url('contact') ?>" data-route="/contact/">Contact</a>
+        </nav>
+        <div class="frame__right">
+            <nav class="frame__lang" aria-label="Langues">
+                <a href="#" aria-current="page">FR</a>
+                <a href="#" aria-disabled="true" tabindex="-1">EN</a>
+                <a href="#" aria-disabled="true" tabindex="-1">ES</a>
+                <a href="#" aria-disabled="true" tabindex="-1">DE</a>
             </nav>
-
+            <button class="frame__menu-btn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu-overlay" data-menu-open>
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
 
@@ -114,55 +115,40 @@
         <?= $content ?>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <p class="footer-brand">Villa Plaisance</p>
-                    <p class="footer-location">
-                        <?= ImageService::icon('icon-localisation', 16, 'footer-icon') ?>
-                        Bédarrides, Vaucluse 84370<br>Provence, France
-                    </p>
-                    <?php
-                    $socialLinks = [];
-                    try { $socialLinks = Database::fetchAll("SELECT * FROM vp_social_links ORDER BY position ASC"); } catch (\Throwable) {}
-                    if ($socialLinks): ?>
-                    <div class="footer-social">
-                        <?php foreach ($socialLinks as $sl):
-                            $slIcon = 'icon-' . htmlspecialchars($sl['icon'] ?? 'lien-externe');
-                        ?>
-                        <a href="<?= htmlspecialchars($sl['url']) ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= htmlspecialchars($sl['name']) ?>">
-                            <?= ImageService::icon($slIcon, 20) ?>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <div class="footer-col">
-                    <nav aria-label="Navigation du pied de page">
-                        <ul>
-                            <li><a href="<?= LangService::url('chambres-d-hotes') ?>"><?= t('nav.chambres') ?></a></li>
-                            <li><a href="<?= LangService::url('location-villa-provence') ?>"><?= t('nav.villa') ?></a></li>
-                            <li><a href="<?= LangService::url('journal') ?>"><?= t('nav.journal') ?></a></li>
-                            <li><a href="<?= LangService::url('contact') ?>"><?= t('nav.contact') ?></a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="footer-col">
-                    <nav aria-label="Informations légales">
-                        <ul>
-                            <li><a href="<?= LangService::url('mentions-legales') ?>"><?= t('footer.mentions') ?></a></li>
-                            <li><a href="<?= LangService::url('politique-confidentialite') ?>"><?= t('footer.confidentialite') ?></a></li>
-                            <li><a href="<?= LangService::url('plan-du-site') ?>"><?= t('footer.plan') ?></a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            <p class="footer-copy"><?= t('footer.rights', ['year' => date('Y')]) ?></p>
-        </div>
-        <div class="footer-giant" aria-hidden="true">Villa Plaisance</div>
+    <!-- Footer V8 (pied : 3 lignes sobres) -->
+    <footer class="pied" role="contentinfo">
+        <p class="pied__nom">
+            Villa Plaisance &middot; Bédarrides 84370 Vaucluse &middot;
+            <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
+        </p>
+        <nav class="pied__nav" aria-label="Mentions">
+            <a href="<?= LangService::url('mentions-legales') ?>">Mentions légales</a>
+            <a href="<?= LangService::url('politique-confidentialite') ?>">Confidentialité</a>
+            <a href="<?= LangService::url('plan-du-site') ?>">Plan du site</a>
+        </nav>
+        <p class="pied__copy">&copy; <?= date('Y') ?> Villa Plaisance</p>
     </footer>
+
+    <!-- Overlay menu V8 (mobile + accessible) -->
+    <div class="menu-overlay" id="menu-overlay" hidden data-menu-overlay>
+        <button class="menu-overlay__close" type="button" aria-label="Fermer le menu" data-menu-close>
+            <span></span><span></span>
+        </button>
+        <nav class="menu-overlay__nav" aria-label="Menu principal">
+            <a href="<?= LangService::url('/') ?>" data-route="/">Accueil</a>
+            <a href="<?= LangService::url('chambres-d-hotes') ?>" data-route="/chambres-d-hotes/">Chambres d'hôtes</a>
+            <a href="<?= LangService::url('location-villa-provence') ?>" data-route="/location-villa-provence/">La villa entière</a>
+            <a href="<?= LangService::url('espaces-exterieurs') ?>" data-route="/espaces-exterieurs/">Espaces extérieurs</a>
+            <a href="<?= LangService::url('sur-place') ?>" data-route="/sur-place/">Sur place</a>
+            <a href="<?= LangService::url('itineraire') ?>" data-route="/itineraire/">Itinéraires</a>
+            <a href="<?= LangService::url('journal') ?>" data-route="/journal/">Le Journal</a>
+            <a href="<?= LangService::url('votre-hote') ?>" data-route="/votre-hote/">Votre hôte</a>
+            <a href="<?= LangService::url('contact') ?>" data-route="/contact/">Écrire</a>
+        </nav>
+        <p class="menu-overlay__contact">
+            <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
+        </p>
+    </div>
 
     <!-- Cookie consent RGPD -->
     <?php if (!isset($_COOKIE['vp_consent'])): ?>
@@ -208,5 +194,6 @@
     <?php endif; ?>
 
     <script src="/assets/js/main.js?v=<?= filemtime(ROOT . '/public/assets/js/main.js') ?>" defer></script>
+    <script src="/assets/js/main-v8.js?v=<?= filemtime(ROOT . '/public/assets/js/main-v8.js') ?>" defer></script>
 </body>
 </html>
