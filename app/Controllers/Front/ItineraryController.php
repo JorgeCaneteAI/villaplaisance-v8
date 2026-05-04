@@ -7,6 +7,22 @@ use App\Controllers\BaseController;
 
 class ItineraryController extends BaseController
 {
+    /**
+     * Page de présentation du service itinéraires personnalisés
+     * (`/itineraire/`). Distincte de show($slug) qui affiche un
+     * itinéraire personnalisé pour un guest particulier.
+     */
+    public function index(): void
+    {
+        $lang = \LangService::get();
+        $seo = \SeoService::forPage('itineraire', $lang,
+            'Itinéraires personnalisés en Provence — Villa Plaisance',
+            'Avant votre séjour, nous préparons un itinéraire d\'une journée sur mesure : étapes, horaires, conseils, contacts. Inclus pour nos hôtes.'
+        );
+        $jsonLd = [];
+        $this->render('front/itineraires', compact('seo', 'jsonLd', 'lang'));
+    }
+
     public function show(string $slug): void
     {
         $lang = \LangService::get();

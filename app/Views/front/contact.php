@@ -1,61 +1,115 @@
-<!-- Breadcrumb -->
-<nav class="breadcrumb" aria-label="Fil d'Ariane">
-    <div class="container">
-        <ol>
-            <li><a href="<?= LangService::url('accueil') ?>"><?= t('nav.home') ?></a></li>
-            <li aria-current="page"><?= t('nav.contact') ?></li>
-        </ol>
-    </div>
-</nav>
-
 <?php
-// Render hero from CMS
-$heroSections = BlockService::getSections('contact', $lang);
-foreach ($heroSections as $section) {
-    echo BlockService::renderBlock($section);
-}
+// Contact V8 — porté du V2 (`contact/index.html`).
+// Variables : $seo, $jsonLd, $lang, $flash, $csrf.
+// Le formulaire POST vers /contact qui appelle ContactController::handleSubmit.
+// Champs adaptés au backend : name, email, subject, message, website (honeypot).
 ?>
 
-<!-- Formulaire (non géré par bloc — logique spécifique) -->
-<section class="section">
-    <div class="container container-narrow">
-        <?php if (!empty($flash['success'])): ?>
-        <div class="alert alert-success" role="alert"><?= htmlspecialchars($flash['success']) ?></div>
-        <?php endif; ?>
-        <?php if (!empty($flash['error'])): ?>
-        <div class="alert alert-error" role="alert"><?= htmlspecialchars($flash['error']) ?></div>
-        <?php endif; ?>
+<!-- Acte 0 : opening compact ultra-sobre -->
+<section class="opening opening--compact opening--mince" aria-labelledby="opening-title">
+    <div class="opening__copy opening__copy--centered">
+        <p class="opening__eyebrow">Bédarrides, Provence</p>
+        <h1 class="opening__title opening__title--compact" id="opening-title">Contact</h1>
+        <p class="opening__sub">Une question&nbsp;? Écrivez-nous.</p>
+    </div>
+</section>
 
-        <form method="POST" action="<?= LangService::url('contact') ?>" class="contact-form" novalidate>
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+<!-- Acte 1 : formulaire + coordonnées -->
+<section class="duo" aria-labelledby="duo-title">
+    <h2 class="acte__num" id="duo-title"><span>I.</span> Nous écrire</h2>
 
-            <!-- Honeypot -->
-            <div style="position:absolute;left:-9999px" aria-hidden="true">
-                <label for="website">Ne pas remplir</label>
-                <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+    <?php if (!empty($flash['success'])): ?>
+    <p class="duo__flash duo__flash--success" role="status">
+        <?= htmlspecialchars($flash['success']) ?>
+    </p>
+    <?php endif; ?>
+
+    <?php if (!empty($flash['error'])): ?>
+    <p class="duo__flash duo__flash--error" role="alert">
+        <?= htmlspecialchars($flash['error']) ?>
+    </p>
+    <?php endif; ?>
+
+    <div class="duo__grille">
+
+        <form class="duo__form" action="<?= LangService::url('contact') ?>" method="post" novalidate>
+            <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrf) ?>">
+
+            <div class="champ">
+                <label for="name">Votre nom</label>
+                <input id="name" name="name" type="text" autocomplete="name" required value="<?= htmlspecialchars($_POST['name'] ?? '') ?>">
             </div>
 
-            <div class="form-group">
-                <label for="name"><?= t('contact.form.name') ?> *</label>
-                <input type="text" id="name" name="name" required autocomplete="name">
+            <div class="champ">
+                <label for="email">Votre courriel</label>
+                <input id="email" name="email" type="email" autocomplete="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
             </div>
 
-            <div class="form-group">
-                <label for="email"><?= t('contact.form.email') ?> *</label>
-                <input type="email" id="email" name="email" required autocomplete="email">
+            <div class="champ">
+                <label for="subject">Objet <span>(optionnel)</span></label>
+                <input id="subject" name="subject" type="text" value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>">
             </div>
 
-            <div class="form-group">
-                <label for="subject"><?= t('contact.form.subject') ?></label>
-                <input type="text" id="subject" name="subject">
+            <div class="champ champ--message">
+                <label for="message">Votre message</label>
+                <textarea id="message" name="message" rows="6" required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="message"><?= t('contact.form.message') ?> *</label>
-                <textarea id="message" name="message" rows="6" required></textarea>
+            <!-- Honeypot anti-spam : champ caché que les bots remplissent -->
+            <div class="champ champ--honeypot" aria-hidden="true">
+                <label for="website">Site web</label>
+                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
             </div>
 
-            <button type="submit" class="btn-primary"><?= t('contact.form.send') ?></button>
+            <button class="duo__envoyer" type="submit">
+                Envoyer
+                <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            </button>
+            <p class="duo__form-note">
+                Nous répondons sous deux jours, en français,
+                en anglais ou en espagnol.
+            </p>
         </form>
+
+        <aside class="duo__cotes">
+            <div class="cote">
+                <p class="cote__libelle">Courriel</p>
+                <p class="cote__valeur">
+                    <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
+                </p>
+            </div>
+            <div class="cote">
+                <p class="cote__libelle">Adresse</p>
+                <p class="cote__valeur">
+                    Villa Plaisance<br>
+                    Bédarrides<br>
+                    84370 Vaucluse, France
+                </p>
+            </div>
+            <div class="cote">
+                <p class="cote__libelle">Pour venir</p>
+                <p class="cote__valeur">
+                    Gare TGV d'Avignon à 15&nbsp;minutes.<br>
+                    Aéroport Marseille-Provence à 1&nbsp;heure.<br>
+                    Sortie A7 Bédarrides.
+                </p>
+            </div>
+            <?php
+            $socialLinks = [];
+            try { $socialLinks = Database::fetchAll("SELECT * FROM vp_social_links ORDER BY position ASC"); } catch (\Throwable) {}
+            ?>
+            <?php if ($socialLinks): ?>
+            <div class="cote">
+                <p class="cote__libelle">Réseaux</p>
+                <p class="cote__valeur">
+                    <?php foreach ($socialLinks as $i => $sl): ?>
+                        <?php if ($i > 0): ?> · <?php endif; ?>
+                        <a href="<?= htmlspecialchars($sl['url']) ?>" rel="me" target="_blank" rel="noopener noreferrer"><?= htmlspecialchars($sl['name']) ?></a>
+                    <?php endforeach; ?>
+                </p>
+            </div>
+            <?php endif; ?>
+        </aside>
+
     </div>
 </section>

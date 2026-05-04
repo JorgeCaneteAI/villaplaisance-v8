@@ -1,92 +1,94 @@
-<!-- Breadcrumb -->
-<nav class="breadcrumb" aria-label="Fil d'Ariane">
-    <div class="container">
-        <ol>
-            <li><a href="<?= LangService::url('accueil') ?>"><?= t('nav.home') ?></a></li>
-            <?php if (($article['type'] ?? '') === 'sur-place'): ?>
-            <li><a href="<?= LangService::url('sur-place') ?>"><?= t('nav.surplace') ?></a></li>
-            <?php else: ?>
-            <li><a href="<?= LangService::url('journal') ?>"><?= t('nav.journal') ?></a></li>
-            <?php endif; ?>
-            <li aria-current="page"><?= htmlspecialchars($article['title']) ?></li>
-        </ol>
-    </div>
-</nav>
+<?php
+// Article V8 — porté du V2 (`journal/le-tourisme-de-masse-est-une-arnaque/`).
+// Variables : $seo, $jsonLd, $lang, $article, $contentBlocks.
+// Le contenu est rendu dynamiquement depuis vp_articles + JSON content blocks.
+$isOnSite = ($article['type'] ?? '') === 'sur-place';
+$backUrl = LangService::url($isOnSite ? 'sur-place' : 'journal');
+$backLabel = $isOnSite ? 'Retour à Sur place' : 'Retour au journal';
+?>
 
-<!-- Article -->
-<article class="section article-full">
-    <div class="container container-narrow">
-        <header class="article-header">
+<article class="post">
+    <nav class="post__breadcrumb" aria-label="Fil d'Ariane">
+        <a href="<?= LangService::url('/') ?>">Accueil</a>
+        <span aria-hidden="true">›</span>
+        <a href="<?= $backUrl ?>"><?= $isOnSite ? 'Sur place' : 'Journal' ?></a>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page"><?= htmlspecialchars($article['title']) ?></span>
+    </nav>
+
+    <header class="post__entete">
+        <p class="post__cat">
             <?php if (!empty($article['category'])): ?>
-            <span class="article-category"><?= htmlspecialchars($article['category']) ?></span>
+                <?= htmlspecialchars($article['category']) ?>
+                <?php if (!empty($article['published_at'])): ?> · <?php endif; ?>
             <?php endif; ?>
-            <h1><?= htmlspecialchars($article['title']) ?></h1>
-            <?php if (!empty($article['excerpt'])): ?>
-            <p class="article-excerpt"><?= htmlspecialchars($article['excerpt']) ?></p>
+            <?php if (!empty($article['published_at'])): ?>
+                <time datetime="<?= htmlspecialchars($article['published_at']) ?>">
+                    <?= date('j F Y', strtotime($article['published_at'])) ?>
+                </time>
             <?php endif; ?>
-            <div class="article-meta">
-                <?php if (!empty($article['published_at'])): ?>
-                <time datetime="<?= $article['published_at'] ?>"><?= t('published_on', ['date' => date('d/m/Y', strtotime($article['published_at']))]) ?></time>
-                <?php endif; ?>
-            </div>
-        </header>
+        </p>
+        <h1 class="post__titre"><?= htmlspecialchars($article['title']) ?></h1>
+        <?php if (!empty($article['excerpt'])): ?>
+        <p class="post__excerpt"><?= htmlspecialchars($article['excerpt']) ?></p>
+        <?php endif; ?>
+    </header>
 
-        <!-- Cover image -->
-        <?php if (!empty($article['cover_image'])): ?>
-        <div class="article-cover">
-            <?= ImageService::img($article['cover_image'], htmlspecialchars($article['title']), 1200, 630) ?>
-        </div>
+    <?php if (!empty($article['cover_image'])): ?>
+    <figure class="post__cover">
+        <?= ImageService::img($article['cover_image'], htmlspecialchars($article['title']), 1200, 630) ?>
+    </figure>
+    <?php endif; ?>
+
+    <div class="post__corps">
+        <?php if (!empty($article['excerpt'])): ?>
+        <p class="post__lead"><?= htmlspecialchars($article['excerpt']) ?></p>
         <?php endif; ?>
 
-        <!-- Content blocks -->
-        <div class="article-content">
-            <?php if (!empty($contentBlocks)): ?>
-                <?php foreach ($contentBlocks as $block): ?>
-                    <?php if (is_string($block)): ?>
-                        <?= $block ?>
-                    <?php elseif (is_array($block)): ?>
-                        <?php if (($block['type'] ?? '') === 'heading'): ?>
-                            <h2><?= htmlspecialchars($block['text'] ?? '') ?></h2>
-                        <?php elseif (($block['type'] ?? '') === 'paragraph'): ?>
-                            <p><?= $block['text'] ?? '' ?></p>
-                        <?php elseif (($block['type'] ?? '') === 'image'): ?>
-                            <figure>
-                                <?= ImageService::img($block['src'] ?? '', htmlspecialchars($block['alt'] ?? ''), 1200, 800) ?>
-                                <?php if (!empty($block['caption'])): ?>
-                                <figcaption><?= htmlspecialchars($block['caption']) ?></figcaption>
-                                <?php endif; ?>
-                            </figure>
-                        <?php elseif (($block['type'] ?? '') === 'quote'): ?>
-                            <blockquote><p><?= htmlspecialchars($block['text'] ?? '') ?></p></blockquote>
-                        <?php elseif (($block['type'] ?? '') === 'list'): ?>
-                            <ul>
-                                <?php foreach (($block['items'] ?? []) as $item): ?>
-                                <li><?php
-                                    $safe = htmlspecialchars($item);
-                                    if (str_contains($safe, ' : ')) {
-                                        [$label, $rest] = explode(' : ', $safe, 2);
-                                        echo '<strong>' . $label . '</strong> : ' . $rest;
-                                    } else {
-                                        echo $safe;
-                                    }
-                                ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php endif; ?>
+        <?php if (!empty($contentBlocks)): ?>
+            <?php foreach ($contentBlocks as $block): ?>
+                <?php if (is_string($block)): ?>
+                    <?= $block ?>
+                <?php elseif (is_array($block)): ?>
+                    <?php if (($block['type'] ?? '') === 'heading'): ?>
+                        <h2><?= htmlspecialchars($block['text'] ?? '') ?></h2>
+                    <?php elseif (($block['type'] ?? '') === 'paragraph'): ?>
+                        <p><?= $block['text'] ?? '' ?></p>
+                    <?php elseif (($block['type'] ?? '') === 'image'): ?>
+                        <figure>
+                            <?= ImageService::img($block['src'] ?? '', htmlspecialchars($block['alt'] ?? ''), 1200, 800) ?>
+                            <?php if (!empty($block['caption'])): ?>
+                            <figcaption><?= htmlspecialchars($block['caption']) ?></figcaption>
+                            <?php endif; ?>
+                        </figure>
+                    <?php elseif (($block['type'] ?? '') === 'quote'): ?>
+                        <blockquote class="post__cite"><?= htmlspecialchars($block['text'] ?? '') ?></blockquote>
+                    <?php elseif (($block['type'] ?? '') === 'list'): ?>
+                        <ul>
+                            <?php foreach (($block['items'] ?? []) as $item): ?>
+                            <li><?php
+                                $safe = htmlspecialchars($item);
+                                if (str_contains($safe, ' : ')) {
+                                    [$label, $rest] = explode(' : ', $safe, 2);
+                                    echo '<strong>' . $label . '</strong> : ' . $rest;
+                                } else {
+                                    echo $safe;
+                                }
+                            ?></li>
+                            <?php endforeach; ?>
+                        </ul>
                     <?php endif; ?>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p><?= nl2br(htmlspecialchars($article['content'] ?? '')) ?></p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Back -->
-        <footer class="article-footer">
-            <?php if (($article['type'] ?? '') === 'sur-place'): ?>
-            <a href="<?= LangService::url('sur-place') ?>" class="btn-secondary">&larr; <?= t('back') ?></a>
-            <?php else: ?>
-            <a href="<?= LangService::url('journal') ?>" class="btn-secondary">&larr; <?= t('back') ?></a>
-            <?php endif; ?>
-        </footer>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p><?= nl2br(htmlspecialchars($article['content'] ?? '')) ?></p>
+        <?php endif; ?>
     </div>
+
+    <footer class="post__pied">
+        <a class="post__retour" href="<?= $backUrl ?>">
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" style="transform:scaleX(-1)"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            <?= $backLabel ?>
+        </a>
+    </footer>
 </article>
