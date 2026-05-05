@@ -1,110 +1,106 @@
 <?php
-// Votre hôte V8 — porté du V2 (`votre-hote/index.html`).
-// Variables : $seo, $jsonLd, $lang, $profile, $blocks, $reviews.
-//
-// V2 statique : tout en dur (Jorge Cañete, 4 repères CV). Le Controller V8
-// fournit déjà $profile et $blocks dynamiques depuis vp_host_profile et
-// vp_host_blocks. À dynamiser dans une étape ultérieure : remplacer le
-// contenu en dur par les variables du Controller, en gardant le V2 comme
-// fallback si la DB est vide.
+/**
+ * Hôte V9 — esprit weeks-off.com (Sprint 3, 2026-05-05).
+ *
+ * Variables disponibles depuis HoteController :
+ *   $profile  vp_host_profile (name, subtitle, photo, intro, origin, passions, philosophy, fun_facts, quote)
+ *   $blocks   vp_host_blocks (4 blocs CV avec title_fr, content_fr, image, position)
+ *   $reviews  6 reviews mentionnant Jorge
+ *   $seo, $jsonLd, $lang
+ */
+
+$photoSrc = !empty($profile['photo']) ? '/uploads/' . htmlspecialchars((string)$profile['photo']) : null;
+$initial = mb_strtoupper(mb_substr((string)($profile['name'] ?? 'J'), 0, 1));
 ?>
 
-<!-- Acte 0 : opening compact -->
-<section class="opening opening--compact opening--mince" aria-labelledby="opening-title">
-    <div class="opening__copy opening__copy--centered">
-        <p class="opening__eyebrow">Bédarrides, Provence</p>
-        <h1 class="opening__title opening__title--compact" id="opening-title">Jorge Cañete</h1>
-        <p class="opening__sub">Votre hôte à Villa Plaisance.</p>
-    </div>
+<section class="identite identite--compact" style="border-bottom:1px solid var(--rule)">
+    <div class="eyebrow">L'hôte</div>
+    <h1><?= htmlspecialchars((string)($profile['name'] ?? 'Jorge Cañete')) ?></h1>
+    <p class="baseline"><?= htmlspecialchars((string)($profile['subtitle'] ?? 'Votre hôte à Villa Plaisance')) ?></p>
 </section>
 
-<!-- Acte 1 : intro + photo + quote -->
-<section class="bio" aria-labelledby="bio-title">
-    <h2 class="acte__num" id="bio-title"><span>I.</span> L'accueil</h2>
-
-    <div class="bio__grille">
-        <figure class="bio__plate plate__ph plate--ph-identite">
-            <img src="/assets/img/v8/villa-plaisance-cuisine-equipee-04.webp"
-                 alt="Cuisine équipée de Villa Plaisance, four, frigo américain, plan de travail clair."
-                 loading="lazy" decoding="async">
-        </figure>
-        <div class="bio__corps">
-            <p class="bio__intro">
-                Bienvenue. Je suis Jorge, votre hôte à Villa Plaisance.
-                Passionné par l'accueil et la Provence, j'ai ouvert les portes
-                de cette maison pour partager un art de vivre simple et authentique.
-            </p>
-            <blockquote class="bio__cite">
-                L'hospitalité, c'est faire sentir à l'autre qu'il est chez lui,
-                même quand il est chez vous.
-            </blockquote>
+<section class="profile-bio">
+    <div class="profile-bio__inner">
+        <?php if ($photoSrc): ?>
+        <div class="profile-bio__photo">
+            <img src="<?= $photoSrc ?>" alt="Portrait de <?= htmlspecialchars((string)($profile['name'] ?? 'Jorge')) ?>" loading="lazy">
+        </div>
+        <?php else: ?>
+        <div class="profile-bio__photo profile-bio__photo--placeholder" aria-hidden="true">
+            <?= htmlspecialchars($initial) ?>
+        </div>
+        <?php endif; ?>
+        <div class="profile-bio__text">
+            <span class="eyebrow">Bienvenue</span>
+            <h2>Bonjour</h2>
+            <p class="subtitle">Je suis <?= htmlspecialchars((string)($profile['name'] ?? 'Jorge')) ?>.</p>
+            <?php if (!empty($profile['intro'])): ?>
+            <?php foreach (preg_split('/\n\n+/', (string)$profile['intro']) as $para): if (trim($para) === '') continue; ?>
+            <p><?= nl2br(htmlspecialchars(trim($para))) ?></p>
+            <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
-<!-- Acte 2 : 4 blocs CV — TODO : utiliser $blocks de vp_host_blocks -->
-<section class="cv" aria-labelledby="cv-title">
-    <h2 class="acte__num" id="cv-title"><span>II.</span> Quatre repères</h2>
+<?php if (!empty($blocks)): ?>
+    <?php foreach ($blocks as $i => $b):
+        $title = $b['title_' . $lang] ?? $b['title_fr'] ?? '';
+        $content = $b['content_' . $lang] ?? $b['content_fr'] ?? '';
+        $roman = ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.'][$i] ?? (($i + 1) . '.');
+    ?>
+    <section class="profile-block">
+        <div class="profile-block__inner">
+            <div>
+                <div class="profile-block__num"><?= htmlspecialchars($roman) ?></div>
+                <h3><?= htmlspecialchars((string)$title) ?></h3>
+            </div>
+            <div class="profile-block__text">
+                <?php foreach (preg_split('/\n\n+/', (string)$content) as $para): if (trim($para) === '') continue; ?>
+                <p><?= nl2br(htmlspecialchars(trim($para))) ?></p>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endforeach; ?>
+<?php endif; ?>
 
-    <div class="cv__grille">
+<?php if (!empty($profile['quote'])): ?>
+<section class="quote-band">
+    <blockquote>« <?= htmlspecialchars((string)$profile['quote']) ?> »</blockquote>
+    <div class="sig">— <?= htmlspecialchars((string)($profile['name'] ?? 'Jorge Cañete')) ?></div>
+</section>
+<?php endif; ?>
 
-        <article class="cv__bloc">
-            <p class="cv__numero">01</p>
-            <h3 class="cv__titre">Origine</h3>
-            <p class="cv__texte">
-                Originaire du sud de la France, j'ai grandi entre la mer et la
-                garrigue. Après des années dans le monde du digital et de la
-                communication, j'ai choisi de revenir aux essentiels&nbsp;:
-                le soleil, la terre, les gens.
-            </p>
-        </article>
-
-        <article class="cv__bloc">
-            <p class="cv__numero">02</p>
-            <h3 class="cv__titre">Passions</h3>
-            <p class="cv__texte">
-                La cuisine provençale, les marchés du dimanche, le vin
-                (surtout celui des voisins vignerons), la photographie,
-                les longues discussions sur la terrasse, et faire découvrir
-                les trésors cachés du Vaucluse.
-            </p>
-        </article>
-
-        <article class="cv__bloc">
-            <p class="cv__numero">03</p>
-            <h3 class="cv__titre">Philosophie</h3>
-            <p class="cv__texte">
-                Ici, pas de protocole. On se tutoie, on partage les bons plans,
-                on prend le temps. Villa Plaisance, c'est votre maison en Provence,
-                avec un hôte qui connaît chaque recoin du territoire.
-            </p>
-        </article>
-
-        <article class="cv__bloc">
-            <p class="cv__numero">04</p>
-            <h3 class="cv__titre">Pour la petite histoire</h3>
-            <p class="cv__texte">
-                Je parle trois langues (français, espagnol, anglais). Je fais
-                le meilleur café du Vaucluse, selon mes hôtes. Je connais le
-                prénom de chaque olivier du jardin.
-            </p>
-        </article>
-
+<?php if (!empty($reviews)): ?>
+<section class="voix">
+    <div class="voix__head">
+        <div class="eyebrow">Hôtes du monde</div>
+        <h2>Ce qu'on dit de Jorge</h2>
+    </div>
+    <div class="voix__grid">
+        <?php foreach (array_slice($reviews, 0, 3) as $r): ?>
+        <figure class="voix__bloc">
+            <blockquote>« <?= htmlspecialchars((string)$r['content']) ?> »</blockquote>
+            <figcaption>
+                <?= htmlspecialchars((string)$r['author']) ?>
+                <?php if (!empty($r['origin'])): ?> &middot; <?= htmlspecialchars((string)$r['origin']) ?><?php endif; ?>
+            </figcaption>
+        </figure>
+        <?php endforeach; ?>
     </div>
 </section>
+<?php endif; ?>
 
-<!-- Acte 3 : contact -->
-<section class="contact" id="contact" aria-labelledby="contact-title">
-    <h2 class="acte__num" id="contact-title"><span>III.</span> Écrire</h2>
-    <p class="contact__phrase">Une envie de venir&nbsp;?</p>
-    <p class="contact__sub">Écrivez-moi directement, je réponds personnellement sous deux jours.</p>
-    <div class="contact__actions">
-        <a class="contact__bouton" href="<?= LangService::url('contact') ?>">
-            M'écrire
-            <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+<section class="ecrire" id="contact">
+    <h2>Écrire à <?= htmlspecialchars((string)($profile['name'] ?? 'Jorge')) ?></h2>
+    <p>Une question, un projet de séjour, un mot ?</p>
+    <p class="sub">Je réponds en français, anglais ou espagnol.</p>
+    <div class="actions">
+        <a href="<?= LangService::url('contact') ?>" class="pill pill--solid pill--big">
+            Nous écrire
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
         </a>
-        <p class="contact__alt">
-            Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-        </p>
+        <p class="alt">Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
     </div>
 </section>

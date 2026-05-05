@@ -1,94 +1,110 @@
 <?php
-// Article V8 — porté du V2 (`journal/le-tourisme-de-masse-est-une-arnaque/`).
-// Variables : $seo, $jsonLd, $lang, $article, $contentBlocks.
-// Le contenu est rendu dynamiquement depuis vp_articles + JSON content blocks.
+/**
+ * Article V9 — esprit weeks-off.com (Sprint 3, 2026-05-05).
+ *
+ * Variables disponibles depuis JournalController::show ou SurPlaceController::show :
+ *   $article          vp_articles row
+ *   $contentBlocks    json_decode(article.content) — array<{type,text,...}>
+ *   $seo, $jsonLd, $lang
+ */
+
 $isOnSite = ($article['type'] ?? '') === 'sur-place';
-$backUrl = LangService::url($isOnSite ? 'sur-place' : 'journal');
-$backLabel = $isOnSite ? 'Retour à Sur place' : 'Retour au journal';
+$listUrl  = $isOnSite ? LangService::url('sur-place') : LangService::url('journal');
+$listLabel = $isOnSite ? 'Sur place' : 'Le Journal';
+
+$frenchMonths = [
+    1=>'janv.',2=>'févr.',3=>'mars',4=>'avr.',5=>'mai',6=>'juin',
+    7=>'juil.',8=>'août',9=>'sept.',10=>'oct.',11=>'nov.',12=>'déc.',
+];
+$fmtDate = function (?string $iso) use ($frenchMonths): string {
+    if (!$iso) return '';
+    $t = strtotime($iso);
+    if (!$t) return '';
+    return (int)date('j', $t) . ' ' . $frenchMonths[(int)date('n', $t)] . ' ' . date('Y', $t);
+};
+
+$cover = $article['cover_image'] ?? null;
 ?>
 
-<article class="post">
-    <nav class="post__breadcrumb" aria-label="Fil d'Ariane">
-        <a href="<?= LangService::url('/') ?>">Accueil</a>
-        <span aria-hidden="true">›</span>
-        <a href="<?= $backUrl ?>"><?= $isOnSite ? 'Sur place' : 'Journal' ?></a>
-        <span aria-hidden="true">›</span>
-        <span aria-current="page"><?= htmlspecialchars($article['title']) ?></span>
-    </nav>
-
-    <header class="post__entete">
-        <p class="post__cat">
-            <?php if (!empty($article['category'])): ?>
-                <?= htmlspecialchars($article['category']) ?>
-                <?php if (!empty($article['published_at'])): ?> · <?php endif; ?>
-            <?php endif; ?>
-            <?php if (!empty($article['published_at'])): ?>
-                <time datetime="<?= htmlspecialchars($article['published_at']) ?>">
-                    <?= date('j F Y', strtotime($article['published_at'])) ?>
-                </time>
-            <?php endif; ?>
-        </p>
-        <h1 class="post__titre"><?= htmlspecialchars($article['title']) ?></h1>
-        <?php if (!empty($article['excerpt'])): ?>
-        <p class="post__excerpt"><?= htmlspecialchars($article['excerpt']) ?></p>
-        <?php endif; ?>
-    </header>
-
-    <?php if (!empty($article['cover_image'])): ?>
-    <figure class="post__cover">
-        <?= ImageService::img($article['cover_image'], htmlspecialchars($article['title']), 1200, 630) ?>
-    </figure>
+<header class="article-hero">
+    <span class="meta">
+        <a href="<?= htmlspecialchars($listUrl) ?>" style="color:var(--ink-soft);border-bottom:1px solid var(--ink-soft);padding-bottom:1px"><?= htmlspecialchars($listLabel) ?></a>
+        <?php if (!empty($article['category'])): ?> &middot; <?= htmlspecialchars((string)$article['category']) ?><?php endif; ?>
+        <?php if (!empty($article['published_at']) && !$isOnSite): ?> &middot; <?= htmlspecialchars($fmtDate($article['published_at'])) ?><?php endif; ?>
+    </span>
+    <h1><?= htmlspecialchars((string)$article['title']) ?></h1>
+    <?php if (!empty($article['excerpt'])): ?>
+    <p class="excerpt"><?= htmlspecialchars((string)$article['excerpt']) ?></p>
     <?php endif; ?>
+</header>
 
-    <div class="post__corps">
-        <?php if (!empty($article['excerpt'])): ?>
-        <p class="post__lead"><?= htmlspecialchars($article['excerpt']) ?></p>
-        <?php endif; ?>
+<?php if ($cover): ?>
+<figure class="article-cover">
+    <img src="/uploads/<?= htmlspecialchars((string)$cover) ?>"
+         alt="<?= htmlspecialchars((string)$article['title']) ?>"
+         loading="lazy" decoding="async">
+</figure>
+<?php endif; ?>
 
-        <?php if (!empty($contentBlocks)): ?>
-            <?php foreach ($contentBlocks as $block): ?>
-                <?php if (is_string($block)): ?>
-                    <?= $block ?>
-                <?php elseif (is_array($block)): ?>
-                    <?php if (($block['type'] ?? '') === 'heading'): ?>
-                        <h2><?= htmlspecialchars($block['text'] ?? '') ?></h2>
-                    <?php elseif (($block['type'] ?? '') === 'paragraph'): ?>
-                        <p><?= $block['text'] ?? '' ?></p>
-                    <?php elseif (($block['type'] ?? '') === 'image'): ?>
-                        <figure>
-                            <?= ImageService::img($block['src'] ?? '', htmlspecialchars($block['alt'] ?? ''), 1200, 800) ?>
-                            <?php if (!empty($block['caption'])): ?>
-                            <figcaption><?= htmlspecialchars($block['caption']) ?></figcaption>
-                            <?php endif; ?>
-                        </figure>
-                    <?php elseif (($block['type'] ?? '') === 'quote'): ?>
-                        <blockquote class="post__cite"><?= htmlspecialchars($block['text'] ?? '') ?></blockquote>
-                    <?php elseif (($block['type'] ?? '') === 'list'): ?>
-                        <ul>
-                            <?php foreach (($block['items'] ?? []) as $item): ?>
-                            <li><?php
-                                $safe = htmlspecialchars($item);
-                                if (str_contains($safe, ' : ')) {
-                                    [$label, $rest] = explode(' : ', $safe, 2);
-                                    echo '<strong>' . $label . '</strong> : ' . $rest;
-                                } else {
-                                    echo $safe;
-                                }
-                            ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p><?= nl2br(htmlspecialchars($article['content'] ?? '')) ?></p>
-        <?php endif; ?>
-    </div>
-
-    <footer class="post__pied">
-        <a class="post__retour" href="<?= $backUrl ?>">
-            <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" style="transform:scaleX(-1)"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
-            <?= $backLabel ?>
-        </a>
-    </footer>
+<article class="article-content">
+    <?php
+    if (!empty($contentBlocks) && is_array($contentBlocks)) {
+        foreach ($contentBlocks as $block) {
+            $type = $block['type'] ?? 'paragraph';
+            $text = (string)($block['text'] ?? '');
+            switch ($type) {
+                case 'heading':
+                case 'h2':
+                    echo '<h2>' . htmlspecialchars($text) . '</h2>';
+                    break;
+                case 'h3':
+                    echo '<h3>' . htmlspecialchars($text) . '</h3>';
+                    break;
+                case 'quote':
+                case 'blockquote':
+                    echo '<blockquote>' . htmlspecialchars($text) . '</blockquote>';
+                    break;
+                case 'image':
+                    $src = $block['src'] ?? '';
+                    $caption = $block['caption'] ?? '';
+                    if ($src) {
+                        $imgSrc = str_starts_with($src, 'http') || str_starts_with($src, '/') ? $src : '/uploads/' . $src;
+                        echo '<figure>';
+                        echo '<img src="' . htmlspecialchars($imgSrc) . '" alt="' . htmlspecialchars($caption ?: '') . '" loading="lazy">';
+                        if ($caption) echo '<figcaption>' . htmlspecialchars($caption) . '</figcaption>';
+                        echo '</figure>';
+                    }
+                    break;
+                case 'list':
+                    $items = $block['items'] ?? [];
+                    if ($items) {
+                        echo '<ul>';
+                        foreach ($items as $item) echo '<li>' . htmlspecialchars((string)$item) . '</li>';
+                        echo '</ul>';
+                    }
+                    break;
+                case 'paragraph':
+                default:
+                    if ($text !== '') echo '<p>' . nl2br(htmlspecialchars($text)) . '</p>';
+                    break;
+            }
+        }
+    } elseif (!empty($article['excerpt'])) {
+        echo '<p>' . nl2br(htmlspecialchars((string)$article['excerpt'])) . '</p>';
+    }
+    ?>
 </article>
+
+<div class="article-back">
+    <a href="<?= htmlspecialchars($listUrl) ?>">← Retour à <?= htmlspecialchars($listLabel) ?></a>
+</div>
+
+<section class="ecrire" id="contact">
+    <h2>Écrire</h2>
+    <p>Cet article vous a parlé ?</p>
+    <p class="sub">Dites-nous, ou venez en discuter sur place.</p>
+    <div class="actions">
+        <a href="<?= LangService::url('contact') ?>" class="pill pill--solid pill--big">Nous écrire</a>
+        <p class="alt">Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
+    </div>
+</section>

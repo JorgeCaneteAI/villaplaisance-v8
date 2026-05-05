@@ -1,115 +1,107 @@
 <?php
-// Contact V8 — porté du V2 (`contact/index.html`).
-// Variables : $seo, $jsonLd, $lang, $flash, $csrf.
-// Le formulaire POST vers /contact qui appelle ContactController::handleSubmit.
-// Champs adaptés au backend : name, email, subject, message, website (honeypot).
+/**
+ * Contact V9 — esprit weeks-off.com (Sprint 3, 2026-05-05).
+ *
+ * Variables disponibles depuis ContactController :
+ *   $flash    array{type, message} | null
+ *   $csrf     string (token)
+ *   $seo, $jsonLd, $lang
+ *
+ * POST vers /contact qui appelle ContactController::handleSubmit (honeypot
+ * "website", CSRF, rate limit 5/h, anti-spam URLs).
+ */
 ?>
 
-<!-- Acte 0 : opening compact ultra-sobre -->
-<section class="opening opening--compact opening--mince" aria-labelledby="opening-title">
-    <div class="opening__copy opening__copy--centered">
-        <p class="opening__eyebrow">Bédarrides, Provence</p>
-        <h1 class="opening__title opening__title--compact" id="opening-title">Contact</h1>
-        <p class="opening__sub">Une question&nbsp;? Écrivez-nous.</p>
+<section class="identite identite--compact" style="border-bottom:1px solid var(--rule)">
+    <div class="eyebrow">Contact</div>
+    <h1>Écrire à Jorge</h1>
+    <p class="baseline">Une question, un projet de séjour, un mot.</p>
+</section>
+
+<section class="lead-section">
+    <div class="lead-section__inner">
+        <div class="lead-section__num">I.</div>
+        <div>
+            <h2>Le plus simple</h2>
+            <p>
+                Écrivez directement à <a href="mailto:contact@villaplaisance.fr" style="color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:1px">contact@villaplaisance.fr</a>.
+                Jorge répond personnellement, en français, anglais ou espagnol,
+                en général sous 24 heures.
+            </p>
+            <p class="lead-section__chute">Précisez vos dates et le nombre de personnes — c'est tout ce qu'il faut.</p>
+        </div>
     </div>
 </section>
 
-<!-- Acte 1 : formulaire + coordonnées -->
-<section class="duo" aria-labelledby="duo-title">
-    <h2 class="acte__num" id="duo-title"><span>I.</span> Nous écrire</h2>
+<section class="lead-section" style="border-top:none">
+    <div class="lead-section__inner">
+        <div class="lead-section__num">II.</div>
+        <div>
+            <h2>Ou via ce formulaire</h2>
+            <p>Si vous préférez, ce formulaire fait le même travail.</p>
+        </div>
+    </div>
+</section>
 
-    <?php if (!empty($flash['success'])): ?>
-    <p class="duo__flash duo__flash--success" role="status">
-        <?= htmlspecialchars($flash['success']) ?>
-    </p>
+<form class="contact-form" method="post" action="<?= LangService::url('contact') ?>" novalidate>
+
+    <?php if (!empty($flash)):
+        $flashClass = ($flash['type'] ?? '') === 'success' ? 'flash--success' : 'flash--error';
+    ?>
+    <div class="flash <?= $flashClass ?>" role="alert">
+        <?= htmlspecialchars((string)($flash['message'] ?? '')) ?>
+    </div>
     <?php endif; ?>
 
-    <?php if (!empty($flash['error'])): ?>
-    <p class="duo__flash duo__flash--error" role="alert">
-        <?= htmlspecialchars($flash['error']) ?>
-    </p>
-    <?php endif; ?>
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string)$csrf) ?>">
 
-    <div class="duo__grille">
+    <div class="honey" aria-hidden="true">
+        <label for="website">Ne pas remplir</label>
+        <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+    </div>
 
-        <form class="duo__form" action="<?= LangService::url('contact') ?>" method="post" novalidate>
-            <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrf) ?>">
+    <div class="field">
+        <label for="name">Votre nom <span aria-hidden="true">*</span></label>
+        <input type="text" name="name" id="name" required autocomplete="name">
+    </div>
 
-            <div class="champ">
-                <label for="name">Votre nom</label>
-                <input id="name" name="name" type="text" autocomplete="name" required value="<?= htmlspecialchars($_POST['name'] ?? '') ?>">
-            </div>
+    <div class="field">
+        <label for="email">Votre email <span aria-hidden="true">*</span></label>
+        <input type="email" name="email" id="email" required autocomplete="email">
+    </div>
 
-            <div class="champ">
-                <label for="email">Votre courriel</label>
-                <input id="email" name="email" type="email" autocomplete="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
-            </div>
+    <div class="field">
+        <label for="subject">Sujet</label>
+        <input type="text" name="subject" id="subject" placeholder="Réservation, question…">
+    </div>
 
-            <div class="champ">
-                <label for="subject">Objet <span>(optionnel)</span></label>
-                <input id="subject" name="subject" type="text" value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>">
-            </div>
+    <div class="field">
+        <label for="message">Votre message <span aria-hidden="true">*</span></label>
+        <textarea name="message" id="message" rows="6" required placeholder="Vos dates, nombre de personnes, ce qui compte pour vous…"></textarea>
+    </div>
 
-            <div class="champ champ--message">
-                <label for="message">Votre message</label>
-                <textarea id="message" name="message" rows="6" required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
-            </div>
+    <div class="submit">
+        <button type="submit" class="pill pill--solid pill--big">
+            Envoyer le message
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+        </button>
+    </div>
+</form>
 
-            <!-- Honeypot anti-spam : champ caché que les bots remplissent -->
-            <div class="champ champ--honeypot" aria-hidden="true">
-                <label for="website">Site web</label>
-                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-            </div>
-
-            <button class="duo__envoyer" type="submit">
-                Envoyer
-                <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
-            </button>
-            <p class="duo__form-note">
-                Nous répondons sous deux jours, en français,
-                en anglais ou en espagnol.
-            </p>
-        </form>
-
-        <aside class="duo__cotes">
-            <div class="cote">
-                <p class="cote__libelle">Courriel</p>
-                <p class="cote__valeur">
-                    <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-                </p>
-            </div>
-            <div class="cote">
-                <p class="cote__libelle">Adresse</p>
-                <p class="cote__valeur">
-                    Villa Plaisance<br>
-                    Bédarrides<br>
-                    84370 Vaucluse, France
-                </p>
-            </div>
-            <div class="cote">
-                <p class="cote__libelle">Pour venir</p>
-                <p class="cote__valeur">
-                    Gare TGV d'Avignon à 15&nbsp;minutes.<br>
-                    Aéroport Marseille-Provence à 1&nbsp;heure.<br>
-                    Sortie A7 Bédarrides.
-                </p>
-            </div>
-            <?php
-            $socialLinks = [];
-            try { $socialLinks = Database::fetchAll("SELECT * FROM vp_social_links ORDER BY position ASC"); } catch (\Throwable) {}
-            ?>
-            <?php if ($socialLinks): ?>
-            <div class="cote">
-                <p class="cote__libelle">Réseaux</p>
-                <p class="cote__valeur">
-                    <?php foreach ($socialLinks as $i => $sl): ?>
-                        <?php if ($i > 0): ?> · <?php endif; ?>
-                        <a href="<?= htmlspecialchars($sl['url']) ?>" rel="me" target="_blank" rel="noopener noreferrer"><?= htmlspecialchars($sl['name']) ?></a>
-                    <?php endforeach; ?>
-                </p>
-            </div>
-            <?php endif; ?>
-        </aside>
-
+<section class="strip" aria-label="Coordonnées">
+    <div>
+        <span class="k">— Adresse</span>
+        <p class="v">Bédarrides 84370</p>
+        <p class="det">Vaucluse, Provence &middot; entre Avignon et Orange</p>
+    </div>
+    <div>
+        <span class="k">— Email</span>
+        <p class="v">Direct</p>
+        <p class="det"><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
+    </div>
+    <div>
+        <span class="k">— Langues</span>
+        <p class="v">FR · EN · ES · DE</p>
+        <p class="det">Jorge répond personnellement à chaque message.</p>
     </div>
 </section>
