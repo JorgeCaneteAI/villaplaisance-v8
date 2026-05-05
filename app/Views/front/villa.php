@@ -1,215 +1,234 @@
 <?php
-// Villa entière V8 — porté du V2 (`location-villa-provence/index.html`).
-// Variables : $seo, $jsonLd, $lang.
-// À dynamiser : Acte 4 (FAQ) → vp_faq WHERE page_slug='location-villa-provence'.
+/**
+ * Villa entière V9 — esprit weeks-off.com (Sprint 2, 2026-05-05).
+ *
+ * Variables disponibles depuis VillaController :
+ *   $seo, $jsonLd, $lang
+ *   $faqs              array<{question,answer}>
+ *   $featuredReviews   array<{author,origin,content,platform,offer,rating}>
+ *
+ * Slug conservé : /location-villa-provence (SEO).
+ * Titre affiché V9 : "L'offre juillet – août · La Villa en exclusivité".
+ */
 ?>
 
-<!-- Acte 0 : opening compact -->
-<section class="opening opening--compact" aria-labelledby="opening-title">
-    <figure class="opening__plate plate__ph plate--ph-opening">
-        <img src="/assets/img/v8/villa-plaisance-piscine-privee-09.webp"
-             alt="Vue surélevée du jardin de Villa Plaisance : palmier au premier plan, piscine et transats au centre, cyprès à l'horizon."
+<!-- Hero -->
+<section class="hero" aria-label="Vue piscine privée Villa Plaisance">
+    <div class="hero__photo">
+        <img src="/uploads/villa-plaisance-piscine-privee-09.webp"
+             alt="Vue surélevée du jardin de Villa Plaisance : palmier, piscine et transats au centre, cyprès à l'horizon."
              fetchpriority="high" decoding="async">
-    </figure>
-    <div class="opening__copy">
-        <p class="opening__eyebrow">Bédarrides, Provence</p>
-        <h1 class="opening__title opening__title--compact" id="opening-title">La Villa en exclusivité</h1>
-        <p class="opening__sub">Quatre chambres, juillet et août.</p>
+    </div>
+    <div class="hero__caption">
+        <span class="lbl">Villa Plaisance, vue jardin et piscine privée</span>
+        <span class="meta">juillet &amp; août</span>
     </div>
 </section>
 
-<!-- Acte 1 : lead intro -->
-<section class="lead" aria-labelledby="lead-title">
-    <h2 class="acte__num" id="lead-title"><span>I.</span> Toute la maison pour vous</h2>
-    <p class="lead__corps">
-        En juillet et août, Villa Plaisance se loue en exclusivité.
-        Quatre chambres, une piscine privée clôturée de 12 mètres sur 6,
-        une cuisine entièrement équipée, un jardin provençal. Jusqu'à dix
-        personnes.
-        <span class="lead__chute">La gestion est autonome, les clés sont à vous.</span>
-    </p>
+<!-- Identité -->
+<section class="identite identite--compact">
+    <div class="eyebrow">L'offre juillet &ndash; août</div>
+    <h1>La Villa en exclusivité</h1>
+    <p class="baseline">Quatre chambres, juillet et août.</p>
 </section>
 
-<!-- Acte 2 : les quatre chambres en grille 2×2 -->
-<section class="quatre" aria-labelledby="quatre-title">
-    <h2 class="acte__num" id="quatre-title"><span>II.</span> Les quatre chambres</h2>
+<!-- Acte I — Lead -->
+<section class="lead-section">
+    <div class="lead-section__inner">
+        <div class="lead-section__num">I.</div>
+        <div>
+            <h2>Toute la maison pour vous</h2>
+            <p>
+                En juillet et août, Villa Plaisance se loue en exclusivité.
+                Quatre chambres, une piscine privée clôturée de 12 mètres sur 6,
+                une cuisine entièrement équipée, un jardin provençal. Jusqu'à dix
+                personnes.
+            </p>
+            <p class="lead-section__chute">La gestion est autonome, les clés sont à vous.</p>
+        </div>
+    </div>
+</section>
 
-    <div class="quatre__grille">
+<!-- Strip 3 colonnes -->
+<section class="strip" aria-label="En un coup d'œil">
+    <div>
+        <span class="k">— Capacité</span>
+        <p class="v">Jusqu'à 10 personnes</p>
+        <p class="det">4 chambres &middot; couchages détaillés ci-dessous</p>
+    </div>
+    <div>
+        <span class="k">— Piscine</span>
+        <p class="v">Privée, 12 × 6 m</p>
+        <p class="det">Clôturée et sécurisée &middot; transats, parasols, douche extérieure</p>
+    </div>
+    <div>
+        <span class="k">— Réserver</span>
+        <p class="v">Écrire à Jorge</p>
+        <p class="det"><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a><br>Semaine du samedi au samedi</p>
+    </div>
+</section>
+
+<!-- Acte II — Les 4 chambres en grille 2×2 -->
+<section class="cellules">
+    <div class="cellules__head">
+        <span class="cellules__num">II.</span>
+        <h2>Les quatre chambres</h2>
+    </div>
+    <div class="cellules__grid">
 
         <article class="cellule" id="verte">
-            <figure class="cellule__plate plate__ph plate--ph-chambres">
-                <img src="/assets/img/v8/villa-plaisance-chambre-verte-04.webp"
+            <div class="cellule__photo">
+                <img src="/uploads/villa-plaisance-chambre-verte-04.webp"
                      alt="Chambre Verte : grand lit, mur vert profond, lumière naturelle latérale."
                      loading="lazy" decoding="async">
-            </figure>
-            <div class="cellule__corps">
-                <p class="cellule__numero">1<span>/4</span></p>
-                <h3 class="cellule__titre">La Verte</h3>
-                <p class="cellule__sous">Grand lit, vue jardin · Rez-de-chaussée</p>
-                <p class="cellule__texte">
-                    Lit 160×200, vue sur le jardin et les oliviers.
-                    Climatisation réversible, TV.
-                </p>
             </div>
+            <p class="cellule__numero"><strong>1</strong> / 4</p>
+            <h3 class="cellule__titre">La Verte</h3>
+            <p class="cellule__sous">Grand lit &middot; vue jardin &middot; rez-de-chaussée</p>
+            <p class="cellule__texte">
+                Lit 160×200, vue sur le jardin et les oliviers. Climatisation réversible, TV.
+            </p>
         </article>
 
         <article class="cellule" id="bleue">
-            <figure class="cellule__plate plate__ph plate--ph-villa">
-                <img src="/assets/img/v8/villa-plaisance-chambre-bleue-04.webp"
+            <div class="cellule__photo">
+                <img src="/uploads/villa-plaisance-chambre-bleue-04.webp"
                      alt="Chambre Bleue : deux lits jumelables, mur gris-bleu, voilages aux fenêtres."
                      loading="lazy" decoding="async">
-            </figure>
-            <div class="cellule__corps">
-                <p class="cellule__numero">2<span>/4</span></p>
-                <h3 class="cellule__titre">La Bleue</h3>
-                <p class="cellule__sous">Bibliothèque 300 livres · 2-3 personnes</p>
-                <p class="cellule__texte">
-                    Deux lits 90×200 jumelables, clic-clac, bibliothèque
-                    de 300 livres. Climatisation réversible.
-                </p>
             </div>
+            <p class="cellule__numero"><strong>2</strong> / 4</p>
+            <h3 class="cellule__titre">La Bleue</h3>
+            <p class="cellule__sous">Bibliothèque 300 livres &middot; 2 à 3 personnes</p>
+            <p class="cellule__texte">
+                Deux lits 90×200 jumelables, clic-clac, bibliothèque de 300 livres. Climatisation réversible.
+            </p>
         </article>
 
         <article class="cellule" id="arche">
-            <figure class="cellule__plate plate__ph plate--ph-identite">
-                <img src="/assets/img/v8/villa-plaisance-chambre-arche-01.webp"
-                     alt="Chambre Arche : grande arche peinte en bleu nuit derrière le lit, bibliothèques sol-plafond de chaque côté."
+            <div class="cellule__photo">
+                <img src="/uploads/villa-plaisance-chambre-arche-01.webp"
+                     alt="Chambre Arche : grande arche peinte en bleu nuit derrière le lit, bibliothèques sol-plafond."
                      loading="lazy" decoding="async">
-            </figure>
-            <div class="cellule__corps">
-                <p class="cellule__numero">3<span>/4</span></p>
-                <h3 class="cellule__titre">L'Arche</h3>
-                <p class="cellule__sous">Arche bleue nuit · Accès direct jardin</p>
-                <p class="cellule__texte">
-                    Lit 140×180 sous une grande arche peinte en bleu nuit.
-                    Bibliothèques sol-plafond. Au rez-de-chaussée.
-                </p>
             </div>
+            <p class="cellule__numero"><strong>3</strong> / 4</p>
+            <h3 class="cellule__titre">L'Arche</h3>
+            <p class="cellule__sous">Arche bleu nuit &middot; accès direct jardin</p>
+            <p class="cellule__texte">
+                Lit 140×180 sous une grande arche peinte en bleu nuit. Bibliothèques sol-plafond. Au rez-de-chaussée.
+            </p>
         </article>
 
         <article class="cellule" id="annees-70">
-            <figure class="cellule__plate plate__ph plate--ph-interlude">
-                <img src="/assets/img/v8/villa-plaisance-chambre-annees-70-05.webp"
+            <div class="cellule__photo">
+                <img src="/uploads/villa-plaisance-chambre-annees-70-05.webp"
                      alt="Chambre 70 : mobilier vintage années 70, porte-fenêtre ouverte sur palmier et jardin."
                      loading="lazy" decoding="async">
-            </figure>
-            <div class="cellule__corps">
-                <p class="cellule__numero">4<span>/4</span></p>
-                <h3 class="cellule__titre">La 70</h3>
-                <p class="cellule__sous">Mobilier vintage · Accès direct jardin</p>
-                <p class="cellule__texte">
-                    Grand lit double, mobilier chiné des années 70.
-                    Porte-fenêtre ouvrant sur le jardin. La plus atypique.
-                </p>
             </div>
+            <p class="cellule__numero"><strong>4</strong> / 4</p>
+            <h3 class="cellule__titre">La 70</h3>
+            <p class="cellule__sous">Mobilier vintage &middot; accès direct jardin</p>
+            <p class="cellule__texte">
+                Grand lit double, mobilier chiné des années 70. Porte-fenêtre ouvrant sur le jardin. La plus atypique.
+            </p>
         </article>
 
     </div>
 </section>
 
-<!-- Acte 3 : piscine privée -->
-<section class="rituel" aria-labelledby="rituel-title">
-    <h2 class="acte__num" id="rituel-title"><span>III.</span> Piscine privée</h2>
-    <div class="rituel__grille rituel__grille--miroir">
-        <p class="rituel__corps">
-            <em>
-                Piscine privée de 12 mètres sur 6, clôturée et sécurisée.
-                Ouverte de mi-mai à fin septembre. Transats, parasols,
-                douche extérieure.
-            </em>
-            <span class="rituel__chute">Réservée exclusivement aux locataires de la villa.</span>
-        </p>
-        <figure class="rituel__plate plate__ph plate--ph-opening">
-            <img src="/assets/img/v8/villa-plaisance-piscine-privee-04.webp"
+<!-- Acte III — Piscine privée -->
+<article class="chapter chapter--reverse">
+    <div class="chapter__inner">
+        <div class="chapter__photo">
+            <img src="/uploads/villa-plaisance-piscine-privee-04.webp"
                  alt="Piscine privée Villa Plaisance : eau cristalline, transats avec parasol, cyprès en arrière-plan."
                  loading="lazy" decoding="async">
+        </div>
+        <div class="chapter__text">
+            <span class="eyebrow">III. La piscine privée</span>
+            <h2>Réservée à votre groupe</h2>
+            <p>
+                Piscine privée de 12 mètres sur 6, clôturée et sécurisée. Ouverte
+                de mi-mai à fin septembre. Transats, parasols, douche extérieure.
+            </p>
+            <p class="pull">Réservée exclusivement aux locataires de la villa.</p>
+        </div>
+    </div>
+</article>
+
+<!-- Interlude photo -->
+<section class="interlude" aria-label="Vue extérieure Villa Plaisance">
+    <div class="interlude__photo">
+        <img src="/uploads/villa-plaisance-jardin-exterieur-05.webp"
+             alt="Vue du jardin Villa Plaisance, espace de vie en extérieur sous lumière de soir."
+             loading="lazy" decoding="async">
+    </div>
+    <p class="interlude__caption"><em>Le jardin, à l'heure du dîner.</em></p>
+</section>
+
+<!-- Acte IV — Voix d'hôtes (Villa) -->
+<?php if (!empty($featuredReviews)): ?>
+<section class="voix">
+    <div class="voix__head">
+        <div class="eyebrow"><span class="num">IV.</span>Hôtes de la villa</div>
+        <h2>Ce qu'on en dit</h2>
+    </div>
+    <div class="voix__grid <?= count($featuredReviews) === 4 ? 'voix__grid--4' : '' ?>">
+        <?php foreach ($featuredReviews as $r): ?>
+        <figure class="voix__bloc">
+            <blockquote>« <?= htmlspecialchars((string)$r['content']) ?> »</blockquote>
+            <figcaption>
+                <?= htmlspecialchars((string)$r['author']) ?>
+                <?php if (!empty($r['origin'])): ?> &middot; <?= htmlspecialchars((string)$r['origin']) ?><?php endif; ?>
+                &middot; Villa entière
+            </figcaption>
         </figure>
+        <?php endforeach; ?>
     </div>
 </section>
+<?php endif; ?>
 
-<!-- Acte 4 : FAQ accordéon — TODO : brancher sur vp_faq WHERE page_slug='location-villa-provence' -->
-<section class="reponses" aria-labelledby="reponses-title">
-    <h2 class="acte__num" id="reponses-title"><span>IV.</span> Réponses</h2>
-
-    <div class="qa-list">
-        <details class="qa-item" open>
-            <summary>Combien de personnes la villa peut-elle accueillir&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    La villa accueille jusqu'à 10 personnes réparties dans
-                    4 chambres&nbsp;: Chambre Verte, Chambre Bleue, Chambre Arche
-                    et Chambre 70.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>La piscine est-elle privée en location villa&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, en juillet et août, la piscine de 12 mètres sur 6
-                    est entièrement privée et réservée aux locataires.
-                    Elle est clôturée et sécurisée.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>La cuisine est-elle équipée&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, la cuisine est entièrement équipée&nbsp;: four, plaques,
-                    lave-vaisselle, micro-ondes, réfrigérateur, ustensiles de
-                    cuisine et vaisselle pour 10 personnes.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Le linge de maison est-il fourni&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, les draps, serviettes de bain et serviettes de piscine
-                    sont fournis et changés chaque semaine.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Quelle est la durée minimum de location&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    En haute saison (juillet-août), la durée minimum est
-                    d'une semaine, du samedi au samedi.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Y a-t-il des commerces à proximité&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, Bédarrides dispose de boulangeries, supérette,
-                    restaurants et pharmacie. Le supermarché le plus proche
-                    est à Sorgues, à 5 minutes en voiture.
-                </p>
-            </div>
-        </details>
+<!-- Acte V — FAQ -->
+<section class="faq">
+    <div class="faq__head">
+        <span class="faq__num">V.</span>
+        <h2>Réponses</h2>
     </div>
+    <dl class="faq__list">
+        <?php if (!empty($faqs)): ?>
+            <?php foreach ($faqs as $q): ?>
+            <div class="faq__item">
+                <dt><?= htmlspecialchars((string)$q['question']) ?></dt>
+                <dd><?= nl2br(htmlspecialchars((string)$q['answer'])) ?></dd>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="faq__item">
+                <dt>Combien de personnes la villa peut-elle accueillir ?</dt>
+                <dd>La villa entière accueille jusqu'à 10 personnes réparties dans 4 chambres : Verte, Bleue, Arche et 70.</dd>
+            </div>
+            <div class="faq__item">
+                <dt>La piscine est-elle privée en location villa ?</dt>
+                <dd>Oui, en juillet et août, la piscine de 12 mètres sur 6 est entièrement privée et réservée aux locataires. Elle est clôturée et sécurisée.</dd>
+            </div>
+            <div class="faq__item">
+                <dt>Quelle est la durée minimum de location ?</dt>
+                <dd>En haute saison (juillet-août), la durée minimum est d'une semaine, du samedi au samedi.</dd>
+            </div>
+        <?php endif; ?>
+    </dl>
 </section>
 
-<!-- Acte 5 : contact -->
-<section class="contact" id="contact" aria-labelledby="contact-title">
-    <h2 class="acte__num" id="contact-title"><span>V.</span> Écrire</h2>
-    <p class="contact__phrase">Envie de séjourner chez nous&nbsp;?</p>
-    <p class="contact__sub">Contactez-nous pour organiser votre séjour en Provence.</p>
-    <div class="contact__actions">
-        <a class="contact__bouton" href="<?= LangService::url('contact') ?>">
+<!-- Acte VI — Écrire -->
+<section class="ecrire" id="contact">
+    <div class="ecrire__num">VI.</div>
+    <h2>Écrire</h2>
+    <p>Envie de séjourner chez nous ?</p>
+    <p class="sub">Contactez-nous pour organiser votre séjour en Provence.</p>
+    <div class="actions">
+        <a href="<?= LangService::url('contact') ?>" class="pill pill--solid pill--big">
             Nous écrire
-            <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
         </a>
-        <p class="contact__alt">
-            Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-        </p>
+        <p class="alt">Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
     </div>
 </section>

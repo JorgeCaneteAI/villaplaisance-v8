@@ -1,189 +1,222 @@
 <?php
-// Chambres d'hôtes V8 — porté du V2 (`chambres-d-hotes/index.html`).
-// Variables : $seo, $jsonLd, $lang.
-// À dynamiser plus tard : Acte 4 (FAQ) → vp_faq WHERE page_slug='chambres-d-hotes'.
+/**
+ * Chambres d'hôtes V9 — esprit weeks-off.com (Sprint 2, 2026-05-05).
+ *
+ * Variables disponibles depuis ChambresController :
+ *   $seo, $jsonLd, $lang
+ *   $faqs              array<{question,answer}>
+ *   $featuredReviews   array<{author,origin,content,platform,offer,rating}>
+ *
+ * Slug conservé : /chambres-d-hotes (SEO).
+ * Titre affiché V9 : "L'offre sept – juin · Chambres d'hôtes".
+ */
 ?>
 
-<!-- Acte 0 : opening compact -->
-<section class="opening opening--compact" aria-labelledby="opening-title">
-    <figure class="opening__plate plate__ph plate--ph-opening">
-        <img src="/assets/img/v8/villa-plaisance-petit-dejeuner-fruits-01.webp"
-             alt="Assiette de fruits frais en vue plongeante : pomme, fraises, melon, sur un set de table coloré, couverts argentés."
+<!-- Hero -->
+<section class="hero" aria-label="Petit-déjeuner Villa Plaisance">
+    <div class="hero__photo">
+        <img src="/uploads/villa-plaisance-petit-dejeuner-fruits-01.webp"
+             alt="Assiette de fruits frais : pomme, fraises, melon, sur un set coloré, couverts argentés."
              fetchpriority="high" decoding="async">
-    </figure>
-    <div class="opening__copy">
-        <p class="opening__eyebrow">Bédarrides, Provence</p>
-        <h1 class="opening__title opening__title--compact" id="opening-title">Chambres d'hôtes</h1>
-        <p class="opening__sub">Deux chambres, de septembre à juin.</p>
+    </div>
+    <div class="hero__caption">
+        <span class="lbl">Petit-déjeuner Villa Plaisance, table dressée en terrasse</span>
+        <span class="meta">de septembre à juin</span>
     </div>
 </section>
 
-<!-- Acte 1 : lead intro -->
-<section class="lead" aria-labelledby="lead-title">
-    <h2 class="acte__num" id="lead-title"><span>I.</span> Séjourner en chambres d'hôtes</h2>
-    <p class="lead__corps">
-        De septembre à juin, Villa Plaisance ouvre deux chambres aux voyageurs.
-        Le petit-déjeuner est préparé chaque matin avec des produits locaux.
-        La piscine est partagée avec les hôtes.
-        <span class="lead__chute">L'accueil est personnel, les conseils aussi.</span>
-    </p>
+<!-- Identité -->
+<section class="identite identite--compact">
+    <div class="eyebrow">L'offre sept &ndash; juin</div>
+    <h1>Chambres d'hôtes</h1>
+    <p class="baseline">Deux chambres, de septembre à juin.</p>
 </section>
 
-<!-- Acte 2 : les deux chambres -->
-<section class="chambres" aria-labelledby="chambres-title">
-    <h2 class="acte__num" id="chambres-title"><span>II.</span> Les deux chambres</h2>
+<!-- Acte I — Lead -->
+<section class="lead-section">
+    <div class="lead-section__inner">
+        <div class="lead-section__num">I.</div>
+        <div>
+            <h2>Séjourner en chambres d'hôtes</h2>
+            <p>
+                De septembre à juin, Villa Plaisance ouvre deux chambres aux voyageurs.
+                Le petit-déjeuner est préparé chaque matin avec des produits locaux.
+                La piscine est partagée avec les hôtes.
+            </p>
+            <p class="lead-section__chute">L'accueil est personnel, les conseils aussi.</p>
+        </div>
+    </div>
+</section>
 
-    <article class="chambre chambre--verte" id="verte">
-        <figure class="chambre__plate plate__ph plate--ph-chambres">
-            <img src="/assets/img/v8/villa-plaisance-chambre-verte-03.webp"
-                 alt="Chambre Verte : grand lit 160 contre un mur vert profond, lampes murales chaudes, couvre-lit jaune en accent."
+<!-- Strip 3 colonnes -->
+<section class="strip" aria-label="En un coup d'œil">
+    <div>
+        <span class="k">— Chambres</span>
+        <p class="v">2 (Verte &amp; Bleue)</p>
+        <p class="det">Climatisation réversible &middot; Wifi &middot; salles d'eau privatives</p>
+    </div>
+    <div>
+        <span class="k">— Petit-déjeuner</span>
+        <p class="v">Maison, inclus</p>
+        <p class="det">Confitures maison, fruits frais, pain de boulanger, fromages et charcuteries du terroir</p>
+    </div>
+    <div>
+        <span class="k">— Réserver</span>
+        <p class="v">Écrire à Jorge</p>
+        <p class="det"><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a><br>FR &middot; EN &middot; ES &middot; DE</p>
+    </div>
+</section>
+
+<!-- Acte II — Les deux chambres en chapitres -->
+<section class="manifesto" style="border-top:none">
+    <div class="manifesto__inner">
+        <div class="manifesto__num">II.</div>
+        <h2>Les deux chambres</h2>
+    </div>
+</section>
+
+<article class="chapter" id="verte">
+    <div class="chapter__inner">
+        <div class="chapter__photo">
+            <img src="/uploads/villa-plaisance-chambre-verte-03.webp"
+                 alt="Chambre Verte : grand lit 160 contre un mur vert profond, lampes murales chaudes, couvre-lit jaune."
                  loading="lazy" decoding="async">
-        </figure>
-        <div class="chambre__corps">
-            <p class="chambre__numero">1<span>chambre</span></p>
-            <h3 class="chambre__titre">La Chambre Verte</h3>
-            <p class="chambre__sous">Grand lit, vue jardin</p>
-            <p class="chambre__texte">
+        </div>
+        <div class="chapter__text">
+            <span class="eyebrow">Chambre 1 sur 2</span>
+            <h2>La Chambre Verte</h2>
+            <p>
                 Chambre lumineuse avec un grand lit 160×200, donnant sur le jardin
                 et les oliviers. Espace cocooning, sobriété et calme.
             </p>
-            <dl class="chambre__faits">
+            <dl class="chapter__facts">
                 <div><dt>Lit</dt><dd>160 × 200</dd></div>
                 <div><dt>Vue</dt><dd>Jardin</dd></div>
                 <div><dt>Position</dt><dd>Rez-de-chaussée</dd></div>
-                <div><dt>Confort</dt><dd>Climatisation, TV, Wifi</dd></div>
             </dl>
         </div>
-    </article>
+    </div>
+</article>
 
-    <article class="chambre chambre--bleue chambre--miroir" id="bleue">
-        <figure class="chambre__plate plate__ph plate--ph-villa">
-            <img src="/assets/img/v8/villa-plaisance-chambre-bleue-01.webp"
-                 alt="Chambre Bleue : deux lits jumelables, mur gris-bleu, fauteuil rouge en accent, fenêtres à voilages, clic-clac au fond."
+<article class="chapter chapter--reverse" id="bleue">
+    <div class="chapter__inner">
+        <div class="chapter__photo">
+            <img src="/uploads/villa-plaisance-chambre-bleue-01.webp"
+                 alt="Chambre Bleue : deux lits jumelables, mur gris-bleu, fauteuil rouge, voilages, clic-clac au fond."
                  loading="lazy" decoding="async">
-        </figure>
-        <div class="chambre__corps">
-            <p class="chambre__numero">2<span>chambre</span></p>
-            <h3 class="chambre__titre">La Chambre Bleue</h3>
-            <p class="chambre__sous">Bibliothèque, idéale famille</p>
-            <p class="chambre__texte">
+        </div>
+        <div class="chapter__text">
+            <span class="eyebrow">Chambre 2 sur 2</span>
+            <h2>La Chambre Bleue</h2>
+            <p>
                 Deux lits 90×200 jumelables en grand lit 180. Un clic-clac pour
                 une troisième personne. Une bibliothèque de 300 livres. La chambre
                 des lecteurs et des familles.
             </p>
-            <dl class="chambre__faits">
-                <div><dt>Lits</dt><dd>2 × 90 (jumelables 180)</dd></div>
-                <div><dt>Couchage +</dt><dd>Clic-clac (1 personne)</dd></div>
+            <dl class="chapter__facts">
+                <div><dt>Lits</dt><dd>2 × 90 jumelables</dd></div>
+                <div><dt>Couchage +</dt><dd>Clic-clac (1 pers.)</dd></div>
                 <div><dt>Bibliothèque</dt><dd>300 livres</dd></div>
-                <div><dt>Confort</dt><dd>Climatisation, Wifi</dd></div>
             </dl>
         </div>
-    </article>
-</section>
+    </div>
+</article>
 
-<!-- Acte 3 : petit-déjeuner -->
-<section class="rituel" aria-labelledby="rituel-title">
-    <h2 class="acte__num" id="rituel-title"><span>III.</span> Le petit-déjeuner</h2>
-    <div class="rituel__grille">
-        <figure class="rituel__plate plate__ph plate--ph-identite">
-            <img src="/assets/img/v8/villa-plaisance-petit-dejeuner-confitures-01.webp"
+<!-- Acte III — Le petit-déjeuner -->
+<article class="chapter">
+    <div class="chapter__inner">
+        <div class="chapter__photo">
+            <img src="/uploads/villa-plaisance-petit-dejeuner-confitures-01.webp"
                  alt="Brioche dorée au sucre perlé en gros plan, table dressée du petit-déjeuner en arrière-plan flou."
                  loading="lazy" decoding="async">
-        </figure>
-        <p class="rituel__corps">
-            <em>
+        </div>
+        <div class="chapter__text">
+            <span class="eyebrow">III. Le petit-déjeuner</span>
+            <h2>Chaque matin, les saisons</h2>
+            <p>
                 Chaque matin, le petit-déjeuner est préparé avec des produits
                 locaux et de saison. Confitures maison, fruits frais, pain de
                 boulanger, fromages et charcuteries du terroir.
-            </em>
-            <span class="rituel__chute">Servi en terrasse quand le temps le permet.</span>
-        </p>
+            </p>
+            <p class="pull">Servi en terrasse quand le temps le permet.</p>
+        </div>
     </div>
+</article>
+
+<!-- Interlude photo -->
+<section class="interlude" aria-label="Vue jardin Villa Plaisance">
+    <div class="interlude__photo">
+        <img src="/uploads/villa-plaisance-jardin-exterieur-08.webp"
+             alt="Vue du jardin Villa Plaisance, oliviers et chaises de jardin sous lumière douce."
+             loading="lazy" decoding="async">
+    </div>
+    <p class="interlude__caption"><em>Le jardin sous les oliviers, en fin d'après-midi.</em></p>
 </section>
 
-<!-- Acte 4 : FAQ accordéon — TODO : brancher sur vp_faq WHERE page_slug='chambres-d-hotes' -->
-<section class="reponses" aria-labelledby="reponses-title">
-    <h2 class="acte__num" id="reponses-title"><span>IV.</span> Réponses</h2>
-
-    <div class="qa-list">
-        <details class="qa-item" open>
-            <summary>Le petit-déjeuner est-il inclus&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, le petit-déjeuner est inclus et préparé chaque matin avec
-                    des produits locaux et de saison&nbsp;: confitures maison, fruits
-                    frais, pain de boulanger, fromages et charcuteries du terroir.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Les chambres sont-elles climatisées&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, les deux chambres (Verte et Bleue) sont équipées de
-                    climatisation réversible et du wifi gratuit.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Peut-on accueillir des enfants en chambres d'hôtes&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, la Chambre Bleue dispose d'un clic-clac pouvant accueillir
-                    une personne supplémentaire, ce qui en fait une chambre idéale
-                    pour les familles.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>À quelle période les chambres d'hôtes sont-elles disponibles&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Les chambres d'hôtes sont ouvertes de septembre à juin.
-                    En juillet et août, la villa se loue en exclusivité.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Comment se rendre à Villa Plaisance&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Bédarrides est accessible en voiture (autoroute A7), en TGV
-                    (gare d'Avignon TGV à 15 minutes) ou via l'aéroport de
-                    Marseille-Provence (1h). Nous pouvons vous fournir les
-                    indications détaillées.
-                </p>
-            </div>
-        </details>
-
-        <details class="qa-item">
-            <summary>Y a-t-il un parking&nbsp;?</summary>
-            <div class="qa-item__corps">
-                <p>
-                    Oui, un parking privé gratuit est disponible sur place pour
-                    tous les hôtes.
-                </p>
-            </div>
-        </details>
+<!-- Acte IV — Voix d'hôtes (B&B) -->
+<?php if (!empty($featuredReviews)): ?>
+<section class="voix">
+    <div class="voix__head">
+        <div class="eyebrow"><span class="num">IV.</span>Hôtes des chambres</div>
+        <h2>Ce qu'on en dit</h2>
+    </div>
+    <div class="voix__grid <?= count($featuredReviews) === 4 ? 'voix__grid--4' : '' ?>">
+        <?php foreach ($featuredReviews as $r): ?>
+        <figure class="voix__bloc">
+            <blockquote>« <?= htmlspecialchars((string)$r['content']) ?> »</blockquote>
+            <figcaption>
+                <?= htmlspecialchars((string)$r['author']) ?>
+                <?php if (!empty($r['origin'])): ?> &middot; <?= htmlspecialchars((string)$r['origin']) ?><?php endif; ?>
+                &middot; Chambres d'hôtes
+            </figcaption>
+        </figure>
+        <?php endforeach; ?>
     </div>
 </section>
+<?php endif; ?>
 
-<!-- Acte 5 : contact -->
-<section class="contact" id="contact" aria-labelledby="contact-title">
-    <h2 class="acte__num" id="contact-title"><span>V.</span> Écrire</h2>
-    <p class="contact__phrase">Envie de séjourner chez nous&nbsp;?</p>
-    <p class="contact__sub">Contactez-nous pour organiser votre séjour en Provence.</p>
-    <div class="contact__actions">
-        <a class="contact__bouton" href="<?= LangService::url('contact') ?>">
+<!-- Acte V — FAQ -->
+<section class="faq">
+    <div class="faq__head">
+        <span class="faq__num">V.</span>
+        <h2>Réponses</h2>
+    </div>
+    <dl class="faq__list">
+        <?php if (!empty($faqs)): ?>
+            <?php foreach ($faqs as $q): ?>
+            <div class="faq__item">
+                <dt><?= htmlspecialchars((string)$q['question']) ?></dt>
+                <dd><?= nl2br(htmlspecialchars((string)$q['answer'])) ?></dd>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="faq__item">
+                <dt>Le petit-déjeuner est-il inclus ?</dt>
+                <dd>Oui, le petit-déjeuner maison est inclus dans le tarif chambres d'hôtes. Il est servi de 7h30 à 10h en terrasse selon la saison.</dd>
+            </div>
+            <div class="faq__item">
+                <dt>Les chambres sont-elles climatisées ?</dt>
+                <dd>Oui, les deux chambres (Verte et Bleue) sont équipées de climatisation réversible et du wifi gratuit.</dd>
+            </div>
+            <div class="faq__item">
+                <dt>À quelle période les chambres d'hôtes sont-elles disponibles ?</dt>
+                <dd>Les chambres d'hôtes sont ouvertes de septembre à juin. En juillet et août, la villa se loue en exclusivité.</dd>
+            </div>
+        <?php endif; ?>
+    </dl>
+</section>
+
+<!-- Acte VI — Écrire -->
+<section class="ecrire" id="contact">
+    <div class="ecrire__num">VI.</div>
+    <h2>Écrire</h2>
+    <p>Envie de séjourner chez nous ?</p>
+    <p class="sub">Contactez-nous pour organiser votre séjour en Provence.</p>
+    <div class="actions">
+        <a href="<?= LangService::url('contact') ?>" class="pill pill--solid pill--big">
             Nous écrire
-            <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
         </a>
-        <p class="contact__alt">
-            Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-        </p>
+        <p class="alt">Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
     </div>
 </section>

@@ -26,7 +26,7 @@ class VillaController extends BaseController
         $faqs = [];
         try {
             $faqs = \Database::fetchAll(
-                "SELECT question, answer FROM vp_faq WHERE page_slug = 'location-villa-provence' AND lang = ? AND active = 1",
+                "SELECT question, answer FROM vp_faq WHERE page_slug = 'location-villa-provence' AND lang = ? AND active = 1 ORDER BY position",
                 [$lang]
             );
         } catch (\Throwable) {}
@@ -34,6 +34,17 @@ class VillaController extends BaseController
             $jsonLd[] = \SeoService::faqJsonLd($faqs);
         }
 
-        $this->render('front/villa', compact('seo', 'jsonLd', 'lang'));
+        $featuredReviews = [];
+        try {
+            $featuredReviews = \Database::fetchAll(
+                "SELECT author, origin, content, platform, offer, rating
+                 FROM vp_reviews
+                 WHERE status = 'published' AND offer IN ('villa', 'both') AND home_carousel = 1
+                 ORDER BY review_date DESC
+                 LIMIT 4"
+            );
+        } catch (\Throwable) {}
+
+        $this->render('front/villa', compact('seo', 'jsonLd', 'lang', 'faqs', 'featuredReviews'));
     }
 }
