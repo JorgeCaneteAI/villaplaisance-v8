@@ -1,282 +1,349 @@
 <?php
-// Home V8 — portage du V2 (`villaplaisance-impeccable-V2/index.html`).
-//
-// Variables disponibles depuis HomeController : $seo, $jsonLd, $lang.
-//
-// Le contenu textuel est porté en dur du V2 (statique, version FR de
-// référence). Les sections suivantes restent à dynamiser via la DB :
-//   - Acte 5 (voix) : à brancher sur vp_reviews (filtre featured = 1)
-//   - Acte 6 (journal) : à brancher sur vp_articles (3 derniers)
-//   - Acte 7 (FAQ) : à brancher sur vp_faq WHERE page_slug='accueil'
-//   - Mappemonde (main-v8.js) : à brancher sur vp_reviews.location
+/**
+ * Home V9 — esprit weeks-off.com (Sprint 1, 2026-05-05).
+ *
+ * Variables disponibles depuis HomeController :
+ *   $seo, $jsonLd, $lang
+ *   $faqs              array<{question,answer}>
+ *   $recentArticles    array<{slug,title,excerpt,category,cover_image,published_at}>
+ *   $featuredReviews   array<{author,origin,content,platform,offer,rating}>
+ *   $guestOriginsCount int
+ *
+ * Tous les bouts de copy statiques restent en clair ici (ton "weeks-off-like"
+ * éditorial) — Jorge ajustera les phrases plus tard. Les sections branchées
+ * sur la DB ont un fallback statique si la table renvoie vide.
+ */
+
+$frenchMonths = [
+    1=>'janv.',2=>'févr.',3=>'mars',4=>'avr.',5=>'mai',6=>'juin',
+    7=>'juil.',8=>'août',9=>'sept.',10=>'oct.',11=>'nov.',12=>'déc.',
+];
+$fmtArticleDate = function (?string $iso) use ($frenchMonths): string {
+    if (!$iso) return '';
+    $t = strtotime($iso);
+    if (!$t) return '';
+    return (int)date('j', $t) . ' ' . $frenchMonths[(int)date('n', $t)] . ' ' . date('Y', $t);
+};
+$originsCount = max(21, (int)($guestOriginsCount ?? 0));
 ?>
 
-<!-- Acte 0 : opening cinematic -->
-<section class="opening" aria-labelledby="opening-title">
-    <figure class="opening__plate plate__ph plate--ph-opening">
-        <img src="/assets/img/v8/villa-plaisance-piscine-privee-02.webp"
-             alt="Villa Plaisance vue depuis la piscine, façade blanche derrière la haie, palmier et ciel de Provence."
+<!-- Hero -->
+<section class="hero" aria-label="Vue de la maison">
+    <div class="hero__photo">
+        <img src="/uploads/villa-plaisance-facade-04.webp"
+             alt="Façade de Villa Plaisance avec son palmier, jardin de pierre, lumière de mi-journée."
              fetchpriority="high" decoding="async">
-    </figure>
-    <div class="opening__copy">
-        <p class="opening__eyebrow">Bédarrides, Provence</p>
-        <h1 class="opening__title" id="opening-title">Villa Plaisance</h1>
-        <p class="opening__sub">Chambres d'hôtes et villa de charme à Bédarrides</p>
     </div>
-    <p class="opening__hint" aria-hidden="true">défiler</p>
+    <div class="hero__caption">
+        <span class="lbl">Villa Plaisance, vue depuis la terrasse</span>
+        <span class="meta">une maison &middot; deux saisons</span>
+    </div>
 </section>
 
-<!-- Acte 1 : manifesto identité -->
-<section class="manifesto" aria-labelledby="manifesto-title">
-    <h2 class="acte__num" id="manifesto-title"><span>I.</span> Une maison, deux façons d'y séjourner</h2>
-    <div class="manifesto__grille">
-        <p class="manifesto__corps">
-            Villa Plaisance est une maison provençale ouverte aux voyageurs,
-            à Bédarrides, entre Avignon et Orange. De septembre à juin, nous
-            accueillons en chambres d'hôtes, avec petit-déjeuner maison et
-            piscine partagée. En juillet et août, la villa entière se loue
-            en exclusivité&nbsp;: quatre chambres, une piscine privée de
-            12 mètres sur 6, un jardin sous les oliviers.
-            <span class="manifesto__chute">
-                Le lieu est calme. Le village est vivant.
-                La campagne est à pied, le TGV à quinze minutes.
-            </span>
-        </p>
-        <figure class="manifesto__plate plate plate--portrait plate__ph plate--ph-identite">
-            <img src="/assets/img/v8/villa-plaisance-facade-04.webp"
-                 alt="Façade de Villa Plaisance avec son palmier, jardin de pierre, lumière de mi-journée."
+<!-- Identité -->
+<section class="identite">
+    <div class="eyebrow">Bédarrides, Provence</div>
+    <h1>Villa Plaisance</h1>
+    <p class="baseline">Chambres d'hôtes et villa de charme à Bédarrides</p>
+</section>
+
+<!-- Acte I — Manifesto -->
+<section class="manifesto">
+    <div class="manifesto__inner">
+        <div class="manifesto__num">I.</div>
+        <div>
+            <h2>Une maison, deux façons d'y séjourner</h2>
+            <p>
+                Villa Plaisance est une maison provençale ouverte aux voyageurs, à
+                Bédarrides, entre Avignon et Orange. De septembre à juin, nous accueillons
+                en chambres d'hôtes, avec petit-déjeuner maison et piscine partagée.
+                En juillet et août, la villa entière se loue en exclusivité&nbsp;: quatre
+                chambres, une piscine privée de 12 mètres sur 6, un jardin sous les oliviers.
+            </p>
+            <p class="manifesto__chute">
+                Le lieu est calme. Le village est vivant. La campagne est à pied,
+                le TGV à quinze minutes.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Strip 3 colonnes -->
+<section class="strip" aria-label="En un coup d'œil">
+    <div>
+        <span class="k">— Septembre à juin</span>
+        <p class="v">Chambres d'hôtes</p>
+        <p class="det">2 chambres climatisées &middot; petit-déjeuner maison inclus &middot; piscine partagée &middot; 1 à 5 personnes</p>
+    </div>
+    <div>
+        <span class="k">— Juillet &amp; août</span>
+        <p class="v">Villa entière, en exclusivité</p>
+        <p class="det">4 chambres &middot; jusqu'à 10 personnes &middot; piscine privée 12 × 6 m &middot; cuisine équipée</p>
+    </div>
+    <div>
+        <span class="k">— Parler à Jorge</span>
+        <p class="v">Écrire directement</p>
+        <p class="det"><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a><br>FR &middot; EN &middot; ES &middot; DE</p>
+    </div>
+</section>
+
+<!-- Acte II — Diptyque title -->
+<section class="manifesto" style="border-top:none">
+    <div class="manifesto__inner">
+        <div class="manifesto__num">II.</div>
+        <h2>Deux saisons, deux maisons</h2>
+    </div>
+</section>
+
+<!-- Chapitre 1 — Chambres d'hôtes -->
+<article class="chapter">
+    <div class="chapter__inner">
+        <div class="chapter__photo">
+            <img src="/uploads/villa-plaisance-chambre-verte-01.webp"
+                 alt="Chambre Verte de Villa Plaisance, mur sombre profond, lit double, lampes murales chaudes."
                  loading="lazy" decoding="async">
-        </figure>
+        </div>
+        <div class="chapter__text">
+            <span class="eyebrow">de septembre à juin</span>
+            <h2>Chambres d'hôtes</h2>
+            <p>
+                Deux chambres climatisées, petit-déjeuner maison avec des produits locaux,
+                piscine partagée avec les hôtes. Un accueil personnel, des conseils sur mesure.
+            </p>
+            <dl class="chapter__facts">
+                <div><dt>Chambres</dt><dd>2 (Verte &amp; Bleue)</dd></div>
+                <div><dt>Petit-déjeuner</dt><dd>Inclus</dd></div>
+                <div><dt>Piscine</dt><dd>Partagée</dd></div>
+            </dl>
+            <a class="chapter__link" href="<?= LangService::url('chambres-d-hotes') ?>">
+                Découvrir les chambres
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            </a>
+        </div>
     </div>
-</section>
+</article>
 
-<!-- Acte 2 : diptyque saisons -->
-<section class="diptyque" aria-labelledby="diptyque-title" data-diptyque>
-    <h2 class="acte__num" id="diptyque-title"><span>II.</span> Deux saisons, deux maisons</h2>
-
-    <div class="diptyque__grille">
-
-        <article class="saison saison--chambres" data-saison="chambres">
-            <figure class="saison__plate plate__ph plate--ph-chambres">
-                <img src="/assets/img/v8/villa-plaisance-chambre-verte-01.webp"
-                     alt="Chambre Verte de Villa Plaisance, mur sombre profond, lit double, lampes murales chaudes."
-                     loading="lazy" decoding="async">
-            </figure>
-            <div class="saison__corps">
-                <p class="saison__dates">de septembre à juin</p>
-                <h3 class="saison__titre">Chambres d'hôtes</h3>
-                <p class="saison__texte">
-                    Deux chambres climatisées, petit-déjeuner maison avec des
-                    produits locaux, piscine partagée avec les hôtes. Un accueil
-                    personnel, des conseils sur mesure.
-                </p>
-                <dl class="saison__faits">
-                    <div><dt>Chambres</dt><dd>2 (Verte &amp; Bleue)</dd></div>
-                    <div><dt>Petit-déjeuner</dt><dd>Inclus</dd></div>
-                    <div><dt>Piscine</dt><dd>Partagée</dd></div>
-                </dl>
-                <a class="saison__lien" href="<?= LangService::url('chambres-d-hotes') ?>">
-                    Découvrir les chambres
-                    <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
-                </a>
-            </div>
-        </article>
-
-        <article class="saison saison--villa" data-saison="villa">
-            <figure class="saison__plate plate__ph plate--ph-villa">
-                <img src="/assets/img/v8/villa-plaisance-salon-salle-a-manger-04.webp"
-                     alt="Salon de Villa Plaisance, arche en pierre brute, canapé en cuir cognac, salle à manger en arrière-plan."
-                     loading="lazy" decoding="async">
-            </figure>
-            <div class="saison__corps">
-                <p class="saison__dates">juillet &amp; août</p>
-                <h3 class="saison__titre">La Villa en exclusivité</h3>
-                <p class="saison__texte">
-                    Quatre chambres, piscine privée 12×6m clôturée, cuisine
-                    entièrement équipée, jardin provençal. Jusqu'à dix
-                    personnes, en totale autonomie.
-                </p>
-                <dl class="saison__faits">
-                    <div><dt>Chambres</dt><dd>4</dd></div>
-                    <div><dt>Capacité</dt><dd>jusqu'à 10</dd></div>
-                    <div><dt>Piscine</dt><dd>Privée 12×6 m</dd></div>
-                </dl>
-                <a class="saison__lien" href="<?= LangService::url('location-villa-provence') ?>">
-                    Découvrir la villa entière
-                    <svg viewBox="0 0 24 24" aria-hidden="true" width="22" height="22"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
-                </a>
-            </div>
-        </article>
-
+<!-- Chapitre 2 — Villa entière -->
+<article class="chapter chapter--reverse">
+    <div class="chapter__inner">
+        <div class="chapter__photo">
+            <img src="/uploads/villa-plaisance-salon-salle-a-manger-04.webp"
+                 alt="Salon de Villa Plaisance, arche en pierre brute, canapé en cuir cognac, salle à manger en arrière-plan."
+                 loading="lazy" decoding="async">
+        </div>
+        <div class="chapter__text">
+            <span class="eyebrow">juillet &amp; août</span>
+            <h2>La Villa en exclusivité</h2>
+            <p>
+                Quatre chambres, piscine privée 12×6 m clôturée, cuisine entièrement
+                équipée, jardin provençal. Jusqu'à dix personnes, en totale autonomie.
+            </p>
+            <dl class="chapter__facts">
+                <div><dt>Chambres</dt><dd>4</dd></div>
+                <div><dt>Capacité</dt><dd>jusqu'à 10</dd></div>
+                <div><dt>Piscine</dt><dd>Privée 12 × 6 m</dd></div>
+            </dl>
+            <a class="chapter__link" href="<?= LangService::url('location-villa-provence') ?>">
+                Découvrir la villa entière
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            </a>
+        </div>
     </div>
-</section>
+</article>
 
-<!-- Acte 3 : interlude photographique -->
+<!-- Interlude photo -->
 <section class="interlude" aria-label="Interlude photographique">
-    <figure class="interlude__plate plate__ph plate--ph-interlude">
-        <img src="/assets/img/v8/villa-plaisance-jardin-exterieur-01.webp"
-             alt="Coquelicots rouges au premier plan, chaises de jardin en métal blanc en arrière-plan flou, ombre des arbres."
+    <div class="interlude__photo">
+        <img src="/uploads/villa-plaisance-jardin-exterieur-01.webp"
+             alt="Coquelicots rouges au premier plan, chaises de jardin en métal blanc en arrière-plan flou."
              loading="lazy" decoding="async">
-    </figure>
-    <p class="interlude__legende"><em>Quelque part dans le jardin, fin août.</em></p>
+    </div>
+    <p class="interlude__caption"><em>Quelque part dans le jardin, fin août.</em></p>
 </section>
 
-<!-- Acte 4 : Triangle d'Or → mappemonde -->
-<section class="lieu" aria-labelledby="lieu-title">
-    <h2 class="acte__num" id="lieu-title"><span>III.</span> Au cœur du Triangle d'Or</h2>
-
-    <div class="lieu__distances">
-        <div class="distance">
-            <p class="distance__valeur">8<span class="distance__unite">min</span></p>
-            <p class="distance__libelle">Châteauneuf-du-Pape</p>
+<!-- Acte III — Triangle d'Or -->
+<section class="distances">
+    <div class="distances__num">III.</div>
+    <h2>Au cœur du Triangle d'Or</h2>
+    <div class="distances__grid">
+        <div>
+            <span class="num">8<small>min</small></span>
+            <span class="lbl">Châteauneuf-du-Pape</span>
         </div>
-        <div class="distance">
-            <p class="distance__valeur">15<span class="distance__unite">min</span></p>
-            <p class="distance__libelle">Avignon</p>
+        <div>
+            <span class="num">15<small>min</small></span>
+            <span class="lbl">Avignon &middot; Gare TGV</span>
         </div>
-        <div class="distance">
-            <p class="distance__valeur">18<span class="distance__unite">min</span></p>
-            <p class="distance__libelle">Orange</p>
+        <div>
+            <span class="num">18<small>min</small></span>
+            <span class="lbl">Orange &middot; Théâtre antique</span>
         </div>
     </div>
-
-    <p class="lieu__pont">
+    <p class="distances__pont">
         Et au-delà des trois villes, le monde entier vient passer la porte.
     </p>
+</section>
 
-    <div class="mappemonde__viewport" data-mappemonde>
-        <div class="mappemonde__map" aria-hidden="true"></div>
-        <svg class="mappemonde__pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
-    </div>
-    <div class="mappemonde__legende">
-        <p class="mappemonde__titre">
-            <span lang="fr">Nos hôtes viennent de…</span>
-            <span lang="en">Our guests come from…</span>
-            <span lang="es">Nuestros huéspedes vienen de…</span>
-            <span lang="de">Unsere Gäste kommen aus…</span>
-        </p>
-        <p class="mappemonde__compte">plus de <strong>21</strong> destinations</p>
-        <p class="mappemonde__villes" data-mappemonde-villes></p>
+<!-- Mappemonde (placeholder visuel) -->
+<section class="mappemonde" aria-label="Mappemonde des hôtes">
+    <div class="mappemonde__inner">
+        <p class="mappemonde__head">Nos hôtes viennent de…</p>
+        <p class="mappemonde__count">plus de <strong><?= htmlspecialchars((string)$originsCount) ?></strong> destinations</p>
+        <div class="mappemonde__viewport" aria-hidden="true">
+            <span>[ carte du monde &middot; pins ]</span>
+            <span class="mappemonde__pin" style="left:15%;top:38%"></span>
+            <span class="mappemonde__pin" style="left:28%;top:30%"></span>
+            <span class="mappemonde__pin" style="left:48%;top:28%"></span>
+            <span class="mappemonde__pin" style="left:52%;top:42%"></span>
+            <span class="mappemonde__pin" style="left:50%;top:48%"></span>
+            <span class="mappemonde__pin" style="left:54%;top:36%"></span>
+            <span class="mappemonde__pin" style="left:62%;top:46%"></span>
+            <span class="mappemonde__pin" style="left:72%;top:55%"></span>
+            <span class="mappemonde__pin" style="left:80%;top:75%"></span>
+            <span class="mappemonde__pin" style="left:30%;top:62%"></span>
+            <span class="mappemonde__pin" style="left:25%;top:78%"></span>
+            <span class="mappemonde__pin" style="left:40%;top:70%"></span>
+        </div>
     </div>
 </section>
 
-<!-- Acte 5 : voix d'hôtes — TODO : brancher sur vp_reviews WHERE featured=1 -->
-<section class="voix" aria-labelledby="voix-title">
-    <h2 class="acte__num" id="voix-title"><span>IV.</span> Ce qu'on en dit</h2>
-
-    <figure class="voix__bloc" lang="fr">
-        <p class="voix__attribution">Marianne · Waterloo, Belgique · Airbnb · Villa entière</p>
-        <blockquote class="voix__citation">
-            Un endroit magnifique, calme et reposant. La piscine est superbe et le jardin enchanteur. Nous avons passé deux semaines inoubliables en famille.
-        </blockquote>
-    </figure>
-
-    <figure class="voix__bloc" lang="de">
-        <p class="voix__attribution">Charlotte · Allemagne · Airbnb · Villa entière</p>
-        <blockquote class="voix__citation">
-            Wunderbar! Die Villa ist perfekt für Familien. Der Pool, der Garten, alles war traumhaft.
-        </blockquote>
-    </figure>
-
-    <figure class="voix__bloc" lang="en">
-        <p class="voix__attribution">Rosemarie · Northampton, Royaume-Uni · Airbnb · Chambres d'hôtes</p>
-        <blockquote class="voix__citation">
-            A lovely stay. The hosts are warm and welcoming. The breakfast was delicious and the pool a wonderful bonus.
-        </blockquote>
-    </figure>
-
-    <figure class="voix__bloc" lang="nl">
-        <p class="voix__attribution">Jeroen · Pays-Bas · Booking · Chambres d'hôtes · 10/10</p>
-        <blockquote class="voix__citation">
-            Perfect verblijf. Gastvrije ontvangst, heerlijk ontbijt, prachtige tuin en zwembad.
-        </blockquote>
-    </figure>
+<!-- Acte IV — Voix d'hôtes (DB ou fallback) -->
+<section class="voix">
+    <div class="voix__head">
+        <div class="eyebrow"><span class="num">IV.</span>Hôtes du monde</div>
+        <h2>Ce qu'on en dit</h2>
+    </div>
+    <?php if (!empty($featuredReviews)): ?>
+    <div class="voix__grid <?= count($featuredReviews) === 4 ? 'voix__grid--4' : '' ?>">
+        <?php foreach ($featuredReviews as $r): ?>
+        <figure class="voix__bloc">
+            <blockquote>« <?= htmlspecialchars((string)$r['content']) ?> »</blockquote>
+            <figcaption>
+                <?= htmlspecialchars((string)$r['author']) ?>
+                <?php if (!empty($r['origin'])): ?> &middot; <?= htmlspecialchars((string)$r['origin']) ?><?php endif; ?>
+                <?php if (!empty($r['offer'])): ?>
+                    &middot; <?= ($r['offer'] === 'villa') ? 'Villa entière' : (($r['offer'] === 'bb') ? 'Chambres d\'hôtes' : 'Les deux saisons') ?>
+                <?php endif; ?>
+            </figcaption>
+        </figure>
+        <?php endforeach; ?>
+    </div>
+    <?php else: ?>
+    <div class="voix__grid voix__grid--4">
+        <figure class="voix__bloc" lang="fr">
+            <blockquote>« Un endroit magnifique, calme et reposant. La piscine est superbe et le jardin enchanteur. Nous avons passé deux semaines inoubliables en famille. »</blockquote>
+            <figcaption>Marianne &middot; Waterloo, Belgique &middot; Villa entière</figcaption>
+        </figure>
+        <figure class="voix__bloc" lang="en">
+            <blockquote>« A lovely stay. The hosts are warm and welcoming. The breakfast was delicious and the pool a wonderful bonus. »</blockquote>
+            <figcaption>Rosemarie &middot; Northampton, UK &middot; Chambres d'hôtes</figcaption>
+        </figure>
+        <figure class="voix__bloc" lang="de">
+            <blockquote>« Wunderbar! Die Villa ist perfekt für Familien. Der Pool, der Garten, alles war traumhaft. »</blockquote>
+            <figcaption>Charlotte &middot; Allemagne &middot; Villa entière</figcaption>
+        </figure>
+        <figure class="voix__bloc" lang="nl">
+            <blockquote>« Perfect verblijf. Gastvrije ontvangst, heerlijk ontbijt, prachtige tuin en zwembad. »</blockquote>
+            <figcaption>Jeroen &middot; Pays-Bas &middot; Booking 10/10 &middot; Chambres d'hôtes</figcaption>
+        </figure>
+    </div>
+    <?php endif; ?>
 </section>
 
-<!-- Acte 6 : journal — TODO : brancher sur vp_articles ORDER BY published_at DESC LIMIT 3 -->
-<section class="journal" aria-labelledby="journal-title">
-    <div class="journal__entete">
-        <h2 class="acte__num" id="journal-title"><span>V.</span> Le Journal</h2>
-        <a class="journal__tous" href="<?= LangService::url('journal') ?>">Tous les articles
-            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
-        </a>
+<!-- Acte V — Journal (DB ou fallback) -->
+<section class="journal">
+    <div class="journal__head">
+        <h2><span class="num">V.</span>Le Journal</h2>
+        <a href="<?= LangService::url('journal') ?>">Tous les articles →</a>
     </div>
-
-    <article class="article article--featured">
-        <p class="article__meta"><time datetime="2025-10-15">15 oct. 2025</time> · Voyager autrement</p>
-        <h3 class="article__titre"><a href="<?= LangService::url('journal') ?>/le-tourisme-de-masse-est-une-arnaque">Le tourisme de masse est une arnaque</a></h3>
-        <p class="article__teaser">
-            Pourquoi le tourisme de masse persiste malgré ses travers,
-            et comment choisir une autre voie en Provence.
-        </p>
-    </article>
-
-    <div class="journal__rail">
-        <article class="article">
-            <p class="article__meta"><time datetime="2025-10-01">1 oct. 2025</time> · Voyager autrement</p>
-            <h3 class="article__titre"><a href="<?= LangService::url('journal') ?>/louer-maison-plutot-hotel-voyage">Louer une maison plutôt qu'un hôtel&nbsp;: pourquoi ça change tout au voyage</a></h3>
-            <p class="article__teaser">
-                Comparatif entre séjour hôtel et location de maison en Provence.
-                Ce que ça change vraiment.
-            </p>
+    <?php if (!empty($recentArticles)): ?>
+    <div class="journal__grid">
+        <?php foreach ($recentArticles as $a): ?>
+        <article class="journal__card">
+            <span class="meta">
+                <?= htmlspecialchars($fmtArticleDate($a['published_at'] ?? null)) ?>
+                <?php if (!empty($a['category'])): ?> &middot; <?= htmlspecialchars((string)$a['category']) ?><?php endif; ?>
+            </span>
+            <h3><a href="<?= LangService::url('journal') ?>/<?= htmlspecialchars((string)$a['slug']) ?>"><?= htmlspecialchars((string)$a['title']) ?></a></h3>
+            <?php if (!empty($a['excerpt'])): ?>
+            <p><?= htmlspecialchars((string)$a['excerpt']) ?></p>
+            <?php endif; ?>
         </article>
-
-        <article class="article">
-            <p class="article__meta"><time datetime="2025-09-20">20 sept. 2025</time> · Hôtes &amp; hôteliers</p>
-            <h3 class="article__titre"><a href="<?= LangService::url('journal') ?>/vie-proprietaire-chambre-hotes">Ce que personne ne dit sur la vie d'un propriétaire de chambre d'hôtes</a></h3>
-            <p class="article__teaser">
-                Les coulisses du métier d'hôte en Provence.
-                Entre passion et réalité quotidienne.
-            </p>
+        <?php endforeach; ?>
+    </div>
+    <?php else: ?>
+    <div class="journal__grid">
+        <article class="journal__card">
+            <span class="meta">15 oct. 2025 &middot; Voyager autrement</span>
+            <h3><a href="<?= LangService::url('journal') ?>/le-tourisme-de-masse-est-une-arnaque">Le tourisme de masse est une arnaque</a></h3>
+            <p>Pourquoi le tourisme de masse persiste malgré ses travers, et comment choisir une autre voie en Provence.</p>
+        </article>
+        <article class="journal__card">
+            <span class="meta">1 oct. 2025 &middot; Voyager autrement</span>
+            <h3><a href="<?= LangService::url('journal') ?>/louer-maison-plutot-hotel-voyage">Louer une maison plutôt qu'un hôtel : pourquoi ça change tout au voyage</a></h3>
+            <p>Comparatif entre séjour hôtel et location de maison en Provence. Ce que ça change vraiment.</p>
+        </article>
+        <article class="journal__card">
+            <span class="meta">20 sept. 2025 &middot; Hôtes &amp; hôteliers</span>
+            <h3><a href="<?= LangService::url('journal') ?>/vie-proprietaire-chambre-hotes">Ce que personne ne dit sur la vie d'un propriétaire de chambre d'hôtes</a></h3>
+            <p>Les coulisses du métier d'hôte en Provence. Entre passion et réalité quotidienne.</p>
         </article>
     </div>
+    <?php endif; ?>
 </section>
 
-<!-- Acte 7 : FAQ — TODO : brancher sur vp_faq WHERE page_slug='accueil' -->
-<section class="questions" aria-labelledby="questions-title">
-    <h2 class="acte__num" id="questions-title"><span>VI.</span> Quelques questions</h2>
-
-    <dl class="qa">
-        <div class="qa__couple">
-            <dt>Où se situe Villa Plaisance&nbsp;?</dt>
-            <dd>
-                Villa Plaisance se trouve à Bédarrides, dans le Vaucluse (84370),
-                au cœur du Triangle d'Or provençal, à 8 minutes de
-                Châteauneuf-du-Pape, 15 minutes d'Avignon et 18 minutes d'Orange.
-            </dd>
-        </div>
-        <div class="qa__couple">
-            <dt>Quelle est la différence entre chambres d'hôtes et villa entière&nbsp;?</dt>
-            <dd>
-                De septembre à juin, nous accueillons en chambres d'hôtes
-                (2 chambres, petit-déjeuner inclus, piscine partagée).
-                En juillet et août, la villa entière se loue en exclusivité
-                (4 chambres, piscine privée, cuisine équipée, jusqu'à 10 personnes).
-            </dd>
-        </div>
-        <div class="qa__couple">
-            <dt>Y a-t-il une piscine&nbsp;?</dt>
-            <dd>
-                Oui. La piscine mesure 12 mètres sur 6, elle est clôturée et
-                sécurisée. En chambres d'hôtes, elle est partagée avec les
-                autres hôtes. En location villa, elle est entièrement privatisée.
-            </dd>
-        </div>
+<!-- Acte VI — FAQ (DB ou fallback) -->
+<section class="faq">
+    <div class="faq__head">
+        <span class="faq__num">VI.</span>
+        <h2>Quelques questions</h2>
+    </div>
+    <dl class="faq__list">
+        <?php if (!empty($faqs)): ?>
+            <?php foreach ($faqs as $q): ?>
+            <div class="faq__item">
+                <dt><?= htmlspecialchars((string)$q['question']) ?></dt>
+                <dd><?= nl2br(htmlspecialchars((string)$q['answer'])) ?></dd>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="faq__item">
+                <dt>Où se situe Villa Plaisance ?</dt>
+                <dd>Villa Plaisance se trouve à Bédarrides, dans le Vaucluse (84370), au cœur du Triangle d'Or provençal, à 8 minutes de Châteauneuf-du-Pape, 15 minutes d'Avignon et 18 minutes d'Orange.</dd>
+            </div>
+            <div class="faq__item">
+                <dt>Quelle est la différence entre chambres d'hôtes et villa entière ?</dt>
+                <dd>De septembre à juin, nous accueillons en chambres d'hôtes (2 chambres, petit-déjeuner inclus, piscine partagée). En juillet et août, la villa entière se loue en exclusivité (4 chambres, piscine privée, cuisine équipée, jusqu'à 10 personnes).</dd>
+            </div>
+            <div class="faq__item">
+                <dt>Y a-t-il une piscine ?</dt>
+                <dd>Oui. La piscine mesure 12 mètres sur 6, elle est clôturée et sécurisée. En chambres d'hôtes, elle est partagée avec les autres hôtes. En location villa, elle est entièrement privatisée.</dd>
+            </div>
+        <?php endif; ?>
     </dl>
 </section>
 
-<!-- Acte 8 : contact -->
-<section class="contact" id="contact" aria-labelledby="contact-title">
-    <h2 class="acte__num" id="contact-title"><span>VII.</span> Écrire</h2>
-    <p class="contact__phrase">Envie de séjourner chez nous&nbsp;?</p>
-    <p class="contact__sub">Contactez-nous pour organiser votre séjour en Provence.</p>
-    <div class="contact__actions">
-        <a class="contact__bouton" href="<?= LangService::url('contact') ?>">
+<!-- Acte VII — Écrire -->
+<section class="ecrire" id="contact">
+    <div class="ecrire__num">VII.</div>
+    <h2>Écrire</h2>
+    <p>Envie de séjourner chez nous ?</p>
+    <p class="sub">Contactez-nous pour organiser votre séjour en Provence.</p>
+    <div class="actions">
+        <a href="<?= LangService::url('contact') ?>" class="pill pill--solid pill--big">
             Nous écrire
-            <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
         </a>
-        <p class="contact__alt">
-            Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-        </p>
+        <p class="alt">Ou directement&nbsp;: <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
     </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+    <h3>Recevoir des nouvelles de la maison</h3>
+    <p>Une lettre, deux ou trois fois par an. Annonce des semaines libres, articles du journal, jamais plus.</p>
+    <form onsubmit="event.preventDefault()">
+        <input type="email" placeholder="Votre adresse e-mail" aria-label="E-mail">
+        <button type="submit">S'inscrire</button>
+    </form>
 </section>

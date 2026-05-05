@@ -24,7 +24,6 @@
     </script>
     <?php endif; ?>
 
-    <!-- Favicon -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -32,12 +31,8 @@
 
     <title><?= htmlspecialchars($seo['title'] ?? 'Villa Plaisance') ?></title>
     <meta name="description" content="<?= htmlspecialchars($seo['description'] ?? '') ?>">
-
-    <!-- Canonical -->
     <link rel="canonical" href="<?= htmlspecialchars($seo['canonical'] ?? '') ?>">
 
-
-    <!-- Open Graph -->
     <?php if (!empty($seo['og'])): ?>
     <meta property="og:title" content="<?= htmlspecialchars($seo['og']['title'] ?? '') ?>">
     <meta property="og:description" content="<?= htmlspecialchars($seo['og']['description'] ?? '') ?>">
@@ -48,109 +43,110 @@
     <meta property="og:site_name" content="Villa Plaisance">
     <?php endif; ?>
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= htmlspecialchars($seo['og']['title'] ?? $seo['title'] ?? '') ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($seo['og']['description'] ?? $seo['description'] ?? '') ?>">
     <meta name="twitter:image" content="<?= htmlspecialchars($seo['og']['image'] ?? '') ?>">
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=EB+Garamond:ital,wght@0,400..600;1,400..500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- CSS V7 (legacy, à supprimer une fois toutes les pages portées) -->
-    <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(ROOT . '/public/assets/css/style.css') ?>">
-    <!-- CSS V8 (design impeccable) -->
-    <link rel="stylesheet" href="/assets/css/style-v8.css?v=<?= filemtime(ROOT . '/public/assets/css/style-v8.css') ?>">
+    <link rel="stylesheet" href="/assets/css/style-v9.css?v=<?= filemtime(ROOT . '/public/assets/css/style-v9.css') ?>">
 
-    <!-- JSON-LD -->
     <?php foreach (($jsonLd ?? []) as $ld): ?>
     <script type="application/ld+json"><?= json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?></script>
     <?php endforeach; ?>
 </head>
 <body>
-    <!-- SVG Sprite (hidden) -->
-    <?php
-    $spriteFile = ROOT . '/public/assets/img/icons.svg';
-    if (file_exists($spriteFile)) {
-        echo '<div style="display:none" aria-hidden="true">';
-        readfile($spriteFile);
-        echo '</div>';
-    }
-    ?>
 
-    <!-- Skip to content -->
     <a href="#main-content" class="skip-link">Aller au contenu</a>
 
-    <!-- Header V8 (frame : wordmark + nav 7 liens + langues + burger) -->
-    <header class="frame" role="banner">
-        <a class="wordmark" href="<?= LangService::url('/') ?>" aria-label="Villa Plaisance, accueil">
-            <span>Villa</span><span>Plaisance</span>
-        </a>
-        <nav class="frame__nav" aria-label="Navigation principale" data-nav>
-            <a href="<?= LangService::url('/') ?>" data-route="/">Accueil</a>
-            <a href="<?= LangService::url('chambres-d-hotes') ?>" data-route="/chambres-d-hotes/">Chambres</a>
-            <a href="<?= LangService::url('location-villa-provence') ?>" data-route="/location-villa-provence/">Villa</a>
-            <a href="<?= LangService::url('sur-place') ?>" data-route="/sur-place/">Sur place</a>
-            <a href="<?= LangService::url('journal') ?>" data-route="/journal/">Journal</a>
-            <a href="<?= LangService::url('votre-hote') ?>" data-route="/votre-hote/">L'hôte</a>
-            <a href="<?= LangService::url('contact') ?>" data-route="/contact/">Contact</a>
-        </nav>
-        <div class="frame__right">
-            <nav class="frame__lang" aria-label="Langues">
-                <a href="#" aria-current="page">FR</a>
-                <a href="#" aria-disabled="true" tabindex="-1">EN</a>
-                <a href="#" aria-disabled="true" tabindex="-1">ES</a>
-                <a href="#" aria-disabled="true" tabindex="-1">DE</a>
+    <header class="topbar" role="banner">
+        <div class="topbar__inner">
+            <a href="<?= LangService::url('/') ?>" class="brand" aria-label="Villa Plaisance, accueil">
+                <span class="brand__name">Villa Plaisance</span>
+                <span class="brand__loc">Bédarrides &middot; Vaucluse</span>
+            </a>
+            <nav class="nav" aria-label="Navigation principale" data-nav>
+                <a href="<?= LangService::url('chambres-d-hotes') ?>" data-route="/chambres-d-hotes/">L'offre sept&ndash;juin</a>
+                <a href="<?= LangService::url('location-villa-provence') ?>" data-route="/location-villa-provence/">L'offre juillet&ndash;août</a>
+                <a href="<?= LangService::url('votre-hote') ?>" data-route="/votre-hote/">L'hôte</a>
+                <a href="<?= LangService::url('sur-place') ?>" data-route="/sur-place/">Sur place</a>
+                <a href="<?= LangService::url('journal') ?>" data-route="/journal/">Journal</a>
+                <a href="<?= LangService::url('contact') ?>" data-route="/contact/">Contact</a>
             </nav>
-            <button class="frame__menu-btn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu-overlay" data-menu-open>
-                <span></span><span></span><span></span>
-            </button>
+            <div class="topbar__right">
+                <nav class="langs" aria-label="Langues">
+                    <a href="#" aria-current="page">FR</a>
+                    <a href="#" aria-disabled="true" tabindex="-1">EN</a>
+                    <a href="#" aria-disabled="true" tabindex="-1">ES</a>
+                    <a href="#" aria-disabled="true" tabindex="-1">DE</a>
+                </nav>
+                <a href="<?= LangService::url('contact') ?>" class="pill pill--solid">Écrire à Jorge</a>
+                <button class="menu-btn" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="menu-overlay" data-menu-open>
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Main content -->
     <main id="main-content">
         <?= $content ?>
     </main>
 
-    <!-- Footer V8 (pied : 3 lignes sobres) -->
-    <footer class="pied" role="contentinfo">
-        <p class="pied__nom">
-            Villa Plaisance &middot; Bédarrides 84370 Vaucluse &middot;
-            <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-        </p>
-        <nav class="pied__nav" aria-label="Mentions">
-            <a href="<?= LangService::url('mentions-legales') ?>">Mentions légales</a>
-            <a href="<?= LangService::url('politique-confidentialite') ?>">Confidentialité</a>
-            <a href="<?= LangService::url('plan-du-site') ?>">Plan du site</a>
-        </nav>
-        <p class="pied__copy">&copy; <?= date('Y') ?> Villa Plaisance</p>
+    <footer class="footer" role="contentinfo">
+        <div class="footer__inner">
+            <div>
+                <div class="brand">
+                    <span class="brand__name">Villa Plaisance</span>
+                    <span class="brand__loc">Bédarrides &middot; Vaucluse</span>
+                </div>
+                <p class="tag">Une maison provençale, deux façons d'y séjourner. Une seule réservation à la fois.</p>
+            </div>
+            <div>
+                <h4>Visiter</h4>
+                <ul>
+                    <li><a href="<?= LangService::url('chambres-d-hotes') ?>">L'offre sept&ndash;juin</a></li>
+                    <li><a href="<?= LangService::url('location-villa-provence') ?>">L'offre juillet&ndash;août</a></li>
+                    <li><a href="<?= LangService::url('votre-hote') ?>">L'hôte</a></li>
+                    <li><a href="<?= LangService::url('sur-place') ?>">Sur place</a></li>
+                    <li><a href="<?= LangService::url('journal') ?>">Journal</a></li>
+                    <li><a href="<?= LangService::url('contact') ?>">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Pratique</h4>
+                <ul>
+                    <li><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></li>
+                    <li>Bédarrides 84370</li>
+                    <li><a href="<?= LangService::url('mentions-legales') ?>">Mentions légales</a></li>
+                    <li><a href="<?= LangService::url('politique-confidentialite') ?>">Politique de confidentialité</a></li>
+                    <li><a href="<?= LangService::url('plan-du-site') ?>">Plan du site</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer__bot">
+            <span>&copy; <?= date('Y') ?> Villa Plaisance &middot; Jorge Cañete</span>
+            <span>FR &middot; EN &middot; ES &middot; DE</span>
+        </div>
     </footer>
 
-    <!-- Overlay menu V8 (mobile + accessible) -->
     <div class="menu-overlay" id="menu-overlay" hidden data-menu-overlay>
-        <button class="menu-overlay__close" type="button" aria-label="Fermer le menu" data-menu-close>
-            <span></span><span></span>
-        </button>
+        <button class="menu-overlay__close" type="button" aria-label="Fermer le menu" data-menu-close>×</button>
         <nav class="menu-overlay__nav" aria-label="Menu principal">
-            <a href="<?= LangService::url('/') ?>" data-route="/">Accueil</a>
-            <a href="<?= LangService::url('chambres-d-hotes') ?>" data-route="/chambres-d-hotes/">Chambres d'hôtes</a>
-            <a href="<?= LangService::url('location-villa-provence') ?>" data-route="/location-villa-provence/">La villa entière</a>
-            <a href="<?= LangService::url('espaces-exterieurs') ?>" data-route="/espaces-exterieurs/">Espaces extérieurs</a>
+            <a href="<?= LangService::url('chambres-d-hotes') ?>" data-route="/chambres-d-hotes/">L'offre sept&ndash;juin</a>
+            <a href="<?= LangService::url('location-villa-provence') ?>" data-route="/location-villa-provence/">L'offre juillet&ndash;août</a>
+            <a href="<?= LangService::url('votre-hote') ?>" data-route="/votre-hote/">L'hôte</a>
             <a href="<?= LangService::url('sur-place') ?>" data-route="/sur-place/">Sur place</a>
-            <a href="<?= LangService::url('itineraire') ?>" data-route="/itineraire/">Itinéraires</a>
-            <a href="<?= LangService::url('journal') ?>" data-route="/journal/">Le Journal</a>
-            <a href="<?= LangService::url('votre-hote') ?>" data-route="/votre-hote/">Votre hôte</a>
-            <a href="<?= LangService::url('contact') ?>" data-route="/contact/">Écrire</a>
+            <a href="<?= LangService::url('journal') ?>" data-route="/journal/">Journal</a>
+            <a href="<?= LangService::url('contact') ?>" data-route="/contact/">Contact</a>
         </nav>
         <p class="menu-overlay__contact">
             <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
         </p>
     </div>
 
-    <!-- Cookie consent RGPD -->
     <?php if (!isset($_COOKIE['vp_consent'])): ?>
     <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Gestion des cookies">
         <div class="cookie-inner">
@@ -161,19 +157,6 @@
             </div>
         </div>
     </div>
-    <style>
-    .cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:10000;background:var(--dark);color:#fff;padding:1rem var(--gutter);transform:translateY(0);transition:transform 0.4s ease}
-    .cookie-banner.hidden{transform:translateY(100%);pointer-events:none}
-    .cookie-inner{max-width:var(--container);margin:0 auto;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
-    .cookie-text{flex:1;font-size:0.8rem;line-height:1.5;min-width:250px;color:rgba(255,255,255,0.85)}
-    .cookie-actions{display:flex;gap:0.75rem;flex-shrink:0}
-    .cookie-btn{padding:0.5rem 1.25rem;border-radius:4px;font-size:0.8rem;font-family:inherit;cursor:pointer;border:none;transition:background 0.2s}
-    .cookie-btn-refuse{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.3)}
-    .cookie-btn-refuse:hover{background:rgba(255,255,255,0.1);color:#fff}
-    .cookie-btn-accept{background:var(--accent);color:#fff}
-    .cookie-btn-accept:hover{background:#6d8a7b}
-    @media(max-width:600px){.cookie-inner{flex-direction:column;text-align:center}.cookie-actions{width:100%;justify-content:center}}
-    </style>
     <script>
     (function(){
         var banner=document.getElementById('cookie-banner');
@@ -193,7 +176,25 @@
     </script>
     <?php endif; ?>
 
-    <script src="/assets/js/main.js?v=<?= filemtime(ROOT . '/public/assets/js/main.js') ?>" defer></script>
-    <script src="/assets/js/main-v8.js?v=<?= filemtime(ROOT . '/public/assets/js/main-v8.js') ?>" defer></script>
+    <script>
+    (function(){
+        var btn = document.querySelector('[data-menu-open]');
+        var overlay = document.querySelector('[data-menu-overlay]');
+        var closeBtn = document.querySelector('[data-menu-close]');
+        if(!btn || !overlay) return;
+        function open(){ overlay.hidden = false; requestAnimationFrame(function(){ overlay.classList.add('is-open'); }); btn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
+        function close(){ overlay.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; setTimeout(function(){ overlay.hidden = true; }, 250); }
+        btn.addEventListener('click', open);
+        if(closeBtn) closeBtn.addEventListener('click', close);
+        overlay.addEventListener('click', function(e){ if(e.target===overlay) close(); });
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !overlay.hidden) close(); });
+    })();
+    (function(){
+        var path = window.location.pathname.replace(/\/$/, '/') || '/';
+        document.querySelectorAll('[data-route]').forEach(function(a){
+            if(a.getAttribute('data-route') === path) a.classList.add('is-current');
+        });
+    })();
+    </script>
 </body>
 </html>

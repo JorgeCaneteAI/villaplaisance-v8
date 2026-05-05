@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Villa Plaisance — mock Weeks-Off-like — accueil</title>
+
+<!--
+  MOCK STATIQUE — Sprint 0.5
+  Direction visuelle : esprit weeks-off.com
+  Photos : depuis ../public/uploads/ (161 fichiers réels)
+  Copy : repris du V2 (citations, distances, témoignages réels)
+  Typo open-source : Fraunces (display, équivalent Bradford) + Inter (corps, équivalent Plaak)
+  Palette : blanc dominant, filets noirs, accent rose pâle
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600;1,9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper: #ffffff;
+    --paper-soft: #faf8f5;
+    --ink: #111111;
+    --ink-2: #2a2a2a;
+    --ink-soft: #6b6b6b;
+    --rule: #111111;
+    --hair: #e8e4dc;
+    --pink-soft: #f4dada;
+    --pink-strong: #b8525e;
+    --max: 1280px;
+  }
+
+  *{box-sizing:border-box}
+  html{ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  html, body { margin:0; padding:0 }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 400;
+  }
+  img{ display:block; max-width:100%; height:auto }
+  a{ color:inherit; text-decoration:none }
+  ::selection{ background: var(--pink-soft); color: var(--ink) }
+
+  /* === Tokens texte === */
+  .display{ font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 600; letter-spacing: -0.01em; }
+  .display-roman{ font-family: "Fraunces", Georgia, serif; font-style: normal; font-weight: 600; letter-spacing: -0.01em; }
+  .mono-caps{ font-family: "Inter", sans-serif; font-weight: 500; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft) }
+  .lede{ font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 400; font-size: 22px; line-height: 1.45; color: var(--ink) }
+
+  /* === Header === */
+  .topbar{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(255,255,255,0.96);
+    border-bottom: 1px solid var(--rule);
+    backdrop-filter: blur(8px);
+  }
+  .topbar__inner{
+    max-width: var(--max); margin: 0 auto;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    gap: 24px;
+    padding: 18px 32px;
+  }
+  .brand{ display: flex; flex-direction: column; gap: 2px }
+  .brand__name{
+    font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 600;
+    font-size: 22px; line-height: 1; letter-spacing: -0.02em;
+  }
+  .brand__loc{
+    font-family: "Inter", sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .nav{
+    display: flex; gap: 28px; justify-content: center;
+    font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500;
+  }
+  .nav a{ color: var(--ink-2); padding: 4px 0; border-bottom: 1px solid transparent; transition: border-color .2s }
+  .nav a:hover{ border-color: var(--ink) }
+  .nav a.is-current{ border-color: var(--ink) }
+  .topbar__right{ display: flex; align-items: center; justify-content: flex-end; gap: 18px }
+  .langs{ display: flex; gap: 12px; font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase }
+  .langs a{ color: var(--ink-soft) }
+  .langs a.on{ color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 1px }
+  .pill{
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--ink); border-radius: 999px;
+    padding: 8px 16px;
+    font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--ink); background: transparent; cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .pill:hover{ background: var(--ink); color: var(--paper) }
+  .pill--solid{ background: var(--ink); color: var(--paper) }
+  .pill--solid:hover{ background: transparent; color: var(--ink) }
+
+  /* === Hero === */
+  .hero{
+    position: relative; padding: 0; border-bottom: 1px solid var(--rule);
+  }
+  .hero__photo{
+    aspect-ratio: 16 / 8; overflow: hidden; background: var(--paper-soft);
+  }
+  .hero__photo img{ width: 100%; height: 100%; object-fit: cover; object-position: center }
+  .hero__caption{
+    max-width: var(--max); margin: 0 auto;
+    padding: 14px 32px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+  }
+  .hero__caption .lbl{ font-family: "Fraunces", serif; font-style: italic; font-weight: 400; font-size: 15px; color: var(--ink-soft) }
+  .hero__caption .meta{ font-family: "Inter", sans-serif; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft) }
+
+  /* === Identité (titre énorme) === */
+  .identite{
+    max-width: 920px; margin: 0 auto;
+    padding: 80px 32px 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+  }
+  .identite .eyebrow{
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+  .identite h1{
+    font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 600;
+    font-size: clamp(64px, 9vw, 124px); line-height: 0.92; letter-spacing: -0.025em;
+    margin: 0 0 18px;
+  }
+  .identite .baseline{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 22px; color: var(--ink-2); margin: 0 0 32px;
+  }
+  .identite p.body{
+    font-family: "Inter", sans-serif; font-size: 16px; line-height: 1.7;
+    color: var(--ink-2); max-width: 62ch; margin: 0 auto;
+  }
+
+  /* === Manifesto (Acte I) === */
+  .manifesto{
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 96px 32px;
+  }
+  .manifesto__inner{
+    max-width: 920px; margin: 0 auto;
+    display: grid; grid-template-columns: 80px 1fr; gap: 40px; align-items: start;
+  }
+  .manifesto__num{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: 56px; line-height: 1; color: var(--pink-strong); letter-spacing: -0.03em;
+  }
+  .manifesto h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(36px, 5vw, 56px); line-height: 1; letter-spacing: -0.02em;
+    margin: 0 0 32px;
+  }
+  .manifesto p{
+    font-family: "Inter", sans-serif; font-size: 17px; line-height: 1.75;
+    color: var(--ink-2); margin: 0 0 18px;
+  }
+  .manifesto__chute{
+    font-family: "Fraunces", serif !important; font-style: italic !important; font-weight: 400 !important;
+    font-size: 20px !important; color: var(--ink) !important;
+    border-left: 1px solid var(--ink); padding-left: 18px; margin-top: 24px !important;
+  }
+
+  /* === Interlude photo plein cadre === */
+  .interlude{
+    border-bottom: 1px solid var(--rule);
+  }
+  .interlude__photo{
+    aspect-ratio: 21/9; overflow: hidden;
+  }
+  .interlude__photo img{ width: 100%; height: 100%; object-fit: cover }
+  .interlude__caption{
+    max-width: var(--max); margin: 0 auto;
+    padding: 14px 32px;
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 15px; color: var(--ink-soft); text-align: center;
+  }
+
+  /* === FAQ === */
+  .faq{
+    padding: 96px 32px; border-bottom: 1px solid var(--rule);
+  }
+  .faq__head{
+    max-width: var(--max); margin: 0 auto 56px;
+    display: flex; gap: 32px; align-items: baseline;
+    border-bottom: 1px solid var(--rule); padding-bottom: 18px;
+  }
+  .faq__num{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: 32px; color: var(--pink-strong); letter-spacing: -0.02em;
+  }
+  .faq__head h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(36px, 5vw, 52px); line-height: 1; letter-spacing: -0.02em; margin: 0;
+  }
+  .faq__list{
+    max-width: 880px; margin: 0 auto;
+  }
+  .faq__item{
+    padding: 28px 0; border-bottom: 1px solid var(--hair);
+    display: grid; grid-template-columns: 1fr 1.5fr; gap: 48px; align-items: start;
+  }
+  .faq__item:last-child{ border-bottom: none }
+  .faq__item dt{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 500;
+    font-size: 22px; line-height: 1.3; color: var(--ink); letter-spacing: -0.01em;
+  }
+  .faq__item dd{
+    margin: 0; font-family: "Inter", sans-serif; font-size: 15px; line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  /* === Contact / Écrire === */
+  .ecrire{
+    padding: 120px 32px;
+    border-bottom: 1px solid var(--rule);
+    text-align: center;
+    background: var(--paper-soft);
+  }
+  .ecrire__num{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: 32px; color: var(--pink-strong); letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .ecrire h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(48px, 7vw, 84px); line-height: 0.95; letter-spacing: -0.025em;
+    margin: 0 0 24px;
+  }
+  .ecrire p{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 22px; color: var(--ink-2); margin: 0 0 8px;
+  }
+  .ecrire .sub{
+    font-family: "Inter", sans-serif; font-style: normal; font-size: 15px;
+    color: var(--ink-soft); margin: 0 0 40px;
+  }
+  .ecrire .actions{
+    display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap;
+  }
+  .ecrire .pill--big{
+    padding: 16px 32px; font-size: 15px;
+  }
+  .ecrire .alt{
+    font-family: "Inter", sans-serif; font-size: 13px; color: var(--ink-soft); margin: 0;
+  }
+  .ecrire .alt a{ color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px }
+
+  /* === Mappemonde (placeholder visuel) === */
+  .mappemonde{
+    border-bottom: 1px solid var(--rule);
+    padding: 80px 32px;
+    background: var(--paper);
+  }
+  .mappemonde__inner{
+    max-width: var(--max); margin: 0 auto; text-align: center;
+  }
+  .mappemonde__head{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 500;
+    font-size: 22px; color: var(--ink); margin: 0 0 8px;
+  }
+  .mappemonde__count{
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+    margin: 0 0 32px;
+  }
+  .mappemonde__count strong{ color: var(--pink-strong); font-weight: 600 }
+  .mappemonde__viewport{
+    aspect-ratio: 21/9;
+    background: var(--paper-soft);
+    border: 1px solid var(--hair);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-soft);
+    font-family: "Inter", sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    position: relative;
+  }
+  /* Pins SVG simulés */
+  .mappemonde__pin{
+    position: absolute; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pink-strong);
+  }
+
+  /* === Strip 3 colonnes (deux saisons + écrire) === */
+  .strip{
+    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+  }
+  .strip > div{
+    padding: 36px 32px;
+    border-right: 1px solid var(--rule);
+  }
+  .strip > div:last-child{ border-right: none }
+  .strip .k{
+    font-family: "Inter", sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 12px; display: block;
+  }
+  .strip .v{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 500;
+    font-size: 22px; line-height: 1.2; color: var(--ink); margin-bottom: 8px;
+  }
+  .strip .det{
+    font-family: "Inter", sans-serif; font-size: 13px; line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .strip .det a{ color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 1px }
+
+  /* === Section : chapitre éditorial (offre, hôte, etc.) === */
+  .chapter{
+    border-bottom: 1px solid var(--rule);
+    padding: 96px 0;
+  }
+  .chapter__inner{
+    max-width: var(--max); margin: 0 auto; padding: 0 32px;
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center;
+  }
+  .chapter--reverse .chapter__inner{ grid-template-columns: 1fr 1.1fr }
+  .chapter--reverse .chapter__photo{ order: 2 }
+  .chapter--reverse .chapter__text{ order: 1 }
+  .chapter__photo{
+    aspect-ratio: 4/5; overflow: hidden;
+  }
+  .chapter__photo img{ width:100%; height: 100%; object-fit: cover }
+  .chapter__text .eyebrow{
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink-strong);
+    margin-bottom: 18px; display: block;
+  }
+  .chapter__text h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(38px, 5vw, 56px); line-height: 1; letter-spacing: -0.02em;
+    margin: 0 0 24px; color: var(--ink);
+  }
+  .chapter__text p{
+    font-family: "Inter", sans-serif; font-size: 15.5px; line-height: 1.7;
+    color: var(--ink-2); margin: 0 0 16px;
+  }
+  .chapter__text p em{ font-family: "Fraunces", serif; font-style: italic; font-weight: 500; color: var(--ink) }
+  .chapter__text .pull{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 20px; line-height: 1.45; color: var(--ink);
+    border-left: 1px solid var(--ink); padding-left: 18px; margin: 24px 0;
+  }
+  .chapter__facts{
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    margin: 24px 0 28px;
+  }
+  .chapter__facts > div{
+    padding: 14px 16px 14px 0;
+    border-right: 1px solid var(--hair);
+  }
+  .chapter__facts > div:last-child{ border-right: none; padding-right: 0 }
+  .chapter__facts dt{
+    font-family: "Inter", sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .chapter__facts dd{
+    margin: 0; font-family: "Fraunces", serif; font-style: italic; font-weight: 500;
+    font-size: 18px; color: var(--ink);
+  }
+  .chapter__link{
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.04em; color: var(--ink);
+    border-bottom: 1px solid var(--ink); padding-bottom: 4px;
+  }
+  .chapter__link:hover{ color: var(--pink-strong); border-color: var(--pink-strong) }
+  .chapter__link svg{ width: 16px; height: 16px }
+
+  /* === Triangle d'Or — distances === */
+  .distances{
+    border-bottom: 1px solid var(--rule);
+    padding: 80px 32px;
+    text-align: center; background: var(--paper-soft);
+  }
+  .distances h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(36px, 5vw, 52px); line-height: 1; letter-spacing: -0.02em;
+    margin: 0 0 56px;
+  }
+  .distances__grid{
+    max-width: 880px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  }
+  .distances__grid > div{
+    padding: 36px 24px;
+    border-right: 1px solid var(--hair);
+  }
+  .distances__grid > div:last-child{ border-right: none }
+  .distances .num{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: 72px; line-height: 1; letter-spacing: -0.04em; color: var(--ink);
+  }
+  .distances .num small{
+    font-size: 16px; font-weight: 500; font-style: italic; margin-left: 6px; color: var(--ink-soft);
+  }
+  .distances .lbl{
+    font-family: "Inter", sans-serif; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+    margin-top: 16px; display: block;
+  }
+  .distances__pont{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 18px; color: var(--ink-2); margin: 56px auto 0; max-width: 60ch;
+  }
+
+  /* === Journal grid === */
+  .journal{
+    padding: 96px 32px; border-bottom: 1px solid var(--rule);
+  }
+  .journal__head{
+    max-width: var(--max); margin: 0 auto 48px;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 32px;
+    border-bottom: 1px solid var(--rule); padding-bottom: 18px;
+  }
+  .journal__head h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(36px, 5vw, 52px); line-height: 1; letter-spacing: -0.02em; margin: 0;
+  }
+  .journal__head a{
+    font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px;
+  }
+  .journal__grid{
+    max-width: var(--max); margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+    border-top: 1px solid var(--hair);
+  }
+  .journal__card{
+    padding: 28px 24px 28px 0;
+    border-bottom: 1px solid var(--hair);
+    border-right: 1px solid var(--hair);
+  }
+  .journal__card:nth-child(3n) { border-right: none; padding-right: 0 }
+  .journal__card:nth-child(n+2) { padding-left: 24px }
+  .journal__card .meta{
+    font-family: "Inter", sans-serif; font-size: 10px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 14px; display: block;
+  }
+  .journal__card h3{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 500;
+    font-size: 24px; line-height: 1.2; letter-spacing: -0.01em;
+    margin: 0 0 12px;
+  }
+  .journal__card h3 a{ color: var(--ink); border-bottom: 1px solid transparent; transition: border-color .2s }
+  .journal__card h3 a:hover{ border-color: var(--ink) }
+  .journal__card p{
+    font-family: "Inter", sans-serif; font-size: 14px; line-height: 1.6;
+    color: var(--ink-2); margin: 0;
+  }
+
+  /* === Voix (témoignages) === */
+  .voix{
+    padding: 96px 32px; border-bottom: 1px solid var(--rule);
+    background: var(--paper-soft);
+  }
+  .voix__head{
+    max-width: var(--max); margin: 0 auto 56px; text-align: center;
+  }
+  .voix__head .eyebrow{
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .voix__head h2{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 600;
+    font-size: clamp(36px, 5vw, 52px); line-height: 1; letter-spacing: -0.02em; margin: 0;
+  }
+  .voix__grid{
+    max-width: var(--max); margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+  }
+  .voix__grid--4{ grid-template-columns: 1fr 1fr 1fr 1fr; gap: 24px }
+  .voix__bloc{
+    padding: 28px 0; margin: 0;
+  }
+  .voix__bloc blockquote{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 18px; line-height: 1.5; color: var(--ink); margin: 0 0 18px;
+  }
+  .voix__bloc figcaption{
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
+  }
+
+  /* === Footer === */
+  .footer{
+    padding: 64px 32px 32px;
+    background: var(--ink); color: var(--paper);
+  }
+  .footer__inner{
+    max-width: var(--max); margin: 0 auto;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 48px;
+    padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.18);
+  }
+  .footer .brand__name{ color: var(--paper); font-size: 32px }
+  .footer .brand__loc{ color: rgba(255,255,255,0.5); margin-top: 6px }
+  .footer p.tag{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 400;
+    font-size: 18px; line-height: 1.5; color: rgba(255,255,255,0.85);
+    margin: 18px 0 0; max-width: 38ch;
+  }
+  .footer h4{
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+    margin: 0 0 18px;
+  }
+  .footer ul{ list-style: none; padding: 0; margin: 0 }
+  .footer li{
+    font-family: "Inter", sans-serif; font-size: 14px; line-height: 1.9;
+    color: rgba(255,255,255,0.85);
+  }
+  .footer li a{ color: inherit; border-bottom: 1px solid transparent; transition: border-color .2s }
+  .footer li a:hover{ border-color: rgba(255,255,255,0.4) }
+  .footer__bot{
+    max-width: var(--max); margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 24px; gap: 24px; flex-wrap: wrap;
+    font-family: "Inter", sans-serif; font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+  }
+
+  /* === Newsletter === */
+  .newsletter{
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 64px 32px; text-align: center;
+  }
+  .newsletter h3{
+    font-family: "Fraunces", serif; font-style: italic; font-weight: 500;
+    font-size: 28px; line-height: 1.2; margin: 0 0 12px;
+  }
+  .newsletter p{
+    font-family: "Inter", sans-serif; font-size: 14px; color: var(--ink-soft);
+    max-width: 50ch; margin: 0 auto 24px;
+  }
+  .newsletter form{
+    max-width: 480px; margin: 0 auto;
+    display: flex; gap: 0; border: 1px solid var(--ink); border-radius: 999px;
+    overflow: hidden;
+  }
+  .newsletter input{
+    flex: 1; border: 0; padding: 12px 18px; font-family: "Inter", sans-serif; font-size: 14px;
+    background: transparent; outline: none;
+  }
+  .newsletter button{
+    border: 0; background: var(--ink); color: var(--paper);
+    padding: 12px 22px; font-family: "Inter", sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; letter-spacing: 0.04em;
+  }
+
+  /* === Responsive === */
+  @media (max-width: 980px){
+    .topbar__inner{ grid-template-columns: 1fr auto; }
+    .nav{ display: none }
+    .strip{ grid-template-columns: 1fr; }
+    .strip > div{ border-right: none; border-bottom: 1px solid var(--rule) }
+    .strip > div:last-child{ border-bottom: none }
+    .chapter__inner{ grid-template-columns: 1fr; gap: 36px }
+    .chapter--reverse .chapter__inner{ grid-template-columns: 1fr }
+    .chapter--reverse .chapter__photo{ order: 0 }
+    .chapter--reverse .chapter__text{ order: 0 }
+    .distances__grid{ grid-template-columns: 1fr; }
+    .distances__grid > div{ border-right: none; border-bottom: 1px solid var(--hair) }
+    .distances__grid > div:last-child{ border-bottom: none }
+    .journal__grid{ grid-template-columns: 1fr }
+    .journal__card{ border-right: none; padding-left: 0 }
+    .journal__card:nth-child(n+2){ padding-left: 0 }
+    .voix__grid{ grid-template-columns: 1fr; gap: 0 }
+    .voix__bloc{ border-bottom: 1px solid rgba(0,0,0,0.15); padding: 28px 0 }
+    .voix__bloc:last-child{ border-bottom: none }
+    .footer__inner{ grid-template-columns: 1fr; gap: 36px }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- =================================================== -->
+<!-- HEADER                                              -->
+<!-- =================================================== -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__name">Villa Plaisance</span>
+      <span class="brand__loc">Bédarrides · Vaucluse</span>
+    </div>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="#" class="is-current">L'offre sept – juin</a>
+      <a href="#">L'offre juillet – août</a>
+      <a href="#">L'hôte</a>
+      <a href="#">Sur place</a>
+      <a href="#">Journal</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="topbar__right">
+      <div class="langs"><a href="#" class="on">FR</a><a href="#">EN</a><a href="#">ES</a><a href="#">DE</a></div>
+      <a href="#" class="pill pill--solid">Écrire à Jorge</a>
+    </div>
+  </div>
+</header>
+
+<!-- =================================================== -->
+<!-- HERO PHOTO                                          -->
+<!-- =================================================== -->
+<section class="hero" aria-label="Vue de la maison">
+  <div class="hero__photo">
+    <img src="../public/uploads/villa-plaisance-facade-04.webp"
+         alt="Façade de Villa Plaisance avec son palmier, jardin de pierre, lumière de mi-journée."
+         fetchpriority="high" decoding="async">
+  </div>
+  <div class="hero__caption">
+    <span class="lbl">Villa Plaisance, vue depuis la terrasse</span>
+    <span class="meta">une maison · deux saisons</span>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- IDENTITÉ — H1 + sous-titre V2                        -->
+<!-- =================================================== -->
+<section class="identite">
+  <div class="eyebrow">Bédarrides, Provence</div>
+  <h1>Villa Plaisance</h1>
+  <p class="baseline">Chambres d'hôtes et villa de charme à Bédarrides</p>
+</section>
+
+<!-- =================================================== -->
+<!-- MANIFESTO — Acte I                                   -->
+<!-- =================================================== -->
+<section class="manifesto">
+  <div class="manifesto__inner">
+    <div class="manifesto__num">I.</div>
+    <h2>Une maison, deux façons d'y séjourner</h2>
+    <p>
+      Villa Plaisance est une maison provençale ouverte aux voyageurs, à
+      Bédarrides, entre Avignon et Orange. De septembre à juin, nous accueillons
+      en chambres d'hôtes, avec petit-déjeuner maison et piscine partagée.
+      En juillet et août, la villa entière se loue en exclusivité : quatre
+      chambres, une piscine privée de 12 mètres sur 6, un jardin sous les oliviers.
+    </p>
+    <p class="manifesto__chute">
+      Le lieu est calme. Le village est vivant. La campagne est à pied,
+      le TGV à quinze minutes.
+    </p>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- STRIP — 3 colonnes : sept-juin / juil-août / écrire -->
+<!-- =================================================== -->
+<section class="strip" aria-label="En un coup d'œil">
+  <div>
+    <span class="k">— Septembre à juin</span>
+    <p class="v">Chambres d'hôtes</p>
+    <p class="det">2 chambres climatisées · petit-déjeuner maison inclus · piscine partagée · 1 à 5 personnes</p>
+  </div>
+  <div>
+    <span class="k">— Juillet & août</span>
+    <p class="v">Villa entière, en exclusivité</p>
+    <p class="det">4 chambres · jusqu'à 10 personnes · piscine privée 12 × 6 m · cuisine équipée</p>
+  </div>
+  <div>
+    <span class="k">— Parler à Jorge</span>
+    <p class="v">Écrire directement</p>
+    <p class="det"><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a><br>FR · EN · ES · DE</p>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- DIPTYQUE TITLE                                       -->
+<!-- =================================================== -->
+<section class="manifesto" style="border-top:none">
+  <div class="manifesto__inner">
+    <div class="manifesto__num">II.</div>
+    <h2>Deux saisons, deux maisons</h2>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- CHAPITRE 1 — Chambres d'hôtes (sep–juin)             -->
+<!-- =================================================== -->
+<article class="chapter">
+  <div class="chapter__inner">
+    <div class="chapter__photo">
+      <img src="../public/uploads/villa-plaisance-chambre-verte-01.webp"
+           alt="Chambre Verte de Villa Plaisance, mur sombre profond, lit double, lampes murales chaudes."
+           loading="lazy" decoding="async">
+    </div>
+    <div class="chapter__text">
+      <span class="eyebrow">de septembre à juin</span>
+      <h2>Chambres d'hôtes</h2>
+      <p>
+        Deux chambres climatisées, petit-déjeuner maison avec des produits locaux,
+        piscine partagée avec les hôtes. Un accueil personnel, des conseils sur mesure.
+      </p>
+      <dl class="chapter__facts">
+        <div><dt>Chambres</dt><dd>2 (Verte & Bleue)</dd></div>
+        <div><dt>Petit-déjeuner</dt><dd>Inclus</dd></div>
+        <div><dt>Piscine</dt><dd>Partagée</dd></div>
+      </dl>
+      <a class="chapter__link" href="#">
+        Découvrir les chambres
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<!-- =================================================== -->
+<!-- CHAPITRE 2 — La Villa en exclusivité (juil-août)     -->
+<!-- =================================================== -->
+<article class="chapter chapter--reverse">
+  <div class="chapter__inner">
+    <div class="chapter__photo">
+      <img src="../public/uploads/villa-plaisance-salon-salle-a-manger-04.webp"
+           alt="Salon de Villa Plaisance, arche en pierre brute, canapé en cuir cognac, salle à manger en arrière-plan."
+           loading="lazy" decoding="async">
+    </div>
+    <div class="chapter__text">
+      <span class="eyebrow">juillet & août</span>
+      <h2>La Villa en exclusivité</h2>
+      <p>
+        Quatre chambres, piscine privée 12×6 m clôturée, cuisine entièrement
+        équipée, jardin provençal. Jusqu'à dix personnes, en totale autonomie.
+      </p>
+      <dl class="chapter__facts">
+        <div><dt>Chambres</dt><dd>4</dd></div>
+        <div><dt>Capacité</dt><dd>jusqu'à 10</dd></div>
+        <div><dt>Piscine</dt><dd>Privée 12 × 6 m</dd></div>
+      </dl>
+      <a class="chapter__link" href="#">
+        Découvrir la villa entière
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<!-- =================================================== -->
+<!-- INTERLUDE — Acte III : photo grand format             -->
+<!-- =================================================== -->
+<section class="interlude" aria-label="Interlude photographique">
+  <div class="interlude__photo">
+    <img src="../public/uploads/villa-plaisance-jardin-exterieur-01.webp"
+         alt="Coquelicots rouges au premier plan, chaises de jardin en métal blanc en arrière-plan flou, ombre des arbres."
+         loading="lazy" decoding="async">
+  </div>
+  <p class="interlude__caption"><em>Quelque part dans le jardin, fin août.</em></p>
+</section>
+
+<!-- =================================================== -->
+<!-- DISTANCES — Acte III : Triangle d'Or                 -->
+<!-- =================================================== -->
+<section class="distances">
+  <div style="font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:32px;color:var(--pink-strong);letter-spacing:-0.02em;margin-bottom:16px">III.</div>
+  <h2>Au cœur du Triangle d'Or</h2>
+  <div class="distances__grid">
+    <div>
+      <span class="num">8<small>min</small></span>
+      <span class="lbl">Châteauneuf-du-Pape</span>
+    </div>
+    <div>
+      <span class="num">15<small>min</small></span>
+      <span class="lbl">Avignon · Gare TGV</span>
+    </div>
+    <div>
+      <span class="num">18<small>min</small></span>
+      <span class="lbl">Orange · Théâtre antique</span>
+    </div>
+  </div>
+  <p class="distances__pont">
+    Et au-delà des trois villes, le monde entier vient passer la porte.
+  </p>
+</section>
+
+<!-- =================================================== -->
+<!-- MAPPEMONDE — placeholder visuel                       -->
+<!-- =================================================== -->
+<section class="mappemonde" aria-label="Mappemonde des hôtes">
+  <div class="mappemonde__inner">
+    <p class="mappemonde__head">Nos hôtes viennent de…</p>
+    <p class="mappemonde__count">plus de <strong>21</strong> destinations</p>
+    <div class="mappemonde__viewport" aria-hidden="true">
+      <span>[ carte du monde · pins ]</span>
+      <!-- pins simulés -->
+      <span class="mappemonde__pin" style="left:15%;top:38%"></span>
+      <span class="mappemonde__pin" style="left:28%;top:30%"></span>
+      <span class="mappemonde__pin" style="left:48%;top:28%"></span>
+      <span class="mappemonde__pin" style="left:52%;top:42%"></span>
+      <span class="mappemonde__pin" style="left:50%;top:48%"></span>
+      <span class="mappemonde__pin" style="left:54%;top:36%"></span>
+      <span class="mappemonde__pin" style="left:62%;top:46%"></span>
+      <span class="mappemonde__pin" style="left:72%;top:55%"></span>
+      <span class="mappemonde__pin" style="left:80%;top:75%"></span>
+      <span class="mappemonde__pin" style="left:30%;top:62%"></span>
+      <span class="mappemonde__pin" style="left:25%;top:78%"></span>
+      <span class="mappemonde__pin" style="left:40%;top:70%"></span>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- JOURNAL — Acte V : 3 derniers articles                -->
+<!-- =================================================== -->
+<section class="journal">
+  <div class="journal__head">
+    <h2><span style="font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:var(--pink-strong);font-size:0.7em;margin-right:18px">V.</span>Le Journal</h2>
+    <a href="#">Tous les articles →</a>
+  </div>
+  <div class="journal__grid">
+    <article class="journal__card">
+      <span class="meta">15 oct. 2025 · Voyager autrement</span>
+      <h3><a href="#">Le tourisme de masse est une arnaque</a></h3>
+      <p>Pourquoi le tourisme de masse persiste malgré ses travers, et comment choisir une autre voie en Provence.</p>
+    </article>
+    <article class="journal__card">
+      <span class="meta">1 oct. 2025 · Voyager autrement</span>
+      <h3><a href="#">Louer une maison plutôt qu'un hôtel : pourquoi ça change tout au voyage</a></h3>
+      <p>Comparatif entre séjour hôtel et location de maison en Provence. Ce que ça change vraiment.</p>
+    </article>
+    <article class="journal__card">
+      <span class="meta">20 sept. 2025 · Hôtes & hôteliers</span>
+      <h3><a href="#">Ce que personne ne dit sur la vie d'un propriétaire de chambre d'hôtes</a></h3>
+      <p>Les coulisses du métier d'hôte en Provence. Entre passion et réalité quotidienne.</p>
+    </article>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- VOIX — Acte IV : témoignages                          -->
+<!-- =================================================== -->
+<section class="voix">
+  <div class="voix__head">
+    <div class="eyebrow"><span style="color:var(--pink-strong);font-weight:600;margin-right:8px">IV.</span>Hôtes du monde</div>
+    <h2>Ce qu'on en dit</h2>
+  </div>
+  <div class="voix__grid voix__grid--4">
+    <figure class="voix__bloc" lang="fr">
+      <blockquote>« Un endroit magnifique, calme et reposant. La piscine est superbe et le jardin enchanteur. Nous avons passé deux semaines inoubliables en famille. »</blockquote>
+      <figcaption>Marianne · Waterloo, Belgique · Villa entière</figcaption>
+    </figure>
+    <figure class="voix__bloc" lang="en">
+      <blockquote>« A lovely stay. The hosts are warm and welcoming. The breakfast was delicious and the pool a wonderful bonus. »</blockquote>
+      <figcaption>Rosemarie · Northampton, UK · Chambres d'hôtes</figcaption>
+    </figure>
+    <figure class="voix__bloc" lang="de">
+      <blockquote>« Wunderbar! Die Villa ist perfekt für Familien. Der Pool, der Garten, alles war traumhaft. »</blockquote>
+      <figcaption>Charlotte · Allemagne · Villa entière</figcaption>
+    </figure>
+    <figure class="voix__bloc" lang="nl">
+      <blockquote>« Perfect verblijf. Gastvrije ontvangst, heerlijk ontbijt, prachtige tuin en zwembad. »</blockquote>
+      <figcaption>Jeroen · Pays-Bas · Booking 10/10 · Chambres d'hôtes</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- FAQ — Acte VI : Quelques questions                    -->
+<!-- =================================================== -->
+<section class="faq">
+  <div class="faq__head">
+    <span class="faq__num">VI.</span>
+    <h2>Quelques questions</h2>
+  </div>
+  <dl class="faq__list">
+    <div class="faq__item">
+      <dt>Où se situe Villa Plaisance ?</dt>
+      <dd>
+        Villa Plaisance se trouve à Bédarrides, dans le Vaucluse (84370),
+        au cœur du Triangle d'Or provençal, à 8 minutes de Châteauneuf-du-Pape,
+        15 minutes d'Avignon et 18 minutes d'Orange.
+      </dd>
+    </div>
+    <div class="faq__item">
+      <dt>Quelle est la différence entre chambres d'hôtes et villa entière ?</dt>
+      <dd>
+        De septembre à juin, nous accueillons en chambres d'hôtes
+        (2 chambres, petit-déjeuner inclus, piscine partagée). En juillet et août,
+        la villa entière se loue en exclusivité (4 chambres, piscine privée,
+        cuisine équipée, jusqu'à 10 personnes).
+      </dd>
+    </div>
+    <div class="faq__item">
+      <dt>Y a-t-il une piscine ?</dt>
+      <dd>
+        Oui. La piscine mesure 12 mètres sur 6, elle est clôturée et sécurisée.
+        En chambres d'hôtes, elle est partagée avec les autres hôtes. En location
+        villa, elle est entièrement privatisée.
+      </dd>
+    </div>
+  </dl>
+</section>
+
+<!-- =================================================== -->
+<!-- ÉCRIRE — Acte VII : contact                           -->
+<!-- =================================================== -->
+<section class="ecrire" id="contact">
+  <div class="ecrire__num">VII.</div>
+  <h2>Écrire</h2>
+  <p>Envie de séjourner chez nous ?</p>
+  <p class="sub">Contactez-nous pour organiser votre séjour en Provence.</p>
+  <div class="actions">
+    <a href="#" class="pill pill--solid pill--big">
+      Nous écrire
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
+    </a>
+    <p class="alt">Ou directement : <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></p>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- NEWSLETTER                                          -->
+<!-- =================================================== -->
+<section class="newsletter">
+  <h3>Recevoir des nouvelles de la maison</h3>
+  <p>Une lettre, deux ou trois fois par an. Annonce des semaines libres, articles du journal, jamais plus.</p>
+  <form onsubmit="event.preventDefault()">
+    <input type="email" placeholder="Votre adresse e-mail" aria-label="E-mail">
+    <button type="submit">S'inscrire</button>
+  </form>
+</section>
+
+<!-- =================================================== -->
+<!-- FOOTER                                              -->
+<!-- =================================================== -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div>
+      <div class="brand">
+        <span class="brand__name">Villa Plaisance</span>
+        <span class="brand__loc">Bédarrides · Vaucluse</span>
+      </div>
+      <p class="tag">Une maison provençale, deux façons d'y séjourner. Une seule réservation à la fois.</p>
+    </div>
+    <div>
+      <h4>Visiter</h4>
+      <ul>
+        <li><a href="#">L'offre sept – juin</a></li>
+        <li><a href="#">L'offre juillet – août</a></li>
+        <li><a href="#">L'hôte</a></li>
+        <li><a href="#">Sur place</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Pratique</h4>
+      <ul>
+        <li><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></li>
+        <li>Bédarrides 84370</li>
+        <li><a href="#">Mentions légales</a></li>
+        <li><a href="#">Politique de confidentialité</a></li>
+        <li><a href="#">Plan du site</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bot">
+    <span>© 2026 Villa Plaisance · Jorge Cañete</span>
+    <span>FR · EN · ES · DE</span>
+  </div>
+</footer>
+
+</body>
+</html>
