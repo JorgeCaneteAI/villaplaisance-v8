@@ -35,10 +35,44 @@ le **front** (Views Front + assets) par le design "impeccable" V2.
 
 ## Production — o2switch
 - Sous-domaine de dev : `v2.villaplaisance.fr` → `/home/efkz3012/v2.villaplaisance.fr/`
-- DB : `efkz3012_VPV8` (séparée de la prod `efkz3012_VPV7`)
+- DB : depuis la réorga 2026-05-19, une seule DB `efkz3012_VPV7` partagée
+  avec la prod (cf. `Site Internet/CLAUDE.md`). L'ancienne DB `efkz3012_VPV8`
+  est orpheline, à supprimer.
 - User SSH : `efkz3012`
-- Déploiement auto via `.cpanel.yml` à chaque push GitHub.
 - Pendant les travaux : htpasswd sur le sous-domaine.
+
+## Workflow de déploiement v8 (IMPORTANT — pas automatique)
+
+Le push GitHub **ne déclenche PAS** le déploiement. Il faut le lancer
+manuellement après chaque push.
+
+**Procédure complète depuis un Mac local :**
+
+1. Commit + push local :
+```
+cd "/Users/jorgecanete/Documents/C.L.A.U.D.E/villaplaisance/Site Internet/v8" && git push origin main
+```
+
+2. Déclencher le déploiement côté serveur (terminal cPanel ou SSH) :
+```
+cd /home/efkz3012/repositories/villaplaisance-v8 && git pull origin main && /bin/cp -R * /home/efkz3012/v2.villaplaisance.fr/ && chmod -R 755 /home/efkz3012/v2.villaplaisance.fr/
+```
+
+3. Invalider OPcache (sinon ancien rendu en cache 1-2 min) :
+```
+touch /home/efkz3012/v2.villaplaisance.fr/public/index.php
+```
+
+4. Si tu as ajouté des fichiers dans `public/uploads/` en local, les uploader
+   à part (gitignored). Depuis le Mac :
+```
+rsync -avz "/Users/jorgecanete/Documents/C.L.A.U.D.E/villaplaisance/Site Internet/v8/public/uploads/" efkz3012@efkz3012.odns.fr:/home/efkz3012/v2.villaplaisance.fr/public/uploads/
+```
+
+5. Cmd+Shift+R sur https://v2.villaplaisance.fr pour vider le cache navigateur.
+
+Alternative à l'étape 2 : cPanel UI → Git Version Control → `villaplaisance-v8`
+→ Update from Remote + Deploy HEAD Commit.
 
 ## Règles
 - Jamais toucher au code de prod (`villaplaisance.fr` ni repo v7).

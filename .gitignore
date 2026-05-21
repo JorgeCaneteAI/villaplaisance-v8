@@ -11,6 +11,9 @@ Thumbs.db
 .vscode/
 *.swp
 
+# Config locale Claude Code
+.claude/
+
 # Uploads (gérés hors git, transfert manuel)
 public/uploads/
 
