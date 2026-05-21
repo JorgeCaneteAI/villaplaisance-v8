@@ -1,115 +1,325 @@
-<?php
-// Contact V8 — porté du V2 (`contact/index.html`).
-// Variables : $seo, $jsonLd, $lang, $flash, $csrf.
-// Le formulaire POST vers /contact qui appelle ContactController::handleSubmit.
-// Champs adaptés au backend : name, email, subject, message, website (honeypot).
-?>
+<?php declare(strict_types=1); ?>
+<?php /**
+ * Vue : Contact (formulaire 2 onglets : chambres / villa).
+ * Portée depuis le proto Claude design (contact.html).
+ * Layout : front-proto.
+ * @var string $lang  @var array $seo  @var array $jsonLd
+ */ ?>
+<style>
+  /* Layout: form on left, contact info on right */
+  .ct-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(40px, 5vw, 96px);
+    align-items: start;
+  }
+  @media (max-width: 960px) { .ct-layout { grid-template-columns: 1fr; } }
 
-<!-- Acte 0 : opening compact ultra-sobre -->
-<section class="opening opening--compact opening--mince" aria-labelledby="opening-title">
-    <div class="opening__copy opening__copy--centered">
-        <p class="opening__eyebrow">Bédarrides, Provence</p>
-        <h1 class="opening__title opening__title--compact" id="opening-title">Contact</h1>
-        <p class="opening__sub">Une question&nbsp;? Écrivez-nous.</p>
+  /* Mode tabs */
+  .ct-tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: var(--hairline);
+    margin-bottom: 36px;
+  }
+  .ct-tabs button {
+    background: transparent; border: 0; cursor: pointer;
+    padding: 20px 24px;
+    text-align: left;
+    border-right: var(--hairline);
+    font: inherit; color: inherit;
+    transition: background .25s ease, color .25s ease;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .ct-tabs button:last-child { border-right: 0; }
+  .ct-tabs .t-when {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em;
+    color: var(--stone-500); text-transform: uppercase;
+  }
+  .ct-tabs .t-name {
+    font-family: var(--font-display); font-size: clamp(22px, 1.8vw, 26px); color: var(--ink-900); letter-spacing: -0.01em;
+  }
+  .ct-tabs .t-name em { font-style: italic; color: var(--sage-700); }
+  .ct-tabs button[aria-pressed="true"] { background: var(--ink-900); }
+  .ct-tabs button[aria-pressed="true"] .t-when { color: rgba(251,247,238,0.7); }
+  .ct-tabs button[aria-pressed="true"] .t-name { color: var(--linen-50); }
+  .ct-tabs button[aria-pressed="true"] .t-name em { color: var(--sage-200); }
+
+  /* Room picker (B&B) */
+  .room-picker {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin-top: 8px;
+  }
+  .room-picker label {
+    position: relative;
+    border: var(--hairline);
+    padding: 16px 14px;
+    cursor: pointer;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: background .2s, border-color .2s, color .2s;
+    background: transparent;
+  }
+  .room-picker label .rn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--stone-500); }
+  .room-picker label .nm { font-family: var(--font-display); font-style: italic; font-size: 22px; color: var(--ink-900); letter-spacing: -0.005em; }
+  .room-picker label .det { font-size: 13px; color: var(--stone-600); margin-top: 2px; }
+  .room-picker input { position: absolute; opacity: 0; pointer-events: none; }
+  .room-picker label:has(input:checked) { background: var(--ink-900); border-color: var(--ink-900); }
+  .room-picker label:has(input:checked) .rn { color: rgba(251,247,238,0.65); }
+  .room-picker label:has(input:checked) .nm { color: var(--linen-50); }
+  .room-picker label:has(input:checked) .det { color: rgba(251,247,238,0.65); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Contact card on the right */
+  .ct-info {
+    background: var(--ink-900);
+    color: var(--linen-100);
+    padding: clamp(28px, 3.6vw, 48px);
+    display: flex; flex-direction: column; gap: 32px;
+    position: sticky; top: 96px;
+  }
+  .ct-info .kicker {
+    align-self: flex-start;
+  }
+  .ct-info h2 {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(28px, 2.8vw, 40px); line-height: 1.05; letter-spacing: -0.015em;
+    color: var(--linen-50); margin: 0;
+  }
+  .ct-info h2 em { font-style: italic; color: var(--sage-200); }
+  .ct-info .body-lg { color: rgba(251,247,238,0.78); margin: 0; }
+  .ct-info .row {
+    border-top: 1px solid rgba(251,247,238,0.16);
+    padding-top: 18px;
+  }
+  .ct-info .row .lbl {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
+    color: rgba(251,247,238,0.55); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .ct-info .row a, .ct-info .row .v {
+    font-family: var(--font-display); font-size: clamp(22px, 1.8vw, 26px); color: var(--linen-50); letter-spacing: -0.005em;
+    line-height: 1.25; display: block;
+  }
+  .ct-info .row a:hover { color: var(--sage-200); }
+  .ct-info .row .sub { font-family: var(--font-sans); font-size: 13px; color: rgba(251,247,238,0.55); margin-top: 6px; }
+  @media (max-width: 960px) { .ct-info { position: static; } }
+
+  /* Submit */
+  .submit-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 36px; padding-top: 24px;
+    border-top: var(--hairline);
+    gap: 24px; flex-wrap: wrap;
+  }
+  .submit-bar .note {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+    color: var(--stone-500);
+  }
+
+  /* Success */
+  .success {
+    display: none;
+    padding: clamp(28px, 4vw, 44px); border: var(--hairline-strong);
+    background: color-mix(in oklab, var(--sage-200) 40%, var(--linen-50));
+    margin-top: 36px;
+  }
+  .success.show { display: block; }
+</style>
+
+
+<!-- ============ MASTHEAD ============ -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div>
+      <div class="page-hero-issue">
+        <span data-en="06 · Contact">06 · Contact</span>
+        <span data-en="Reply within the day">Réponse dans la journée</span>
+      </div>
+      <h1>Une lettre,<br/>un <em>appel</em>.</h1>
     </div>
+    <p class="lede" data-en="No booking engine, no automatic confirmation. Tell us what you'd like, we check the calendar, we write back — by hand, within the day.">Pas de moteur de réservation, pas de confirmation automatique. Dites-nous ce que vous souhaitez, on vérifie le calendrier, on vous répond — à la main, dans la journée.</p>
+  </div>
 </section>
 
-<!-- Acte 1 : formulaire + coordonnées -->
-<section class="duo" aria-labelledby="duo-title">
-    <h2 class="acte__num" id="duo-title"><span>I.</span> Nous écrire</h2>
+<!-- ============ FORM + INFO ============ -->
+<section class="section">
+  <div class="container-wide">
+    <div class="ct-layout">
 
-    <?php if (!empty($flash['success'])): ?>
-    <p class="duo__flash duo__flash--success" role="status">
-        <?= htmlspecialchars($flash['success']) ?>
-    </p>
-    <?php endif; ?>
+      <!-- LEFT — FORM -->
+      <main id="form">
+        <div class="section-label" style="margin-bottom: 16px;">
+          <span class="numeral">— 01 / <span data-en="Tell us">Dites-nous</span></span>
+        </div>
+        <h2 class="h-xl" style="margin: 0 0 32px; max-width: 18ch;" data-en="What kind of stay are you thinking of?">Quel genre de séjour<br/>imaginez-vous ?</h2>
 
-    <?php if (!empty($flash['error'])): ?>
-    <p class="duo__flash duo__flash--error" role="alert">
-        <?= htmlspecialchars($flash['error']) ?>
-    </p>
-    <?php endif; ?>
+        <!-- Mode tabs -->
+        <div class="ct-tabs" role="tablist">
+          <button role="tab" data-tab="bnb" aria-pressed="true">
+            <span class="t-when" data-en="Sept → June">Sept → Juin</span>
+            <span class="t-name" data-en="A room or two"><em>Chambres d'hôtes</em></span>
+          </button>
+          <button role="tab" data-tab="villa" aria-pressed="false">
+            <span class="t-when" data-en="July → August">Juil → Août</span>
+            <span class="t-name" data-en="The whole villa"><em>Villa entière</em></span>
+          </button>
+        </div>
 
-    <div class="duo__grille">
-
-        <form class="duo__form" action="<?= LangService::url('contact') ?>" method="post" novalidate>
-            <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrf) ?>">
-
-            <div class="champ">
-                <label for="name">Votre nom</label>
-                <input id="name" name="name" type="text" autocomplete="name" required value="<?= htmlspecialchars($_POST['name'] ?? '') ?>">
+        <form id="contactForm" novalidate>
+          <!-- B&B Panel -->
+          <div class="panel active" data-panel="bnb">
+            <div class="form-grid">
+              <div class="field">
+                <label data-en="Arrival">Arrivée</label>
+                <input type="date" name="arrival_bnb" />
+              </div>
+              <div class="field">
+                <label data-en="Departure">Départ</label>
+                <input type="date" name="departure_bnb" />
+              </div>
+              <div class="field full">
+                <label data-en="Bedding configuration">Configuration du couchage</label>
+                <p class="body-sm" style="margin: -2px 0 14px; color: var(--stone-600);" data-en="The two communicating bedrooms form a single suite, rented as one for 1 to 5 guests.">Les deux chambres communicantes forment une seule suite, louée d'un seul tenant pour 1 à 5 personnes.</p>
+                <div class="room-picker">
+                  <label>
+                    <input type="radio" name="config" value="lit-double" checked />
+                    <span class="rn" data-en="As a couple">À deux</span>
+                    <span class="nm" data-en="Double bed">Lit double</span>
+                    <span class="det" data-en="Chambre Verte prepared · Bleue stays as a lounge">Chambre Verte préparée · Bleue en salon</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="config" value="lits-simples" />
+                    <span class="rn" data-en="As a couple">À deux</span>
+                    <span class="nm" data-en="Two single beds">Deux lits simples</span>
+                    <span class="det" data-en="Chambre Bleue prepared · Verte stays as a lounge">Chambre Bleue préparée · Verte en salon</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="config" value="chacun" />
+                    <span class="rn" data-en="As a couple · + € 30 / night">À deux · + 30 €/nuit</span>
+                    <span class="nm" data-en="A room each">Une chambre chacun</span>
+                    <span class="det" data-en="Both rooms prepared">Les deux chambres préparées</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="config" value="famille" />
+                    <span class="rn" data-en="3 to 5 guests">À 3, 4 ou 5</span>
+                    <span class="nm" data-en="Family / small group">Famille / groupe</span>
+                    <span class="det" data-en="Both rooms prepared · sofa bed if needed">Les deux chambres · clic-clac si besoin</span>
+                  </label>
+                </div>
+              </div>
+              <div class="field">
+                <label data-en="Adults">Adultes</label>
+                <input type="number" name="adults" min="1" max="5" value="2" />
+              </div>
+              <div class="field">
+                <label data-en="Children">Enfants</label>
+                <input type="number" name="children" min="0" max="3" value="0" />
+              </div>
             </div>
+          </div>
 
-            <div class="champ">
-                <label for="email">Votre courriel</label>
-                <input id="email" name="email" type="email" autocomplete="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+          <!-- Villa Panel -->
+          <div class="panel" data-panel="villa">
+            <div class="form-grid">
+              <div class="field">
+                <label data-en="Arrival (Saturday)">Arrivée (samedi)</label>
+                <input type="date" name="arrival_villa" />
+              </div>
+              <div class="field">
+                <label data-en="Departure (Saturday)">Départ (samedi)</label>
+                <input type="date" name="departure_villa" />
+              </div>
+              <div class="field full">
+                <label data-en="Total guests (max. 10)">Personnes au total (max. 10)</label>
+                <input type="number" name="villa_guests" min="2" max="10" value="8" />
+              </div>
+              <div class="field full">
+                <label data-en="The occasion?">L'occasion ?</label>
+                <input type="text" name="occasion" data-en-attr="placeholder|Family reunion, birthday, just a long week…" placeholder="Réunion de famille, anniversaire, juste une longue semaine…" />
+              </div>
             </div>
+          </div>
 
-            <div class="champ">
-                <label for="subject">Objet <span>(optionnel)</span></label>
-                <input id="subject" name="subject" type="text" value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>">
+          <!-- Shared fields -->
+          <div class="form-grid" style="margin-top: 28px;">
+            <div class="field">
+              <label data-en="Your name">Votre nom</label>
+              <input type="text" name="name" required />
             </div>
-
-            <div class="champ champ--message">
-                <label for="message">Votre message</label>
-                <textarea id="message" name="message" rows="6" required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+            <div class="field">
+              <label data-en="Email">Courriel</label>
+              <input type="email" name="email" required />
             </div>
-
-            <!-- Honeypot anti-spam : champ caché que les bots remplissent -->
-            <div class="champ champ--honeypot" aria-hidden="true">
-                <label for="website">Site web</label>
-                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+            <div class="field">
+              <label data-en="Phone (optional)">Téléphone (facultatif)</label>
+              <input type="tel" name="phone" />
             </div>
+            <div class="field">
+              <label data-en="How did you find us?">Comment nous avez-vous trouvés ?</label>
+              <select name="source">
+                <option data-en="A friend">Un ami</option>
+                <option data-en="Instagram">Instagram</option>
+                <option data-en="A magazine">Un magazine</option>
+                <option data-en="Search">Recherche</option>
+                <option data-en="Came back">Revenu(e)</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label data-en="Anything you'd like us to know?">Quelque chose qu'on devrait savoir ?</label>
+              <textarea name="note" data-en-attr="placeholder|Dietary preferences, a celebration to plan, a transfer to organise…" placeholder="Régimes particuliers, une occasion à préparer, un transfert à organiser…"></textarea>
+            </div>
+          </div>
 
-            <button class="duo__envoyer" type="submit">
-                Envoyer
-                <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M4 12h15m0 0-5-5m5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg>
-            </button>
-            <p class="duo__form-note">
-                Nous répondons sous deux jours, en français,
-                en anglais ou en espagnol.
-            </p>
+          <div class="submit-bar">
+            <div class="note" data-en="No payment at this stage — only an enquiry.">Aucun paiement à cette étape — uniquement une demande.</div>
+            <button type="submit" class="btn" data-en="Send →">Envoyer →</button>
+          </div>
+
+          <div class="success" id="success">
+            <div class="numeral" style="margin-bottom: 14px;" data-en="Got it.">Bien reçu.</div>
+            <h3 class="h-lg" style="margin: 0 0 14px;" data-en="A reply is on its way.">Notre réponse <em>est en route</em>.</h3>
+            <p class="body-lg" style="margin: 0;" data-en="We'll write you back within the day from contact@villaplaisance.fr — please check your spam folder, just in case.">Nous vous répondons dans la journée depuis contact@villaplaisance.fr — pensez aux indésirables, au cas où.</p>
+          </div>
         </form>
+      </main>
 
-        <aside class="duo__cotes">
-            <div class="cote">
-                <p class="cote__libelle">Courriel</p>
-                <p class="cote__valeur">
-                    <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-                </p>
-            </div>
-            <div class="cote">
-                <p class="cote__libelle">Adresse</p>
-                <p class="cote__valeur">
-                    Villa Plaisance<br>
-                    Bédarrides<br>
-                    84370 Vaucluse, France
-                </p>
-            </div>
-            <div class="cote">
-                <p class="cote__libelle">Pour venir</p>
-                <p class="cote__valeur">
-                    Gare TGV d'Avignon à 15&nbsp;minutes.<br>
-                    Aéroport Marseille-Provence à 1&nbsp;heure.<br>
-                    Sortie A7 Bédarrides.
-                </p>
-            </div>
-            <?php
-            $socialLinks = [];
-            try { $socialLinks = Database::fetchAll("SELECT * FROM vp_social_links ORDER BY position ASC"); } catch (\Throwable) {}
-            ?>
-            <?php if ($socialLinks): ?>
-            <div class="cote">
-                <p class="cote__libelle">Réseaux</p>
-                <p class="cote__valeur">
-                    <?php foreach ($socialLinks as $i => $sl): ?>
-                        <?php if ($i > 0): ?> · <?php endif; ?>
-                        <a href="<?= htmlspecialchars($sl['url']) ?>" rel="me" target="_blank" rel="noopener noreferrer"><?= htmlspecialchars($sl['name']) ?></a>
-                    <?php endforeach; ?>
-                </p>
-            </div>
-            <?php endif; ?>
-        </aside>
+      <!-- RIGHT — INFO -->
+      <aside class="ct-info">
+        <div class="kicker dark" style="background: transparent; border: 1px solid rgba(251,247,238,0.25); color: var(--linen-200);">
+          <span class="dot" style="background: var(--sage-200);"></span>
+          <span data-en="Contact">Coordonnées</span>
+        </div>
+
+        <h2 data-en="Three ways/to reach us.">Trois façons<br/>de <em>nous joindre</em>.</h2>
+        <p class="body-lg" data-en="Email is best — we keep the conversation written so nothing gets lost.">L'écrit, idéalement — la conversation reste écrite, rien ne se perd.</p>
+
+        <div class="row">
+          <div class="lbl" data-en="By email">Par courriel</div>
+          <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
+          <div class="sub" data-en="The fastest way to a real answer.">Le chemin le plus court vers une vraie réponse.</div>
+        </div>
+
+        <div class="row">
+          <div class="lbl" data-en="In person">Sur place</div>
+          <span class="v">Bédarrides<br/>Vaucluse · 84</span>
+          <div class="sub" data-en="The full address is sent with your booking confirmation.">L'adresse complète est transmise avec la confirmation de séjour.</div>
+        </div>
+
+        <div class="row">
+          <div class="lbl" data-en="Reply time">Délai de réponse</div>
+          <span class="v" data-en="Within the day"><em>Dans la journée</em></span>
+          <div class="sub" data-en="Every enquiry is read and answered by hand, not by a bot.">Chaque demande est lue et signée à la main, jamais par un robot.</div>
+        </div>
+
+        <div class="row">
+          <div class="lbl" data-en="And to follow along">Et pour suivre</div>
+          <a href="#" data-en="Instagram · @villaplaisance">Instagram · @villaplaisance</a>
+        </div>
+      </aside>
 
     </div>
+  </div>
 </section>
+
+<!-- ============ FOOTER ============ -->

@@ -89,6 +89,7 @@ class Router
             '/sur-place' => ['Controllers\\Front\\SurPlaceController', 'index'],
             '/contact' => ['Controllers\\Front\\ContactController', 'index'],
             '/livret' => ['Controllers\\Front\\LivretController', 'index'],
+            '/livret-apercu' => ['Controllers\\Front\\LivretController', 'preview'],
             '/itineraire' => ['Controllers\\Front\\ItineraryController', 'index'],
             '/votre-hote' => ['Controllers\\Front\\HoteController', 'index'],
             '/mentions-legales' => ['Controllers\\Front\\LegalController', 'mentions'],

@@ -31,7 +31,8 @@ class JournalController extends BaseController
             ]),
         ];
 
-        $this->render('front/journal', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        $this->render('front/journal', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function show(string $slug): void

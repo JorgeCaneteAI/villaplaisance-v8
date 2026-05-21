@@ -11,16 +11,20 @@ class HoteController extends BaseController
     {
         $lang = \LangService::get();
 
-        $profile = \Database::fetchOne(
-            "SELECT * FROM vp_host_profile WHERE lang = ? AND active = 1",
-            [$lang]
-        );
-
-        if (!$profile) {
+        // Profile : protégé d'une erreur DB pour que la page reste affichable
+        // même si la BDD est indisponible (MAMP arrêté, etc.). Fallback FR si lang manquante.
+        $profile = null;
+        try {
             $profile = \Database::fetchOne(
-                "SELECT * FROM vp_host_profile WHERE lang = 'fr' AND active = 1"
+                "SELECT * FROM vp_host_profile WHERE lang = ? AND active = 1",
+                [$lang]
             );
-        }
+            if (!$profile) {
+                $profile = \Database::fetchOne(
+                    "SELECT * FROM vp_host_profile WHERE lang = 'fr' AND active = 1"
+                );
+            }
+        } catch (\Throwable) {}
 
         // Fetch CV blocks
         $blocks = [];
@@ -45,6 +49,7 @@ class HoteController extends BaseController
 
         $jsonLd = [];
 
-        $this->render('front/hote', compact('profile', 'blocks', 'reviews', 'seo', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        $this->render('front/hote', compact('profile', 'blocks', 'reviews', 'seo', 'jsonLd', 'lang'), 'front-proto');
     }
 }

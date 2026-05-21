@@ -62,7 +62,8 @@ class LivretController extends BaseController
 
         // Not authenticated: show password gate
         if (empty($_SESSION['livret_authenticated'])) {
-            $this->render('front/livret/password', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang', 'type'));
+            // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+            $this->render('front/livret/password', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang', 'type'), 'front-proto');
             return;
         }
 
@@ -75,7 +76,41 @@ class LivretController extends BaseController
             );
         } catch (\Throwable) {}
 
-        $this->render('front/livret/show', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang', 'type', 'sections'));
+        $this->render('front/livret/show', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang', 'type', 'sections'), 'front-proto');
+    }
+
+    /**
+     * Aperçu public du livret (sans mot de passe). Sert un livret en mode démo,
+     * utile pour lien partageable / aperçu commercial. Type par défaut : bb.
+     * Marqué noindex pour ne pas être indexé par Google.
+     */
+    public function preview(): void
+    {
+        $lang = \LangService::get();
+        $type = $_GET['type'] ?? 'bb';
+        if (!in_array($type, ['bb', 'villa'], true)) {
+            $type = 'bb';
+        }
+
+        $sections = [];
+        try {
+            $sections = \Database::fetchAll(
+                "SELECT * FROM vp_livret WHERE type = ? AND lang = ? AND active = 1 ORDER BY position ASC",
+                [$type, $lang]
+            );
+        } catch (\Throwable) {}
+
+        $seo = [
+            'title' => t('livret.title') . ' — Aperçu — Villa Plaisance',
+            'description' => 'Aperçu du livret d\'accueil Villa Plaisance.',
+            'canonical' => '',
+            'robots' => 'noindex, nofollow',
+            'og' => [],
+            'hreflang' => [],
+        ];
+        $jsonLd = [];
+
+        $this->render('front/livret/preview', compact('seo', 'jsonLd', 'lang', 'type', 'sections'), 'front-proto');
     }
 
     private function handleMessage(string $lang, string $type): void

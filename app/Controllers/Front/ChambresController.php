@@ -34,6 +34,7 @@ class ChambresController extends BaseController
             $jsonLd[] = \SeoService::faqJsonLd($faqs);
         }
 
-        $this->render('front/chambres', compact('seo', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        $this->render('front/chambres', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 }

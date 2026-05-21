@@ -34,6 +34,9 @@ class VillaController extends BaseController
             $jsonLd[] = \SeoService::faqJsonLd($faqs);
         }
 
-        $this->render('front/villa', compact('seo', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        // Les autres pages restent sur 'front' (design impeccable V2) tant qu'elles
+        // n'ont pas été portées.
+        $this->render('front/villa', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 }

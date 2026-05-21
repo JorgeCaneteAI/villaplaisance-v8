@@ -42,7 +42,8 @@ class HomeController extends BaseController
             $jsonLd[0]['aggregateRating'] = \SeoService::aggregateRatingJsonLd($avgRating, count($reviews));
         }
 
-        $this->render('front/home', compact('seo', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        $this->render('front/home', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function notFound(): void

@@ -20,7 +20,8 @@ class ItineraryController extends BaseController
             'Avant votre séjour, nous préparons un itinéraire d\'une journée sur mesure : étapes, horaires, conseils, contacts. Inclus pour nos hôtes.'
         );
         $jsonLd = [];
-        $this->render('front/itineraires', compact('seo', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        $this->render('front/itineraires', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function show(string $slug): void

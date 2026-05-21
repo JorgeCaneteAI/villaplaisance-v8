@@ -31,7 +31,8 @@ class ContactController extends BaseController
             ]),
         ];
 
-        $this->render('front/contact', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang'));
+        // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
+        $this->render('front/contact', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang'), 'front-proto');
     }
 
     private function handleSubmit(string $lang): void
