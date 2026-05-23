@@ -82,6 +82,6 @@ class JournalController extends BaseController
         // Parse content (stored as JSON with blocks)
         $contentBlocks = json_decode($article['content'] ?? '[]', true) ?: [];
 
-        $this->render('front/article', compact('seo', 'article', 'contentBlocks', 'jsonLd', 'lang'));
+        $this->render('front/article', compact('seo', 'article', 'contentBlocks', 'jsonLd', 'lang'), 'front-proto');
     }
 }

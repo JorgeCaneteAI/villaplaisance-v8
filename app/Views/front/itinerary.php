@@ -1,5 +1,17 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1); ?>
+<?php /**
+ * Vue : Itinéraire personnalisé (rendu par /itineraire/{slug}).
+ * Portée en design proto. Layout : front-proto.
+ * Carte Leaflet conservée à l'identique. Tout le reste reskinné proto.
+ *
+ * @var string $lang
+ * @var array  $seo
+ * @var array  $jsonLd
+ * @var array  $itinerary  row de vp_itineraries
+ * @var array  $steps      rows de vp_itinerary_steps
+ * @var array  $comments   rows de vp_itinerary_comments
+ * @var string $csrf
+ */
 $date = $itinerary['itinerary_date'] ? date('d/m/Y', strtotime($itinerary['itinerary_date'])) : '';
 $itLang = $itinerary['lang'] ?? 'fr';
 $dayNamesFr = ['Sunday'=>'Dimanche','Monday'=>'Lundi','Tuesday'=>'Mardi','Wednesday'=>'Mercredi','Thursday'=>'Jeudi','Friday'=>'Vendredi','Saturday'=>'Samedi'];
@@ -10,10 +22,8 @@ $dayName = $itinerary['itinerary_date'] ? ($dayNamesMap[date('l', strtotime($iti
 // Titre dynamique : premier → dernier lieu
 $firstStep = $steps[0]['title'] ?? '';
 $lastStep  = end($steps)['title'] ?? '';
-// Nettoyer les préfixes "Départ de" / "Departure from" / "Arrivée à" / "Arrival in"
 $originClean = preg_replace('/^(Departure from|Départ( de)?)\s*/i', '', $firstStep);
 $destClean   = preg_replace('/^(Arrival in|Arrivée à)\s*/i', '', $lastStep);
-$routeTitle  = $originClean . ' → ' . $destClean;
 
 // Coordonnées pour la carte
 $mapPoints = [];
@@ -27,475 +37,302 @@ foreach ($steps as $s) {
 $hasMap = count($mapPoints) >= 2;
 $gmapsUrl = 'https://www.google.com/maps/dir/' . implode('/', $gmapsWaypoints);
 
-// Nombre d'arrêts (sans départ ni arrivée)
-$stopCount = max(0, count($steps) - 2);
+$firstTime = $steps[0]['time_label'] ?? '';
+$lastTime  = end($steps)['time_label'] ?? '';
 ?>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 
 <style>
-.itinerary-page {
-    max-width: 660px;
-    margin: 0 auto;
-    padding: 0 1.25rem 3rem;
-}
+  .it-page { padding-top: clamp(72px, 9vw, 120px); }
+  .it-page .page-hero { padding-top: 0; }
+  .it-crumbs {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    color: var(--stone-500); text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+  .it-crumbs a { color: var(--stone-500); }
+  .it-crumbs a:hover { color: var(--ink-900); }
+  .it-crumbs .sep { margin: 0 8px; opacity: 0.5; }
 
-/* ── Hero ── */
-.itinerary-hero {
-    text-align: left;
-    padding: 25vh 0 2rem;
-    margin-bottom: 0;
-}
-.itinerary-hero-label {
-    display: inline-block;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #8B7355;
-    background: rgba(139,115,85,0.08);
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    margin-bottom: 1rem;
-}
-.itinerary-hero h1 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 2rem;
-    font-weight: 400;
-    color: #2c3e50;
-    margin: 0 0 0.6rem;
-    line-height: 1.2;
-}
-.itinerary-hero h1 .route-arrow {
-    color: #C5B9A8;
-    font-weight: 300;
-}
-.itinerary-hero-meta {
-    font-size: 0.85rem;
-    color: #999;
-    margin-bottom: 1.2rem;
-}
-.itinerary-hero-meta strong {
-    color: #666;
-    font-weight: 500;
-}
-.itinerary-hero-intro {
-    font-size: 0.92rem;
-    color: #777;
-    line-height: 1.7;
-    max-width: 520px;
-    margin: 0;
-}
-.itinerary-hero-stats {
-    display: flex;
-    justify-content: flex-start;
-    gap: 2rem;
-    margin-top: 1.5rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid #eee;
-}
-.itinerary-hero-stat {
-    text-align: center;
-}
-.itinerary-hero-stat-value {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-    line-height: 1;
-}
-.itinerary-hero-stat-label {
-    font-size: 0.7rem;
-    color: #aaa;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0.25rem;
-}
+  .it-meta {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+    color: var(--stone-600);
+    margin: 8px 0 0;
+  }
+  .it-meta strong { color: var(--ink-900); font-weight: 500; }
+  .it-intro {
+    font-family: var(--font-sans); font-size: 16px; line-height: 1.65; color: var(--stone-600);
+    margin: 24px 0 0; max-width: 56ch;
+  }
 
-/* ── Carte ── */
-.itinerary-map-wrap {
-    margin-bottom: 2rem;
-    border-radius: 14px;
+  /* Stats sous le hero */
+  .it-stats {
+    display: flex; gap: clamp(36px, 5vw, 80px);
+    margin-top: 36px; padding-top: 28px; border-top: var(--hairline);
+  }
+  .it-stat .v {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(32px, 3.6vw, 48px); line-height: 1.0; letter-spacing: -0.015em;
+    color: var(--ink-900);
+  }
+  .it-stat .l {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--stone-500);
+    margin-top: 6px;
+  }
+
+  /* Carte */
+  .it-map-wrap {
+    margin: 56px 0;
+    border: var(--hairline);
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #e8e0d8;
-}
-#itinerary-map {
-    height: 300px;
-    width: 100%;
-}
-.itinerary-map-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    padding: 0.75rem;
-    background: #fafaf8;
-    border-top: 1px solid #e8e0d8;
-}
-.btn-maps {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1.2rem;
-    background: #2c3e50;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-.btn-maps:hover { background: #1a252f; }
-.btn-maps-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1rem;
-    background: #fff;
-    color: #555;
-    border: 1px solid #d0c8be;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    cursor: pointer;
-    transition: border-color 0.2s;
-}
-.btn-maps-outline:hover { border-color: #8B7355; }
+  }
+  #itinerary-map { height: 420px; width: 100%; }
+  @media (max-width: 720px) { #itinerary-map { height: 320px; } }
+  .it-map-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--linen-100);
+    border-top: var(--hairline);
+  }
 
-/* ── Marqueurs carte ── */
-.step-marker {
-    background: #8B7355;
-    color: #fff;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border: 2px solid #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
+  /* Timeline */
+  .it-section-label {
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--stone-500);
+    margin: 56px 0 28px;
+    padding-bottom: 14px; border-bottom: var(--hairline);
+  }
 
-/* ── Section titre ── */
-.itinerary-section-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #C5B9A8;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #f0ebe4;
-}
-
-/* ── Timeline ── */
-.itinerary-timeline {
+  .it-timeline {
     position: relative;
-    padding-left: 2.5rem;
-    margin-bottom: 2rem;
-}
-.itinerary-timeline::before {
+    padding-left: 56px;
+    max-width: 760px;
+  }
+  .it-timeline::before {
     content: '';
     position: absolute;
-    left: 9px;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    background: linear-gradient(to bottom, #8B7355 0%, #C5B9A8 40%, #e8e0d8 100%);
-}
-.itinerary-step {
+    left: 17px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--olive-900) 0%, var(--sage-700) 40%, color-mix(in oklab, var(--sage-700) 25%, transparent) 100%);
+  }
+  .it-step {
     position: relative;
-    margin-bottom: 2rem;
-}
-.itinerary-step:last-child {
-    margin-bottom: 0;
-}
-.itinerary-step::before {
+    margin-bottom: 36px;
+  }
+  .it-step:last-child { margin-bottom: 0; }
+  .it-step::before {
     content: '';
     position: absolute;
-    left: -2.5rem;
-    top: 5px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #fff;
-    border: 3px solid #C5B9A8;
+    left: -50px; top: 6px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--linen-50);
+    border: 2px solid var(--sage-700);
     z-index: 1;
-    transition: border-color 0.2s;
-}
-.itinerary-step:first-child::before {
-    background: #8B7355;
-    border-color: #8B7355;
-    box-shadow: 0 0 0 4px rgba(139,115,85,0.15);
-}
-.itinerary-step:last-child::before {
-    background: #C5B9A8;
-    border-color: #C5B9A8;
-    box-shadow: 0 0 0 4px rgba(197,185,168,0.15);
-}
-.step-time {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: #8B7355;
-    letter-spacing: 0.03em;
-    margin-bottom: 0.15rem;
-}
-.step-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.15rem;
-    line-height: 1.25;
-}
-.step-duration {
+  }
+  .it-step:first-child::before {
+    background: var(--olive-900); border-color: var(--olive-900);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--olive-900) 20%, transparent);
+  }
+  .it-step:last-child::before {
+    background: var(--sage-700); border-color: var(--sage-700);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--sage-700) 20%, transparent);
+  }
+  .it-step .it-time {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--olive-900);
+    margin-bottom: 4px;
+  }
+  .it-step .it-title {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(22px, 1.8vw, 26px); line-height: 1.2; letter-spacing: -0.005em;
+    color: var(--ink-900); margin: 0 0 4px;
+    display: inline-flex; align-items: baseline; gap: 8px;
+  }
+  .it-step .it-title a { color: var(--ink-900); }
+  .it-step .it-title a:hover { color: var(--sage-700); }
+  .it-step .it-title .ext { font-size: 0.65em; color: var(--sage-700); }
+  .it-step .it-duration {
     display: inline-block;
-    font-size: 0.72rem;
-    color: #999;
-    background: rgba(139,115,85,0.06);
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    margin-bottom: 0.4rem;
-}
-.step-desc {
-    font-size: 0.88rem;
-    color: #666;
-    line-height: 1.65;
-}
-.step-image {
-    margin-top: 0.6rem;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.step-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
+    color: var(--stone-600);
+    background: color-mix(in oklab, var(--sage-700) 10%, var(--linen-50));
+    padding: 2px 8px;
+    margin-bottom: 10px;
+  }
+  .it-step .it-desc {
+    font-family: var(--font-sans); font-size: 15px; line-height: 1.65; color: var(--stone-600);
+    margin: 0;
+  }
+  .it-step .it-image {
+    margin-top: 14px; overflow: hidden;
+    border: var(--hairline);
+  }
+  .it-step .it-image img { width: 100%; height: auto; display: block; }
 
-/* ── Commentaires ── */
-.itinerary-comments {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-}
-.comment-item {
-    padding: 1rem 0;
-    border-bottom: 1px solid #f0ebe4;
-}
-.comment-item:last-child { border-bottom: none; }
-.comment-author {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #2c3e50;
-}
-.comment-date {
-    font-size: 0.72rem;
-    color: #bbb;
-    margin-left: 0.5rem;
-}
-.comment-text {
-    font-size: 0.88rem;
-    color: #666;
-    line-height: 1.6;
-    margin-top: 0.25rem;
-}
-.comment-form {
-    margin-top: 1.5rem;
-    padding: 1.25rem;
-    background: #fafaf8;
-    border-radius: 10px;
-    border: 1px solid #e8e0d8;
-}
-.comment-form input,
-.comment-form textarea {
-    width: 100%;
-    padding: 0.6rem 0.75rem;
-    border: 1px solid #d0c8be;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 0.88rem;
-    margin-bottom: 0.75rem;
-    box-sizing: border-box;
-}
-.comment-form textarea { resize: vertical; min-height: 80px; }
-.comment-form button {
-    background: #8B7355;
-    color: #fff;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.comment-form button:hover { background: #7a6448; }
+  /* Marker carte */
+  .step-marker {
+    background: var(--olive-900);
+    color: var(--linen-50);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+    border: 2px solid var(--linen-50);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
 
-/* ── Footer ── */
-.itinerary-footer {
-    text-align: center;
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: #88A398;
-    border-radius: 12px;
-}
-.itinerary-footer-logo {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #fff;
-    margin-bottom: 0.25rem;
-}
-.itinerary-footer-logo a {
-    color: #fff;
-    text-decoration: none;
-}
-.itinerary-footer-sub {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.8);
-}
-.itinerary-footer-sub a {
-    color: #fff;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
+  /* Commentaires */
+  .it-comments { max-width: 760px; margin-top: 64px; }
+  .it-comment {
+    padding: 18px 0;
+    border-bottom: var(--hairline);
+  }
+  .it-comment:last-of-type { border-bottom: 0; }
+  .it-comment .who {
+    font-family: var(--font-display); font-style: italic;
+    font-size: 18px; color: var(--ink-900);
+  }
+  .it-comment .when {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
+    color: var(--stone-500); text-transform: uppercase;
+    margin-left: 10px;
+  }
+  .it-comment .what {
+    font-family: var(--font-sans); font-size: 15px; line-height: 1.65; color: var(--stone-600);
+    margin: 6px 0 0;
+  }
 
-/* ── Mobile ── */
-@media (max-width: 480px) {
-    .itinerary-page { padding: 0 1rem 2rem; }
-    .itinerary-hero { padding: 25vh 0.5rem 1.5rem; }
-    .itinerary-hero h1 { font-size: 1.6rem; }
-    .itinerary-hero-stats { gap: 1.5rem; }
-    .step-title { font-size: 1.15rem; }
-    #itinerary-map { height: 240px; }
-    .itinerary-timeline { padding-left: 2.2rem; }
-    .itinerary-step::before { left: -2.2rem; }
-}
+  .it-form {
+    margin-top: 28px;
+    padding: 24px;
+    background: var(--linen-100);
+    border: var(--hairline);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .it-form input,
+  .it-form textarea {
+    width: 100%; box-sizing: border-box;
+    padding: 12px 14px;
+    background: var(--linen-50);
+    border: var(--hairline);
+    font-family: var(--font-sans); font-size: 14px; color: var(--ink-900);
+  }
+  .it-form input:focus,
+  .it-form textarea:focus { outline: 1px solid var(--olive-900); border-color: var(--olive-900); }
+  .it-form textarea { resize: vertical; min-height: 100px; }
+  .it-form button { align-self: flex-start; }
 </style>
 
-<div class="itinerary-page">
+<section class="section it-page">
+  <div class="container-wide">
 
-    <!-- ═══ Hero ═══ -->
-    <header class="itinerary-hero">
-        <div class="itinerary-hero-label"><?= $itLang === 'en' ? 'Day Trip' : 'Itinéraire du jour' ?></div>
-        <h1><?= htmlspecialchars($originClean) ?> <span class="route-arrow">→</span> <?= htmlspecialchars($destClean) ?></h1>
-        <div class="itinerary-hero-meta">
+    <nav class="it-crumbs" aria-label="Fil d'Ariane">
+      <a href="<?= LangService::url('/') ?>" data-en="Home">Accueil</a>
+      <span class="sep" aria-hidden="true">/</span>
+      <a href="<?= LangService::url('itineraire') ?>" data-en="Custom itineraries">Itinéraires</a>
+      <span class="sep" aria-hidden="true">/</span>
+      <span aria-current="page"><?= htmlspecialchars($itinerary['guest_name']) ?></span>
+    </nav>
+
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <div class="page-hero-issue">
+            <span><?= $itLang === 'en' ? 'Day Trip' : 'Itinéraire du jour' ?></span>
             <?php if ($date): ?>
-            <strong><?= $dayName ?> <?= $date ?></strong> ·
+            <span><?= htmlspecialchars($dayName) ?> &middot; <?= htmlspecialchars($date) ?></span>
             <?php endif; ?>
+          </div>
+          <h1><?= htmlspecialchars($originClean) ?> <em>&rarr;</em> <?= htmlspecialchars($destClean) ?></h1>
+          <p class="it-meta">
             <?= $itLang === 'en' ? 'Prepared for' : 'Préparé pour' ?> <strong><?= htmlspecialchars($itinerary['guest_name']) ?></strong>
+          </p>
         </div>
         <?php if (!empty($itinerary['intro_text'])): ?>
-        <p class="itinerary-hero-intro"><?= nl2br(htmlspecialchars($itinerary['intro_text'])) ?></p>
+        <p class="lede"><?= nl2br(htmlspecialchars($itinerary['intro_text'])) ?></p>
         <?php endif; ?>
-        <div class="itinerary-hero-stats">
-            <div class="itinerary-hero-stat">
-                <div class="itinerary-hero-stat-value"><?= count($steps) ?></div>
-                <div class="itinerary-hero-stat-label"><?= $itLang === 'en' ? 'stops' : 'étapes' ?></div>
-            </div>
-            <div class="itinerary-hero-stat">
-                <?php
-                $firstTime = $steps[0]['time_label'] ?? '';
-                $lastTime  = end($steps)['time_label'] ?? '';
-                $firstClean = preg_replace('/[^0-9:]/', '', str_replace(['AM','PM','h'], [':00',':00',':'], $firstTime));
-                $lastClean  = preg_replace('/[^0-9:]/', '', str_replace(['AM','PM','h'], [':00',':00',':'], $lastTime));
-                ?>
-                <div class="itinerary-hero-stat-value"><?= htmlspecialchars(trim($firstTime, '~')) ?></div>
-                <div class="itinerary-hero-stat-label"><?= $itLang === 'en' ? 'departure' : 'départ' ?></div>
-            </div>
-            <div class="itinerary-hero-stat">
-                <div class="itinerary-hero-stat-value"><?= htmlspecialchars(trim($lastTime, '~')) ?></div>
-                <div class="itinerary-hero-stat-label"><?= $itLang === 'en' ? 'arrival' : 'arrivée' ?></div>
-            </div>
-        </div>
-    </header>
+      </div>
+    </div>
 
-    <!-- ═══ Carte ═══ -->
+    <div class="it-stats">
+      <div class="it-stat"><div class="v"><?= count($steps) ?></div><div class="l"><?= $itLang === 'en' ? 'Stops' : 'Étapes' ?></div></div>
+      <?php if ($firstTime): ?>
+      <div class="it-stat"><div class="v"><?= htmlspecialchars(trim($firstTime, '~')) ?></div><div class="l"><?= $itLang === 'en' ? 'Departure' : 'Départ' ?></div></div>
+      <?php endif; ?>
+      <?php if ($lastTime): ?>
+      <div class="it-stat"><div class="v"><?= htmlspecialchars(trim($lastTime, '~')) ?></div><div class="l"><?= $itLang === 'en' ? 'Arrival' : 'Arrivée' ?></div></div>
+      <?php endif; ?>
+    </div>
+
     <?php if ($hasMap): ?>
-    <div class="itinerary-map-wrap">
-        <div id="itinerary-map"></div>
-        <div class="itinerary-map-actions">
-            <a href="<?= htmlspecialchars($gmapsUrl) ?>" target="_blank" rel="noopener" class="btn-maps">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <?= $itLang === 'en' ? 'Open in Google Maps' : 'Ouvrir dans Google Maps' ?>
-            </a>
-            <button type="button" class="btn-maps-outline" onclick="navigator.clipboard.writeText('<?= htmlspecialchars($gmapsUrl) ?>').then(()=>this.textContent='<?= $itLang === 'en' ? 'Copied!' : 'Copié !' ?>')">
-                <?= $itLang === 'en' ? 'Copy link' : 'Copier le lien' ?>
-            </button>
-        </div>
+    <div class="it-map-wrap">
+      <div id="itinerary-map"></div>
+      <div class="it-map-actions">
+        <a class="btn" href="<?= htmlspecialchars($gmapsUrl) ?>" target="_blank" rel="noopener">
+          <?= $itLang === 'en' ? 'Open in Google Maps' : 'Ouvrir dans Google Maps' ?> &rarr;
+        </a>
+        <button type="button" class="btn btn-ghost" onclick="navigator.clipboard.writeText('<?= htmlspecialchars($gmapsUrl) ?>').then(()=>{this.textContent='<?= $itLang === 'en' ? 'Copied' : 'Copié' ?>';})">
+          <?= $itLang === 'en' ? 'Copy link' : 'Copier le lien' ?>
+        </button>
+      </div>
     </div>
     <?php endif; ?>
 
-    <!-- ═══ Timeline ═══ -->
-    <div class="itinerary-section-title"><?= $itLang === 'en' ? 'Your route, step by step' : 'Votre parcours, étape par étape' ?></div>
-    <div class="itinerary-timeline">
-        <?php foreach ($steps as $step): ?>
-        <div class="itinerary-step">
-            <?php if (!empty($step['time_label'])): ?>
-            <div class="step-time"><?= htmlspecialchars($step['time_label']) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($step['link'])): ?>
-            <a href="<?= htmlspecialchars($step['link']) ?>" target="_blank" rel="noopener" class="step-title" style="text-decoration:none;color:#2c3e50"><?= htmlspecialchars($step['title']) ?> <span style="font-size:0.7em;color:#8B7355">&#x2197;</span></a>
-            <?php else: ?>
-            <div class="step-title"><?= htmlspecialchars($step['title']) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($step['duration'])): ?>
-            <div class="step-duration"><?= htmlspecialchars($step['duration']) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($step['description'])): ?>
-            <p class="step-desc"><?= nl2br(htmlspecialchars($step['description'])) ?></p>
-            <?php endif; ?>
-            <?php if (!empty($step['image'])): ?>
-            <div class="step-image">
-                <?= \ImageService::img($step['image'], htmlspecialchars($step['title']), 600, 300) ?>
-            </div>
-            <?php endif; ?>
-        </div>
-        <?php endforeach; ?>
-    </div>
-
-    <!-- ═══ Commentaires ═══ -->
-    <div class="itinerary-comments" id="comments">
-        <div class="itinerary-section-title"><?= $itLang === 'en' ? 'Guest comments' : 'Commentaires' ?></div>
-
-        <?php if (!empty($comments)): ?>
-        <?php foreach ($comments as $c): ?>
-        <div class="comment-item">
-            <span class="comment-author"><?= htmlspecialchars($c['guest_name']) ?></span>
-            <span class="comment-date"><?= date('d/m/Y', strtotime($c['created_at'])) ?></span>
-            <p class="comment-text"><?= nl2br(htmlspecialchars($c['message'])) ?></p>
-        </div>
-        <?php endforeach; ?>
+    <div class="it-section-label"><?= $itLang === 'en' ? 'Your route, step by step' : 'Votre parcours, étape par étape' ?></div>
+    <div class="it-timeline">
+      <?php foreach ($steps as $step): ?>
+      <div class="it-step">
+        <?php if (!empty($step['time_label'])): ?>
+        <div class="it-time"><?= htmlspecialchars($step['time_label']) ?></div>
         <?php endif; ?>
-
-        <form class="comment-form" method="post" action="/itineraire/<?= htmlspecialchars($itinerary['slug']) ?>/comment">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
-            <div style="position:absolute;left:-9999px" aria-hidden="true">
-                <input type="text" name="website" tabindex="-1" autocomplete="off">
-            </div>
-            <input type="text" name="guest_name" placeholder="<?= $itLang === 'en' ? 'Your name' : 'Votre nom' ?>" required>
-            <textarea name="message" placeholder="<?= $itLang === 'en' ? 'Leave a comment or a thank you note...' : 'Laissez un commentaire ou un mot de remerciement...' ?>" required></textarea>
-            <button type="submit"><?= $itLang === 'en' ? 'Send' : 'Envoyer' ?></button>
-        </form>
+        <?php if (!empty($step['link'])): ?>
+          <h3 class="it-title"><a href="<?= htmlspecialchars($step['link']) ?>" target="_blank" rel="noopener"><?= htmlspecialchars($step['title']) ?> <span class="ext">&#x2197;</span></a></h3>
+        <?php else: ?>
+          <h3 class="it-title"><?= htmlspecialchars($step['title']) ?></h3>
+        <?php endif; ?>
+        <?php if (!empty($step['duration'])): ?>
+        <span class="it-duration"><?= htmlspecialchars($step['duration']) ?></span>
+        <?php endif; ?>
+        <?php if (!empty($step['description'])): ?>
+        <p class="it-desc"><?= nl2br(htmlspecialchars($step['description'])) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($step['image'])): ?>
+        <div class="it-image">
+          <?= \ImageService::img($step['image'], htmlspecialchars($step['title']), 800, 400) ?>
+        </div>
+        <?php endif; ?>
+      </div>
+      <?php endforeach; ?>
     </div>
 
-    <!-- ═══ Footer ═══ -->
-    <footer class="itinerary-footer">
-        <div class="itinerary-footer-logo"><a href="<?= APP_URL ?>">Villa Plaisance</a></div>
-        <div class="itinerary-footer-sub">
-            <?= $itLang === 'en'
-                ? 'Prepared with care by <a href="' . APP_URL . '/votre-hote">Jorge Canete</a> from <a href="' . APP_URL . '">La Villa Plaisance</a>'
-                : 'Préparé avec soin par <a href="' . APP_URL . '/votre-hote">Jorge Canete</a>, <a href="' . APP_URL . '">La Villa Plaisance</a>' ?>
-        </div>
-    </footer>
+    <div class="it-comments" id="comments">
+      <div class="it-section-label"><?= $itLang === 'en' ? 'Guest comments' : 'Commentaires' ?></div>
 
-</div>
+      <?php if (!empty($comments)): ?>
+        <?php foreach ($comments as $c): ?>
+        <div class="it-comment">
+          <span class="who"><?= htmlspecialchars($c['guest_name']) ?></span>
+          <span class="when"><?= date('d/m/Y', strtotime($c['created_at'])) ?></span>
+          <p class="what"><?= nl2br(htmlspecialchars($c['message'])) ?></p>
+        </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
+
+      <form class="it-form" method="post" action="/itineraire/<?= htmlspecialchars($itinerary['slug']) ?>/comment">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+        <div style="position:absolute;left:-9999px" aria-hidden="true">
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <input type="text" name="guest_name" placeholder="<?= $itLang === 'en' ? 'Your name' : 'Votre nom' ?>" required>
+        <textarea name="message" placeholder="<?= $itLang === 'en' ? 'Leave a comment or a thank you note…' : 'Laissez un commentaire ou un mot de remerciement…' ?>" required></textarea>
+        <button type="submit" class="btn"><?= $itLang === 'en' ? 'Send' : 'Envoyer' ?> &rarr;</button>
+      </form>
+    </div>
+
+  </div>
+</section>
 
 <?php if ($hasMap): ?>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
@@ -524,7 +361,7 @@ $stopCount = max(0, count($steps) - 2);
     });
 
     L.polyline(latlngs, {
-        color: '#8B7355',
+        color: '#1F2814',
         weight: 3,
         opacity: 0.7,
         dashArray: '8, 6'

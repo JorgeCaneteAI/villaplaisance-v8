@@ -31,7 +31,7 @@ class SurPlaceController extends BaseController
             ]),
         ];
 
-        $this->render('front/surplace', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'));
+        $this->render('front/surplace', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function show(string $slug): void
@@ -80,6 +80,6 @@ class SurPlaceController extends BaseController
 
         $contentBlocks = json_decode($article['content'] ?? '[]', true) ?: [];
 
-        $this->render('front/article', compact('seo', 'article', 'contentBlocks', 'jsonLd', 'lang'));
+        $this->render('front/article', compact('seo', 'article', 'contentBlocks', 'jsonLd', 'lang'), 'front-proto');
     }
 }

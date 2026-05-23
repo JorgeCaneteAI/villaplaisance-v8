@@ -84,7 +84,7 @@ class ItineraryController extends BaseController
         $jsonLd = [];
         $csrf = $this->csrf();
 
-        $this->render('front/itinerary', compact('seo', 'itinerary', 'steps', 'comments', 'jsonLd', 'lang', 'csrf'));
+        $this->render('front/itinerary', compact('seo', 'itinerary', 'steps', 'comments', 'jsonLd', 'lang', 'csrf'), 'front-proto');
     }
 
     public function comment(string $slug): void
