@@ -52,6 +52,6 @@ class HomeController extends BaseController
         $lang = \LangService::get();
         $seo = \SeoService::forPage('404', $lang, '404 — Page introuvable', 'Cette page n\'existe pas.');
         $jsonLd = [];
-        $this->render('front/404', compact('seo', 'jsonLd', 'lang'));
+        $this->render('front/404', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 }

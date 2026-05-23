@@ -20,7 +20,7 @@ class LegalController extends BaseController
                 ['name' => t('footer.mentions')],
             ]),
         ];
-        $this->render('front/mentions-legales', compact('seo', 'jsonLd', 'lang'));
+        $this->render('front/mentions-legales', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function confidentialite(): void
@@ -36,7 +36,7 @@ class LegalController extends BaseController
                 ['name' => t('footer.confidentialite')],
             ]),
         ];
-        $this->render('front/politique-confidentialite', compact('seo', 'jsonLd', 'lang'));
+        $this->render('front/politique-confidentialite', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function planDuSite(): void
@@ -52,6 +52,6 @@ class LegalController extends BaseController
                 ['name' => t('footer.plan')],
             ]),
         ];
-        $this->render('front/plan-du-site', compact('seo', 'jsonLd', 'lang'));
+        $this->render('front/plan-du-site', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }
 }

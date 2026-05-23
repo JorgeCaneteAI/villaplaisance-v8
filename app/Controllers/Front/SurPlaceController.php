@@ -50,7 +50,7 @@ class SurPlaceController extends BaseController
             http_response_code(404);
             $seo = \SeoService::forPage('404', $lang, '404 — Fiche introuvable', '');
             $jsonLd = [];
-            $this->render('front/404', compact('seo', 'jsonLd', 'lang'));
+            $this->render('front/404', compact('seo', 'jsonLd', 'lang'), 'front-proto');
             return;
         }
 
