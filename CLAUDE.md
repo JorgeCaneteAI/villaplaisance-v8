@@ -35,9 +35,13 @@ le **front** (Views Front + assets) par le design "impeccable" V2.
 
 ## Production — o2switch
 - Sous-domaine de dev : `v2.villaplaisance.fr` → `/home/efkz3012/v2.villaplaisance.fr/`
-- DB : depuis la réorga 2026-05-19, une seule DB `efkz3012_VPV7` partagée
-  avec la prod (cf. `Site Internet/CLAUDE.md`). L'ancienne DB `efkz3012_VPV8`
-  est orpheline, à supprimer.
+- DB : depuis 2026-05-23, v8 tourne sur **sa propre DB `efkz3012_VPV8_dev`**
+  (snapshot de VPV7), pour permettre les chantiers de schéma sans risque
+  sur la prod. User MySQL dédié `efkz3012_VPV8_dev`. Cf.
+  `../docs/2026-05-23-db-v8-separee.md` pour la procédure de re-sync prod → dev
+  et le rollback `.env.shared-vpv7`.
+- L'ancienne DB orpheline `efkz3012_VPV8` (≠ VPV8_dev) est conservée comme
+  filet, à supprimer dans une session ultérieure.
 - User SSH : `efkz3012`
 - Pendant les travaux : htpasswd sur le sous-domaine.
 
@@ -83,3 +87,6 @@ Alternative à l'étape 2 : cPanel UI → Git Version Control → `villaplaisanc
 
 ## Index `docs/`
 - `2026-04-30-setup-v8.md` : décisions de setup, état Phase 0.
+
+## Index `../docs/` (niveau maître, hors repo)
+- `2026-05-23-db-v8-separee.md` : DB v8 séparée de la prod (piste A).
