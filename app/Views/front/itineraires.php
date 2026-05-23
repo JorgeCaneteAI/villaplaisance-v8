@@ -220,7 +220,7 @@ $totalCount = ($featured ? 1 : 0) + count($articles);
       <?php if ($featured): ?>
       <!-- FEATURED -->
       <article class="qf-featured qf-card" data-cat="<?= htmlspecialchars($catSlug($featured['category'] ?? '')) ?>">
-        <div class="img" style="background-image: url('<?= htmlspecialchars($featured['cover_image'] ?? '/assets/img/placeholder/sur-place.webp') ?>')"></div>
+        <div class="img" style="background-image: url('<?= htmlspecialchars(!empty($featured['cover_image']) ? \ImageService::url($featured['cover_image']) : '/assets/img/placeholder/sur-place.webp') ?>')"></div>
         <div>
           <div class="meta">
             <?php if (!empty($featured['category'])): ?>
@@ -247,7 +247,7 @@ $totalCount = ($featured ? 1 : 0) + count($articles);
       <!-- CARDS -->
       <?php foreach ($articles as $a): ?>
       <article class="qf-card" data-cat="<?= htmlspecialchars($catSlug($a['category'] ?? '')) ?>">
-        <div class="img" style="background-image: url('<?= htmlspecialchars($a['cover_image'] ?? '/assets/img/placeholder/sur-place.webp') ?>')"></div>
+        <div class="img" style="background-image: url('<?= htmlspecialchars(!empty($a['cover_image']) ? \ImageService::url($a['cover_image']) : '/assets/img/placeholder/sur-place.webp') ?>')"></div>
         <?php if (!empty($a['category'])): ?>
         <div class="meta">
           <span class="badge <?= htmlspecialchars($catSlug($a['category'])) ?>"><?= htmlspecialchars($a['category']) ?></span>
