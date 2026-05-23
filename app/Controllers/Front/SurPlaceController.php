@@ -7,33 +7,15 @@ use App\Controllers\BaseController;
 
 class SurPlaceController extends BaseController
 {
-    public function index(): void
-    {
-        $lang = \LangService::get();
-        $seo = \SeoService::forPage('sur-place', $lang,
-            'Sur place — Adresses et recommandations autour de Bédarrides',
-            'Restaurants, commerces, sites à visiter, activités enfants. Nos recommandations autour de Villa Plaisance à Bédarrides.'
-        );
-
-        $articles = [];
-        try {
-            $articles = \Database::fetchAll(
-                "SELECT * FROM vp_articles WHERE type = 'sur-place' AND lang = ? AND status = 'published' ORDER BY published_at DESC",
-                [$lang]
-            );
-        } catch (\Throwable) {}
-
-        $categories = array_unique(array_column($articles, 'category'));
-        $jsonLd = [
-            \SeoService::breadcrumbJsonLd([
-                ['name' => t('nav.home'), 'url' => APP_URL . '/'],
-                ['name' => t('nav.surplace')],
-            ]),
-        ];
-
-        $this->render('front/surplace', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'), 'front-proto');
-    }
-
+    /**
+     * Note : la page liste publique /sur-place a été supprimée le 2026-05-23.
+     * Son contenu est désormais servi par ItineraryController::index sur
+     * /itineraire (lien "Que faire" de la nav). Le router redirige 301
+     * /sur-place → /itineraire.
+     *
+     * Cette classe ne garde que show() pour les pages détaillées des
+     * articles vp_articles type='sur-place' : URL /sur-place/{slug}.
+     */
     public function show(string $slug): void
     {
         $lang = \LangService::get();

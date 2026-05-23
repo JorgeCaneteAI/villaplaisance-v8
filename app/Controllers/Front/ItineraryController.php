@@ -8,20 +8,38 @@ use App\Controllers\BaseController;
 class ItineraryController extends BaseController
 {
     /**
-     * Page de présentation du service itinéraires personnalisés
-     * (`/itineraire/`). Distincte de show($slug) qui affiche un
-     * itinéraire personnalisé pour un guest particulier.
+     * Page "Que faire" — directory dynamique des recommandations.
+     * Liste les articles vp_articles WHERE type='sur-place'. Le lien
+     * de la nav "Que faire" pointe ici. Distincte de show($slug) qui
+     * affiche un itinéraire personnalisé nominatif.
      */
     public function index(): void
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('itineraire', $lang,
-            'Itinéraires personnalisés en Provence — Villa Plaisance',
-            'Avant votre séjour, nous préparons un itinéraire d\'une journée sur mesure : étapes, horaires, conseils, contacts. Inclus pour nos hôtes.'
+            'Que faire en Provence autour de Bédarrides — Villa Plaisance',
+            'Sites à visiter, tables et restaurants, commerces, activités enfants. La sélection que nous donnons à nos hôtes au petit-déjeuner.'
         );
-        $jsonLd = [];
+
+        $articles = [];
+        try {
+            $articles = \Database::fetchAll(
+                "SELECT * FROM vp_articles WHERE type = 'sur-place' AND lang = ? AND status = 'published' ORDER BY published_at DESC",
+                [$lang]
+            );
+        } catch (\Throwable) {}
+
+        $categories = array_values(array_unique(array_filter(array_column($articles, 'category'))));
+
+        $jsonLd = [
+            \SeoService::breadcrumbJsonLd([
+                ['name' => t('nav.home'), 'url' => APP_URL . '/'],
+                ['name' => t('nav.itineraire')],
+            ]),
+        ];
+
         // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
-        $this->render('front/itineraires', compact('seo', 'jsonLd', 'lang'), 'front-proto');
+        $this->render('front/itineraires', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'), 'front-proto');
     }
 
     public function show(string $slug): void

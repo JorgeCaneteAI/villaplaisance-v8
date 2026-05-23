@@ -74,8 +74,7 @@
       <div class="sm-bloc">
         <h2 data-en="The territory">Le territoire</h2>
         <ul>
-          <li><a href="<?= LangService::url('sur-place') ?>" data-en="On site">Sur place</a></li>
-          <li><a href="<?= LangService::url('itineraire') ?>" data-en="Custom itineraries">Itinéraires sur mesure</a></li>
+          <li><a href="<?= LangService::url('itineraire') ?>" data-en="Things to do">Que faire sur place</a></li>
           <li><a href="<?= LangService::url('journal') ?>" data-en="The Journal">Le Journal</a></li>
         </ul>
       </div>

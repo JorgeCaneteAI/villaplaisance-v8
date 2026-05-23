@@ -79,6 +79,15 @@ class Router
         $normalized = rtrim($uri, '/');
         if ($normalized === '') $normalized = '/';
 
+        // Redirection 301 — /sur-place fusionnée dans /itineraire (2026-05-23).
+        // La page liste "Sur place" n'existe plus, son contenu est servi par
+        // ItineraryController::index sous l'URL /itineraire (lien "Que faire"
+        // de la nav). Les pages détaillées /sur-place/{slug} restent valides.
+        if ($normalized === '/sur-place') {
+            header('Location: ' . APP_URL . '/itineraire', true, 301);
+            exit;
+        }
+
         // Direct route matching
         $routes = [
             '/' => ['Controllers\\Front\\HomeController', 'index'],
@@ -86,7 +95,6 @@ class Router
             '/location-villa-provence' => ['Controllers\\Front\\VillaController', 'index'],
             '/espaces-exterieurs' => ['Controllers\\Front\\ExterieursController', 'index'],
             '/journal' => ['Controllers\\Front\\JournalController', 'index'],
-            '/sur-place' => ['Controllers\\Front\\SurPlaceController', 'index'],
             '/contact' => ['Controllers\\Front\\ContactController', 'index'],
             '/livret' => ['Controllers\\Front\\LivretController', 'index'],
             '/livret-apercu' => ['Controllers\\Front\\LivretController', 'preview'],
