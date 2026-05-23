@@ -100,7 +100,7 @@
         <div class="container-wide">
             <h2 data-en="Want to come?">Envie de <em>venir</em> ?</h2>
             <div style="display:flex; gap: 16px; flex-wrap: wrap;">
-                <a class="btn" style="background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span data-en="Send an enquiry">Envoyer une demande</span> &rarr;</a>
+                <a class="btn" style="background: var(--linen-50); color: var(--olive-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span data-en="Send an enquiry">Envoyer une demande</span> &rarr;</a>
                 <a class="btn btn-ghost" style="color: var(--linen-50); border-color: rgba(251,247,238,0.4);" href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
             </div>
 

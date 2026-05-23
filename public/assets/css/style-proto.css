@@ -15,6 +15,9 @@
   --ink-700:   #3B362D;
   --ink-900:   #1F1C16;
 
+  /* Olive — vert olive très sombre, utilisé pour aplats de footer et boutons */
+  --olive-900: #1F2814;
+
   /* Sage — quiet accent */
   --sage-200: #C9D2BD;
   --sage-400: #94A487;
@@ -275,21 +278,21 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-sans); font-size: 13.5px; font-weight: 500;
   letter-spacing: 0.02em;
   padding: 12px 22px;
-  border: 1px solid var(--ink-900);
-  background: var(--ink-900);
+  border: 1px solid var(--olive-900);
+  background: var(--olive-900);
   color: var(--linen-50);
   cursor: pointer;
   transition: background .2s ease, color .2s ease, transform .2s ease;
 }
 .btn:hover { background: var(--sage-700); border-color: var(--sage-700); }
 .btn-ghost {
-  background: transparent; color: var(--ink-900); border-color: var(--ink-900);
+  background: transparent; color: var(--olive-900); border-color: var(--olive-900);
 }
-.btn-ghost:hover { background: var(--ink-900); color: var(--linen-50); }
+.btn-ghost:hover { background: var(--olive-900); color: var(--linen-50); }
 .btn-link {
   display: inline-flex; align-items: center; gap: 10px;
-  font-size: 13.5px; letter-spacing: 0.02em; color: var(--ink-900);
-  padding-bottom: 3px; border-bottom: 1px solid var(--ink-900);
+  font-size: 13.5px; letter-spacing: 0.02em; color: var(--olive-900);
+  padding-bottom: 3px; border-bottom: 1px solid var(--olive-900);
   transition: gap .2s ease, color .2s ease;
 }
 .btn-link:hover { gap: 14px; color: var(--sage-700); border-color: var(--sage-700); }
@@ -542,7 +545,7 @@ a { color: inherit; text-decoration: none; }
 /* ============ FOOTER ============ */
 
 .footer {
-  background: var(--ink-900);
+  background: var(--olive-900);
   color: var(--linen-200);
   padding: clamp(56px, 7vw, 96px) 0 32px;
   margin-top: var(--section-y);
