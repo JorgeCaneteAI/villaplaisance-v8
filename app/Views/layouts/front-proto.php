@@ -76,6 +76,7 @@
             <nav class="nav-links" aria-label="Principal">
                 <a href="<?= LangService::url('chambres-d-hotes') ?>" data-en="B&amp;B rooms" data-page="chambres-hotes">Chambres d'hôtes</a>
                 <a href="<?= LangService::url('location-villa-provence') ?>" data-en="Whole house" data-page="maison-hotes">Maison d'hôtes</a>
+                <a href="<?= LangService::url('disponibilites') ?>" data-en="Availability" data-page="disponibilites">Disponibilités</a>
                 <a href="<?= LangService::url('espaces-exterieurs') ?>" data-en="Outdoors" data-page="exterieurs">Extérieurs</a>
                 <a href="<?= LangService::url('journal') ?>" data-en="Tourism" data-page="journal-tourisme">Tourisme</a>
                 <a href="<?= LangService::url('itineraire') ?>" data-en="Things to do" data-page="journal-que-faire">Que faire</a>
@@ -114,6 +115,7 @@
                     <ul>
                         <li><a href="<?= LangService::url('chambres-d-hotes') ?>" data-en="B&amp;B rooms (Sept → June)">Chambres d'hôtes (sept &rarr; juin)</a></li>
                         <li><a href="<?= LangService::url('location-villa-provence') ?>" data-en="Whole house (July – Aug)">Maison d'hôtes (juil &ndash; août)</a></li>
+                        <li><a href="<?= LangService::url('disponibilites') ?>" data-en="Availability">Disponibilités</a></li>
                         <li><a href="<?= LangService::url('espaces-exterieurs') ?>" data-en="The outdoors">Les extérieurs</a></li>
                     </ul>
                 </div>
