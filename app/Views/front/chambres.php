@@ -195,6 +195,16 @@
   </div>
 </section>
 
+<!-- ============ DISPONIBILITÉS (ruban saisonnier) ============ -->
+<section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
+  <div class="container-wide">
+    <div class="section-label" style="margin-bottom: 18px;">
+      <span class="numeral" data-en="— Availability">— Disponibilités</span>
+    </div>
+    <?php include __DIR__ . '/_partials/calendar_ribbon.php'; ?>
+  </div>
+</section>
+
 <!-- ============ 2 · INTRO ============ -->
 <section class="section">
   <div class="container-wide">

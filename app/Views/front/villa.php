@@ -226,6 +226,16 @@
   </div>
 </section>
 
+<!-- ============ DISPONIBILITÉS (ruban saisonnier) ============ -->
+<section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
+  <div class="container-wide">
+    <div class="section-label" style="margin-bottom: 18px;">
+      <span class="numeral" data-en="— Availability">— Disponibilités</span>
+    </div>
+    <?php include __DIR__ . '/_partials/calendar_ribbon.php'; ?>
+  </div>
+</section>
+
 <!-- KEY STATS STRIP -->
 <div style="border-bottom: var(--hairline);">
   <div class="container-wide" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-left: var(--hairline); border-right: var(--hairline);">

@@ -169,6 +169,19 @@
         <form id="contactForm" novalidate>
           <!-- B&B Panel -->
           <div class="panel active" data-panel="bnb">
+            <!-- Aperçu disponibilités (3 prochains mois) -->
+            <div class="cal-preview" style="margin-bottom: 32px;">
+              <?php
+                $cal_propriete = 'VP-BB';
+                $cal_variant   = 'bnb';
+                include __DIR__ . '/_partials/calendar_focus.php';
+              ?>
+              <div class="legend">
+                <span class="legend-key"><span class="legend-sw open"></span> Disponible</span>
+                <span class="legend-key"><span class="legend-sw booked"></span> Réservé</span>
+              </div>
+            </div>
+
             <div class="form-grid">
               <div class="field">
                 <label data-en="Arrival">Arrivée</label>
@@ -221,6 +234,19 @@
 
           <!-- Villa Panel -->
           <div class="panel" data-panel="villa">
+            <!-- Aperçu disponibilités (3 prochains mois) -->
+            <div class="cal-preview" style="margin-bottom: 32px;">
+              <?php
+                $cal_propriete = 'VP-ETE';
+                $cal_variant   = 'villa';
+                include __DIR__ . '/_partials/calendar_focus.php';
+              ?>
+              <div class="legend">
+                <span class="legend-key"><span class="legend-sw villa"></span> Disponible</span>
+                <span class="legend-key"><span class="legend-sw booked"></span> Réservé</span>
+              </div>
+            </div>
+
             <div class="form-grid">
               <div class="field">
                 <label data-en="Arrival (Saturday)">Arrivée (samedi)</label>
