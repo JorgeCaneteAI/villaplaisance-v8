@@ -1,12 +1,10 @@
 <?php declare(strict_types=1); ?>
 <?php /**
- * Vue : Disponibilités publiques.
+ * Vue : Disponibilités publiques (vue annuelle 12 mois).
  * Layout : front-proto.
  * @var string $lang  @var array $seo  @var array $jsonLd
  *
- * VERSION DE TEST (2026-05-24) — calendriers temporairement désactivés
- * pour isoler le bug. Si cette page charge, le problème est dans
- * _partials/calendar_annual.php → calendar_month.php → PublicAvailabilityService.
+ * Source design : docs/design-refs/2026-05-24-calendriers.html (Style A).
  */ ?>
 
 <!-- ============ MASTHEAD ============ -->
@@ -14,36 +12,44 @@
   <div class="page-hero-inner">
     <div>
       <div class="page-hero-issue">
-        <span>Disponibilités</span>
-        <span>Page en cours</span>
+        <span data-en="Availability">Disponibilités</span>
+        <span data-en="Synced with Airbnb &amp; Booking">Sync. Airbnb &amp; Booking</span>
       </div>
       <h1>Douze <em>mois</em>,<br/>d'un seul tenant.</h1>
     </div>
     <div>
-      <p class="lede">Toutes nos disponibilités sur l'année à venir — synchronisées avec Airbnb et Booking. Pour réserver, il suffit de nous écrire.</p>
+      <p class="lede" data-en="All our availability for the year ahead — synchronised with Airbnb and Booking, updated every thirty minutes. To book, simply write to us.">Toutes nos disponibilités sur l'année à venir — synchronisées avec Airbnb et Booking, mises à jour toutes les trente minutes. Pour réserver, il suffit de nous écrire.</p>
       <div class="page-hero-ctas">
-        <a class="btn" href="<?= \LangService::url('contact') ?>"><span>Demander un séjour</span> →</a>
+        <a class="btn" href="<?= \LangService::url('contact') ?>"><span data-en="Enquire about a stay">Demander un séjour</span> →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ TEST ============ -->
+<!-- ============ VUE ANNUELLE 12 MOIS ============ -->
 <section class="section">
   <div class="container-wide">
-    <div style="border: 2px dashed var(--terra-500); padding: clamp(28px, 4vw, 48px); background: color-mix(in oklab, var(--terra-500) 6%, var(--linen-50));">
-      <div class="section-label" style="margin-bottom: 12px;">
-        <span class="numeral" style="color: var(--terra-500);">— Test de page</span>
+    <?php include __DIR__ . '/_partials/calendar_annual.php'; ?>
+
+    <div class="legend">
+      <span class="legend-key"><span class="legend-sw open"></span> <span data-en="Available — B&amp;B">Disponible — Chambres</span></span>
+      <span class="legend-key"><span class="legend-sw villa"></span> <span data-en="Available — Villa">Disponible — Villa</span></span>
+      <span class="legend-key"><span class="legend-sw booked"></span> <span data-en="Booked">Réservé</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RAPPEL CONTACT ============ -->
+<section class="section-tight" style="padding-bottom: clamp(64px, 8vw, 96px);">
+  <div class="container-wide">
+    <div style="border: var(--hairline); padding: clamp(28px, 4vw, 48px); display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;">
+      <div>
+        <div class="section-label" style="margin-bottom: 12px;">
+          <span class="numeral" data-en="— A free date?">— Une date libre ?</span>
+        </div>
+        <h2 class="h-lg" style="margin: 0; max-width: 22ch;" data-en="Write to us — we reply within the day, by hand.">Écrivez-nous — nous répondons dans la journée, à la main.</h2>
       </div>
-      <h2 class="h-lg" style="margin: 0 0 16px; max-width: 28ch;">Si tu vois ce bloc, la page se charge correctement.</h2>
-      <p class="body-lg" style="margin: 0; max-width: 60ch;">
-        Les calendriers sont temporairement retirés le temps d'identifier ce
-        qui bloquait. Une fois cette page validée, on les réintroduit un par
-        un (mois isolé, puis ruban, puis vue annuelle).
-      </p>
-      <p style="margin-top: 18px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--stone-500); text-transform: uppercase;">
-        Build : <?= date('Y-m-d H:i:s') ?>
-      </p>
+      <a class="btn" href="<?= \LangService::url('contact') ?>"><span data-en="Contact">Contact</span> →</a>
     </div>
   </div>
 </section>

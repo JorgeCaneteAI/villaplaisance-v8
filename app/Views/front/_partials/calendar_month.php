@@ -47,7 +47,10 @@ $monthClass = 'cal-month' . ($cal_variant === 'villa' ? ' is-villa' : '');
         <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
     </div>
     <div class="cal-grid">
-<?php for ($i = 0; $i < $leadingEmpty; $i++): ?>
+<?php /* Variables nommées explicitement pour ne pas piétiner le $i d'un
+       partial parent qui inclurait ce fichier dans une boucle (cf.
+       calendar_annual.php → boucle infinie corrigée le 2026-05-24). */ ?>
+<?php for ($leadingIdx = 0; $leadingIdx < $leadingEmpty; $leadingIdx++): ?>
         <span class="cal-cell cal-empty"></span>
 <?php endfor; ?>
 <?php for ($day = 1; $day <= $daysInMonth; $day++):
