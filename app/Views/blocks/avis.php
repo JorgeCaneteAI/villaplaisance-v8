@@ -1,70 +1,110 @@
 <?php
-$heading = $heading ?? t('home.avis.title');
-$limit = $limit ?? 4;
-$offer_filter = $offer_filter ?? '';
+declare(strict_types=1);
+/**
+ * Bloc « avis » V8 — Témoignages clients.
+ *
+ * Deux modes :
+ *   - source='manual' (défaut) : utilise les items[] fournis dans le JSON.
+ *   - source='auto'            : lit vp_reviews (featured=1, status='published'),
+ *                                limité à `limit`.
+ *
+ * Schéma JSON :
+ *   - label_numeral  : ex. "05"
+ *   - label_text     : ex. "Ce qu'on en dit" (mini-md)
+ *   - heading        : titre h2 (mini-md, multiligne)
+ *   - intro          : court texte à droite du titre (optionnel)
+ *   - intro_style    : 'normal' (défaut) | 'placeholder' (badge "pl-inline")
+ *   - display        : 'testimonial' (défaut V8) | 'cards' (compatibilité V7)
+ *   - source         : 'manual' (défaut) | 'auto'
+ *   - limit          : int — si source=auto (défaut 3)
+ *   - items          : tableau de { rating, quote, author, location }  (si source=manual)
+ *   - surface        : 'default' | 'stone' | 'sage' | 'sage-light'
+ */
 
-$reviews = [];
-try {
-    $sql = "SELECT * FROM vp_reviews WHERE status = 'published' AND featured = 1";
-    $params = [];
-    if ($offer_filter) {
-        $sql .= " AND offer = ?";
-        $params[] = $offer_filter;
+$label_numeral = $label_numeral ?? '';
+$label_text    = $label_text    ?? '';
+$heading       = $heading       ?? '';
+$intro         = $intro         ?? '';
+$intro_style   = $intro_style   ?? 'normal';
+$display       = $display       ?? 'testimonial';
+$source        = $source        ?? 'manual';
+$limit         = (int)($limit   ?? 3);
+$items         = $items         ?? [];
+$surface       = $surface       ?? 'default';
+
+$surfaceClass = $surface !== 'default' ? 'surface-' . $surface : '';
+$surfaceStyle = '';
+if ($surface === 'stone')      $surfaceStyle = 'background: var(--linen-100);';
+if ($surface === 'sage')       $surfaceStyle = 'background: var(--sage-200);';
+if ($surface === 'sage-light') $surfaceStyle = 'background: color-mix(in oklab, var(--sage-200) 28%, var(--linen-50));';
+
+// Mode auto : lire vp_reviews
+if ($source === 'auto') {
+    try {
+        $rows = Database::fetchAll(
+            "SELECT * FROM vp_reviews WHERE status='published' AND featured=1 ORDER BY date_review DESC LIMIT " . max(1, $limit)
+        );
+        $items = array_map(static function (array $r): array {
+            return [
+                'rating'   => (int)($r['rating'] ?? 5),
+                'quote'    => (string)($r['comment'] ?? ''),
+                'author'   => (string)($r['author_name'] ?? ''),
+                'location' => (string)($r['author_location'] ?? ''),
+            ];
+        }, $rows);
+    } catch (\Throwable) {
+        $items = [];
     }
-    $sql .= " ORDER BY review_date DESC LIMIT " . (int)$limit;
-    $reviews = Database::fetchAll($sql, $params);
-} catch (\Throwable) {}
-if (empty($reviews)) return;
+}
 ?>
-<section class="section section-reviews" id="avis">
-    <div class="container">
-        <div class="reviews-header">
-            <h2><?= htmlspecialchars($heading) ?></h2>
+<section class="section <?= htmlspecialchars($surfaceClass) ?>"<?= $surfaceStyle ? ' style="' . htmlspecialchars($surfaceStyle) . '"' : '' ?>>
+  <div class="container-wide">
+
+    <?php if ($heading !== '' || $intro !== '' || $label_numeral !== '' || $label_text !== ''): ?>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
+      <div>
+        <?php if ($label_numeral !== '' || $label_text !== ''): ?>
+        <div class="section-label">
+          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
-        <div class="postcard-carousel">
-            <div class="postcard-track">
-                <?php foreach ($reviews as $i => $review): ?>
-                <blockquote class="review-card postcard<?= $i === 0 ? ' active' : '' ?>">
-                    <div class="postcard-inner">
-                        <div class="postcard-message">
-                            <p class="review-content"><?= preg_replace('/\b(Jorge|Georges|George)\b/iu', '<a href="/votre-hote" class="host-link"><strong>$1</strong></a>', htmlspecialchars($review['content'])) ?></p>
-                        </div>
-                        <div class="postcard-divider"></div>
-                        <div class="postcard-address">
-                            <div class="postcard-stamp">
-                                <?php
-                                $platformIconMap = [
-                                    'airbnb' => 'icon-airbnb', 'booking' => 'icon-booking',
-                                    'booking.com' => 'icon-booking', 'google' => 'icon-google',
-                                ];
-                                $pf = mb_strtolower(trim($review['platform'] ?? ''));
-                                $pfIcon = $platformIconMap[$pf] ?? null;
-                                ?>
-                                <span class="review-platform"><?php if ($pfIcon): ?><?= ImageService::icon($pfIcon, 16, 'platform-icon') ?><?php endif; ?><?= htmlspecialchars($review['platform'] ?? '') ?></span>
-                                <span class="review-rating" aria-label="Note : <?= $review['rating'] ?>/5">
-                                    <?php for ($j = 0; $j < min((int)$review['rating'], 5); $j++): ?><?= ImageService::icon('icon-etoile-pleine', 12, 'star-icon') ?><?php endfor; ?>
-                                </span>
-                            </div>
-                            <div class="postcard-dest">
-                                <cite class="review-author"><?= htmlspecialchars($review['author']) ?></cite>
-                                <?php if (!empty($review['origin'])): ?>
-                                <span class="review-origin"><?= htmlspecialchars($review['origin']) ?></span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                </blockquote>
-                <?php endforeach; ?>
-            </div>
-            <div class="postcard-nav">
-                <button class="postcard-prev" aria-label="Précédent">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <span class="postcard-counter"><span class="postcard-current">1</span> / <?= count($reviews) ?></span>
-                <button class="postcard-next" aria-label="Suivant">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
-        </div>
+        <?php endif; ?>
+        <?php if ($heading !== ''): ?>
+        <h2 class="h-xl" style="margin: 0; max-width: 14ch;"><?= TextService::renderTitle($heading) ?></h2>
+        <?php endif; ?>
+      </div>
+      <?php if ($intro !== ''): ?>
+        <?php if ($intro_style === 'placeholder'): ?>
+        <span class="pl-inline"><span class="dot"></span><span><?= htmlspecialchars($intro) ?></span></span>
+        <?php else: ?>
+        <p class="body-lg" style="max-width: 38ch; margin: 0;"><?= htmlspecialchars($intro) ?></p>
+        <?php endif; ?>
+      <?php endif; ?>
     </div>
+    <?php endif; ?>
+
+    <?php if (!empty($items)): ?>
+    <div class="<?= $display === 'testimonial' ? 'testimonials' : 'avis-cards' ?>">
+      <?php foreach ($items as $item):
+        $rating   = (int)($item['rating'] ?? 5);
+        $quote    = (string)($item['quote'] ?? '');
+        $author   = (string)($item['author'] ?? '');
+        $location = (string)($item['location'] ?? '');
+        $rating   = max(0, min(5, $rating));
+      ?>
+      <article class="testimonial">
+        <?php if ($rating > 0): ?>
+        <div class="stars"><?= str_repeat('★ ', $rating - 1) . '★' ?></div>
+        <?php endif; ?>
+        <?php if ($quote !== ''): ?>
+        <blockquote><?= TextService::renderTitle($quote) ?></blockquote>
+        <?php endif; ?>
+        <?php if ($author !== '' || $location !== ''): ?>
+        <cite>— <?= htmlspecialchars($author) ?><?= ($author !== '' && $location !== '') ? ' · ' : '' ?><?= htmlspecialchars($location) ?></cite>
+        <?php endif; ?>
+      </article>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+  </div>
 </section>

@@ -161,6 +161,94 @@ Database::insert('vp_sections', [
 echo "  ✓ [4] Triangle d'Or (territoire)\n";
 
 // ========================================================================
+// BLOC 5 (numéral 05) — TÉMOIGNAGES (avis display=testimonial, placeholders)
+// NB. La numérotation visuelle saute le 04 (mappemonde) qui reste en HTML
+// dur pour cette phase. À harmoniser quand on portera la mappemonde.
+// ========================================================================
+Database::insert('vp_sections', [
+    'page_slug'  => 'accueil',
+    'lang'       => 'fr',
+    'block_type' => 'avis',
+    'title'      => 'Témoignages (placeholders)',
+    'content'    => json_encode([
+        'label_numeral' => '05',
+        'label_text'    => "Ce qu'on en dit",
+        'heading'       => "Quelques *mots*\nlaissés au départ.",
+        'intro'         => "Témoignages d'exemple — à remplacer par vos vrais avis",
+        'intro_style'   => 'placeholder',
+        'display'       => 'testimonial',
+        'source'        => 'manual',
+        'items' => [
+            [
+                'rating'   => 5,
+                'quote'    => "« *Placeholder* — un mot du voyageur sur la chambre, le petit-déjeuner, l'accueil. Deux ou trois phrases au maximum. »",
+                'author'   => 'Visiteur',
+                'location' => 'ville',
+            ],
+            [
+                'rating'   => 5,
+                'quote'    => "« *Placeholder* — un mot sur la villa entière, la piscine, la cuisine, le calme. Témoignage à venir. »",
+                'author'   => 'Visiteur',
+                'location' => 'ville',
+            ],
+            [
+                'rating'   => 5,
+                'quote'    => "« *Placeholder* — un mot sur la région, les conseils, la disponibilité des hôtes. »",
+                'author'   => 'Visiteur',
+                'location' => 'ville',
+            ],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 6,  // position 5 réservée à mappemonde quand on la portera
+    'active'     => 1,
+]);
+echo "  ✓ [6] Témoignages (avis testimonial)\n";
+
+// ========================================================================
+// BLOC 7 — DU JOURNAL (articles display=grid manual, 2 cartes mosaïque)
+// Images : on cherche dans vp_media par filename (peut être null si absent)
+// ========================================================================
+$journalImg1 = $mediaId('villa-plaisance-vignes-provence-01.webp');
+$journalImg2 = $mediaId('villa-plaisance-vp-itini-elisa-02-pont-du-gard.webp');
+if ($journalImg1 === null) echo "  ⚠ image journal #1 absente de vp_media (sera sans image)\n";
+if ($journalImg2 === null) echo "  ⚠ image journal #2 absente de vp_media (sera sans image)\n";
+
+Database::insert('vp_sections', [
+    'page_slug'  => 'accueil',
+    'lang'       => 'fr',
+    'block_type' => 'articles',
+    'title'      => 'Du journal — teasers',
+    'content'    => json_encode([
+        'label_numeral' => '06',
+        'label_text'    => 'Du journal',
+        'heading'       => "Ce qu'on *écrit*,\nce qu'on conseille.",
+        'intro'         => "Deux rubriques — articles autour du tourisme, et la sélection sur place.",
+        'surface'       => 'sage-light',
+        'source'        => 'manual',
+        'display'       => 'grid',
+        'items' => [
+            [
+                'image_id' => $journalImg1,
+                'kicker'   => 'Journal · Tourisme',
+                'title'    => "Voyager *autrement*\nen Provence.",
+                'text'     => "Cinq façons de regarder la région — provence contemporaine, voyager autrement, hôtes & hôteliers, territoire & transition, l'art de séjourner.",
+                'cta'      => ['label' => 'Lire le journal', 'url' => '/journal'],
+            ],
+            [
+                'image_id' => $journalImg2,
+                'kicker'   => 'Journal · Que faire sur place',
+                'title'    => "Sur place,\ntout est *là*.",
+                'text'     => "Sites à visiter, tables, commerces, activités avec les enfants — la sélection de la maison.",
+                'cta'      => ['label' => 'Voir la sélection', 'url' => '/itineraire'],
+            ],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 7,
+    'active'     => 1,
+]);
+echo "  ✓ [7] Journal (articles grid manual)\n";
+
+// ========================================================================
 // Vérification finale
 // ========================================================================
 $check = Database::fetchAll(

@@ -636,6 +636,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 </section>
 
 <!-- ============ 06 · TÉMOIGNAGES ============ -->
+<?php if ($_avisHtml = $renderV8BlockAt(6, 'avis')): ?>
+<?= $_avisHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
@@ -667,8 +670,12 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 07 · DU JOURNAL ============ -->
+<?php if ($_journalHtml = $renderV8BlockAt(7, 'articles')): ?>
+<?= $_journalHtml ?>
+<?php else: ?>
 <section class="section surface-sage" style="background: color-mix(in oklab, var(--sage-200) 28%, var(--linen-50));">
   <div class="container-wide">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
@@ -704,5 +711,6 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ FOOTER ============ -->
