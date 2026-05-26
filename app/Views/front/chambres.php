@@ -291,7 +291,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
             </li>
             <li style="display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: baseline;">
               <span style="width: 6px; height: 6px; background: var(--terra-500); border-radius: 50%; align-self: center;"></span>
-              <span class="body" data-en="Both rooms prepared, a bedroom each <span style='color: var(--terra-600); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-left: 6px;'>+ 30 €/NUIT</span>">Les deux chambres préparées, une chambre chacun <span style="color: var(--terra-600); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-left: 6px;">+ 30 €/NUIT</span></span>
+              <span class="body" data-en="Both rooms prepared, a bedroom each <span style='color: var(--terra-600); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-left: 6px;'>OPTION PAYANTE</span>">Les deux chambres préparées, une chambre chacun <span style="color: var(--terra-600); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-left: 6px;">OPTION PAYANTE</span></span>
             </li>
           </ul>
         </div>
