@@ -21,6 +21,7 @@ declare(strict_types=1);
  * @var array|null  $cta             { label, url, style }
  * @var string|null $layout          'two-col'|'text-only'|'text-image-right'|'text-image-left'
  * @var string|null $surface         'default'|'stone'|'sage'|'sage-light'
+ * @var array|null  $stats_band      [ { label, value } ]  bande de stats sous le texte (signature V8)
  */
 
 $label_numeral = $label_numeral ?? '';
@@ -31,6 +32,7 @@ $image_id      = $image_id      ?? null;
 $cta           = $cta           ?? null;
 $layout        = $layout        ?? 'two-col';
 $surface       = $surface       ?? 'default';
+$stats_band    = $stats_band    ?? [];
 
 // Surface → class + style fond
 $surfaceClass = $surface !== 'default' ? 'surface-' . $surface : '';
@@ -90,6 +92,25 @@ $_renderCta = function () use ($cta, $ctaUrl): string {
          . htmlspecialchars($ctaUrl) . '">'
          . htmlspecialchars($cta['label']) . ' →</a></p>';
 };
+
+// Helper local pour la bande de stats (signature V8 : grille de N cellules
+// avec overline + h-md, séparées par 1px de hairline)
+$_renderStatsBand = function () use ($stats_band): string {
+    if (empty($stats_band)) return '';
+    $n = count($stats_band);
+    $out = '<div style="display: grid; grid-template-columns: repeat(' . $n
+         . ', 1fr); gap: 1px; background: color-mix(in oklab, var(--ink-900) 14%, transparent); margin-top: clamp(40px, 4vw, 56px); border-top: var(--hairline); border-bottom: var(--hairline);">';
+    foreach ($stats_band as $stat) {
+        $label = (string)($stat['label'] ?? '');
+        $value = (string)($stat['value'] ?? '');
+        $out .= '<div style="background: var(--linen-50); padding: 22px 18px;">'
+              . '<div class="overline">' . htmlspecialchars($label) . '</div>'
+              . '<div class="h-md" style="margin-top: 8px;">' . htmlspecialchars($value) . '</div>'
+              . '</div>';
+    }
+    $out .= '</div>';
+    return $out;
+};
 ?>
 <section class="section <?= htmlspecialchars($surfaceClass) ?>"<?= $surfaceStyle ? ' style="' . htmlspecialchars($surfaceStyle) . '"' : '' ?>>
   <div class="container-wide">
@@ -104,6 +125,7 @@ $_renderCta = function () use ($cta, $ctaUrl): string {
       </div>
       <div>
         <?= $_renderParagraphs() ?>
+        <?= $_renderStatsBand() ?>
         <?= $_renderCta() ?>
       </div>
     </div>

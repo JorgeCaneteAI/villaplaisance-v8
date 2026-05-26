@@ -175,7 +175,32 @@
 </style>
 
 
+<?php
+/*
+ * Bascule progressive vers vp_sections (page chambres-d-hotes).
+ * Cf. home.php pour la mécanique. Position 1 = hero, position 2 = intro.
+ * Le widget Disponibilités entre les deux reste en HTML dur (calendar_ribbon
+ * partial, non géré par BlockService).
+ */
+$_v8SectionsByPos = [];
+foreach (BlockService::getSections('chambres-d-hotes', $lang) as $_s) {
+    $_v8SectionsByPos[(int)$_s['position']] = $_s;
+}
+$renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8SectionsByPos): ?string {
+    $s = $_v8SectionsByPos[$pos] ?? null;
+    if (!$s) return null;
+    if ($s['block_type'] !== $expectedType) {
+        error_log("V8 chambres: position $pos attendu '$expectedType' mais BDD a '{$s['block_type']}'");
+        return null;
+    }
+    return BlockService::renderBlock($s);
+};
+?>
+
 <!-- ============ 1 · HERO ============ -->
+<?php if ($_heroHtml = $renderV8BlockAt(1, 'hero')): ?>
+<?= $_heroHtml ?>
+<?php else: ?>
 <section class="page-hero">
   <div class="page-hero-inner">
     <div>
@@ -194,6 +219,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ DISPONIBILITÉS (ruban saisonnier) ============ -->
 <section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
@@ -206,6 +232,9 @@
 </section>
 
 <!-- ============ 2 · INTRO ============ -->
+<?php if ($_introHtml = $renderV8BlockAt(2, 'prose')): ?>
+<?= $_introHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div class="two-col">
@@ -228,6 +257,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ HOW IT WORKS · SUITE EXPLAINER ============ -->
 <section class="section surface-stone" style="background: var(--linen-100); padding-top: clamp(56px, 7vw, 96px); padding-bottom: clamp(56px, 7vw, 96px);">
