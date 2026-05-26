@@ -373,6 +373,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <?php endif; ?>
 
 <!-- ============ 03 · DEUX FORMULES ============ -->
+<?php if ($_formulasHtml = $renderV8BlockAt(3, 'formula')): ?>
+<?= $_formulasHtml ?>
+<?php else: ?>
 <section class="section surface-stone" style="background: var(--linen-100);">
   <div class="container-wide">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
@@ -424,6 +427,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 04 · TRIANGLE D'OR ============ -->
 <section class="section">

@@ -91,6 +91,46 @@ Database::insert('vp_sections', [
 echo "  ✓ [2] Intro (prose two-col)\n";
 
 // ========================================================================
+// BLOC 3 — DEUX FORMULES (nouveau type V8 : formula)
+// ========================================================================
+Database::insert('vp_sections', [
+    'page_slug'  => 'accueil',
+    'lang'       => 'fr',
+    'block_type' => 'formula',
+    'title'      => 'Deux formules — B&B + Villa',
+    'content'    => json_encode([
+        'label_numeral' => '02',
+        'label_text'    => 'Deux formules',
+        'heading'       => "Deux façons\nde *séjourner*,\nune seule maison.",
+        'intro'         => "La maison vit deux saisons — choisissez celle qui vous va.",
+        'surface'       => 'stone',
+        'formulas' => [
+            [
+                'label_numeral' => '01',
+                'label_period'  => 'Sept → Juin',
+                'label_tag'     => "Chez l'habitant",
+                'title'         => "Chambres d'hôtes",
+                'text'          => "Vous séjournez chez l'habitant. Deux chambres communicantes et climatisées avec salle de bain privée vous sont strictement dédiées. Le petit-déjeuner est inclus : produits locaux, confitures maison, fruits du jardin. Piscine partagée, conseils personnalisés et accueil chaleureux. Suite communicante idéale pour les familles (1 à 5 personnes).",
+                'stats'         => ['1 – 5 pers.', 'Petit-déj inclus', 'Piscine partagée'],
+                'cta'           => ['label' => "Découvrir les chambres d'hôtes", 'url' => '/chambres-d-hotes'],
+            ],
+            [
+                'label_numeral' => '02',
+                'label_period'  => 'Juil & Août',
+                'label_tag'     => 'Vous seuls',
+                'title'         => 'La Villa en exclusivité',
+                'text'          => "Vous séjournez seuls et disposez de la villa et des extérieurs en exclusivité. 4 chambres, 2 salles de bain, cuisine entièrement équipée, piscine privée clôturée 12 × 6 m et jardin sous les oliviers. Jusqu'à 10 personnes en totale autonomie — votre maison en Provence, sans vis-à-vis.",
+                'stats'         => ["Jusqu'à 10 pers.", 'Piscine privée 12 × 6', 'Samedi → samedi'],
+                'cta'           => ['label' => 'Découvrir la villa entière', 'url' => '/location-villa-provence'],
+            ],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 3,
+    'active'     => 1,
+]);
+echo "  ✓ [3] Formules (formula)\n";
+
+// ========================================================================
 // Vérification finale
 // ========================================================================
 $check = Database::fetchAll(
