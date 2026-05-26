@@ -299,26 +299,33 @@
 <?php
 /*
  * Bascule progressive vers vp_sections.
- * Pour chaque type, on regarde si une section BDD existe → renderBlock.
- * Si absent → fallback HTML en dur (comportement V8 actuel).
+ * On indexe les sections BDD par position. À chaque emplacement HTML,
+ * on appelle renderV8BlockAt($pos, $expectedType) : si la BDD a une
+ * section à cette position ET du bon type, on la rend. Sinon fallback
+ * HTML en dur (comportement V8 actuel).
  *
- * Phase 2 (2026-05-26) : seul `hero` est câblé. Les autres types suivent
- * en Phase 3 (1 session par page).
+ * Phase 2 (2026-05-26) :
+ *   - position 1 : hero
+ *   - position 2 : intro (prose two-col)
+ * Les autres positions suivent au fur et à mesure du port.
  */
-$_v8Sections = $_v8Sections ?? null;
-if ($_v8Sections === null) {
-    $_v8Sections = [];
-    foreach (BlockService::getSections('accueil', $lang) as $_s) {
-        $_v8Sections[$_s['block_type']] = $_s;
-    }
+$_v8SectionsByPos = [];
+foreach (BlockService::getSections('accueil', $lang) as $_s) {
+    $_v8SectionsByPos[(int)$_s['position']] = $_s;
 }
-$renderV8Block = static function (string $type) use ($_v8Sections): ?string {
-    return isset($_v8Sections[$type]) ? BlockService::renderBlock($_v8Sections[$type]) : null;
+$renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8SectionsByPos): ?string {
+    $s = $_v8SectionsByPos[$pos] ?? null;
+    if (!$s) return null;
+    if ($s['block_type'] !== $expectedType) {
+        error_log("V8 home: position $pos attendu '$expectedType' mais BDD a '{$s['block_type']}'");
+        return null;
+    }
+    return BlockService::renderBlock($s);
 };
 ?>
 
 <!-- ============ HERO MASTHEAD (home: with image) ============ -->
-<?php if ($_heroHtml = $renderV8Block('hero')): ?>
+<?php if ($_heroHtml = $renderV8BlockAt(1, 'hero')): ?>
 <?= $_heroHtml ?>
 <?php else: ?>
 <section class="page-hero has-image">
@@ -343,6 +350,9 @@ $renderV8Block = static function (string $type) use ($_v8Sections): ?string {
 <?php endif; ?>
 
 <!-- ============ 02 · L'INTRO ============ -->
+<?php if ($_introHtml = $renderV8BlockAt(2, 'prose')): ?>
+<?= $_introHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div class="two-col">
@@ -360,6 +370,7 @@ $renderV8Block = static function (string $type) use ($_v8Sections): ?string {
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 03 · DEUX FORMULES ============ -->
 <section class="section surface-stone" style="background: var(--linen-100);">
