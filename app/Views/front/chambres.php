@@ -396,6 +396,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 </section>
 
 <!-- ============ 6 · PETIT-DÉJEUNER ============ -->
+<?php if ($_breakfastHtml = $renderV8BlockAt(6, 'petit-dejeuner')): ?>
+<?= $_breakfastHtml ?>
+<?php else: ?>
 <section class="section surface-sage" style="background: color-mix(in oklab, var(--sage-200) 28%, var(--linen-50));">
   <div class="container-wide">
     <div class="breakfast-layout">
@@ -423,6 +426,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 7 · ÉQUIPEMENTS ============ -->
 <section class="section">
@@ -523,7 +527,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="As a couple, which room will be prepared?">À deux, quelle chambre sera préparée ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Whichever you prefer — tell us when you book. The Chambre Verte (double 160×200) or the Chambre Bleue (two singles, joinable into a 180). The other room stays accessible as a reading lounge. If you'd like both rooms prepared so you can each have your own, the supplement is € 30 per night.">Celle que vous préférez — dites-le nous à la réservation. La Chambre Verte (lit double 160×200) ou la Chambre Bleue (deux lits simples, jumelables en 180). L'autre reste accessible en salon de lecture. Si vous souhaitez que les deux chambres soient préparées pour avoir chacun la sienne, le supplément est de 30 € par nuit.</div>
+          <div class="answer" data-en="Whichever you prefer — tell us when you book. The Chambre Verte (double 160×200) or the Chambre Bleue (two singles, joinable into a 180). The other room stays accessible as a reading lounge. If you'd like both rooms prepared so you can each have your own, this is available as a paid option.">Celle que vous préférez — dites-le nous à la réservation. La Chambre Verte (lit double 160×200) ou la Chambre Bleue (deux lits simples, jumelables en 180). L'autre reste accessible en salon de lecture. Si vous souhaitez que les deux chambres soient préparées pour avoir chacun la sienne, cela est disponible en option payante.</div>
         </details>
         <details>
           <summary><span data-en="Is breakfast included?">Le petit-déjeuner est-il inclus ?</span><span class="icon"></span></summary>

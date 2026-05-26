@@ -77,6 +77,53 @@ Database::insert('vp_sections', [
 echo "  ✓ [2] Intro (prose two-col + stats_band)\n";
 
 // ========================================================================
+// BLOC 6 (numéral 05) — PETIT-DÉJEUNER
+// NB. positions 3/4/5 réservées aux blocs HTML dur de la page :
+//   - 3 = How it works · Suite explainer
+//   - 4 = Chambre Verte
+//   - 5 = Chambre Bleue + Salle de bain
+// On les portera plus tard, en même temps que la refonte cartes ↔ vp_pieces.
+// ========================================================================
+$mediaId = function (string $filename): ?int {
+    $row = Database::fetchOne("SELECT id FROM vp_media WHERE filename = ? LIMIT 1", [$filename]);
+    return $row ? (int)$row['id'] : null;
+};
+$breakfastImg = $mediaId('villa-plaisance-petit-dejeuner-brioche-01.webp')
+             ?? $mediaId('petit-dejeuner.webp');
+if ($breakfastImg === null) echo "  ⚠ image petit-déjeuner absente de vp_media (bloc sans image)\n";
+else                        echo "  → image petit-déjeuner = vp_media.id $breakfastImg\n";
+
+Database::insert('vp_sections', [
+    'page_slug'  => 'chambres-d-hotes',
+    'lang'       => 'fr',
+    'block_type' => 'petit-dejeuner',
+    'title'      => 'Petit-déjeuner inclus',
+    'content'    => json_encode([
+        'label_numeral' => '05',
+        'label_text'    => 'Petit-déjeuner',
+        'heading'       => "Petit-déjeuner\n*maison*, inclus.",
+        'text'          => "Chaque matin, de 7h30 à 10h, en terrasse ou en véranda selon la saison.",
+        'image_id'      => $breakfastImg,
+        'surface'       => 'sage-light',
+        'items' => [
+            'Confitures artisanales (figues, abricots, lavande-miel)',
+            'Viennoiseries',
+            'Pain de boulanger',
+            'Fromages provençaux',
+            'Charcuterie régionale',
+            'Fruits frais de saison',
+            "Jus d'orange pressé",
+            'Café, thé, tisanes bio',
+            'Miel',
+            'Yaourt maison',
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 6,
+    'active'     => 1,
+]);
+echo "  ✓ [6] Petit-déjeuner\n";
+
+// ========================================================================
 // Vérification finale
 // ========================================================================
 $check = Database::fetchAll(
