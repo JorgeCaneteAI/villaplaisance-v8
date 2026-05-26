@@ -34,29 +34,46 @@ use App\Services\ReservationConstants;
         if ($m < 1440) return round($m / 60, 1) . ' h';
         return round($m / 1440) . ' j';
     };
-    $badgeClass = 'sync-unknown';
-    $badgeText = 'Sync jamais effectuée';
+    $widgetClass = 'is-unknown';
+    $widgetIcon  = '◌';
+    $widgetTitle = 'Synchronisation iCal';
+    $widgetStatus = 'Aucune synchronisation enregistrée pour le moment.';
     if (!empty($last_sync_at)) {
         $syncAge = max(0, (time() - strtotime($last_sync_at)) / 60);
+        $when = date('d/m/Y à H:i', strtotime($last_sync_at));
         if ((int) $last_sync_ok === 0) {
-            $badgeClass = 'sync-error';
-            $badgeText = 'Dernière sync KO il y a ' . $fmtAge($syncAge);
+            $widgetClass = 'is-error'; $widgetIcon = '✕';
+            $widgetTitle = 'Dernière sync en erreur';
+            $widgetStatus = 'Il y a <strong>' . $fmtAge($syncAge) . '</strong> · ' . $when;
         } elseif ($syncAge < 60) {
-            $badgeClass = 'sync-ok'; $badgeText = 'Sync il y a ' . $fmtAge($syncAge);
+            $widgetClass = ''; $widgetIcon = '✓';
+            $widgetTitle = 'Calendriers à jour';
+            $widgetStatus = 'Dernière sync il y a <strong>' . $fmtAge($syncAge) . '</strong> · ' . $when;
         } elseif ($syncAge < 1440) {
-            $badgeClass = 'sync-warn'; $badgeText = 'Sync il y a ' . $fmtAge($syncAge);
+            $widgetClass = 'is-warn'; $widgetIcon = '⌛';
+            $widgetTitle = 'Sync ancienne';
+            $widgetStatus = 'Dernière sync il y a <strong>' . $fmtAge($syncAge) . '</strong> · ' . $when;
         } else {
-            $badgeClass = 'sync-error'; $badgeText = 'Sync il y a ' . $fmtAge($syncAge);
+            $widgetClass = 'is-error'; $widgetIcon = '!';
+            $widgetTitle = 'Sync trop ancienne';
+            $widgetStatus = 'Dernière sync il y a <strong>' . $fmtAge($syncAge) . '</strong> · ' . $when;
         }
     }
     ?>
-    <div class="sync-bar">
-        <span class="sync-badge <?= $badgeClass ?>"><?= htmlspecialchars($badgeText) ?></span>
-        <form method="post" action="/admin/calendrier/sync" style="display:inline">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
-            <button type="submit" class="btn">Sync iCal</button>
-        </form>
-        <a href="/admin/calendrier/logs" class="btn">Logs</a>
+    <div class="sync-widget <?= $widgetClass ?>">
+        <div class="sync-widget-icon" aria-hidden="true"><?= $widgetIcon ?></div>
+        <div class="sync-widget-info">
+            <div class="sync-widget-title"><?= htmlspecialchars($widgetTitle) ?></div>
+            <div class="sync-widget-status"><?= $widgetStatus ?></div>
+            <span class="sync-widget-note">Sync automatique toutes les 30 minutes (Airbnb + Booking).</span>
+        </div>
+        <div class="sync-widget-actions">
+            <form method="post" action="/admin/calendrier/sync">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+                <button type="submit" class="btn btn-primary">Sync maintenant</button>
+            </form>
+            <a href="/admin/calendrier/logs" class="btn">Voir les logs</a>
+        </div>
     </div>
 
     <table class="calendrier__grid">
@@ -100,22 +117,17 @@ use App\Services\ReservationConstants;
 </div>
 
 <style>
-.calendrier__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.calendrier__nav h1 { margin: 0; }
+.calendrier__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; }
+.calendrier__nav h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.8rem; letter-spacing: -0.01em; color: var(--ink-900); }
 .calendrier__toolbar { display: flex; gap: 8px; margin: 12px 0 20px; flex-wrap: wrap; }
-.calendrier__grid { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.calendrier__grid th { background: #2C2C2A; color: #fff; padding: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
-.calendrier__grid td.cell { border: 1px solid #e0e0e0; vertical-align: top; height: 110px; width: 14.28%; padding: 4px; }
-.calendrier__grid td.outside { background: #f5f5f5; }
-.calendrier__grid td.today { background: #fffbe0; }
-.calendrier__grid .day-num { font-weight: 700; font-size: 12px; color: #222; margin-bottom: 2px; }
-.calendrier__grid td.outside .day-num { color: #bbb; }
+.calendrier__grid { width: 100%; border-collapse: collapse; table-layout: fixed; background: #fff; border: 1px solid var(--admin-border); border-radius: var(--admin-radius); overflow: hidden; }
+.calendrier__grid th { background: var(--olive-900); color: #fff; padding: 10px 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.calendrier__grid td.cell { border: 1px solid var(--admin-border); vertical-align: top; height: 110px; width: 14.28%; padding: 4px; }
+.calendrier__grid td.outside { background: var(--linen-100); }
+.calendrier__grid td.today { background: color-mix(in oklab, var(--terra-500) 7%, #fff); }
+.calendrier__grid .day-num { font-weight: 700; font-size: 12px; color: var(--ink-700); margin-bottom: 2px; }
+.calendrier__grid td.outside .day-num { color: var(--stone-400); }
+.calendrier__grid td.today .day-num { color: var(--terra-600); }
 .calendrier__grid .resa { display: block; padding: 3px 5px; margin-top: 2px; border-radius: 3px; font-size: 10.5px; text-decoration: none; line-height: 1.2; }
 .calendrier__grid .resa:hover { opacity: 0.85; }
-.sync-bar { margin: 8px 0 20px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.sync-badge { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-.sync-ok    { background: #E0F5E0; color: #2d7a2d; }
-.sync-warn  { background: #FFF3CD; color: #856404; }
-.sync-error { background: #F8D7DA; color: #721C24; }
-.sync-unknown { background: #E9ECEF; color: #495057; }
 </style>

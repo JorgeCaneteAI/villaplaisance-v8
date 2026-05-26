@@ -1,16 +1,41 @@
-/* Admin CSS — Villa Plaisance V7 */
+/* Admin CSS — Villa Plaisance V8 (re-skinning sur les tokens du front V8) */
 :root {
-  --admin-bg: #f5f7fa;
-  --admin-sidebar: #0C1A2E;
-  --admin-accent: #1A6EB8;
-  --admin-text: #333;
-  --admin-border: #e2e8f0;
-  --admin-success: #1A7A4A;
-  --admin-error: #C0392B;
-  --admin-radius: 6px;
+  /* Tokens V8 — pierre, lin, vert sauge, olive, terracotta */
+  --linen-50:  #FBF7EE;
+  --linen-100: #F4EEE0;
+  --linen-200: #EBE2CF;
+  --linen-300: #DCD0B7;
+  --stone-400: #B8AC91;
+  --stone-500: #8C8167;
+  --stone-600: #6B6253;
+  --ink-700:   #3B362D;
+  --ink-900:   #1F1C16;
+  --olive-900: #1F2814;
+  --sage-200:  #C9D2BD;
+  --sage-400:  #94A487;
+  --sage-500:  #6F8466;
+  --sage-700:  #4D5E47;
+  --terra-500: #C44C24;
+  --terra-600: #A23A18;
+  --font-display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+  --font-sans: "Manrope", "Inter", "Söhne", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Mapping admin → V8 (les classes existantes sont reskinnées automatiquement) */
+  --admin-bg:       var(--linen-50);
+  --admin-sidebar:  var(--olive-900);
+  --admin-accent:   var(--terra-500);
+  --admin-text:     var(--ink-700);
+  --admin-border:   #DCD0B7;
+  --admin-success:  var(--sage-700);
+  --admin-error:    #C0392B;
+  --admin-radius:   4px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body.admin-body { font-family: 'Inter', system-ui, sans-serif; font-size: 0.9rem; color: var(--admin-text); background: var(--admin-bg); min-height: 100vh; }
+body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(--admin-text); background: var(--admin-bg); min-height: 100vh; }
+.admin-body h1, .admin-body h2, .admin-body h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em; color: var(--ink-900); }
+.page-header h1 { font-family: var(--font-display); font-weight: 500; font-size: 1.8rem; letter-spacing: -0.01em; }
+.topbar-logo { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; letter-spacing: 0.01em; }
 
 /* Topbar horizontal */
 .admin-topbar {
@@ -1033,4 +1058,77 @@ body.admin-body { font-family: 'Inter', system-ui, sans-serif; font-size: 0.9rem
 @media (max-width: 1200px) {
   .article-layout { grid-template-columns: 1fr; }
   .article-sidebar { position: static; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BOÎTE MAIL — refonte V8 de /admin/messages
+   ═══════════════════════════════════════════════════════════ */
+.mail-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.85rem; color: var(--stone-600); }
+.mail-toolbar .mail-count strong { color: var(--ink-900); font-weight: 600; }
+
+.mail-list { display: flex; flex-direction: column; gap: 0; background: #fff; border: 1px solid var(--admin-border); border-radius: var(--admin-radius); overflow: hidden; }
+.mail-card { display: grid; grid-template-columns: 44px 1fr auto; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--admin-border); background: #fff; text-decoration: none; color: inherit; position: relative; transition: background .15s; cursor: pointer; }
+.mail-card:last-child { border-bottom: none; }
+.mail-card:hover { background: var(--linen-100); }
+.mail-card.is-unread { background: color-mix(in oklab, var(--terra-500) 4%, #fff); }
+.mail-card.is-unread:hover { background: color-mix(in oklab, var(--terra-500) 7%, #fff); }
+.mail-card.is-unread::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--terra-500); }
+
+.mail-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--sage-200); color: var(--ink-900); font-weight: 600; font-size: 1.1rem; font-family: var(--font-display); flex-shrink: 0; }
+.mail-card.is-unread .mail-avatar { background: var(--terra-500); color: #fff; }
+
+.mail-body { min-width: 0; }
+.mail-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.2rem; flex-wrap: wrap; }
+.mail-from { font-weight: 600; font-size: 0.95rem; color: var(--ink-900); }
+.mail-email { font-size: 0.78rem; color: var(--stone-500); font-family: var(--font-mono); }
+.mail-subject { font-size: 0.9rem; color: var(--ink-700); font-weight: 500; margin-bottom: 0.25rem; }
+.mail-card.is-unread .mail-subject { font-weight: 700; color: var(--ink-900); }
+.mail-preview { font-size: 0.82rem; color: var(--stone-600); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+
+.mail-meta { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; flex-shrink: 0; }
+.mail-date { font-size: 0.75rem; color: var(--stone-500); white-space: nowrap; }
+.mail-delete-form { margin: 0; }
+.mail-delete { background: none; border: none; cursor: pointer; color: var(--stone-400); padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.78rem; font-family: var(--font-sans); transition: color .15s, background .15s; }
+.mail-delete:hover { color: var(--admin-error); background: rgba(192,57,43,0.08); }
+
+.mail-empty { text-align: center; padding: 4rem 1rem; background: #fff; border: 1px dashed var(--admin-border); border-radius: var(--admin-radius); color: var(--stone-500); font-size: 0.95rem; }
+.mail-empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.5; }
+
+/* Détail mail */
+.mail-detail { background: #fff; border-radius: var(--admin-radius); border: 1px solid var(--admin-border); overflow: hidden; }
+.mail-detail-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--admin-border); background: var(--linen-100); }
+.mail-detail-from { font-family: var(--font-display); font-size: 1.7rem; font-weight: 500; color: var(--ink-900); margin-bottom: 0.25rem; line-height: 1.2; }
+.mail-detail-email { font-size: 0.85rem; color: var(--stone-600); font-family: var(--font-mono); }
+.mail-detail-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.78rem; color: var(--stone-500); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--admin-border); }
+.mail-detail-meta div strong { display: block; font-size: 0.7rem; color: var(--stone-400); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
+.mail-detail-meta div span { color: var(--ink-700); font-weight: 500; font-size: 0.85rem; }
+.mail-detail-subject-line { padding: 1rem 2rem; background: #fff; border-bottom: 1px solid var(--admin-border); font-size: 0.78rem; color: var(--stone-500); text-transform: uppercase; letter-spacing: 0.08em; }
+.mail-detail-subject-line strong { display: block; font-size: 1.1rem; color: var(--ink-900); font-family: var(--font-display); font-weight: 500; text-transform: none; letter-spacing: 0; margin-top: 0.2rem; }
+.mail-detail-body { padding: 2rem; white-space: pre-wrap; line-height: 1.7; font-size: 0.95rem; color: var(--ink-700); background: #fff; }
+.mail-detail-actions { display: flex; gap: 0.75rem; align-items: center; padding: 1.25rem 2rem; border-top: 1px solid var(--admin-border); background: var(--linen-50); }
+.mail-detail-actions form { margin: 0; margin-left: auto; }
+
+/* ═══════════════════════════════════════════════════════════
+   WIDGET SYNC iCAL — refonte V8 de /admin/calendrier (en tête)
+   ═══════════════════════════════════════════════════════════ */
+.sync-widget { display: grid; grid-template-columns: auto 1fr auto; gap: 1.25rem; align-items: center; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; background: #fff; border: 1px solid var(--admin-border); border-left: 4px solid var(--sage-500); border-radius: var(--admin-radius); }
+.sync-widget.is-warn { border-left-color: #d4a017; }
+.sync-widget.is-error { border-left-color: var(--admin-error); background: color-mix(in oklab, var(--admin-error) 4%, #fff); }
+.sync-widget.is-unknown { border-left-color: var(--stone-400); }
+.sync-widget-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--sage-200); color: var(--sage-700); font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+.sync-widget.is-warn .sync-widget-icon { background: #fff3cd; color: #856404; }
+.sync-widget.is-error .sync-widget-icon { background: #fce4ec; color: var(--admin-error); }
+.sync-widget.is-unknown .sync-widget-icon { background: var(--linen-200); color: var(--stone-500); }
+.sync-widget-info { min-width: 0; }
+.sync-widget-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 500; color: var(--ink-900); margin-bottom: 0.15rem; line-height: 1.2; }
+.sync-widget-status { font-size: 0.85rem; color: var(--stone-600); }
+.sync-widget-status strong { color: var(--ink-900); font-weight: 600; }
+.sync-widget-note { display: block; font-size: 0.75rem; color: var(--stone-500); margin-top: 0.25rem; font-style: italic; }
+.sync-widget-actions { display: flex; gap: 0.5rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.sync-widget-actions form { margin: 0; }
+
+@media (max-width: 640px) {
+  .sync-widget { grid-template-columns: 1fr; text-align: center; }
+  .sync-widget-icon { margin: 0 auto; }
+  .sync-widget-actions { justify-content: center; }
 }

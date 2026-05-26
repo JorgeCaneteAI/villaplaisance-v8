@@ -1,24 +1,46 @@
+<?php /** @var array $message @var string $csrf */ ?>
 <div class="page-header">
-    <h1>Message de <?= htmlspecialchars($message['name']) ?></h1>
-    <a href="/admin/messages" class="btn">Retour</a>
+    <h1>Message reçu</h1>
+    <a href="/admin/messages" class="btn">← Tous les messages</a>
 </div>
 
-<div class="admin-card">
-    <p><strong>De :</strong> <?= htmlspecialchars($message['name']) ?> &lt;<?= htmlspecialchars($message['email']) ?>&gt;</p>
-    <p><strong>Sujet :</strong> <?= htmlspecialchars($message['subject'] ?: '(sans sujet)') ?></p>
-    <p><strong>Date :</strong> <?= date('d/m/Y à H:i', strtotime($message['created_at'])) ?></p>
-    <p><strong>Langue :</strong> <?= htmlspecialchars($message['lang'] ?? 'fr') ?></p>
-    <p><strong>IP :</strong> <?= htmlspecialchars($message['ip'] ?? '') ?></p>
+<div class="mail-detail">
+    <div class="mail-detail-header">
+        <div class="mail-detail-from"><?= htmlspecialchars($message['name'] ?? '(anonyme)') ?></div>
+        <div class="mail-detail-email"><?= htmlspecialchars($message['email'] ?? '') ?></div>
 
-    <hr style="margin:1rem 0;border:none;border-top:1px solid var(--admin-border)">
+        <div class="mail-detail-meta">
+            <div>
+                <strong>Reçu le</strong>
+                <span><?= date('d/m/Y à H:i', strtotime($message['created_at'])) ?></span>
+            </div>
+            <div>
+                <strong>Langue</strong>
+                <span><?= htmlspecialchars(strtoupper($message['lang'] ?? 'fr')) ?></span>
+            </div>
+            <?php if (!empty($message['ip'])): ?>
+            <div>
+                <strong>IP</strong>
+                <span><?= htmlspecialchars($message['ip']) ?></span>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
 
-    <div style="white-space:pre-wrap;line-height:1.6"><?= htmlspecialchars($message['message']) ?></div>
-</div>
+    <div class="mail-detail-subject-line">
+        Sujet
+        <strong><?= htmlspecialchars($message['subject'] ?: '(sans sujet)') ?></strong>
+    </div>
 
-<div class="mt-2 btn-group">
-    <a href="mailto:<?= htmlspecialchars($message['email']) ?>?subject=Re: <?= rawurlencode($message['subject'] ?? 'Villa Plaisance') ?>" class="btn btn-primary">Répondre par email</a>
-    <form method="POST" action="/admin/messages/<?= $message['id'] ?>/delete" onsubmit="return confirm('Supprimer ce message ?')">
-        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
-        <button type="submit" class="btn btn-danger">Supprimer</button>
-    </form>
+    <div class="mail-detail-body"><?= htmlspecialchars($message['message'] ?? '') ?></div>
+
+    <div class="mail-detail-actions">
+        <a href="mailto:<?= htmlspecialchars($message['email']) ?>?subject=<?= rawurlencode('Re: ' . ($message['subject'] ?? 'Villa Plaisance')) ?>" class="btn btn-primary">
+            ✉ Répondre par email
+        </a>
+        <form method="POST" action="/admin/messages/<?= (int) $message['id'] ?>/delete" onsubmit="return confirm('Supprimer définitivement ce message ?')">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+        </form>
+    </div>
 </div>
