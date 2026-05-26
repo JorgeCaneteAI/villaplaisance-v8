@@ -13,6 +13,9 @@
 <body class="login-page">
     <div class="login-card">
         <h1>Villa Plaisance</h1>
+        <p style="text-align:center; margin: -4px 0 18px 0;">
+            <span style="display:inline-block; background:#f59e0b; color:#1a1a1a; padding:3px 10px; border-radius:3px; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; font-family:Inter,sans-serif;">V8 — DEV</span>
+        </p>
 
         <?php if (!empty($flash['error'])): ?>
         <div class="alert alert-error"><?= htmlspecialchars($flash['error']) ?></div>

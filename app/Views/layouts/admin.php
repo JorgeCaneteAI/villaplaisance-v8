@@ -28,6 +28,7 @@
 <body class="admin-body <?= htmlspecialchars($body_class ?? '') ?>">
     <header class="admin-topbar">
         <a href="/admin" class="topbar-logo">VP Admin</a>
+        <span style="display:inline-block; background:#f59e0b; color:#1a1a1a; padding:3px 9px; border-radius:3px; font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-left:8px; vertical-align:middle;" title="Tu es sur la version V8 (dev). La prod tourne sur villaplaisance.fr/admin.">V8 — DEV</span>
         <nav class="topbar-nav">
             <a href="/admin/dashboard" class="topbar-link">Dashboard</a>
             <a href="/admin/calendrier" class="topbar-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/calendrier') ? 'active' : '' ?>">Calendrier</a>
