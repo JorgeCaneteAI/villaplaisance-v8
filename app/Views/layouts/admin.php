@@ -28,13 +28,12 @@
 <body class="admin-body <?= htmlspecialchars($body_class ?? '') ?>">
     <header class="admin-topbar">
         <a href="/admin" class="topbar-logo">VP Admin</a>
-        <span style="display:inline-block; background:#f59e0b; color:#1a1a1a; padding:3px 9px; border-radius:3px; font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; margin-left:8px; vertical-align:middle;" title="Tu es sur la version V8 (dev). La prod tourne sur villaplaisance.fr/admin.">V8 — DEV</span>
         <nav class="topbar-nav">
-            <a href="/admin/dashboard" class="topbar-link">Dashboard</a>
-            <a href="/admin/calendrier" class="topbar-link <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/calendrier') ? 'active' : '' ?>">Calendrier</a>
-            <a href="/admin/analytics" class="topbar-link">Statistiques</a>
+            <!-- ═══ À GAUCHE DU BADGE V8 — sections PAS ENCORE refondues (look V7 hérité) ═══ -->
+            <a href="/admin/dashboard" class="topbar-link is-stale" title="Pas encore refondu V8">Dashboard</a>
+            <a href="/admin/analytics" class="topbar-link is-stale" title="Pas encore refondu V8">Statistiques</a>
 
-            <div class="topbar-group">
+            <div class="topbar-group is-stale" title="Pas encore refondu V8">
                 <button class="topbar-group-btn">Contenu ▾</button>
                 <div class="topbar-dropdown">
                     <a href="/admin/pages" class="topbar-dd-link">Pages CMS</a>
@@ -46,15 +45,9 @@
                 </div>
             </div>
 
-            <div class="topbar-group">
-                <button class="topbar-group-btn">Interactions ▾</button>
-                <div class="topbar-dropdown">
-                    <a href="/admin/messages" class="topbar-dd-link">Messages</a>
-                    <a href="/admin/avis" class="topbar-dd-link">Avis</a>
-                </div>
-            </div>
+            <a href="/admin/avis" class="topbar-link is-stale" title="Pas encore refondu V8">Avis</a>
 
-            <div class="topbar-group">
+            <div class="topbar-group is-stale" title="Pas encore refondu V8">
                 <button class="topbar-group-btn">Médias & SEO ▾</button>
                 <div class="topbar-dropdown">
                     <a href="/admin/media" class="topbar-dd-link">Médias</a>
@@ -63,7 +56,14 @@
                 </div>
             </div>
 
-            <a href="/admin/reglages" class="topbar-link">Réglages</a>
+            <a href="/admin/reglages" class="topbar-link is-stale" title="Pas encore refondu V8">Réglages</a>
+
+            <!-- ═══ Le badge V8 — DEV sert de SÉPARATEUR ═══ -->
+            <span class="env-separator" title="À gauche : sections en attente de refonte V8. À droite : sections refondues et validées.">V8 — DEV</span>
+
+            <!-- ═══ À DROITE DU BADGE V8 — sections REFONDUES et validées ═══ -->
+            <a href="/admin/messages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/messages') ? 'active' : '' ?>">Messages</a>
+            <a href="/admin/calendrier" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/calendrier') ? 'active' : '' ?>">Calendrier</a>
         </nav>
         <div class="topbar-right">
             <a href="/" class="topbar-link" target="_blank">Voir le site</a>
