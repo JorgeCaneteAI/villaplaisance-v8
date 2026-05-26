@@ -1,77 +1,68 @@
 <?php
-$title = $title ?? t('site.name');
-$subtitle = $subtitle ?? '';
-$cta_text = $cta_text ?? '';
-$cta_url = $cta_url ?? '';
-$image = $image ?? 'hero.webp';
-$image_alt = $image_alt ?? 'Villa Plaisance';
-$compact = $compact ?? false;
+declare(strict_types=1);
+/**
+ * Bloc « hero » V8 (design impeccable — page-hero has-image).
+ *
+ * @var array       $section      Ligne vp_sections complète
+ * @var string|null $title        Mini-md autorisé (*italique*, retour ligne)
+ * @var string|null $lede         Texte d'intro
+ * @var int|null    $image_id     Référence vp_media.id pour le fond
+ * @var array       $tags         Badges affichés au-dessus du h1
+ * @var array       $ctas         [{ label, url, style: 'primary'|'ghost' }]
+ * @var string|null $surface      'default' | 'stone' | 'sage' | 'sage-light'
+ */
 
-// Normalize image: can be array (multi-image) or string
-$heroImages = is_array($image) ? $image : [$image];
-$heroImages = array_filter($heroImages);
-if (empty($heroImages)) $heroImages = ['hero.webp'];
+$title    = $title    ?? '';
+$lede     = $lede     ?? '';
+$image_id = $image_id ?? null;
+$tags     = $tags     ?? [];
+$ctas     = $ctas     ?? [];
+
+// Résolution du fond depuis vp_media
+$bgUrl    = $image_id ? ImageService::urlById((int)$image_id) : null;
+$bgAlt    = $image_id ? ImageService::altById((int)$image_id) : '';
+$hasImage = $bgUrl !== null;
 ?>
-<?php if ($compact): ?>
-<section class="hero hero-page hero-compact">
-    <div class="container">
-        <h1><?= htmlspecialchars($title) ?></h1>
-        <?php if ($subtitle): ?>
-        <p class="hero-subtitle"><?= htmlspecialchars($subtitle) ?></p>
-        <?php endif; ?>
+<section class="page-hero<?= $hasImage ? ' has-image' : '' ?>">
+  <?php if ($hasImage): ?>
+  <div class="bg" style="background-image: url('<?= htmlspecialchars($bgUrl) ?>')" role="img" aria-label="<?= htmlspecialchars($bgAlt) ?>"></div>
+  <?php endif; ?>
+  <div class="page-hero-inner">
+    <div>
+      <?php if (!empty($tags)): ?>
+      <div class="page-hero-issue">
+        <?php foreach ($tags as $tag): ?>
+        <span><?= htmlspecialchars((string)$tag) ?></span>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+      <?php if ($title !== ''): ?>
+      <h1><?= TextService::renderTitle($title) ?></h1>
+      <?php endif; ?>
     </div>
+    <?php if ($lede !== '' || !empty($ctas)): ?>
+    <div>
+      <?php if ($lede !== ''): ?>
+      <p class="lede"><?= htmlspecialchars($lede) ?></p>
+      <?php endif; ?>
+      <?php if (!empty($ctas)): ?>
+      <div class="page-hero-ctas">
+        <?php foreach ($ctas as $cta): ?>
+          <?php
+            $label = (string)($cta['label'] ?? '');
+            $url   = (string)($cta['url']   ?? '#');
+            $style = (string)($cta['style'] ?? 'primary');
+            // LangService::url pour les liens internes
+            if (str_starts_with($url, '/') && !str_starts_with($url, '//')) {
+                $url = LangService::url(ltrim($url, '/'));
+            }
+            $btnClass = $style === 'ghost' ? 'btn btn-ghost' : 'btn';
+          ?>
+          <a href="<?= htmlspecialchars($url) ?>" class="<?= $btnClass ?>"><?= htmlspecialchars($label) ?> →</a>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+    </div>
+    <?php endif; ?>
+  </div>
 </section>
-<?php else: ?>
-<section class="hero <?= empty($cta_text) ? 'hero-page' : '' ?>">
-    <div class="hero-image">
-        <?php if (count($heroImages) > 1): ?>
-        <div class="hero-slideshow" aria-label="Photos">
-            <?php foreach ($heroImages as $i => $img): ?>
-            <div class="hero-slide<?= $i === 0 ? ' active' : '' ?>">
-                <?= ImageService::img($img, htmlspecialchars($image_alt), 1920, 1080, false, 'hero-img') ?>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php else: ?>
-        <?= ImageService::img($heroImages[0], htmlspecialchars($image_alt), 1920, 1080, false, 'hero-img') ?>
-        <?php endif; ?>
-        <div class="hero-overlay"></div>
-    </div>
-    <div class="hero-content">
-        <?php
-            $fullTitle = htmlspecialchars($title);
-            $splitPos = mb_strpos($fullTitle, '—');
-            $bigPart = $splitPos !== false ? trim(mb_substr($fullTitle, 0, $splitPos)) : $fullTitle;
-            $smallPart = $splitPos !== false ? trim(mb_substr($fullTitle, $splitPos + 1)) : '';
-        ?>
-        <div class="hero-title-wrap">
-            <h1 class="hero-title"><?php
-                $bigWords = explode(' ', $bigPart);
-                foreach ($bigWords as $i => $w) {
-                    $cls = $i % 2 === 0 ? 'word word-sans' : 'word word-serif';
-                    echo '<span class="' . $cls . '">' . $w . '</span> ';
-                }
-            ?></h1>
-        </div>
-        <div class="hero-badges">
-            <span class="hero-badge">Bédarrides, au c&oelig;ur du Triangle d'Or</span>
-            <span class="hero-badge-sep">&middot;</span>
-            <span class="hero-badge"><strong>9.4</strong>/10 Booking</span>
-            <span class="hero-badge-sep">&middot;</span>
-            <span class="hero-badge">Superhost Airbnb</span>
-        </div>
-        <?php if ($smallPart): ?>
-        <div class="hero-title-sub"><?= $smallPart ?></div>
-        <?php endif; ?>
-        <?php if ($cta_text && $cta_url): ?>
-        <div class="hero-cta">
-            <a href="<?= htmlspecialchars($cta_url) ?>" class="btn-primary"><?= htmlspecialchars($cta_text) ?></a>
-        </div>
-        <?php endif; ?>
-    </div>
-    <div class="hero-scroll" aria-hidden="true">
-        <span>Scroll</span>
-        <div class="hero-scroll-line"></div>
-    </div>
-</section>
-<?php endif; ?>

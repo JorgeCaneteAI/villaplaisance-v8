@@ -142,4 +142,52 @@ class ImageService
             return null;
         }
     }
+
+    /**
+     * Get full media record by ID (used by V8 blocks that reference vp_media.id).
+     * Cached per-request.
+     */
+    private static array $mediaCacheById = [];
+    public static function getById(int $id): ?array
+    {
+        if (isset(self::$mediaCacheById[$id])) {
+            return self::$mediaCacheById[$id];
+        }
+        try {
+            $row = Database::fetchOne("SELECT * FROM vp_media WHERE id = ?", [$id]);
+            self::$mediaCacheById[$id] = $row ?: null;
+            return self::$mediaCacheById[$id];
+        } catch (\Throwable) {
+            self::$mediaCacheById[$id] = null;
+            return null;
+        }
+    }
+
+    /**
+     * Resolve a vp_media ID to its public URL (/uploads/filename.webp).
+     * Returns null if the ID doesn't exist or the file is missing on disk.
+     */
+    public static function urlById(int $id): ?string
+    {
+        $row = self::getById($id);
+        if (!$row || empty($row['filename'])) return null;
+        $path = '/uploads/' . ltrim($row['filename'], '/');
+        if (!file_exists(ROOT . '/public' . $path)) return null;
+        return $path;
+    }
+
+    /**
+     * Get alt text in current/given language for a vp_media ID.
+     * Falls back to alt_fr if the language-specific alt is empty.
+     */
+    public static function altById(int $id, string $lang = ''): string
+    {
+        $row = self::getById($id);
+        if (!$row) return '';
+        if ($lang === '') {
+            $lang = defined('CURRENT_LANG') ? CURRENT_LANG : (LangService::get() ?? 'fr');
+        }
+        $field = "alt_{$lang}";
+        return (string)(!empty($row[$field]) ? $row[$field] : ($row['alt_fr'] ?? ''));
+    }
 }

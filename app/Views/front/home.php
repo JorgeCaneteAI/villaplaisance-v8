@@ -296,7 +296,31 @@
 </style>
 
 
+<?php
+/*
+ * Bascule progressive vers vp_sections.
+ * Pour chaque type, on regarde si une section BDD existe → renderBlock.
+ * Si absent → fallback HTML en dur (comportement V8 actuel).
+ *
+ * Phase 2 (2026-05-26) : seul `hero` est câblé. Les autres types suivent
+ * en Phase 3 (1 session par page).
+ */
+$_v8Sections = $_v8Sections ?? null;
+if ($_v8Sections === null) {
+    $_v8Sections = [];
+    foreach (BlockService::getSections('accueil', $lang) as $_s) {
+        $_v8Sections[$_s['block_type']] = $_s;
+    }
+}
+$renderV8Block = static function (string $type) use ($_v8Sections): ?string {
+    return isset($_v8Sections[$type]) ? BlockService::renderBlock($_v8Sections[$type]) : null;
+};
+?>
+
 <!-- ============ HERO MASTHEAD (home: with image) ============ -->
+<?php if ($_heroHtml = $renderV8Block('hero')): ?>
+<?= $_heroHtml ?>
+<?php else: ?>
 <section class="page-hero has-image">
   <div class="bg" style="background-image: url('/uploads/hero-piscine.webp')"></div>
   <div class="page-hero-inner">
@@ -316,6 +340,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 02 · L'INTRO ============ -->
 <section class="section">
