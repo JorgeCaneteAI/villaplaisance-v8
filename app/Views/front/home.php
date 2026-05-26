@@ -430,6 +430,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <?php endif; ?>
 
 <!-- ============ 04 · TRIANGLE D'OR ============ -->
+<?php if ($_territoireHtml = $renderV8BlockAt(4, 'territoire')): ?>
+<?= $_territoireHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div class="two-col">
@@ -490,6 +493,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 05 · PROVENANCE / WORLD MAP ============ -->
 <section class="section surface-stone" style="background: var(--linen-100); padding-left: 0; padding-right: 0;">

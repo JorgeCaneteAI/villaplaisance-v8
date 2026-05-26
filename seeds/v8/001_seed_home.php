@@ -131,6 +131,36 @@ Database::insert('vp_sections', [
 echo "  ✓ [3] Formules (formula)\n";
 
 // ========================================================================
+// BLOC 4 — TRIANGLE D'OR (territoire two-col)
+// ========================================================================
+Database::insert('vp_sections', [
+    'page_slug'  => 'accueil',
+    'lang'       => 'fr',
+    'block_type' => 'territoire',
+    'title'      => "Triangle d'Or — destinations",
+    'content'    => json_encode([
+        'label_numeral' => '03',
+        'label_text'    => 'Où nous sommes',
+        'heading'       => "Au cœur du\n*Triangle d'Or*.",
+        'intro'         => "Toute la région rayonne depuis Bédarrides — Avignon au sud, Orange au nord, Châteauneuf à l'ouest, le Mont Ventoux droit devant.",
+        'destinations' => [
+            ['time' => '8 MIN',  'place' => 'Châteauneuf-du-Pape',    'tag' => 'Vignes'],
+            ['time' => '15 MIN', 'place' => 'Avignon',                'tag' => 'Gare TGV'],
+            ['time' => '18 MIN', 'place' => 'Orange',                 'tag' => 'Théâtre antique'],
+            ['time' => '25 MIN', 'place' => "L'Isle-sur-la-Sorgue",   'tag' => 'Marché brocante'],
+            ['time' => '30 MIN', 'place' => 'Pont du Gard',           'tag' => 'Patrimoine romain'],
+            ['time' => '35 MIN', 'place' => 'Vaison-la-Romaine',      'tag' => 'Antiques & marché'],
+            ['time' => '42 MIN', 'place' => 'Gordes',                 'tag' => 'Village perché'],
+            ['time' => '45 MIN', 'place' => 'Les Baux-de-Provence',   'tag' => 'Carrières de Lumières'],
+            ['time' => '45 MIN', 'place' => 'Mont Ventoux',           'tag' => 'La route, la vue'],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 4,
+    'active'     => 1,
+]);
+echo "  ✓ [4] Triangle d'Or (territoire)\n";
+
+// ========================================================================
 // Vérification finale
 // ========================================================================
 $check = Database::fetchAll(
