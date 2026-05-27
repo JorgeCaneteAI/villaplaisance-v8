@@ -189,6 +189,28 @@ Database::insert('vp_sections', [
 echo "  ✓ [8] Infos pratiques (tableau key-value)\n";
 
 // ========================================================================
+// BLOC 9 — FAQ (lit vp_faq via page_slug='chambres-d-hotes')
+// NB. La FAQ doit avoir été enrichie auparavant via :
+//     php seeds/v8/003_seed_faq_chambres_enrich.php
+// ========================================================================
+Database::insert('vp_sections', [
+    'page_slug'  => 'chambres-d-hotes',
+    'lang'       => 'fr',
+    'block_type' => 'faq',
+    'title'      => 'FAQ chambres',
+    'content'    => json_encode([
+        'label_numeral' => '08',
+        'label_text'    => 'Questions fréquentes',
+        'heading'       => "Les *questions*\nqui reviennent.",
+        'page_slug'     => 'chambres-d-hotes',
+        'first_open'    => true,
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 9,
+    'active'     => 1,
+]);
+echo "  ✓ [9] FAQ (lit vp_faq)\n";
+
+// ========================================================================
 // Vérification finale
 // ========================================================================
 $check = Database::fetchAll(

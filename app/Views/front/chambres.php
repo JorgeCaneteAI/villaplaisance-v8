@@ -519,6 +519,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <?php endif; ?>
 
 <!-- ============ 9 · FAQ ============ -->
+<?php if ($_faqHtml = $renderV8BlockAt(9, 'faq')): ?>
+<?= $_faqHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(32px, 6vw, 96px); align-items: start;">
@@ -573,5 +576,6 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 10 · FOOTER CTA ============ -->
