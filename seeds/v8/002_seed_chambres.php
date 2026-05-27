@@ -124,6 +124,71 @@ Database::insert('vp_sections', [
 echo "  ✓ [6] Petit-déjeuner\n";
 
 // ========================================================================
+// BLOC 7 — ÉQUIPEMENTS (liste display=numbered-grid)
+// ========================================================================
+Database::insert('vp_sections', [
+    'page_slug'  => 'chambres-d-hotes',
+    'lang'       => 'fr',
+    'block_type' => 'liste',
+    'title'      => 'Équipements & services inclus',
+    'content'    => json_encode([
+        'label_numeral' => '06',
+        'label_text'    => 'Inclus',
+        'heading'       => "Équipements\n& *services* inclus.",
+        'intro'         => "Ce qu'on remet avec la clé — rien d'extravagant, juste ce qui rend un séjour simple.",
+        'display'       => 'numbered-grid',
+        'items' => [
+            'Literie premium (draps 100 % coton percale)',
+            'Salle de bain privative avec produits de toilette bio',
+            'Climatisation réversible dans chaque chambre',
+            'Wifi haut débit gratuit',
+            'Télévision écran plat',
+            'Piscine partagée 12 × 6 m (mai à octobre)',
+            'Jardin provençal et terrasses ombragées',
+            'Parking privé gratuit',
+            'Arrivée autonome (boîte à clé)',
+            'Conseils et recommandations locales personnalisés',
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 7,
+    'active'     => 1,
+]);
+echo "  ✓ [7] Équipements (liste numbered-grid)\n";
+
+// ========================================================================
+// BLOC 8 — INFOS PRATIQUES (tableau display=key-value, ancre #infos)
+// ========================================================================
+Database::insert('vp_sections', [
+    'page_slug'  => 'chambres-d-hotes',
+    'lang'       => 'fr',
+    'block_type' => 'tableau',
+    'title'      => 'Infos pratiques',
+    'content'    => json_encode([
+        'label_numeral' => '07',
+        'label_text'    => 'Infos pratiques',
+        'heading'       => "Tout ce qu'il faut *savoir*.",
+        'intro'         => "Dates, capacité, horaires, ce qui est inclus — l'essentiel d'un coup d'œil.",
+        'surface'       => 'stone',
+        'anchor_id'     => 'infos',
+        'display'       => 'key-value',
+        'rows' => [
+            ['key' => 'Période',         'value' => '**De septembre à juin**'],
+            ['key' => 'Arrivée',         'value' => 'À partir de 17h'],
+            ['key' => 'Départ',          'value' => 'Avant 11h'],
+            ['key' => 'Séjour minimum',  'value' => '**2 nuits** (haute saison : 3 nuits)'],
+            ['key' => 'Capacité',        'value' => '**1 à 5 personnes** (suite communicante)'],
+            ['key' => 'Petit-déjeuner',  'value' => 'Inclus · servi de 7h30 à 10h'],
+            ['key' => 'Piscine',         'value' => 'Partagée · 12 × 6 m · mai à octobre'],
+            ['key' => 'Animaux',         'value' => 'Non acceptés'],
+            ['key' => 'Fumeur',          'value' => 'Non-fumeur'],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+    'position'   => 8,
+    'active'     => 1,
+]);
+echo "  ✓ [8] Infos pratiques (tableau key-value)\n";
+
+// ========================================================================
 // Vérification finale
 // ========================================================================
 $check = Database::fetchAll(

@@ -429,6 +429,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <?php endif; ?>
 
 <!-- ============ 7 · ÉQUIPEMENTS ============ -->
+<?php if ($_equipHtml = $renderV8BlockAt(7, 'liste')): ?>
+<?= $_equipHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
@@ -455,8 +458,12 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 8 · INFOS PRATIQUES ============ -->
+<?php if ($_infosHtml = $renderV8BlockAt(8, 'tableau')): ?>
+<?= $_infosHtml ?>
+<?php else: ?>
 <section class="section surface-stone" style="background: var(--linen-100);" id="infos">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
@@ -509,6 +516,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 9 · FAQ ============ -->
 <section class="section">
