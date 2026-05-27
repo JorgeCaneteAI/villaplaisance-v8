@@ -1,39 +1,85 @@
 <?php
-$heading = $heading ?? t('villa.pool.title');
-$text = $text ?? 'Piscine privée de 12 mètres sur 6, clôturée et sécurisée. Ouverte de mi-mai à fin septembre. Transats, parasols, douche extérieure. La piscine est réservée exclusivement aux locataires de la villa.';
-$image = $image ?? 'piscine-villa.webp';
+declare(strict_types=1);
+/**
+ * Bloc « piscine » V8.
+ *
+ * Section avec label + h2 + lede, puis grande image 21:9 full-width,
+ * puis un `.pool-block` : paragraphe + note à gauche, liste de features à droite.
+ *
+ * Schéma JSON :
+ *   - label_numeral, label_text
+ *   - heading  (mini-md)
+ *   - lede     (paragraphe court sous le titre)
+ *   - image_id (vp_media — grande image 21:9 sous le titre)
+ *   - text     (paragraphe principal du pool-block)
+ *   - note     (paragraphe gris sous le text, optionnel)
+ *   - features[] : tableau de strings (liste à droite)
+ *   - surface ('default'|'stone'|'sage'|'sage-light')
+ *   - anchor_id  : id HTML (ex. 'piscine')
+ */
 
-$poolImages = is_array($image) ? $image : [$image];
-$poolImages = array_filter($poolImages);
-if (empty($poolImages)) $poolImages = ['piscine-villa.webp'];
+$label_numeral = $label_numeral ?? '';
+$label_text    = $label_text    ?? '';
+$heading       = $heading       ?? '';
+$lede          = $lede          ?? '';
+$image_id      = $image_id      ?? null;
+$text          = $text          ?? '';
+$note          = $note          ?? '';
+$features      = $features      ?? [];
+$surface       = $surface       ?? 'default';
+$anchor_id     = $anchor_id     ?? '';
+
+$surfaceClass = $surface !== 'default' ? 'surface-' . $surface : '';
+$surfaceStyle = '';
+if ($surface === 'stone')      $surfaceStyle = 'background: var(--linen-100);';
+if ($surface === 'sage')       $surfaceStyle = 'background: var(--sage-200);';
+if ($surface === 'sage-light') $surfaceStyle = 'background: color-mix(in oklab, var(--sage-200) 28%, var(--linen-50));';
+
+$imgUrl = $image_id ? ImageService::urlById((int)$image_id) : null;
+$imgAlt = $image_id ? ImageService::altById((int)$image_id) : '';
+
+$idAttr = $anchor_id !== '' ? ' id="' . htmlspecialchars($anchor_id) . '"' : '';
 ?>
-<section class="section" id="piscine">
-    <div class="container prose-section">
-        <div class="prose-grid">
-            <div class="prose-text">
-                <h2 class="prose-heading"><?= htmlspecialchars($heading) ?></h2>
-                <p><?= nl2br(htmlspecialchars($text)) ?></p>
-            </div>
-            <div class="prose-image">
-                <?php if (count($poolImages) > 1):
-                    $puid = 'piscine-carousel-' . substr(md5(json_encode($poolImages)), 0, 6);
-                ?>
-                <div class="carousel room-carousel" id="<?= $puid ?>" aria-label="Photos piscine">
-                    <div class="carousel-track">
-                        <?php foreach ($poolImages as $img): ?>
-                        <div class="carousel-slide">
-                            <?= ImageService::img($img, htmlspecialchars($heading), 800, 600) ?>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <button class="carousel-prev" aria-label="Precedent"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg></button>
-                    <button class="carousel-next" aria-label="Suivant"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg></button>
-                    <div class="carousel-counter"><span class="carousel-current">01</span> / <span class="carousel-total"><?= str_pad((string)count($poolImages), 2, '0', STR_PAD_LEFT) ?></span></div>
-                </div>
-                <?php else: ?>
-                <?= ImageService::img($poolImages[0], htmlspecialchars($heading), 800, 600) ?>
-                <?php endif; ?>
-            </div>
-        </div>
+<section class="section <?= htmlspecialchars($surfaceClass) ?>"<?= $idAttr ?><?= $surfaceStyle ? ' style="' . htmlspecialchars($surfaceStyle) . '"' : '' ?>>
+  <div class="container-wide">
+
+    <?php if ($label_numeral !== '' || $label_text !== ''): ?>
+    <div class="section-label">
+      <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
     </div>
+    <?php endif; ?>
+
+    <?php if ($heading !== ''): ?>
+    <h2 class="h-xl" style="margin: 0 0 28px; max-width: 18ch;"><?= TextService::renderTitle($heading) ?></h2>
+    <?php endif; ?>
+
+    <?php if ($lede !== ''): ?>
+    <p class="lede" style="margin: 0; max-width: 52ch;"><?= htmlspecialchars($lede) ?></p>
+    <?php endif; ?>
+
+    <?php if ($imgUrl): ?>
+    <div style="aspect-ratio: 21/9; background: center/cover url('<?= htmlspecialchars($imgUrl) ?>'); margin-top: clamp(32px, 4vw, 56px);" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+    <?php endif; ?>
+
+    <?php if ($text !== '' || $note !== '' || !empty($features)): ?>
+    <div class="pool-block">
+      <div>
+        <?php if ($text !== ''): ?>
+        <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;"><?= nl2br(htmlspecialchars($text), false) ?></p>
+        <?php endif; ?>
+        <?php if ($note !== ''): ?>
+        <p class="body" style="margin: 0; max-width: 56ch; color: var(--stone-600);"><?= nl2br(htmlspecialchars($note), false) ?></p>
+        <?php endif; ?>
+      </div>
+      <?php if (!empty($features)): ?>
+      <ul class="pool-features">
+        <?php foreach ($features as $f): ?>
+        <li><?= htmlspecialchars((string)$f) ?></li>
+        <?php endforeach; ?>
+      </ul>
+      <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+  </div>
 </section>

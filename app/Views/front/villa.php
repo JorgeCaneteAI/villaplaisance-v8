@@ -206,7 +206,30 @@
 </style>
 
 
+<?php
+/*
+ * Bascule progressive vers vp_sections (page location-villa-provence).
+ * Cf. home.php / chambres.php pour la mécanique.
+ */
+$_v8SectionsByPos = [];
+foreach (BlockService::getSections('location-villa-provence', $lang) as $_s) {
+    $_v8SectionsByPos[(int)$_s['position']] = $_s;
+}
+$renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8SectionsByPos): ?string {
+    $s = $_v8SectionsByPos[$pos] ?? null;
+    if (!$s) return null;
+    if ($s['block_type'] !== $expectedType) {
+        error_log("V8 villa: position $pos attendu '$expectedType' mais BDD a '{$s['block_type']}'");
+        return null;
+    }
+    return BlockService::renderBlock($s);
+};
+?>
+
 <!-- HERO -->
+<?php if ($_heroHtml = $renderV8BlockAt(1, 'hero')): ?>
+<?= $_heroHtml ?>
+<?php else: ?>
 <section class="page-hero">
   <div class="page-hero-inner">
     <div>
@@ -225,6 +248,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ DISPONIBILITÉS (ruban saisonnier) ============ -->
 <section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
@@ -237,6 +261,9 @@
 </section>
 
 <!-- KEY STATS STRIP -->
+<?php if ($_statsHtml = $renderV8BlockAt(2, 'stats')): ?>
+<?= $_statsHtml ?>
+<?php else: ?>
 <div style="border-bottom: var(--hairline);">
   <div class="container-wide" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-left: var(--hairline); border-right: var(--hairline);">
     <div style="padding: 26px 24px; border-right: var(--hairline);">
@@ -257,6 +284,7 @@
     </div>
   </div>
 </div>
+<?php endif; ?>
 
 <!-- ============ 4 CHAMBRES ============ -->
 <section class="section" id="chambres">
@@ -347,6 +375,9 @@
 </section>
 
 <!-- ============ INTÉRIEUR : CUISINE + SALON ============ -->
+<?php if ($_intHtml = $renderV8BlockAt(4, 'interior')): ?>
+<?= $_intHtml ?>
+<?php else: ?>
 <section class="section surface-stone" style="background: var(--linen-100);">
   <div class="container-wide">
     <div style="margin-bottom: clamp(40px, 5vw, 64px);">
@@ -377,8 +408,12 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ PISCINE ============ -->
+<?php if ($_pisHtml = $renderV8BlockAt(5, 'piscine')): ?>
+<?= $_pisHtml ?>
+<?php else: ?>
 <section class="section" id="piscine">
   <div class="container-wide">
     <div class="section-label">
@@ -405,8 +440,12 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ LES ESPACES ============ -->
+<?php if ($_espHtml = $renderV8BlockAt(6, 'tableau')): ?>
+<?= $_espHtml ?>
+<?php else: ?>
 <section class="section surface-stone" style="background: var(--linen-100);">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 72px);">
@@ -475,8 +514,12 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ INFOS PRATIQUES ============ -->
+<?php if ($_infHtml = $renderV8BlockAt(7, 'tableau')): ?>
+<?= $_infHtml ?>
+<?php else: ?>
 <section class="section" id="infos">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
@@ -533,8 +576,12 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ FAQ ============ -->
+<?php if ($_faqHtml = $renderV8BlockAt(8, 'faq')): ?>
+<?= $_faqHtml ?>
+<?php else: ?>
 <section class="section surface-stone" style="background: var(--linen-100);">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(32px, 6vw, 96px); align-items: start;">
@@ -581,5 +628,6 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ FOOTER CTA ============ -->

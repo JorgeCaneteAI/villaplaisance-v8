@@ -4,8 +4,9 @@ declare(strict_types=1);
  * Bloc « tableau » V8.
  *
  * Displays supportés :
- *   - 'key-value' (signature V8 : liste verticale .practical avec .row > .k + .v)
- *   - 'columns'   (tableau classique entêtes + lignes)
+ *   - 'key-value'          (liste verticale .practical avec .row > .k + .v)
+ *   - 'key-value-two-cols' (signature villa : 2 colonnes de dl/dt/dd, classe .espaces)
+ *   - 'columns'            (tableau classique entêtes + lignes)
  *
  * Schéma JSON :
  *   - label_numeral, label_text
@@ -72,6 +73,31 @@ $idAttr = $anchor_id !== '' ? ' id="' . htmlspecialchars($anchor_id) . '"' : '';
         <div class="k"><?= htmlspecialchars($k) ?></div>
         <div class="v"><?= TextService::renderTitle($v) ?></div>
       </div>
+      <?php endforeach; ?>
+    </div>
+
+    <?php elseif ($display === 'key-value-two-cols' && !empty($rows)): ?>
+    <?php
+      $total = count($rows);
+      $mid   = (int) ceil($total / 2);
+      $cols  = [
+        array_slice($rows, 0, $mid),
+        array_slice($rows, $mid),
+      ];
+    ?>
+    <div class="espaces">
+      <?php foreach ($cols as $col): ?>
+      <dl>
+        <?php foreach ($col as $row):
+          $k = (string)($row['key']   ?? '');
+          $v = (string)($row['value'] ?? '');
+        ?>
+        <div class="row">
+          <dt><?= htmlspecialchars($k) ?></dt>
+          <dd><?= TextService::renderTitle($v) ?></dd>
+        </div>
+        <?php endforeach; ?>
+      </dl>
       <?php endforeach; ?>
     </div>
 
