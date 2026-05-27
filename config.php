@@ -29,6 +29,7 @@ require ROOT . '/app/Services/Database.php';
 require ROOT . '/app/Services/LangService.php';
 require ROOT . '/app/Services/SeoService.php';
 require ROOT . '/app/Services/BlockService.php';
+require ROOT . '/app/Services/BlockFieldsService.php';
 require ROOT . '/app/Services/ImageService.php';
 require ROOT . '/app/Services/TextService.php';
 require ROOT . '/app/Services/AnthropicService.php';

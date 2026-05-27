@@ -63,7 +63,14 @@ class SectionController extends AdminBaseController
             }
         } catch (\Throwable) {}
 
-        $this->render('admin/sections/index', compact('pages', 'sections', 'sectionsByLang', 'langs', 'page_slug', 'blockTypes', 'csrf', 'body_class', 'preview_url', 'pieces', 'faqBySlugLang', 'statsByLang', 'proxByLang'));
+        // V8 — on utilise la nouvelle vue simplifiée list_v8.php quand un page_slug est fourni.
+        // L'ancienne vue index.php (massive, mélange édition inline + FAQ + pieces + stats)
+        // est conservée pour référence mais n'est plus appelée.
+        if ($page_slug !== '') {
+            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf'));
+        } else {
+            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf'));
+        }
     }
 
     public function edit(int $id): void
@@ -94,20 +101,54 @@ class SectionController extends AdminBaseController
 
         // Build content JSON from typed fields or raw content
         if (isset($_POST['fields']) && is_array($_POST['fields'])) {
-            $fields = $_POST['fields'];
-            // Decode JSON fields (arrays stored as JSON strings)
-            foreach ($fields as $key => $val) {
+            $rawFields = $_POST['fields'];
+            // Détecter le type de chaque champ via BlockFieldsService pour caster correctement.
+            $defs = \BlockFieldsService::fieldsFor($section['block_type'] ?? ($_POST['block_type'] ?? 'prose'));
+            $defsByName = [];
+            foreach ($defs as $d) { $defsByName[$d['name'] ?? ''] = $d; }
+
+            $fields = [];
+            foreach ($rawFields as $key => $val) {
+                $type = $defsByName[$key]['type'] ?? null;
+                if ($type === 'repeater' || $type === 'buttons') {
+                    // Décoder JSON (saisi en textarea pour l'instant)
+                    if (is_string($val)) {
+                        $val = trim($val);
+                        if ($val === '' || $val === '[]') {
+                            $fields[$key] = [];
+                            continue;
+                        }
+                        $decoded = json_decode($val, true);
+                        $fields[$key] = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : [];
+                        continue;
+                    }
+                    $fields[$key] = is_array($val) ? $val : [];
+                    continue;
+                }
+                if ($type === 'media_id' || $type === 'int') {
+                    if ($val === '' || $val === null) { $fields[$key] = null; continue; }
+                    $fields[$key] = (int)$val;
+                    continue;
+                }
+                if ($type === 'bool') {
+                    $fields[$key] = ($val === '1' || $val === 1 || $val === true);
+                    continue;
+                }
+                // Fallback : conserver la string telle quelle (text, textarea, select)
+                // — mais décoder si c'est un JSON array historique
                 if (is_string($val) && str_starts_with(trim($val), '[')) {
                     $decoded = json_decode($val, true);
                     if (json_last_error() === JSON_ERROR_NONE) {
                         $fields[$key] = $decoded;
+                        continue;
                     }
                 }
-                // Convert numeric strings for checkbox/number fields
-                if ($val === '0' || $val === '1') {
-                    // Keep as-is for checkboxes — they'll be cast properly in the template
-                }
+                $fields[$key] = $val;
             }
+            // Nettoyer les champs vides (sauf 0/false explicites) pour ne pas polluer le JSON
+            $fields = array_filter($fields, static function ($v) {
+                return !($v === '' || $v === null || (is_array($v) && empty($v)));
+            });
             $contentJson = json_encode($fields, JSON_UNESCAPED_UNICODE);
         } else {
             $contentJson = $_POST['content'] ?? '{}';

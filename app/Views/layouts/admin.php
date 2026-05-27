@@ -36,7 +36,6 @@
             <div class="topbar-group is-stale" title="Pas encore refondu V8">
                 <button class="topbar-group-btn">Contenu ▾</button>
                 <div class="topbar-dropdown">
-                    <a href="/admin/pages" class="topbar-dd-link">Pages CMS</a>
                     <a href="/admin/articles" class="topbar-dd-link">Articles</a>
                     <a href="/admin/pieces" class="topbar-dd-link">Chambres</a>
                     <a href="/admin/host" class="topbar-dd-link">Votre hôte</a>
@@ -64,6 +63,7 @@
             <!-- ═══ À DROITE DU BADGE V8 — sections REFONDUES et validées ═══ -->
             <a href="/admin/messages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/messages') ? 'active' : '' ?>">Messages</a>
             <a href="/admin/calendrier" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/calendrier') ? 'active' : '' ?>">Calendrier</a>
+            <a href="/admin/pages" class="topbar-link is-fresh <?= (str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/pages') || str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/sections')) ? 'active' : '' ?>">Pages</a>
         </nav>
         <div class="topbar-right">
             <a href="/" class="topbar-link" target="_blank">Voir le site</a>
