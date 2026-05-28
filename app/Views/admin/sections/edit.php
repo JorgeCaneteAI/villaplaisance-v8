@@ -51,21 +51,21 @@ $renderField = function (array $field, array $content, string $namePrefix = 'fie
                 <input type="number" id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>" value="<?= htmlspecialchars(is_scalar($value) ? (string)$value : '') ?>" style="max-width: 120px;">
                 <?php break;
             case 'media_id': ?>
-                <?php $idVal = is_scalar($value) ? (int)$value : 0; ?>
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <input type="number" id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>" value="<?= $idVal ?: '' ?>" placeholder="ID vp_media" style="max-width: 140px;">
-                    <?php if ($idVal > 0):
-                        $url = ImageService::urlById($idVal);
-                        if ($url): ?>
-                        <img src="<?= htmlspecialchars($url) ?>" style="height: 48px; width: auto; border-radius: 3px; border: 1px solid var(--admin-border);">
-                        <span class="text-sm text-muted">id=<?= $idVal ?></span>
-                        <?php else: ?>
+                <?php
+                    $idVal = is_scalar($value) ? (int)$value : 0;
+                    $inputId = 'f-' . str_replace(['[', ']'], ['-', ''], $name);
+                    $previewUrl = $idVal > 0 ? ImageService::urlById($idVal) : null;
+                ?>
+                <div class="vp-mp-row">
+                    <input type="number" id="<?= htmlspecialchars($inputId) ?>" name="<?= htmlspecialchars($inputName) ?>" value="<?= $idVal ?: '' ?>" placeholder="ID" style="max-width: 100px;">
+                    <button type="button" class="vp-mp-trigger" data-target="<?= htmlspecialchars($inputId) ?>">Choisir une image…</button>
+                    <img class="vp-mp-preview" data-for="<?= htmlspecialchars($inputId) ?>" src="<?= htmlspecialchars($previewUrl ?? '') ?>" alt="" <?= $previewUrl ? '' : 'hidden' ?>>
+                    <span class="vp-mp-preview-label" data-for="<?= htmlspecialchars($inputId) ?>"><?= $idVal > 0 ? 'id=' . $idVal : '' ?></span>
+                    <?php if ($idVal > 0 && !$previewUrl): ?>
                         <span class="text-sm" style="color: var(--admin-error);">image introuvable</span>
-                        <?php endif; ?>
                     <?php endif; ?>
-                    <a href="/admin/media" target="_blank" class="text-sm" style="margin-left:auto;">Voir les médias →</a>
+                    <a href="/admin/media" target="_blank" rel="noopener" class="text-sm" style="margin-left:auto;">Gérer les médias →</a>
                 </div>
-                <p class="text-sm text-muted" style="margin-top: 4px;">MediaPicker visuel arrive en Session 2. Pour l'instant, va sur la liste des médias, copie l'ID puis colle-le ici.</p>
                 <?php break;
             case 'repeater':
                 // Fallback temporaire : JSON brut tant qu'on n'a pas l'UI repeater (Session 2)
@@ -137,3 +137,29 @@ $renderField = function (array $field, array $content, string $namePrefix = 'fie
         <button type="submit" class="btn btn-primary" style="margin-left: auto;">Enregistrer</button>
     </div>
 </form>
+
+<!-- MediaPicker (Phase 4 Session 2 / L1) — modal partagé pour tous les champs media_id -->
+<div id="vp-media-picker" class="vp-mp-backdrop" hidden>
+    <div class="vp-mp-modal" role="dialog" aria-modal="true" aria-labelledby="vp-mp-title">
+        <header class="vp-mp-head">
+            <h2 id="vp-mp-title">Choisir un média</h2>
+            <button type="button" class="vp-mp-close" aria-label="Fermer">×</button>
+        </header>
+        <div class="vp-mp-toolbar">
+            <input type="search" class="vp-mp-search" placeholder="Rechercher (nom, alt, titre, tags)…">
+            <select class="vp-mp-folder">
+                <option value="">Tous les dossiers</option>
+            </select>
+            <a href="/admin/media" target="_blank" rel="noopener" class="vp-mp-upload">+ Uploader →</a>
+        </div>
+        <div class="vp-mp-grid" aria-live="polite">
+            <p class="vp-mp-empty">Chargement…</p>
+        </div>
+        <footer class="vp-mp-foot">
+            <span class="vp-mp-count"></span>
+            <button type="button" class="vp-mp-cancel">Annuler</button>
+        </footer>
+    </div>
+</div>
+
+<script src="/assets/js/admin-section-edit.js?v=<?= filemtime(ROOT . '/public/assets/js/admin-section-edit.js') ?>" defer></script>

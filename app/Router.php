@@ -431,7 +431,8 @@ class Router
             return;
         }
 
-        // API — media list for picker
+        // API — media list for picker (legacy : filenames bruts,
+        // consommé par articles/host/sections/itineraries/pieces).
         if ($normalized === '/admin/api/media-list') {
             header('Content-Type: application/json');
             $dir = ROOT . '/public/uploads';
@@ -445,6 +446,57 @@ class Router
             }
             sort($files);
             echo json_encode($files);
+            return;
+        }
+
+        // API — media records V8 (pour le MediaPicker section admin).
+        // Renvoie les records vp_media enrichis. Filtres : ?folder=&q=&limit=.
+        // Format : {media: [{id, filename, url, folder, alt_fr, title, width, height}], folders: [{folder, count}], total}
+        if ($normalized === '/admin/api/media') {
+            header('Content-Type: application/json');
+            $folder = isset($_GET['folder']) ? trim((string)$_GET['folder']) : '';
+            $q = isset($_GET['q']) ? trim((string)$_GET['q']) : '';
+            $limit = isset($_GET['limit']) ? max(1, min(500, (int)$_GET['limit'])) : 300;
+
+            $sql = "SELECT id, filename, folder, alt_fr, title, width, height FROM vp_media";
+            $params = [];
+            $where = [];
+            if ($folder !== '') { $where[] = "folder = ?"; $params[] = $folder; }
+            if ($q !== '') {
+                $where[] = "(filename LIKE ? OR alt_fr LIKE ? OR title LIKE ? OR tags LIKE ?)";
+                $s = "%{$q}%";
+                $params[] = $s; $params[] = $s; $params[] = $s; $params[] = $s;
+            }
+            if ($where) $sql .= " WHERE " . implode(' AND ', $where);
+            $sql .= " ORDER BY created_at DESC LIMIT " . $limit;
+
+            $rows = [];
+            try { $rows = \Database::fetchAll($sql, $params); } catch (\Throwable) {}
+
+            $folders = [];
+            try {
+                $folderRows = \Database::fetchAll("SELECT folder, COUNT(*) AS n FROM vp_media WHERE folder IS NOT NULL AND folder != '' GROUP BY folder ORDER BY folder");
+                foreach ($folderRows as $fr) {
+                    $folders[] = ['folder' => (string)$fr['folder'], 'count' => (int)$fr['n']];
+                }
+            } catch (\Throwable) {}
+
+            $out = [];
+            foreach ($rows as $r) {
+                $filename = (string)($r['filename'] ?? '');
+                $out[] = [
+                    'id' => (int)$r['id'],
+                    'filename' => $filename,
+                    'url' => $filename !== '' ? '/uploads/' . ltrim($filename, '/') : '',
+                    'folder' => (string)($r['folder'] ?? ''),
+                    'alt_fr' => (string)($r['alt_fr'] ?? ''),
+                    'title' => (string)($r['title'] ?? ''),
+                    'width' => (int)($r['width'] ?? 0),
+                    'height' => (int)($r['height'] ?? 0),
+                ];
+            }
+
+            echo json_encode(['media' => $out, 'folders' => $folders, 'total' => count($out)]);
             return;
         }
 
