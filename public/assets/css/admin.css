@@ -1262,7 +1262,6 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
   overflow: hidden;
   background: #fff;
   transition: border-color 120ms, transform 120ms, box-shadow 120ms;
-  display: flex; flex-direction: column;
 }
 .vp-mp-card:hover, .vp-mp-card:focus-visible {
   border-color: var(--ink-900);
@@ -1273,7 +1272,8 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
 .vp-mp-card-thumb {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 0;
+  padding-bottom: 100%;
   background: var(--linen-200);
   overflow: hidden;
 }
