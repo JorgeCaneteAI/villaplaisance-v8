@@ -96,7 +96,9 @@
                 .replace(/\.(webp|jpg|png|gif|avif)$/i, '');
             return `
                 <div class="vp-mp-card" role="button" tabindex="0" data-id="${m.id}" title="${escapeAttr(m.alt_fr || m.filename)}">
-                    <img src="${escapeAttr(m.url)}" alt="" loading="lazy">
+                    <div class="vp-mp-card-thumb">
+                        <img src="${escapeAttr(m.url)}" alt="" loading="lazy" decoding="async" width="200" height="200">
+                    </div>
                     <div class="vp-mp-card-meta">
                         <span class="vp-mp-card-id">#${m.id}</span> · ${escapeAttr(label)}
                     </div>
