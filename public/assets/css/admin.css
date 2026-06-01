@@ -1186,6 +1186,7 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
   background: var(--linen-50);
   border-radius: var(--admin-radius);
   width: min(960px, 100%);
+  height: 80vh;
   max-height: calc(100vh - 48px);
   display: flex; flex-direction: column;
   box-shadow: 0 12px 48px rgba(0,0,0,0.35);
