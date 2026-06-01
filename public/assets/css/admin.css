@@ -1175,6 +1175,8 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
 /* ═══════════════════════════════════════════════════════════
    MEDIAPICKER V8 — admin/sections/edit (Phase 4 Session 2 / L1)
    ═══════════════════════════════════════════════════════════ */
+
+/* ----- Modal & backdrop ----- */
 .vp-mp-backdrop {
   position: fixed; inset: 0; z-index: 1000;
   background: rgba(20, 18, 14, 0.55);
@@ -1183,22 +1185,23 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
 }
 .vp-mp-backdrop[hidden] { display: none; }
 .vp-mp-modal {
-  background: var(--linen-50);
-  border-radius: var(--admin-radius);
   width: min(960px, 100%);
   height: 80vh;
   max-height: calc(100vh - 48px);
   display: flex; flex-direction: column;
+  background: var(--linen-50);
+  border-radius: var(--admin-radius);
+  overflow: hidden;                   /* coins arrondis suivent automatiquement head/foot */
   box-shadow: 0 12px 48px rgba(0,0,0,0.35);
   font-family: var(--font-sans, 'Manrope', sans-serif);
 }
+
+/* ----- Head ----- */
 .vp-mp-head {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--admin-border);
   display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem;
   background: #fff;
-  border-top-left-radius: var(--admin-radius);
-  border-top-right-radius: var(--admin-radius);
+  border-bottom: 1px solid var(--admin-border);
 }
 .vp-mp-head h2 {
   margin: 0;
@@ -1207,114 +1210,120 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
   color: var(--ink-900);
 }
 .vp-mp-close {
+  padding: 0.2rem 0.5rem;
   background: none; border: none; cursor: pointer;
   font-size: 1.6rem; line-height: 1;
   color: var(--stone-500);
-  padding: 0.2rem 0.5rem;
 }
 .vp-mp-close:hover { color: var(--ink-900); }
+
+/* ----- Toolbar (search + folder + upload) ----- */
 .vp-mp-toolbar {
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
   padding: 0.75rem 1.25rem;
+  background: #fff;
   border-bottom: 1px solid var(--admin-border);
-  display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
-  background: #fff;
 }
-.vp-mp-search {
-  flex: 1; min-width: 220px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--admin-border);
-  border-radius: var(--admin-radius); font: inherit;
-  background: #fff;
-}
-.vp-mp-search:focus { outline: 2px solid var(--sage-500); outline-offset: 1px; }
+.vp-mp-search,
 .vp-mp-folder {
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--admin-border);
-  border-radius: var(--admin-radius); font: inherit;
   background: #fff;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  font: inherit;
 }
+.vp-mp-search { flex: 1; min-width: 220px; }
+.vp-mp-search:focus { outline: 2px solid var(--sage-500); outline-offset: 1px; }
 .vp-mp-upload {
   margin-left: auto;
   padding: 0.45rem 0.9rem;
   background: var(--ink-900); color: #fff;
-  border-radius: var(--admin-radius); text-decoration: none;
+  border-radius: var(--admin-radius);
+  text-decoration: none;
   font-size: 0.85rem;
 }
 .vp-mp-upload:hover { background: var(--olive-900); color: #fff; }
+
+/* ----- Grid scrollable ----- */
 .vp-mp-grid {
   flex: 1 1 0;
-  min-height: 0;
+  min-height: 0;                      /* indispensable pour activer overflow dans flex column */
   overflow-y: auto;
   padding: 1rem 1.25rem;
+  background: var(--linen-100);
   display: grid; gap: 0.75rem;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  grid-auto-rows: 180px;
+  grid-auto-rows: 180px;              /* 140 thumb + ~40 meta — empêche la compression */
   align-content: start;
-  background: var(--linen-100);
 }
 .vp-mp-empty {
   grid-column: 1 / -1;
+  margin: 0;
+  padding: 2.5rem 0;
   text-align: center;
   color: var(--stone-500);
-  padding: 2.5rem 0;
-  margin: 0;
 }
+
+/* ----- Card (vignette dans la grille) ----- */
 .vp-mp-card {
-  cursor: pointer;
+  background: #fff;
   border: 1px solid var(--admin-border);
   border-radius: var(--admin-radius);
   overflow: hidden;
-  background: #fff;
+  cursor: pointer;
   transition: border-color 120ms, transform 120ms, box-shadow 120ms;
 }
-.vp-mp-card:hover, .vp-mp-card:focus-visible {
+.vp-mp-card:hover {
   border-color: var(--ink-900);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  outline: none;
+}
+.vp-mp-card:focus-visible {           /* séparé du hover pour préserver l'outline clavier */
+  border-color: var(--ink-900);
+  outline: 2px solid var(--sage-500);
+  outline-offset: 1px;
 }
 .vp-mp-card-thumb {
-  width: 100%;
-  height: 140px;
+  width: 100%; height: 140px;
   background: var(--linen-200);
   overflow: hidden;
 }
 .vp-mp-card-thumb img {
   width: 100%; height: 100%;
-  object-fit: cover; display: block;
+  display: block;
+  object-fit: cover;
 }
 .vp-mp-card-meta {
   padding: 0.4rem 0.55rem;
+  border-top: 1px solid var(--admin-border);
   font-size: 0.72rem;
   color: var(--stone-600);
-  border-top: 1px solid var(--admin-border);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .vp-mp-card-id {
   font-family: var(--font-mono, ui-monospace, monospace);
-  color: var(--sage-700);
   font-weight: 600;
+  color: var(--sage-700);
 }
+
+/* ----- Foot (compteur + annuler) ----- */
 .vp-mp-foot {
-  padding: 0.6rem 1.25rem;
-  border-top: 1px solid var(--admin-border);
   display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 1.25rem;
   background: #fff;
-  border-bottom-left-radius: var(--admin-radius);
-  border-bottom-right-radius: var(--admin-radius);
+  border-top: 1px solid var(--admin-border);
 }
-.vp-mp-count {
-  font-size: 0.8rem; color: var(--stone-500);
-}
+.vp-mp-count { font-size: 0.8rem; color: var(--stone-500); }
 .vp-mp-cancel {
   padding: 0.4rem 0.9rem;
   background: #fff;
   border: 1px solid var(--admin-border);
-  border-radius: var(--admin-radius); cursor: pointer; font: inherit;
+  border-radius: var(--admin-radius);
+  cursor: pointer; font: inherit;
 }
 .vp-mp-cancel:hover { background: var(--linen-100); }
 
-/* Bouton « Choisir une image » à côté d'un input media_id */
+/* ----- Trigger + preview (rendu inline dans le formulaire d'édition) ----- */
 .vp-mp-trigger {
   padding: 0.4rem 0.85rem;
   background: var(--ink-900); color: #fff;
@@ -1325,10 +1334,10 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
 .vp-mp-trigger:hover { background: var(--olive-900); }
 .vp-mp-trigger:focus-visible { outline: 2px solid var(--sage-500); outline-offset: 1px; }
 .vp-mp-preview {
-  height: 48px; width: auto;
-  border-radius: 3px;
-  border: 1px solid var(--admin-border);
+  width: auto; height: 48px;
   background: var(--linen-200);
+  border: 1px solid var(--admin-border);
+  border-radius: 3px;
 }
 .vp-mp-preview[hidden] { display: none; }
 .vp-mp-preview-label {
@@ -1337,5 +1346,5 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
   color: var(--stone-500);
 }
 .vp-mp-row {
-  display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
 }
