@@ -13,76 +13,6 @@
 $blockType = $section['block_type'] ?? 'prose';
 $fields = BlockFieldsService::fieldsFor($blockType);
 $content = json_decode($section['content'] ?? '{}', true) ?: [];
-
-// Helper d'affichage d'un champ
-$renderField = function (array $field, array $content, string $namePrefix = 'fields'): void {
-    $name = $field['name'] ?? '';
-    $type = $field['type'] ?? 'text';
-    $label = $field['label'] ?? $name;
-    $help = $field['help'] ?? '';
-    $value = $content[$name] ?? $field['default'] ?? '';
-    $inputName = $namePrefix . '[' . $name . ']';
-    ?>
-    <div class="form-group" data-field="<?= htmlspecialchars($name) ?>" data-type="<?= htmlspecialchars($type) ?>">
-        <label for="f-<?= htmlspecialchars($name) ?>"><?= htmlspecialchars($label) ?></label>
-        <?php switch ($type):
-            case 'text': ?>
-                <input type="text" id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>" value="<?= htmlspecialchars(is_scalar($value) ? (string)$value : '') ?>">
-                <?php break;
-            case 'textarea': ?>
-                <textarea id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>" rows="4"><?= htmlspecialchars(is_scalar($value) ? (string)$value : '') ?></textarea>
-                <?php break;
-            case 'select':
-                $options = $field['options'] ?? []; ?>
-                <select id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>">
-                    <?php foreach ($options as $optKey => $optLabel): ?>
-                    <option value="<?= htmlspecialchars((string)$optKey) ?>" <?= (string)$value === (string)$optKey ? 'selected' : '' ?>><?= htmlspecialchars($optLabel) ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <?php break;
-            case 'bool': ?>
-                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                    <input type="hidden" name="<?= htmlspecialchars($inputName) ?>" value="0">
-                    <input type="checkbox" name="<?= htmlspecialchars($inputName) ?>" value="1" <?= $value ? 'checked' : '' ?>>
-                    <span class="text-sm text-muted">Activer</span>
-                </label>
-                <?php break;
-            case 'int': ?>
-                <input type="number" id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>" value="<?= htmlspecialchars(is_scalar($value) ? (string)$value : '') ?>" style="max-width: 120px;">
-                <?php break;
-            case 'media_id': ?>
-                <?php
-                    $idVal = is_scalar($value) ? (int)$value : 0;
-                    $inputId = 'f-' . str_replace(['[', ']'], ['-', ''], $name);
-                    $previewUrl = $idVal > 0 ? ImageService::urlById($idVal) : null;
-                ?>
-                <div class="vp-mp-row">
-                    <input type="number" id="<?= htmlspecialchars($inputId) ?>" name="<?= htmlspecialchars($inputName) ?>" value="<?= $idVal ?: '' ?>" placeholder="ID" style="max-width: 100px;">
-                    <button type="button" class="vp-mp-trigger" data-target="<?= htmlspecialchars($inputId) ?>">Choisir une image…</button>
-                    <img class="vp-mp-preview" data-for="<?= htmlspecialchars($inputId) ?>" src="<?= htmlspecialchars($previewUrl ?? '') ?>" alt="" <?= $previewUrl ? '' : 'hidden' ?>>
-                    <span class="vp-mp-preview-label" data-for="<?= htmlspecialchars($inputId) ?>"><?= $idVal > 0 ? 'id=' . $idVal : '' ?></span>
-                    <?php if ($idVal > 0 && !$previewUrl): ?>
-                        <span class="text-sm" style="color: var(--admin-error);">image introuvable</span>
-                    <?php endif; ?>
-                    <a href="/admin/media" target="_blank" rel="noopener" class="text-sm" style="margin-left:auto;">Gérer les médias →</a>
-                </div>
-                <?php break;
-            case 'repeater':
-                // Fallback temporaire : JSON brut tant qu'on n'a pas l'UI repeater (Session 2)
-                $jsonVal = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '[]'; ?>
-                <textarea id="f-<?= htmlspecialchars($name) ?>" name="<?= htmlspecialchars($inputName) ?>" rows="6" style="font-family: var(--font-mono); font-size: 0.78rem; background: var(--linen-50);"><?= htmlspecialchars($jsonVal) ?></textarea>
-                <p class="text-sm text-muted" style="margin-top: 4px;">⚠ Champ complexe — édition en JSON pour l'instant. UI dédiée (ajout/suppression d'items) arrive en Session 2.</p>
-                <?php break;
-            default: ?>
-                <input type="text" name="<?= htmlspecialchars($inputName) ?>" value="<?= htmlspecialchars(is_scalar($value) ? (string)$value : '') ?>">
-                <?php
-        endswitch; ?>
-        <?php if ($help !== ''): ?>
-        <p class="text-sm text-muted" style="margin-top: 4px;"><?= htmlspecialchars($help) ?></p>
-        <?php endif; ?>
-    </div>
-    <?php
-};
 ?>
 
 <div class="page-header">
@@ -122,7 +52,7 @@ $renderField = function (array $field, array $content, string $namePrefix = 'fie
     </h2>
 
     <?php foreach ($fields as $field): ?>
-        <?php $renderField($field, $content); ?>
+        <?php BlockFormRenderer::renderField($field, $content); ?>
     <?php endforeach; ?>
 
     <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">

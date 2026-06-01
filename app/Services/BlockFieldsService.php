@@ -39,6 +39,75 @@ class BlockFieldsService
         ];
     }
 
+    /**
+     * Cast récursivement une valeur POST brute selon la définition du champ.
+     *
+     * Sert dans SectionController::save() pour transformer ce que PHP a parsé
+     * de $_POST en valeurs typées avant le json_encode → vp_sections.content.
+     *
+     * Règles :
+     * - int / media_id : (int) si non vide, sinon null
+     * - bool           : true si "1"/1/true, false sinon
+     * - text/textarea/select : string telle quelle
+     * - repeater       : array d'items, re-séquencé (sans trou),
+     *                    chaque item casté selon item_type ou item_fields,
+     *                    items vides supprimés
+     */
+    public static function castValue($value, array $field)
+    {
+        $type = (string)($field['type'] ?? 'text');
+
+        if ($type === 'repeater') {
+            // Décoder si valeur JSON brute (mode debug ou import)
+            if (is_string($value)) {
+                $value = trim($value);
+                if ($value === '' || $value === '[]') return [];
+                $decoded = json_decode($value, true);
+                $value = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : [];
+            }
+            if (!is_array($value)) return [];
+
+            $itemType = $field['item_type'] ?? null;
+            $itemFields = $field['item_fields'] ?? null;
+            $out = [];
+            foreach ($value as $rawItem) {
+                if ($itemType === 'int') {
+                    if ($rawItem === '' || $rawItem === null) continue;
+                    $out[] = (int)$rawItem;
+                } elseif ($itemType === 'string') {
+                    $s = is_scalar($rawItem) ? trim((string)$rawItem) : '';
+                    if ($s === '') continue;
+                    $out[] = $s;
+                } elseif (is_array($itemFields) && is_array($rawItem)) {
+                    $castedItem = [];
+                    foreach ($itemFields as $subField) {
+                        $subName = (string)($subField['name'] ?? '');
+                        if ($subName === '') continue;
+                        if (!array_key_exists($subName, $rawItem)) continue;
+                        $castedItem[$subName] = self::castValue($rawItem[$subName], $subField);
+                    }
+                    // Supprimer les sous-champs vides du JSON pour ne pas le polluer
+                    $castedItem = array_filter($castedItem, static function ($v) {
+                        return !($v === '' || $v === null || (is_array($v) && empty($v)));
+                    });
+                    if (!empty($castedItem)) $out[] = $castedItem;
+                }
+            }
+            return $out;
+        }
+
+        if ($type === 'int' || $type === 'media_id') {
+            if ($value === '' || $value === null) return null;
+            return (int)$value;
+        }
+        if ($type === 'bool') {
+            return ($value === '1' || $value === 1 || $value === true);
+        }
+        // text / textarea / select / default : string ou tel quel
+        if (is_scalar($value)) return (string)$value;
+        return $value;
+    }
+
     /** Définition complète par type — surcharge ou complète commonFields. */
     public static function fieldsFor(string $blockType): array
     {

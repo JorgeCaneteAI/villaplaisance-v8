@@ -1348,3 +1348,118 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
 .vp-mp-row {
   display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   REPEATER V8 — admin/sections/edit (Phase 4 Session 2 / L2)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Container du repeater */
+.vp-rp {
+  margin-top: 0.25rem;
+  padding: 0.75rem;
+  background: var(--linen-100);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+}
+
+/* Liste des items */
+.vp-rp-items {
+  display: flex; flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.vp-rp-items:empty + .vp-rp-add::before {
+  content: '(vide) ';
+  color: var(--stone-500);
+  font-style: italic;
+}
+
+/* Un item */
+.vp-rp-item {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: #fff;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+}
+
+/* Pastille numéro à gauche */
+.vp-rp-item-handle {
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 0.2rem;
+  color: var(--stone-500);
+}
+.vp-rp-item-num {
+  display: inline-block;
+  min-width: 24px; padding: 0.1rem 0.3rem;
+  background: var(--linen-200);
+  border-radius: 12px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  text-align: center;
+  color: var(--stone-600);
+}
+
+/* Corps de l'item — empile les sub-fields ou rend l'input scalaire */
+.vp-rp-item-body {
+  display: flex; flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;       /* permet aux inputs longs de wrapper */
+}
+.vp-rp-item-body > input[type="text"],
+.vp-rp-item-body > input[type="number"] {
+  width: 100%;
+}
+/* Imbriqué : sub-repeater à l'intérieur d'un item */
+.vp-rp-item-body .vp-rp {
+  background: var(--linen-50);
+}
+
+/* Actions ↑ ↓ × */
+.vp-rp-item-actions {
+  display: flex; flex-direction: column;
+  gap: 0.2rem;
+}
+.vp-rp-item-actions button {
+  width: 28px; height: 28px;
+  padding: 0;
+  background: #fff;
+  border: 1px solid var(--admin-border);
+  border-radius: 3px;
+  cursor: pointer;
+  font: inherit; font-size: 0.85rem; line-height: 1;
+  color: var(--stone-600);
+}
+.vp-rp-item-actions button:hover {
+  border-color: var(--ink-900); color: var(--ink-900);
+}
+.vp-rp-item-actions .vp-rp-remove:hover {
+  background: color-mix(in oklab, var(--admin-error) 8%, #fff);
+  border-color: var(--admin-error); color: var(--admin-error);
+}
+
+/* Bouton "+ Ajouter" */
+.vp-rp-add {
+  padding: 0.4rem 0.85rem;
+  background: #fff;
+  border: 1px dashed var(--admin-border);
+  border-radius: var(--admin-radius);
+  cursor: pointer;
+  font: inherit; font-size: 0.85rem;
+  color: var(--stone-600);
+}
+.vp-rp-add:hover:not([disabled]) {
+  background: var(--linen-50);
+  border-style: solid; border-color: var(--ink-900); color: var(--ink-900);
+}
+.vp-rp-add[disabled] {
+  opacity: 0.5; cursor: not-allowed;
+}
+.vp-rp-max-note {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--stone-500);
+  font-style: italic;
+}

@@ -171,3 +171,133 @@
     search.addEventListener('input', render);
     folderSel.addEventListener('change', render);
 })();
+
+
+/* ═══════════════════════════════════════════════════════════
+   REPEATER UI (Phase 4 Session 2 / L2)
+   ═══════════════════════════════════════════════════════════
+   Markup attendu (rendu par BlockFormRenderer::renderRepeater) :
+
+   <div class="vp-rp" data-name-prefix="fields[items]" data-id-prefix="f-items" data-item-kind="object|string|int" data-max="N">
+     <div class="vp-rp-items">
+       <div class="vp-rp-item" data-index="0">…inputs…<actions ↑ ↓ ×></div>
+       …
+     </div>
+     <template class="vp-rp-tpl">
+       <div class="vp-rp-item" data-index="__INDEX__">…inputs avec __INDEX__…</div>
+     </template>
+     <button class="vp-rp-add">+ Ajouter</button>
+   </div>
+
+   La numérotation côté HTML peut avoir des trous après remove. Le PHP
+   re-séquence à la sauvegarde (BlockFieldsService::castValue). Pas besoin
+   de renommer tous les inputs côté JS, c'est plus simple et plus robuste.
+*/
+(function () {
+    'use strict';
+
+    function nextIndex(container) {
+        const items = container.querySelectorAll('.vp-rp-items > .vp-rp-item');
+        let max = -1;
+        items.forEach(it => {
+            const i = parseInt(it.dataset.index, 10);
+            if (!isNaN(i) && i > max) max = i;
+        });
+        return max + 1;
+    }
+
+    function renumberLabels(container) {
+        // Met à jour les pastilles "1, 2, 3" affichées à gauche de chaque item.
+        // L'index data-attr reste celui d'origine (les trous sont OK).
+        container.querySelectorAll('.vp-rp-items > .vp-rp-item .vp-rp-item-num').forEach((el, visualIdx) => {
+            el.textContent = String(visualIdx + 1);
+        });
+    }
+
+    function refreshAddDisabled(container) {
+        const max = parseInt(container.dataset.max || '0', 10);
+        if (max <= 0) return;
+        const count = container.querySelectorAll('.vp-rp-items > .vp-rp-item').length;
+        const addBtn = container.querySelector(':scope > .vp-rp-add');
+        if (addBtn) addBtn.disabled = count >= max;
+    }
+
+    function addItem(container) {
+        const tpl = container.querySelector(':scope > .vp-rp-tpl');
+        if (!tpl) return;
+        const idx = nextIndex(container);
+        // tpl.innerHTML pour récupérer la chaîne avec les placeholders __INDEX__
+        const html = tpl.innerHTML.replace(/__INDEX__/g, String(idx));
+        const wrap = document.createElement('div');
+        wrap.innerHTML = html.trim();
+        const newItem = wrap.firstElementChild;
+        if (!newItem) return;
+        container.querySelector(':scope > .vp-rp-items').appendChild(newItem);
+        renumberLabels(container);
+        refreshAddDisabled(container);
+        // Focus le premier input du nouvel item, ergo
+        const firstInput = newItem.querySelector('input, textarea, select');
+        if (firstInput) firstInput.focus();
+    }
+
+    function removeItem(item) {
+        const container = item.closest('.vp-rp');
+        item.remove();
+        if (container) {
+            renumberLabels(container);
+            refreshAddDisabled(container);
+        }
+    }
+
+    function moveItem(item, dir) {
+        const sibling = dir === 'up' ? item.previousElementSibling : item.nextElementSibling;
+        if (!sibling) return;
+        if (dir === 'up') {
+            sibling.before(item);
+        } else {
+            sibling.after(item);
+        }
+        const container = item.closest('.vp-rp');
+        if (container) renumberLabels(container);
+    }
+
+    // Délégation globale sur tous les boutons repeater
+    document.addEventListener('click', e => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+
+        // Le bouton .vp-rp-add doit cibler le container parent direct uniquement
+        // (pas celui d'un parent éloigné en cas de repeater imbriqué)
+        const addBtn = target.closest('.vp-rp-add');
+        if (addBtn && !addBtn.disabled) {
+            e.preventDefault();
+            const container = addBtn.closest('.vp-rp');
+            if (container) addItem(container);
+            return;
+        }
+
+        const removeBtn = target.closest('.vp-rp-remove');
+        if (removeBtn) {
+            e.preventDefault();
+            const item = removeBtn.closest('.vp-rp-item');
+            if (item) removeItem(item);
+            return;
+        }
+
+        const upBtn = target.closest('.vp-rp-up');
+        if (upBtn) {
+            e.preventDefault();
+            const item = upBtn.closest('.vp-rp-item');
+            if (item) moveItem(item, 'up');
+            return;
+        }
+
+        const downBtn = target.closest('.vp-rp-down');
+        if (downBtn) {
+            e.preventDefault();
+            const item = downBtn.closest('.vp-rp-item');
+            if (item) moveItem(item, 'down');
+            return;
+        }
+    });
+})();
