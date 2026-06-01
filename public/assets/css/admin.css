@@ -1463,3 +1463,40 @@ body.admin-body { font-family: var(--font-sans); font-size: 0.9rem; color: var(-
   color: var(--stone-500);
   font-style: italic;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MINI-MARKDOWN PREVIEW (Phase 4 Session 2 / L3)
+   ═══════════════════════════════════════════════════════════ */
+.vp-md-preview {
+  display: flex; align-items: baseline; gap: 0.6rem;
+  margin-top: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  background: var(--linen-50);
+  border-left: 2px solid var(--sage-500);
+  border-radius: 0 3px 3px 0;
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--ink-700);
+}
+.vp-md-preview-tag {
+  flex-shrink: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sage-700);
+}
+.vp-md-preview-html {
+  min-width: 0;
+  flex: 1;
+}
+.vp-md-preview-html:empty::before {
+  content: '(vide)';
+  color: var(--stone-500);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+.vp-md-preview-html em { font-style: italic; }
+.vp-md-preview-html strong { font-weight: 600; }

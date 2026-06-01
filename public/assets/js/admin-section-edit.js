@@ -301,3 +301,59 @@
         }
     });
 })();
+
+
+/* ═══════════════════════════════════════════════════════════
+   MINI-MARKDOWN PREVIEW (Phase 4 Session 2 / L3)
+   ═══════════════════════════════════════════════════════════
+   Reproduit TextService::renderTitle() côté JS :
+     - **gras** → <strong>
+     - *italique* → <em>
+     - retour ligne → <br>
+
+   Sur chaque input/textarea avec data-md-source="1", le voisin
+   .vp-md-preview[data-for=<id>] est mis à jour à chaque saisie.
+*/
+(function () {
+    'use strict';
+
+    function escapeHtml(s) {
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function renderMd(raw) {
+        if (!raw) return '';
+        let t = escapeHtml(raw);
+        // **gras** d'abord (sinon * capturerait **)
+        t = t.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+        // *italique* ensuite
+        t = t.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+        return t.replace(/\n/g, '<br>');
+    }
+
+    function cssEscape(s) {
+        return (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+    }
+
+    function updatePreview(source) {
+        const id = source.id;
+        if (!id) return;
+        const preview = document.querySelector(`.vp-md-preview[data-for="${cssEscape(id)}"] > .vp-md-preview-html`);
+        if (!preview) return;
+        preview.innerHTML = renderMd(source.value);
+    }
+
+    // Délégation sur input — couvre les champs rendus côté serveur et ceux
+    // injectés au runtime par le repeater (template cloné)
+    document.addEventListener('input', e => {
+        const src = e.target;
+        if (!(src instanceof HTMLElement)) return;
+        if (src.dataset && src.dataset.mdSource === '1') {
+            updatePreview(src);
+        }
+    });
+})();

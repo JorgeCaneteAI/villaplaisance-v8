@@ -30,6 +30,28 @@ declare(strict_types=1);
 class BlockFormRenderer
 {
     /**
+     * Noms de champs dont le contenu est rendu via TextService::renderTitle()
+     * côté front (mini-markdown actif). Une preview live est affichée sous
+     * le textarea/input pour aider à l'édition.
+     *
+     * Un champ peut aussi forcer le flag via `'markdown' => true` dans sa def.
+     */
+    private const MARKDOWN_FIELD_NAMES = ['title', 'heading', 'label_text', 'quote', 'value'];
+
+    private static function isMarkdownField(array $field): bool
+    {
+        if (!empty($field['markdown'])) return true;
+        return in_array((string)($field['name'] ?? ''), self::MARKDOWN_FIELD_NAMES, true);
+    }
+
+    /** Reproduit TextService::renderTitle() pour générer la preview initiale côté serveur. */
+    private static function renderMarkdownPreview(string $raw): string
+    {
+        return TextService::renderTitle($raw);
+    }
+
+
+    /**
      * Rend un champ unique (label + input adapté au type) + son help text.
      *
      * @param array  $field       Définition du champ (cf. BlockFieldsService)
@@ -50,12 +72,13 @@ class BlockFormRenderer
         echo '<div class="form-group" data-field="' . htmlspecialchars($name) . '" data-type="' . htmlspecialchars($type) . '">';
         echo '<label for="' . htmlspecialchars($inputId) . '">' . htmlspecialchars($label) . '</label>';
 
+        $isMd = self::isMarkdownField($field);
         switch ($type) {
             case 'text':
-                self::renderText($inputName, $inputId, $value);
+                self::renderText($inputName, $inputId, $value, $isMd);
                 break;
             case 'textarea':
-                self::renderTextarea($inputName, $inputId, $value);
+                self::renderTextarea($inputName, $inputId, $value, $isMd);
                 break;
             case 'select':
                 self::renderSelect($inputName, $inputId, $value, $field['options'] ?? []);
@@ -86,25 +109,40 @@ class BlockFormRenderer
     // Champs simples
     // ───────────────────────────────────────────────────────────
 
-    private static function renderText(string $name, string $id, $value): void
+    private static function renderText(string $name, string $id, $value, bool $markdown = false): void
     {
+        $raw = is_scalar($value) ? (string)$value : '';
         printf(
-            '<input type="text" id="%s" name="%s" value="%s">',
+            '<input type="text" id="%s" name="%s" value="%s"%s>',
             htmlspecialchars($id),
             htmlspecialchars($name),
-            htmlspecialchars(is_scalar($value) ? (string)$value : '')
+            htmlspecialchars($raw),
+            $markdown ? ' data-md-source="1"' : ''
         );
+        if ($markdown) self::renderMdPreview($id, $raw);
     }
 
-    private static function renderTextarea(string $name, string $id, $value, int $rows = 4): void
+    private static function renderTextarea(string $name, string $id, $value, bool $markdown = false, int $rows = 4): void
     {
+        $raw = is_scalar($value) ? (string)$value : '';
         printf(
-            '<textarea id="%s" name="%s" rows="%d">%s</textarea>',
+            '<textarea id="%s" name="%s" rows="%d"%s>%s</textarea>',
             htmlspecialchars($id),
             htmlspecialchars($name),
             $rows,
-            htmlspecialchars(is_scalar($value) ? (string)$value : '')
+            $markdown ? ' data-md-source="1"' : '',
+            htmlspecialchars($raw)
         );
+        if ($markdown) self::renderMdPreview($id, $raw);
+    }
+
+    /** Bloc preview du mini-markdown, mis à jour en live par le JS. */
+    private static function renderMdPreview(string $sourceId, string $raw): void
+    {
+        echo '<div class="vp-md-preview" data-for="' . htmlspecialchars($sourceId) . '">';
+        echo '<span class="vp-md-preview-tag">aperçu</span>';
+        echo '<span class="vp-md-preview-html">' . self::renderMarkdownPreview($raw) . '</span>';
+        echo '</div>';
     }
 
     private static function renderSelect(string $name, string $id, $value, array $options): void
