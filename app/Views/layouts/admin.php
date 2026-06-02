@@ -29,10 +29,7 @@
     <header class="admin-topbar">
         <a href="/admin" class="topbar-logo">VP Admin</a>
         <nav class="topbar-nav">
-            <!-- ═══ À GAUCHE DU BADGE V8 — sections PAS ENCORE refondues (look V7 hérité) ═══ -->
-            <a href="/admin/dashboard" class="topbar-link is-stale" title="Pas encore refondu V8">Dashboard</a>
-            <a href="/admin/analytics" class="topbar-link is-stale" title="Pas encore refondu V8">Statistiques</a>
-
+            <!-- ═══ À GAUCHE DU BADGE V8 — outils techniques (V7 hérité visuellement compatible) ═══ -->
             <div class="topbar-group is-stale" title="Outils techniques en V7 hérité">
                 <button class="topbar-group-btn">SEO ▾</button>
                 <div class="topbar-dropdown">
@@ -41,12 +38,12 @@
                 </div>
             </div>
 
-            <a href="/admin/reglages" class="topbar-link is-stale" title="V7 hérité (paramètres techniques)">Réglages</a>
-
             <!-- ═══ Le badge V8 — DEV sert de SÉPARATEUR ═══ -->
             <span class="env-separator" title="À gauche : sections en attente de refonte V8. À droite : sections refondues et validées.">V8 — DEV</span>
 
             <!-- ═══ À DROITE DU BADGE V8 — sections REFONDUES et validées ═══ -->
+            <a href="/admin/dashboard" class="topbar-link is-fresh <?= (in_array($_SERVER['REQUEST_URI'] ?? '', ['/admin', '/admin/dashboard'], true)) ? 'active' : '' ?>">Dashboard</a>
+            <a href="/admin/analytics" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/analytics') ? 'active' : '' ?>">Stats</a>
             <a href="/admin/messages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/messages') ? 'active' : '' ?>">Messages</a>
             <a href="/admin/calendrier" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/calendrier') ? 'active' : '' ?>">Calendrier</a>
             <a href="/admin/pages" class="topbar-link is-fresh <?= (str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/pages') || str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/sections')) ? 'active' : '' ?>">Pages</a>
@@ -63,6 +60,7 @@
             <a href="/admin/faq" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/faq') ? 'active' : '' ?>">FAQ</a>
             <a href="/admin/avis" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/avis') ? 'active' : '' ?>">Avis</a>
             <a href="/admin/media" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/media') ? 'active' : '' ?>">Médias</a>
+            <a href="/admin/reglages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/reglages') ? 'active' : '' ?>">Réglages</a>
         </nav>
         <div class="topbar-right">
             <a href="/" class="topbar-link" target="_blank">Voir le site</a>
