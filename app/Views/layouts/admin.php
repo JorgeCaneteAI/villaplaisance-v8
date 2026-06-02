@@ -27,14 +27,11 @@
 </head>
 <body class="admin-body <?= htmlspecialchars($body_class ?? '') ?>">
     <header class="admin-topbar">
-        <a href="/admin" class="topbar-logo">VP Admin</a>
+        <a href="/admin" class="topbar-logo">Villa Plaisance</a>
         <nav class="topbar-nav">
             <!-- ═══ À GAUCHE DU BADGE V8 — (vide, tout est en fresh) ═══ -->
 
-            <!-- ═══ Le badge V8 — DEV sert de SÉPARATEUR ═══ -->
-            <span class="env-separator" title="À gauche : sections en attente de refonte V8. À droite : sections refondues et validées.">V8 — DEV</span>
-
-            <!-- ═══ À DROITE DU BADGE V8 — sections REFONDUES et validées ═══ -->
+            <!-- ═══ Nav admin (toutes les sections refondues V8) ═══ -->
             <a href="/admin/dashboard" class="topbar-link is-fresh <?= (in_array($_SERVER['REQUEST_URI'] ?? '', ['/admin', '/admin/dashboard'], true)) ? 'active' : '' ?>">Dashboard</a>
             <a href="/admin/analytics" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/analytics') ? 'active' : '' ?>">Stats</a>
             <a href="/admin/messages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/messages') ? 'active' : '' ?>">Messages</a>
