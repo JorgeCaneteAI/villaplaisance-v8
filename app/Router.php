@@ -96,6 +96,7 @@ class Router
             '/espaces-exterieurs' => ['Controllers\\Front\\ExterieursController', 'index'],
             '/journal' => ['Controllers\\Front\\JournalController', 'index'],
             '/contact' => ['Controllers\\Front\\ContactController', 'index'],
+            '/avis' => ['Controllers\\Front\\AvisController', 'index'],
             '/disponibilites' => ['Controllers\\Front\\DisponibilitesController', 'index'],
             '/livret' => ['Controllers\\Front\\LivretController', 'index'],
             '/livret-apercu' => ['Controllers\\Front\\LivretController', 'preview'],

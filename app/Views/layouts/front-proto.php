@@ -130,6 +130,7 @@
                     <h4 data-en="Stay close">Rester proche</h4>
                     <ul>
                         <li><a href="<?= LangService::url('contact') ?>" data-en="Contact">Contact</a></li>
+                        <li><a href="<?= LangService::url('avis') ?>" data-en="Guest reviews">Avis clients</a></li>
                         <li><a href="<?= LangService::url('votre-hote') ?>" data-en="Your host">Votre hôte</a></li>
                         <li><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></li>
                         <li><a href="#" data-en="Instagram">Instagram</a></li>
