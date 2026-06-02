@@ -6,9 +6,31 @@ namespace App\Controllers\Admin;
 class MediaController extends AdminBaseController
 {
     private const UPLOAD_DIR = ROOT . '/public/uploads/';
+    private const THUMB_DIR = ROOT . '/public/uploads/thumb/';   // miniatures servies au MediaPicker
+    private const THUMB_MAX = 400;                                // côté le plus long en pixels (2× retina sur 200px)
+    private const THUMB_QUALITY = 70;                             // qualité WebP des miniatures
     private const MAX_SIZE = 5 * 1024 * 1024; // 5 Mo
     private const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
     private const FOLDERS = ['general', 'chambres', 'villa', 'exterieurs', 'journal', 'surplace', 'hero', 'divers'];
+
+    /**
+     * Convention : pour une image `nom.ext`, la miniature est `thumb/nom.webp`
+     * (toujours WebP, indépendamment du format source).
+     */
+    public static function thumbFilename(string $sourceFilename): string
+    {
+        return pathinfo($sourceFilename, PATHINFO_FILENAME) . '.webp';
+    }
+
+    public static function thumbUrl(string $sourceFilename): string
+    {
+        return '/uploads/thumb/' . self::thumbFilename($sourceFilename);
+    }
+
+    public static function thumbAbsolutePath(string $sourceFilename): string
+    {
+        return self::THUMB_DIR . self::thumbFilename($sourceFilename);
+    }
 
     public function index(): void
     {
@@ -154,6 +176,8 @@ class MediaController extends AdminBaseController
                     'seo_filename' => $seoName,
                 ]);
                 $uploaded++;
+                // Génère la miniature (best-effort — n'échoue jamais l'upload si la thumb plante)
+                self::generateThumb(self::UPLOAD_DIR . $finalName, self::thumbAbsolutePath($finalName));
             } catch (\Throwable $e) {
                 @unlink(self::UPLOAD_DIR . $finalName);
                 $errors++;
@@ -265,6 +289,67 @@ class MediaController extends AdminBaseController
             'image/avif' => 'avif',
             default => 'webp',
         };
+    }
+
+    /**
+     * Génère une miniature WebP (ratio préservé, côté le plus long ≤ $maxSize).
+     *
+     * - Sortie : toujours WebP, qualité $quality.
+     * - Crée le dossier de destination si absent.
+     * - Idempotent : si la thumb existe déjà, retourne true sans regénérer.
+     * - Best-effort : retourne false silencieusement si GD manque ou source invalide.
+     *
+     * Public static pour pouvoir être appelée depuis le script bin/generate_thumbs.php.
+     */
+    public static function generateThumb(
+        string $sourcePath,
+        string $thumbPath,
+        int $maxSize = self::THUMB_MAX,
+        int $quality = self::THUMB_QUALITY
+    ): bool {
+        if (file_exists($thumbPath)) return true;            // idempotent
+        if (!file_exists($sourcePath)) return false;
+        if (!function_exists('imagewebp')) return false;     // GD sans WebP
+
+        $info = @getimagesize($sourcePath);
+        if (!$info) return false;
+        [$srcW, $srcH, $type] = $info;
+        if ($srcW <= 0 || $srcH <= 0) return false;
+
+        $src = match ($type) {
+            IMAGETYPE_WEBP => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($sourcePath) : false,
+            IMAGETYPE_JPEG => function_exists('imagecreatefromjpeg') ? @imagecreatefromjpeg($sourcePath) : false,
+            IMAGETYPE_PNG  => function_exists('imagecreatefrompng')  ? @imagecreatefrompng($sourcePath)  : false,
+            IMAGETYPE_GIF  => function_exists('imagecreatefromgif')  ? @imagecreatefromgif($sourcePath)  : false,
+            default => false,
+        };
+        if (!$src) return false;
+
+        // Dimensions cibles — ratio préservé, max sur le côté le plus long
+        if ($srcW >= $srcH) {
+            $dstW = min($maxSize, $srcW);
+            $dstH = max(1, (int) round($dstW * $srcH / $srcW));
+        } else {
+            $dstH = min($maxSize, $srcH);
+            $dstW = max(1, (int) round($dstH * $srcW / $srcH));
+        }
+
+        // Dossier de destination
+        $dir = dirname($thumbPath);
+        if (!is_dir($dir)) @mkdir($dir, 0755, true);
+
+        $dst = imagecreatetruecolor($dstW, $dstH);
+        // Préserve la transparence pour PNG/WebP
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+
+        $ok = imagecopyresampled($dst, $src, 0, 0, 0, 0, $dstW, $dstH, $srcW, $srcH)
+           && imagewebp($dst, $thumbPath, $quality);
+
+        imagedestroy($src);
+        imagedestroy($dst);
+
+        return $ok && file_exists($thumbPath);
     }
 
     private function convertToWebp(string $source, string $dest, string $mime): bool

@@ -481,13 +481,29 @@ class Router
                 }
             } catch (\Throwable) {}
 
+            // Listage en une fois des thumbs disponibles → évite N file_exists.
+            // Convention : /uploads/thumb/<nom_sans_ext>.webp pour chaque média.
+            $thumbDir = ROOT . '/public/uploads/thumb';
+            $thumbSet = [];
+            if (is_dir($thumbDir)) {
+                foreach (scandir($thumbDir) ?: [] as $f) {
+                    if ($f[0] !== '.') $thumbSet[$f] = true;
+                }
+            }
+
             $out = [];
             foreach ($rows as $r) {
                 $filename = (string)($r['filename'] ?? '');
+                $url = $filename !== '' ? '/uploads/' . ltrim($filename, '/') : '';
+                $thumbName = $filename !== '' ? pathinfo($filename, PATHINFO_FILENAME) . '.webp' : '';
+                $urlThumb = ($thumbName !== '' && isset($thumbSet[$thumbName]))
+                    ? '/uploads/thumb/' . $thumbName
+                    : $url;  // fallback : l'original si la thumb n'existe pas
                 $out[] = [
                     'id' => (int)$r['id'],
                     'filename' => $filename,
-                    'url' => $filename !== '' ? '/uploads/' . ltrim($filename, '/') : '',
+                    'url' => $url,
+                    'url_thumb' => $urlThumb,
                     'folder' => (string)($r['folder'] ?? ''),
                     'alt_fr' => (string)($r['alt_fr'] ?? ''),
                     'title' => (string)($r['title'] ?? ''),

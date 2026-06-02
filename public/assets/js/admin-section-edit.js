@@ -94,10 +94,12 @@
             const label = m.filename
                 .replace('villa-plaisance-', '')
                 .replace(/\.(webp|jpg|png|gif|avif)$/i, '');
+            // url_thumb : miniature ~400px générée côté serveur, fallback sur l'original
+            const src = m.url_thumb || m.url;
             return `
                 <div class="vp-mp-card" role="button" tabindex="0" data-id="${m.id}" title="${escapeAttr(m.alt_fr || m.filename)}">
                     <div class="vp-mp-card-thumb">
-                        <img src="${escapeAttr(m.url)}" alt="" loading="lazy" decoding="async" width="200" height="200">
+                        <img src="${escapeAttr(src)}" alt="" loading="lazy" decoding="async" width="200" height="200">
                     </div>
                     <div class="vp-mp-card-meta">
                         <span class="vp-mp-card-id">#${m.id}</span> · ${escapeAttr(label)}
