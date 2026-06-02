@@ -495,144 +495,156 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 </section>
 <?php endif; ?>
 
-<!-- ============ 05 · PROVENANCE / WORLD MAP ============ -->
+<!-- ============ 05 · PROVENANCE / WORLD MAP (Leaflet — vraie carte du monde) ============ -->
+<?php
+// Origines depuis vp_reviews — données réelles, mises à jour quand on ajoute un avis
+$_mapOrigins = [];
+$_mapCityList = [];
+try {
+    $_rows = Database::fetchAll(
+        "SELECT origin, COUNT(*) AS cnt FROM vp_reviews WHERE LENGTH(origin) > 0 AND status = 'published' GROUP BY origin ORDER BY cnt DESC"
+    );
+    foreach ($_rows as $_r) {
+        $_mapOrigins[$_r['origin']] = (int)$_r['cnt'];
+        $_mapCityList[] = $_r['origin'];
+    }
+} catch (\Throwable) {}
+
+// Geocoding lookup (lat, lng) — mêmes coordonnées que le bloc mappemonde
+$_mapGeocode = [
+    'France' => [46.6034, 2.3488],
+    'Paris, France' => [48.8566, 2.3522],
+    'Austin, Texas' => [30.2672, -97.7431],
+    'Burtonsville, Maryland' => [39.1115, -76.9325],
+    'Charlotte, Caroline du Nord' => [35.2271, -80.8431],
+    'Costa Mesa, Californie' => [33.6412, -117.9187],
+    'Géorgie, États-Unis' => [33.7490, -84.3880],
+    'Maine, États-Unis' => [45.2538, -69.4455],
+    'New York, États-Unis' => [40.7128, -74.0060],
+    'New York, New York' => [40.7128, -74.0060],
+    'San Francisco, Californie' => [37.7749, -122.4194],
+    'Port Townsend, Washington' => [48.1170, -122.7604],
+    'Montréal, Canada' => [45.5017, -73.5673],
+    'Québec City, Canada' => [46.8139, -71.2080],
+    'Allemagne' => [51.1657, 10.4515],
+    'Pays-Bas' => [52.1326, 5.2913],
+    'Suisse' => [46.8182, 8.2275],
+    'Espagne' => [40.4168, -3.7038],
+    'Grèce' => [39.0742, 21.8243],
+    'Norvège' => [60.4720, 8.4689],
+    'Tunisie' => [33.8869, 9.5375],
+    'Sydney, Australie' => [-33.8688, 151.2093],
+];
+
+// Construction des pins — merge des coordonnées identiques
+$_coordMap = [];
+foreach ($_mapOrigins as $_origin => $_count) {
+    if (isset($_mapGeocode[$_origin])) {
+        $_key = $_mapGeocode[$_origin][0] . ',' . $_mapGeocode[$_origin][1];
+        if (!isset($_coordMap[$_key])) {
+            $_coordMap[$_key] = ['lat' => $_mapGeocode[$_origin][0], 'lng' => $_mapGeocode[$_origin][1], 'label' => $_origin, 'count' => $_count];
+        } else {
+            $_coordMap[$_key]['count'] += $_count;
+            if (mb_strlen($_origin) < mb_strlen($_coordMap[$_key]['label'])) {
+                $_coordMap[$_key]['label'] = $_origin;
+            }
+        }
+    }
+}
+$_mapPins = array_values($_coordMap);
+$_villaLat = 44.0410;
+$_villaLng = 4.8945;
+shuffle($_mapCityList);
+$_nPins = count($_mapPins);
+?>
 <section class="section surface-stone" style="background: var(--linen-100); padding-left: 0; padding-right: 0;">
   <div class="container-wide">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 04 / <span data-en="Where our guests come from">D'où viennent nos hôtes</span></span>
+          <span class="numeral">— 04 / <span><?= t('home.map.kicker') ?></span></span>
         </div>
-        <h2 class="h-xl" style="margin: 0; max-width: 14ch;" data-en="Travellers from/around the world.">Voyageurs<br/>du <em>monde</em> entier.</h2>
+        <h2 class="h-xl" style="margin: 0; max-width: 14ch;"><?= t('home.map.title') ?></h2>
       </div>
-      <p class="body-lg" style="max-width: 40ch; margin: 0;" data-en="Twenty-two countries and counting — postcards on the kitchen wall.">Vingt-deux origines et toujours plus — les cartes postales s'accrochent au mur de la cuisine.</p>
+      <p class="body-lg" style="max-width: 40ch; margin: 0;">
+        <?= $_nPins > 0 ? t('home.map.subtitle_n', ['n' => (string)$_nPins]) : t('home.map.subtitle_empty') ?>
+      </p>
     </div>
   </div>
 
-  <!-- Full-bleed world map -->
-  <div class="worldmap-full" aria-label="Carte des provenances">
-    <svg viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-
-      <!-- Continents (simplified outlines, equirectangular projection) -->
-      <g class="continents">
-        <!-- North America -->
-        <path d="M 28 64 L 139 56 L 200 70 L 270 95 L 319 111 L 305 145 L 278 181 L 240 195 L 205 188 L 175 161 L 165 145 L 139 111 L 95 95 L 83 83 L 50 75 Z"/>
-        <!-- Greenland -->
-        <path d="M 330 50 L 380 55 L 395 80 L 380 105 L 350 115 L 335 95 L 330 70 Z"/>
-        <!-- South America -->
-        <path d="M 275 264 L 310 245 L 361 250 L 403 272 L 395 305 L 381 311 L 360 335 L 339 342 L 320 380 L 300 400 L 295 370 L 290 330 L 285 295 L 275 280 Z"/>
-        <!-- Eurasia (Europe + Asia + Russia) -->
-        <path d="M 475 131 L 486 114 L 514 103 L 528 83 L 528 53 L 583 56 L 667 42 L 750 39 L 875 42 L 970 60 L 986 64 L 944 83 L 889 103 L 861 133 L 839 164 L 800 189 L 760 200 L 717 228 L 700 186 L 660 195 L 622 214 L 605 200 L 589 164 L 567 153 L 542 147 L 522 147 L 500 152 L 483 150 Z"/>
-        <!-- UK + Ireland -->
-        <path d="M 477 108 L 492 105 L 495 122 L 484 128 L 472 122 Z"/>
-        <!-- Africa -->
-        <path d="M 472 167 L 510 160 L 528 161 L 575 168 L 589 195 L 622 214 L 645 217 L 639 240 L 620 260 L 597 290 L 597 317 L 575 340 L 556 344 L 540 365 L 510 385 L 495 380 L 480 360 L 472 330 L 470 295 L 472 240 L 470 200 Z"/>
-        <!-- Arabia + Middle East -->
-        <path d="M 597 175 L 625 175 L 660 195 L 645 230 L 622 214 L 605 200 L 595 188 Z"/>
-        <!-- India -->
-        <path d="M 720 175 L 760 175 L 770 200 L 760 220 L 745 240 L 720 230 L 715 200 Z"/>
-        <!-- Southeast Asia peninsula -->
-        <path d="M 795 195 L 830 200 L 835 225 L 815 235 L 800 220 Z"/>
-        <!-- Indonesia (rough) -->
-        <path d="M 800 245 L 855 250 L 875 260 L 855 268 L 815 265 Z"/>
-        <!-- Japan -->
-        <path d="M 875 130 L 895 140 L 890 165 L 870 160 Z"/>
-        <!-- Australia -->
-        <path d="M 819 311 L 861 283 L 903 278 L 925 295 L 935 320 L 925 345 L 905 350 L 870 345 L 850 335 L 825 325 Z"/>
-        <!-- New Zealand -->
-        <path d="M 945 370 L 960 385 L 950 395 L 940 380 Z"/>
-        <!-- Madagascar -->
-        <path d="M 615 345 L 622 360 L 618 380 L 608 372 Z"/>
-      </g>
-
-      <!-- Lat/lon thin guides -->
-      <line x1="0" y1="250" x2="1000" y2="250" stroke="#6F8466" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.5"/>
-
-      <!-- Great-circle-ish curves from each origin to Bédarrides (514, 128). -->
-      <g stroke="#6F8466" stroke-width="0.7" opacity="0.45" fill="none" stroke-linecap="round">
-        <path d="M 920 344 Q 700 600 514 128"/>
-        <path d="M 507 115 Q 510 90 514 128"/>
-        <path d="M 266 157 Q 380 30 514 128"/>
-        <path d="M 173 156 Q 340 -30 514 128"/>
-        <path d="M 294 137 Q 400 30 514 128"/>
-        <path d="M 528 148 Q 520 140 514 128"/>
-        <path d="M 296 124 Q 400 30 514 128"/>
-        <path d="M 159 117 Q 340 -30 514 128"/>
-        <path d="M 306 127 Q 400 30 514 128"/>
-        <path d="M 490 138 Q 500 145 514 128"/>
-        <path d="M 530 84 Q 525 100 514 128"/>
-        <path d="M 537 104 Q 525 115 514 128"/>
-        <path d="M 276 152 Q 390 40 514 128"/>
-        <path d="M 229 166 Q 370 30 514 128"/>
-        <path d="M 566 145 Q 540 130 514 128"/>
-        <path d="M 160 145 Q 340 -20 514 128"/>
-        <path d="M 286 142 Q 400 40 514 128"/>
-        <path d="M 302 120 Q 400 30 514 128"/>
-        <path d="M 514 105 Q 514 116 514 128"/>
-        <path d="M 521 120 Q 518 124 514 128"/>
-      </g>
-
-      <!-- Origin pins -->
-      <g fill="#3B362D">
-        <circle cx="920" cy="344" r="4"/>
-        <circle cx="507" cy="115" r="4"/>
-        <circle cx="266" cy="157" r="4"/>
-        <circle cx="173" cy="156" r="4"/>
-        <circle cx="294" cy="137" r="4"/>
-        <circle cx="528" cy="148" r="4"/>
-        <circle cx="296" cy="124" r="4"/>
-        <circle cx="159" cy="117" r="4"/>
-        <circle cx="306" cy="127" r="4"/>
-        <circle cx="490" cy="138" r="4"/>
-        <circle cx="530" cy="84" r="4"/>
-        <circle cx="537" cy="104" r="4"/>
-        <circle cx="276" cy="152" r="4"/>
-        <circle cx="229" cy="166" r="4"/>
-        <circle cx="566" cy="145" r="4"/>
-        <circle cx="160" cy="145" r="4"/>
-        <circle cx="286" cy="142" r="4"/>
-        <circle cx="302" cy="120" r="4"/>
-        <circle cx="514" cy="105" r="4"/>
-        <circle cx="521" cy="120" r="4"/>
-      </g>
-
-      <!-- Bédarrides — the centre -->
-      <circle cx="514" cy="128" r="8" fill="#C44C24"/>
-      <circle cx="514" cy="128" r="16" fill="none" stroke="#C44C24" stroke-width="1" opacity="0.55"/>
-      <circle cx="514" cy="128" r="26" fill="none" stroke="#C44C24" stroke-width="0.6" opacity="0.3"/>
-      <text x="514" y="95" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#C44C24" letter-spacing="0.16em" font-weight="500">BÉDARRIDES</text>
-    </svg>
-    <div class="legend">
-      <span style="display: inline-flex; align-items: center; gap: 6px;"><span class="swatch" style="background: var(--terra-500);"></span> <span data-en="The house">La maison</span></span>
-      <span style="display: inline-flex; align-items: center; gap: 6px;"><span class="swatch" style="background: var(--ink-700);"></span> <span data-en="22 origins">Origines des hôtes</span></span>
+  <!-- Vraie carte du monde (Leaflet + tuiles CARTO/OpenStreetMap) -->
+  <div id="guest-map" class="guest-map" aria-label="<?= t('home.map.kicker') ?>"></div>
+  <div class="container-wide map-legend-wrap">
+    <div class="map-legend">
+      <span><span class="swatch swatch-home"></span> <?= t('home.map.legend_home') ?></span>
+      <span><span class="swatch swatch-guest"></span> <?= t('home.map.legend_guests') ?></span>
     </div>
   </div>
 
-  <!-- Origins inline -->
-  <div class="container-wide" style="margin-top: clamp(40px, 5vw, 64px);">
+  <?php if (!empty($_mapCityList)): ?>
+  <!-- Liste des origines réelles (depuis vp_reviews, ordre mélangé) -->
+  <div class="container-wide" style="margin-top: clamp(32px, 4vw, 48px);">
     <ul class="origins-inline">
-      <li>Sydney, Australie</li>
-      <li>Paris, France</li>
-      <li>Géorgie, États-Unis</li>
-      <li>Costa Mesa, Californie</li>
-      <li>New York, États-Unis</li>
-      <li>Tunisie</li>
-      <li>Montréal, Canada</li>
-      <li>Port Townsend, Washington</li>
-      <li>Maine, États-Unis</li>
-      <li>Espagne</li>
-      <li>Norvège</li>
-      <li>Allemagne</li>
-      <li>Charlotte, Caroline du Nord</li>
-      <li>Austin, Texas</li>
-      <li>Grèce</li>
-      <li>San Francisco, Californie</li>
-      <li>Burtonsville, Maryland</li>
-      <li>Québec City, Canada</li>
-      <li>Pays-Bas</li>
-      <li>Suisse</li>
+      <?php foreach ($_mapCityList as $_city): ?>
+      <li><?= htmlspecialchars($_city) ?></li>
+      <?php endforeach; ?>
     </ul>
   </div>
+  <?php endif; ?>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin defer></script>
+  <script>
+  (function() {
+    function initGuestMap() {
+      if (typeof L === 'undefined') { setTimeout(initGuestMap, 60); return; }
+      var map = L.map('guest-map', {
+        center: [38, -15],
+        zoom: 3,
+        minZoom: 2,
+        maxZoom: 12,
+        scrollWheelZoom: false,
+        zoomControl: true
+      });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      // Pin Villa Plaisance
+      var homeIcon = L.divIcon({
+        className: 'map-pin-home',
+        html: '<div class="pin-home-inner"></div>',
+        iconSize: [18, 18], iconAnchor: [9, 9]
+      });
+      L.marker([<?= $_villaLat ?>, <?= $_villaLng ?>], {icon: homeIcon, zIndexOffset: 1000})
+        .addTo(map)
+        .bindTooltip('Villa Plaisance — Bédarrides', {direction: 'top', offset: [0, -10]});
+
+      // Pins origines clients
+      var pins = <?= json_encode($_mapPins, JSON_UNESCAPED_UNICODE) ?>;
+      var bounds = [[<?= $_villaLat ?>, <?= $_villaLng ?>]];
+      pins.forEach(function(pin) {
+        var guestIcon = L.divIcon({
+          className: 'map-pin-guest',
+          html: '<div class="pin-guest-inner"></div>',
+          iconSize: [12, 12], iconAnchor: [6, 6]
+        });
+        L.marker([pin.lat, pin.lng], {icon: guestIcon})
+          .addTo(map)
+          .bindTooltip(pin.label, {direction: 'top', offset: [0, -8]});
+        bounds.push([pin.lat, pin.lng]);
+      });
+      if (bounds.length > 1) {
+        map.fitBounds(bounds, {padding: [40, 40], maxZoom: 5});
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGuestMap);
+    } else { initGuestMap(); }
+  })();
+  </script>
 </section>
 
 <!-- ============ 06 · TÉMOIGNAGES ============ -->
