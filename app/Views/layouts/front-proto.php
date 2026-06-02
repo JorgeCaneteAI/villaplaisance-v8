@@ -86,6 +86,8 @@
                     <button data-lang="fr" class="active">FR</button>
                     <span class="sep">/</span>
                     <button data-lang="en">EN</button>
+                    <span class="sep">/</span>
+                    <button data-lang="es">ES</button>
                 </div>
                 <a href="<?= LangService::url('contact') ?>" class="btn" data-en="Contact">Contact</a>
             </div>
