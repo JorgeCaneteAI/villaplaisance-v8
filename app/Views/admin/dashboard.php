@@ -14,9 +14,10 @@
         <div class="stat-number"><?= $stats['pages'] ?></div>
         <div class="stat-label">Pages CMS</div>
     </a>
-    <a href="/admin/sections" class="stat-card stat-card-link">
+    <a href="/admin/sections" class="stat-card stat-card-link" title="Recherche full-text dans tous les blocs de toutes les pages">
         <div class="stat-number"><?= $stats['sections'] ?></div>
-        <div class="stat-label">Sections</div>
+        <div class="stat-label">🔍 Rechercher un bloc</div>
+        <div style="font-size:0.7rem;color:#aaa;margin-top:0.25rem;">parmi <?= $stats['sections'] ?> au total</div>
     </a>
     <a href="/admin/messages" class="stat-card stat-card-link">
         <div class="stat-number"><?= $stats['messages_unread'] ?></div>
