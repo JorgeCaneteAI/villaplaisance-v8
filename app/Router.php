@@ -392,6 +392,10 @@ class Router
         }
 
         // Pieces (rooms/spaces)
+        if (preg_match('#^/admin/pieces/(\d+)/edit$#', $normalized, $m)) {
+            $this->callController('Controllers\\Admin\\PieceController', 'edit', ['id' => (int)$m[1]]);
+            return;
+        }
         if (preg_match('#^/admin/pieces/(\d+)/save$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\PieceController', 'save', ['id' => (int)$m[1]]);
             return;

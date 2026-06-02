@@ -123,20 +123,23 @@
         if (!activeTargetId) return close();
         const input = document.getElementById(activeTargetId);
         if (!input) return close();
-        input.value = id;
+        const media = allMedia.find(m => m.id === id);
+        // Mode 'id' (défaut, blocs vp_sections) ou 'filename' (vp_pieces.images, etc.)
+        const mode = input.dataset.mpMode || 'id';
+        const value = (mode === 'filename' && media) ? media.filename : String(id);
+        input.value = value;
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
-        const media = allMedia.find(m => m.id === id);
         if (media) {
             const sel = `[data-for="${cssEscape(activeTargetId)}"]`;
             const preview = document.querySelector(`img.vp-mp-preview${sel}`);
             if (preview) {
-                preview.src = media.url;
+                preview.src = media.url_thumb || media.url;
                 preview.alt = media.alt_fr || media.filename;
                 preview.hidden = false;
             }
             const label = document.querySelector(`.vp-mp-preview-label${sel}`);
-            if (label) label.textContent = `id=${id}`;
+            if (label) label.textContent = mode === 'filename' ? media.filename : `id=${id}`;
         }
         close();
     }
