@@ -4,10 +4,16 @@ declare(strict_types=1);
  * Bloc « prose » V8.
  *
  * Layouts supportés :
- *   - `two-col`           : titre à gauche, texte à droite (signature V8 accueil)
- *   - `text-only`         : un seul flux de texte centré
- *   - `text-image-right`  : texte à gauche, image à droite
- *   - `text-image-left`   : image à gauche, texte à droite
+ *   - `two-col`               : titre à gauche, texte à droite (signature V8 accueil)
+ *   - `text-only`             : un seul flux de texte centré
+ *   - `text-image-right`      : texte à gauche, image à droite (markup .prose-grid, éditorial asymétrique)
+ *   - `text-image-left`       : image à gauche, texte à droite (markup .prose-grid, éditorial asymétrique)
+ *   - `two-col-image-right`   : texte à gauche, image à droite (markup .two-col, simple 2 colonnes alignées)
+ *   - `two-col-image-left`    : image à gauche, texte à droite (markup .two-col.reverse, simple 2 colonnes alignées)
+ *
+ * Différence prose-grid vs two-col : le `prose-grid` crée un chevauchement
+ * éditorial avec z-index (signature V8 accueil). Le `two-col` est un layout
+ * 2 colonnes simple aligné, idéal pour les blocs explicatifs (ex. salle de bain).
  *
  * Le champ `text` est splitté sur double retour ligne (`\n\n`) en paragraphes.
  * Le 1er paragraphe reçoit la classe `lede`, les suivants `body-lg`.
@@ -140,7 +146,22 @@ $_renderStatsBand = function () use ($stats_band): string {
       <?= $_renderCta() ?>
     </div>
 
-    <?php else: /* text-image-left|right */ ?>
+    <?php elseif ($layout === 'two-col-image-left' || $layout === 'two-col-image-right'): ?>
+    <div class="two-col<?= $layout === 'two-col-image-left' ? ' reverse' : '' ?>" style="align-items: center;">
+      <?php if ($imgUrl): ?>
+      <div style="aspect-ratio: 4/5; background: center/cover url('<?= htmlspecialchars($imgUrl) ?>');" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+      <?php endif; ?>
+      <div>
+        <?= $_renderLabel() ?>
+        <?php if ($heading !== ''): ?>
+        <h2 class="h-xl" style="margin: 0 0 24px;"><?= TextService::renderTitle($heading) ?></h2>
+        <?php endif; ?>
+        <?= $_renderParagraphs() ?>
+        <?= $_renderCta() ?>
+      </div>
+    </div>
+
+    <?php else: /* text-image-left|right — markup éditorial asymétrique */ ?>
     <div class="prose-grid <?= $layout === 'text-image-left' ? 'reverse' : '' ?>">
       <div class="prose-text">
         <?= $_renderLabel() ?>

@@ -387,7 +387,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 </section>
 <?php endif; ?>
 
-<!-- ============ 5 · SALLE DE BAIN ============ -->
+<!-- ============ 5 · SALLE DE BAIN (BDD prose or fallback HTML) ============ -->
+<?php if ($_sdbHtml = $renderV8BlockAt(5, 'prose')): ?>
+<?= $_sdbHtml ?>
+<?php else: ?>
 <section class="section">
   <div class="container-wide">
     <div class="two-col reverse" style="align-items: center;">
@@ -403,6 +406,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 6 · PETIT-DÉJEUNER ============ -->
 <?php if ($_breakfastHtml = $renderV8BlockAt(6, 'petit-dejeuner')): ?>

@@ -161,8 +161,10 @@ class BlockFieldsService
                     ['name' => 'layout', 'label' => 'Mise en page', 'type' => 'select', 'options' => [
                         'two-col' => '2 colonnes : titre à gauche, texte à droite',
                         'text-only' => 'Texte centré seul',
-                        'text-image-right' => 'Texte + image à droite',
-                        'text-image-left' => 'Image à gauche + texte',
+                        'text-image-right' => 'Texte + image à droite (éditorial asymétrique)',
+                        'text-image-left' => 'Image à gauche + texte (éditorial asymétrique)',
+                        'two-col-image-right' => '2 colonnes texte + image à droite (simple, aligné)',
+                        'two-col-image-left' => '2 colonnes image à gauche + texte (simple, aligné)',
                     ], 'default' => 'two-col'],
                     ['name' => 'heading', 'label' => 'Titre (h2)', 'type' => 'textarea', 'help' => 'Mini-md : *italique*, **gras**, retours ligne.'],
                     ['name' => 'text', 'label' => 'Texte (1 ligne vide = nouveau paragraphe)', 'type' => 'textarea', 'help' => 'Le 1er paragraphe = lede, les suivants = body-lg.'],
