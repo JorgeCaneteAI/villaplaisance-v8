@@ -286,7 +286,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 </div>
 <?php endif; ?>
 
-<!-- ============ 4 CHAMBRES ============ -->
+<!-- ============ 4 CHAMBRES VILLA (BDD vp_pieces or fallback HTML) ============ -->
+<?php if ($_chambresVillaHtml = $renderV8BlockAt(3, 'cartes')): ?>
+<?= $_chambresVillaHtml ?>
+<?php else: ?>
 <section class="section" id="chambres">
   <div class="container-wide">
     <div style="display:flex; justify-content:space-between; align-items:flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 72px); flex-wrap: wrap;">
@@ -373,6 +376,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ INTÉRIEUR : CUISINE + SALON ============ -->
 <?php if ($_intHtml = $renderV8BlockAt(4, 'interior')): ?>

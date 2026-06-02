@@ -309,10 +309,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
-<!-- ============ 3 · CHAMBRE VERTE ============ -->
+<!-- ============ 3 · Préambule "Chacune sa lumière" (HTML dur — éditorial unique) ============ -->
 <section class="section-tight" style="padding-top: clamp(48px, 6vw, 88px);">
   <div class="container-wide">
-    <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 80px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
+    <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 80px); align-items: end;">
       <div>
         <div class="section-label">
           <span class="numeral">— 03 / <span data-en="The two rooms of the suite">Les deux chambres de la suite</span></span>
@@ -321,6 +321,15 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       </div>
       <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="A single door opens onto both rooms — and onto a shared corridor with a private bathroom. Their characters differ; their guests are the same.">Une seule porte ouvre sur les deux chambres — et sur leur couloir partagé avec salle de bain. Leur caractère diffère ; leurs hôtes sont les mêmes.</p>
     </div>
+  </div>
+</section>
+
+<!-- ============ 4 · CHAMBRES VERTE + BLEUE (BDD vp_pieces or fallback HTML) ============ -->
+<?php if ($_chambresHtml = $renderV8BlockAt(4, 'cartes')): ?>
+<?= $_chambresHtml ?>
+<?php else: ?>
+<section class="section-tight">
+  <div class="container-wide">
     <div class="ch-room">
       <div class="ch-room-text">
         <div class="ch-room-num">
@@ -348,7 +357,6 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
   </div>
 </section>
 
-<!-- ============ 4 · CHAMBRE BLEUE ============ -->
 <section class="section" style="background: var(--linen-100);">
   <div class="container-wide">
     <div class="ch-room alt">
@@ -377,6 +385,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 5 · SALLE DE BAIN ============ -->
 <section class="section">

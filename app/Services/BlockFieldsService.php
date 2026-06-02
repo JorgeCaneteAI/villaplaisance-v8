@@ -184,10 +184,11 @@ class BlockFieldsService
             'cartes' => [
                 'label' => 'Cartes chambres (lit vp_pieces)',
                 'fields' => [
-                    ['name' => 'heading', 'label' => 'Titre', 'type' => 'textarea'],
+                    ['name' => 'heading', 'label' => 'Titre (h2, affiché en mode villa)', 'type' => 'textarea'],
+                    ['name' => 'intro', 'label' => 'Intro (paragraphe à droite, mode villa)', 'type' => 'textarea'],
                     ['name' => 'offer', 'label' => 'Offre', 'type' => 'select', 'options' => [
-                        'bb' => 'Chambres d\'hôtes (B&B)',
-                        'villa' => 'Villa entière',
+                        'bb' => 'Chambres d\'hôtes (B&B) — markup .ch-room (1 section/chambre)',
+                        'villa' => 'Villa entière — markup .room-card-x (grille)',
                         'both' => 'Les deux',
                     ]],
                 ],
