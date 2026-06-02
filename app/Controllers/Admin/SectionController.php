@@ -168,6 +168,40 @@ class SectionController extends AdminBaseController
         $this->redirect('/admin/sections/page/' . $pageSlug);
     }
 
+    public function reorder(): void
+    {
+        // Endpoint AJAX : reçoit un JSON { page_slug, lang, order: [id1, id2, ...] }
+        // et met à jour la colonne `position` de chaque section selon l'ordre fourni.
+        header('Content-Type: application/json');
+
+        // CSRF via header X-CSRF-Token (envoyé par le JS) ou body
+        $tokenHeader = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        $sessionToken = $_SESSION['csrf_token'] ?? '';
+        if ($tokenHeader === '' || !hash_equals((string)$sessionToken, $tokenHeader)) {
+            http_response_code(403);
+            echo json_encode(['error' => 'CSRF']);
+            return;
+        }
+
+        $input = json_decode(file_get_contents('php://input') ?: '{}', true) ?: [];
+        $order = $input['order'] ?? [];
+        if (!is_array($order) || empty($order)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'order missing']);
+            return;
+        }
+
+        $updated = 0;
+        foreach ($order as $i => $rawId) {
+            $id = (int)$rawId;
+            if ($id <= 0) continue;
+            \Database::update('vp_sections', ['position' => $i + 1], 'id = ?', [$id]);
+            $updated++;
+        }
+
+        echo json_encode(['ok' => true, 'updated' => $updated]);
+    }
+
     public function create(): void
     {
         if (!$this->verifyCsrf()) {

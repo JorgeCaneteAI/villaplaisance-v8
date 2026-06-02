@@ -563,6 +563,10 @@ class Router
             $this->callController('Controllers\\Admin\\SectionController', 'move', ['id' => (int)$m[1], 'direction' => $m[2]]);
             return;
         }
+        if ($normalized === '/admin/sections/reorder' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\SectionController', 'reorder');
+            return;
+        }
         if ($normalized === '/admin/sections/create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\SectionController', 'create');
             return;

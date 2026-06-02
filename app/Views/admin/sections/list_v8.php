@@ -83,7 +83,7 @@ foreach ($langs as $l) {
                 $title = $section['title'] ?: '(sans titre admin)';
                 $isActive = (int)$section['active'] === 1;
             ?>
-            <tr style="<?= !$isActive ? 'opacity: 0.55;' : '' ?>">
+            <tr data-section-id="<?= (int)$section['id'] ?>" draggable="true" style="<?= !$isActive ? 'opacity: 0.55;' : '' ?> cursor: grab;">
                 <td style="font-variant-numeric: tabular-nums; font-weight: 600; color: var(--stone-500);">
                     <?= sprintf('%02d', (int)$section['position']) ?>
                 </td>
@@ -138,6 +138,102 @@ foreach ($langs as $l) {
 </div>
 
 <p class="text-sm text-muted" style="margin-top: 12px;">
-    ⚠ Réordonnancement par glisser-déposer arrivera en Session 2. Pour l'instant, l'ordre vient des seeds PHP.
+    💡 Glisse-dépose une ligne pour réordonner. L'ordre est sauvegardé automatiquement.
 </p>
+
+<!-- Mini-formulaire « Nouveau bloc » (C) -->
+<div class="admin-card" style="margin-top: 1.5rem;">
+    <h2 style="font-size: 1.05rem; margin: 0 0 12px; font-family: var(--font-display); font-weight: 500;">+ Nouveau bloc sur cette page</h2>
+    <form method="POST" action="/admin/sections/create" style="display: flex; gap: 0.75rem; align-items: end; flex-wrap: wrap;">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+        <input type="hidden" name="page_slug" value="<?= htmlspecialchars($page_slug) ?>">
+        <div class="form-group" style="margin: 0; min-width: 220px;">
+            <label for="new-block-type" class="text-sm">Type</label>
+            <select id="new-block-type" name="block_type" required>
+                <?php foreach ($blockTypes as $key => $label): ?>
+                <option value="<?= htmlspecialchars($key) ?>"><?= htmlspecialchars($label) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="form-group" style="margin: 0; flex: 1; min-width: 240px;">
+            <label for="new-block-title" class="text-sm">Titre admin (interne, optionnel)</label>
+            <input type="text" id="new-block-title" name="title" placeholder="ex. « Hero accueil V8 »">
+        </div>
+        <button type="submit" class="btn btn-primary">Créer (FR + EN + ES)</button>
+    </form>
+    <p class="text-sm text-muted" style="margin-top: 8px;">
+        Crée 3 entrées vp_sections vides (FR/EN/ES) à la dernière position. Tu remplis le contenu via « Éditer » après création.
+    </p>
+</div>
 <?php endif; ?>
+
+<script>
+(function () {
+    'use strict';
+    const tbody = document.querySelector('.admin-table tbody');
+    if (!tbody) return;
+
+    const csrf = <?= json_encode($csrf) ?>;
+    let dragRow = null;
+
+    tbody.addEventListener('dragstart', (e) => {
+        const tr = e.target.closest('tr[data-section-id]');
+        if (!tr) return;
+        dragRow = tr;
+        tr.style.opacity = '0.4';
+        e.dataTransfer.effectAllowed = 'move';
+    });
+
+    tbody.addEventListener('dragend', () => {
+        if (dragRow) {
+            dragRow.style.opacity = '';
+            dragRow = null;
+        }
+        // Re-séquence les pastilles "Pos." visuellement
+        Array.from(tbody.querySelectorAll('tr[data-section-id]')).forEach((tr, i) => {
+            const posCell = tr.querySelector('td:first-child');
+            if (posCell) posCell.textContent = String(i + 1).padStart(2, '0');
+        });
+    });
+
+    tbody.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const tr = e.target.closest('tr[data-section-id]');
+        if (!tr || tr === dragRow) return;
+        const rect = tr.getBoundingClientRect();
+        const after = (e.clientY - rect.top) > rect.height / 2;
+        if (after) {
+            tr.parentNode.insertBefore(dragRow, tr.nextSibling);
+        } else {
+            tr.parentNode.insertBefore(dragRow, tr);
+        }
+    });
+
+    tbody.addEventListener('drop', (e) => {
+        e.preventDefault();
+        // Récupère le nouvel ordre + envoie au serveur
+        const order = Array.from(tbody.querySelectorAll('tr[data-section-id]'))
+            .map(tr => parseInt(tr.dataset.sectionId, 10));
+        fetch('/admin/sections/reorder', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrf,
+            },
+            body: JSON.stringify({ order }),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.ok) {
+                console.error('Reorder failed', data);
+                alert('Erreur de réordonnancement : ' + (data.error || 'inconnu'));
+            }
+        })
+        .catch(err => {
+            console.error('Reorder error', err);
+            alert('Erreur réseau lors du réordonnancement');
+        });
+    });
+})();
+</script>
