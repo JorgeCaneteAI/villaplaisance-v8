@@ -2,34 +2,58 @@
 /**
  * Liste V8 des blocs d'une page.
  *
- * Vue simplifiée : tableau des blocs FR avec position, type, titre admin,
- * statut actif, et lien "Éditer" vers le formulaire dédié V8
- * (admin/sections/{id}/edit).
+ * Tableau des blocs de la langue courante, sélecteur de langue, badges
+ * présence/absence par langue, lien Éditer vers le formulaire dédié V8.
  *
- * Drag-and-drop reorder + édition inline arrivent en Session 2.
- *
- * @var array  $sections    (FR uniquement, ordonnées par position)
+ * @var array  $sections        Sections de la langue courante
+ * @var array  $sectionsByLang  Sections groupées par lang (pour les badges)
+ * @var string $currentLang     'fr'|'en'|'es'
+ * @var array  $langs           SUPPORTED_LANGS
  * @var string $page_slug
- * @var array  $blockTypes  (libellés via BlockService::getBlockTypes())
+ * @var array  $blockTypes      Libellés via BlockService::getBlockTypes()
  * @var string $csrf
  */
 
-// Récupérer le titre de la page depuis vp_pages pour l'afficher en haut
 $pageTitle = '';
 try {
     $row = Database::fetchOne("SELECT title FROM vp_pages WHERE slug = ? AND lang = 'fr' LIMIT 1", [$page_slug]);
     $pageTitle = $row['title'] ?? '';
 } catch (\Throwable) {}
+
+$langLabels = ['fr' => "🇫🇷 Français", 'en' => "🇬🇧 English", 'es' => "🇪🇸 Español"];
+
+// Pour chaque position, savoir quelles langues ont un bloc à cette position
+$presenceByPos = [];
+foreach ($langs as $l) {
+    foreach ($sectionsByLang[$l] ?? [] as $s) {
+        $presenceByPos[(int)$s['position']][$l] = true;
+    }
+}
 ?>
 <div class="page-header">
     <h1><?= htmlspecialchars($pageTitle !== '' ? $pageTitle : $page_slug) ?></h1>
     <a href="/admin/pages" class="btn">← Toutes les pages</a>
 </div>
 
-<p class="text-muted mb-2" style="max-width: 65ch;">
-    URL publique : <a href="/<?= htmlspecialchars($page_slug === 'accueil' ? '' : $page_slug) ?>" target="_blank" style="color: var(--terra-500);">/<?= htmlspecialchars($page_slug) ?></a>
-    · <?= count($sections) ?> bloc<?= count($sections) > 1 ? 's' : '' ?> en français.
-</p>
+<div class="vp-pc-toolbar" style="margin-bottom: 1rem;">
+    <form method="GET" action="/admin/sections/page/<?= htmlspecialchars($page_slug) ?>" class="vp-pc-filters">
+        <label>
+            <span class="text-sm text-muted">Langue affichée</span>
+            <select name="lang" onchange="this.form.submit()">
+                <?php foreach ($langs as $l):
+                    $count = count($sectionsByLang[$l] ?? []);
+                ?>
+                <option value="<?= $l ?>" <?= $currentLang === $l ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($langLabels[$l] ?? strtoupper($l)) ?> · <?= $count ?> bloc<?= $count > 1 ? 's' : '' ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+        </label>
+    </form>
+    <p class="text-sm text-muted" style="margin: 0;">
+        URL publique : <a href="/<?= htmlspecialchars($page_slug === 'accueil' ? '' : $page_slug) ?>" target="_blank" style="color: var(--terra-500);">/<?= htmlspecialchars($page_slug) ?></a>
+    </p>
+</div>
 
 <?php if (empty($sections)): ?>
 <div class="mail-empty">
@@ -48,6 +72,7 @@ try {
                 <th style="width: 56px;">Pos.</th>
                 <th>Bloc</th>
                 <th>Type</th>
+                <th class="text-center">Langues</th>
                 <th class="text-center">Actif</th>
                 <th>Actions</th>
             </tr>
@@ -68,6 +93,25 @@ try {
                 <td>
                     <span style="background: var(--linen-100); padding: 2px 8px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.78rem;"><?= htmlspecialchars($section['block_type']) ?></span>
                     <div class="text-sm text-muted" style="margin-top: 2px;"><?= htmlspecialchars($typeLabel) ?></div>
+                </td>
+                <td class="text-center">
+                    <?php foreach ($langs as $l):
+                        $present = $presenceByPos[(int)$section['position']][$l] ?? false;
+                    ?>
+                    <span title="<?= $l ?> <?= $present ? 'présent' : 'manquant' ?>" style="
+                        display: inline-block;
+                        font-family: var(--font-mono);
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                        padding: 2px 6px;
+                        margin: 0 1px;
+                        border-radius: 3px;
+                        text-transform: uppercase;
+                        background: <?= $present ? 'var(--sage-200)' : 'var(--linen-200)' ?>;
+                        color: <?= $present ? 'var(--sage-700)' : 'var(--stone-500)' ?>;
+                        <?= $present ? '' : 'text-decoration: line-through;' ?>
+                    "><?= $l ?></span>
+                    <?php endforeach; ?>
                 </td>
                 <td class="text-center">
                     <?php if ($isActive): ?>

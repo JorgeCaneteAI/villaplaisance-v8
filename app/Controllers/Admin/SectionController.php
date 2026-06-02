@@ -13,16 +13,18 @@ class SectionController extends AdminBaseController
         } catch (\Throwable) {}
 
         $langs = SUPPORTED_LANGS;
+        $currentLang = $_GET['lang'] ?? 'fr';
+        if (!in_array($currentLang, $langs, true)) $currentLang = 'fr';
 
-        // Load sections for all languages
+        // Load sections for all languages (utile pour les badges de présence/absence par langue)
         $sectionsByLang = [];
         if ($page_slug !== '') {
             foreach ($langs as $l) {
                 $sectionsByLang[$l] = \BlockService::getAllSections($page_slug, $l);
             }
         }
-        // FR sections are the reference
-        $sections = $sectionsByLang['fr'] ?? [];
+        // Sections affichées dans la liste = celles de la langue courante
+        $sections = $sectionsByLang[$currentLang] ?? [];
 
         $blockTypes = \BlockService::getBlockTypes();
         $csrf = $this->csrf();
@@ -67,9 +69,9 @@ class SectionController extends AdminBaseController
         // L'ancienne vue index.php (massive, mélange édition inline + FAQ + pieces + stats)
         // est conservée pour référence mais n'est plus appelée.
         if ($page_slug !== '') {
-            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf'));
+            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf', 'currentLang', 'langs', 'sectionsByLang'));
         } else {
-            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf'));
+            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf', 'currentLang', 'langs', 'sectionsByLang'));
         }
     }
 
