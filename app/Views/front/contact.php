@@ -128,7 +128,19 @@
 </style>
 
 
-<!-- ============ MASTHEAD ============ -->
+<!-- ============ MASTHEAD (BDD vp_sections or fallback HTML) ============ -->
+<?php
+$_v8HeroContact = null;
+foreach (BlockService::getSections('contact', $lang) as $_s) {
+    if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+        $_v8HeroContact = BlockService::renderBlock($_s);
+        break;
+    }
+}
+?>
+<?php if ($_v8HeroContact): ?>
+<?= $_v8HeroContact ?>
+<?php else: ?>
 <section class="page-hero">
   <div class="page-hero-inner">
     <div>
@@ -141,6 +153,7 @@
     <p class="lede" data-en="No booking engine, no automatic confirmation. Tell us what you'd like, we check the calendar, we write back — by hand, within the day.">Pas de moteur de réservation, pas de confirmation automatique. Dites-nous ce que vous souhaitez, on vérifie le calendrier, on vous répond — à la main, dans la journée.</p>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ FORM + INFO ============ -->
 <section class="section">

@@ -210,7 +210,19 @@
 </style>
 
 
-<!-- ============ MASTHEAD ============ -->
+<!-- ============ MASTHEAD (BDD vp_sections or fallback HTML) ============ -->
+<?php
+$_v8HeroJournal = null;
+foreach (BlockService::getSections('journal', $lang) as $_s) {
+    if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+        $_v8HeroJournal = BlockService::renderBlock($_s);
+        break;
+    }
+}
+?>
+<?php if ($_v8HeroJournal): ?>
+<?= $_v8HeroJournal ?>
+<?php else: ?>
 <section class="j-masthead">
   <div class="j-masthead-inner">
     <div>
@@ -231,6 +243,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ FILTER ============ -->
 <div class="j-filter">

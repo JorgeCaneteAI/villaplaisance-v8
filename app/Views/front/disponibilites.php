@@ -7,7 +7,19 @@
  * Source design : docs/design-refs/2026-05-24-calendriers.html (Style A).
  */ ?>
 
-<!-- ============ MASTHEAD ============ -->
+<!-- ============ MASTHEAD (BDD vp_sections or fallback HTML) ============ -->
+<?php
+$_v8HeroDispo = null;
+foreach (BlockService::getSections('disponibilites', $lang) as $_s) {
+    if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+        $_v8HeroDispo = BlockService::renderBlock($_s);
+        break;
+    }
+}
+?>
+<?php if ($_v8HeroDispo): ?>
+<?= $_v8HeroDispo ?>
+<?php else: ?>
 <section class="page-hero">
   <div class="page-hero-inner">
     <div>
@@ -25,6 +37,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ VUE ANNUELLE 12 MOIS ============ -->
 <section class="section">
