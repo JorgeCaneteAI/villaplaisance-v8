@@ -559,6 +559,10 @@ class Router
             $this->callController('Controllers\\Admin\\SectionController', 'toggle', ['id' => (int)$m[1]]);
             return;
         }
+        if (preg_match('#^/admin/sections/(\d+)/duplicate$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\SectionController', 'duplicate', ['id' => (int)$m[1]]);
+            return;
+        }
         if (preg_match('#^/admin/sections/(\d+)/move/(up|down)$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\SectionController', 'move', ['id' => (int)$m[1], 'direction' => $m[2]]);
             return;

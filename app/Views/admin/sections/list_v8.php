@@ -123,6 +123,10 @@ foreach ($langs as $l) {
                 <td>
                     <div class="btn-group">
                         <a href="/admin/sections/<?= (int)$section['id'] ?>/edit" class="btn btn-primary btn-sm">Éditer</a>
+                        <form method="POST" action="/admin/sections/<?= (int)$section['id'] ?>/duplicate" style="display:inline;">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+                            <button type="submit" class="btn btn-sm" title="Dupliquer ce bloc juste en dessous">⎘ Dupliquer</button>
+                        </form>
                         <form method="POST" action="/admin/sections/<?= (int)$section['id'] ?>/toggle" style="display:inline;">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                             <button type="submit" class="btn btn-sm" title="<?= $isActive ? 'Cacher ce bloc' : 'Rendre actif' ?>">

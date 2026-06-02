@@ -45,7 +45,6 @@
                 <div class="topbar-dropdown">
                     <a href="/admin/pieces" class="topbar-dd-link">Chambres &amp; espaces</a>
                     <a href="/admin/articles" class="topbar-dd-link">Articles</a>
-                    <a href="/admin/host" class="topbar-dd-link">Votre hôte</a>
                     <a href="/admin/livret" class="topbar-dd-link">Livret d'accueil</a>
                     <a href="/admin/itineraires" class="topbar-dd-link">Itinéraires</a>
                 </div>

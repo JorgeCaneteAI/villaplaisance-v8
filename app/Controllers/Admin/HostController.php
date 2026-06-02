@@ -7,10 +7,10 @@ class HostController extends AdminBaseController
 {
     public function index(): void
     {
-        $profiles = \Database::fetchAll("SELECT * FROM vp_host_profile ORDER BY FIELD(lang, 'fr', 'en', 'es')");
-        $blocks = \Database::fetchAll("SELECT * FROM vp_host_blocks ORDER BY position ASC");
-        $csrf = $this->csrf();
-        $this->render('admin/host/index', compact('profiles', 'blocks', 'csrf'));
+        // Depuis le port /votre-hote sur vp_sections (2026-06-02), cette vue
+        // est obsolète. On redirige vers le nouveau système d'édition unifié.
+        $this->flash('success', "L'édition de Votre hôte se fait maintenant via Pages → /votre-hote.");
+        $this->redirect('/admin/sections/page/votre-hote');
     }
 
     public function save(): void

@@ -265,6 +265,47 @@ class SectionController extends AdminBaseController
         $this->redirect('/admin/sections/page/' . ($section['page_slug'] ?? ''));
     }
 
+    public function duplicate(int $id): void
+    {
+        if (!$this->verifyCsrf()) {
+            $this->flash('error', 'Token CSRF invalide.');
+            $this->redirect('/admin/sections');
+            return;
+        }
+        $section = \BlockService::getSection($id);
+        if (!$section) {
+            $this->flash('error', 'Bloc introuvable.');
+            $this->redirect('/admin/sections');
+            return;
+        }
+
+        // Calcule la nouvelle position : juste après le bloc dupliqué.
+        // Décale tous les blocs suivants de +1 pour ne pas créer de collision.
+        $pageSlug = $section['page_slug'];
+        $lang     = $section['lang'];
+        $oldPos   = (int)$section['position'];
+        $newPos   = $oldPos + 1;
+
+        \Database::query(
+            "UPDATE vp_sections SET position = position + 1
+             WHERE page_slug = ? AND lang = ? AND position >= ?",
+            [$pageSlug, $lang, $newPos]
+        );
+
+        \BlockService::createSection([
+            'page_slug'  => $pageSlug,
+            'lang'       => $lang,
+            'block_type' => $section['block_type'],
+            'title'      => trim((string)($section['title'] ?? '')) . ' (copie)',
+            'content'    => $section['content'],
+            'position'   => $newPos,
+            'active'     => 1,
+        ]);
+
+        $this->flash('success', "Bloc dupliqué en position $newPos.");
+        $this->redirect('/admin/sections/page/' . $pageSlug . '?lang=' . $lang);
+    }
+
     public function delete(int $id): void
     {
         if (!$this->verifyCsrf()) {
