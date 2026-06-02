@@ -29,14 +29,7 @@
     <header class="admin-topbar">
         <a href="/admin" class="topbar-logo">VP Admin</a>
         <nav class="topbar-nav">
-            <!-- ═══ À GAUCHE DU BADGE V8 — outils techniques (V7 hérité visuellement compatible) ═══ -->
-            <div class="topbar-group is-stale" title="Outils techniques en V7 hérité">
-                <button class="topbar-group-btn">SEO ▾</button>
-                <div class="topbar-dropdown">
-                    <a href="/admin/seo-files" class="topbar-dd-link">SEO</a>
-                    <a href="/admin/redirects" class="topbar-dd-link">Redirections</a>
-                </div>
-            </div>
+            <!-- ═══ À GAUCHE DU BADGE V8 — (vide, tout est en fresh) ═══ -->
 
             <!-- ═══ Le badge V8 — DEV sert de SÉPARATEUR ═══ -->
             <span class="env-separator" title="À gauche : sections en attente de refonte V8. À droite : sections refondues et validées.">V8 — DEV</span>
@@ -61,6 +54,13 @@
             <a href="/admin/avis" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/avis') ? 'active' : '' ?>">Avis</a>
             <a href="/admin/media" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/media') ? 'active' : '' ?>">Médias</a>
             <a href="/admin/reglages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/reglages') ? 'active' : '' ?>">Réglages</a>
+            <div class="topbar-group is-fresh">
+                <button class="topbar-group-btn">SEO ▾</button>
+                <div class="topbar-dropdown">
+                    <a href="/admin/seo-files" class="topbar-dd-link">Fichiers SEO</a>
+                    <a href="/admin/redirects" class="topbar-dd-link">Redirections</a>
+                </div>
+            </div>
         </nav>
         <div class="topbar-right">
             <a href="/" class="topbar-link" target="_blank">Voir le site</a>
