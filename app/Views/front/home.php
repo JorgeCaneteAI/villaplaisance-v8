@@ -572,8 +572,57 @@ $_nPins = count($_mapPins);
     </div>
   </div>
 
-  <!-- Vraie carte du monde (Leaflet + tuiles CARTO/OpenStreetMap) -->
-  <div id="guest-map" class="guest-map" aria-label="<?= t('home.map.kicker') ?>"></div>
+  <?php
+  // Projection equirectangular pure (cohérente avec le SVG world)
+  // x = (lng + 180) / 360 * 1000 ; y = (90 - lat) / 180 * 500
+  $_proj = static function (float $lng, float $lat): array {
+      return [round(($lng + 180) / 360 * 1000, 2), round((90 - $lat) / 180 * 500, 2)];
+  };
+  [$_villaX, $_villaY] = $_proj($_villaLng, $_villaLat);
+  $_pinsXY = [];
+  foreach ($_mapPins as $_p) {
+      [$_x, $_y] = $_proj((float)$_p['lng'], (float)$_p['lat']);
+      $_pinsXY[] = ['x' => $_x, 'y' => $_y, 'label' => $_p['label']];
+  }
+  $_worldSvg = @file_get_contents(ROOT . '/public/assets/img/world-equirectangular.svg');
+  // Strip XML prolog si présent (on l'inline dans du HTML)
+  if ($_worldSvg) {
+      $_worldSvg = preg_replace('/^<\?xml[^?]*\?>\s*/i', '', $_worldSvg);
+  }
+  ?>
+  <!-- Carte du monde SVG au trait (Natural Earth 110m, projection equirectangulaire) -->
+  <div class="worldmap-svg" role="img" aria-label="<?= t('home.map.kicker') ?>">
+    <?php if ($_worldSvg): ?>
+    <div class="worldmap-svg-frame">
+      <?= preg_replace(
+        '/<svg([^>]*)>/i',
+        '<svg$1 class="worldmap-countries">',
+        $_worldSvg,
+        1
+      ) ?>
+      <svg class="worldmap-pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <!-- Pins origines clients -->
+        <g class="pins-guests">
+          <?php foreach ($_pinsXY as $_p): ?>
+          <g class="pin-guest" transform="translate(<?= $_p['x'] ?>, <?= $_p['y'] ?>)">
+            <circle r="3"></circle>
+            <title><?= htmlspecialchars($_p['label']) ?></title>
+          </g>
+          <?php endforeach; ?>
+        </g>
+        <!-- Pin Villa Plaisance (Bédarrides) avec halo + label -->
+        <g class="pin-home" transform="translate(<?= $_villaX ?>, <?= $_villaY ?>)">
+          <circle class="pin-home-halo-3" r="14"></circle>
+          <circle class="pin-home-halo-2" r="8"></circle>
+          <circle class="pin-home-dot" r="3.5"></circle>
+          <text class="pin-home-label" y="-12" text-anchor="middle">BÉDARRIDES</text>
+          <title>Villa Plaisance — Bédarrides</title>
+        </g>
+      </svg>
+    </div>
+    <?php endif; ?>
+  </div>
+
   <div class="container-wide map-legend-wrap">
     <div class="map-legend">
       <span><span class="swatch swatch-home"></span> <?= t('home.map.legend_home') ?></span>
@@ -591,60 +640,6 @@ $_nPins = count($_mapPins);
     </ul>
   </div>
   <?php endif; ?>
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin defer></script>
-  <script>
-  (function() {
-    function initGuestMap() {
-      if (typeof L === 'undefined') { setTimeout(initGuestMap, 60); return; }
-      var map = L.map('guest-map', {
-        center: [38, -15],
-        zoom: 3,
-        minZoom: 2,
-        maxZoom: 12,
-        scrollWheelZoom: false,
-        zoomControl: true
-      });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 19
-      }).addTo(map);
-
-      // Pin Villa Plaisance
-      var homeIcon = L.divIcon({
-        className: 'map-pin-home',
-        html: '<div class="pin-home-inner"></div>',
-        iconSize: [18, 18], iconAnchor: [9, 9]
-      });
-      L.marker([<?= $_villaLat ?>, <?= $_villaLng ?>], {icon: homeIcon, zIndexOffset: 1000})
-        .addTo(map)
-        .bindTooltip('Villa Plaisance — Bédarrides', {direction: 'top', offset: [0, -10]});
-
-      // Pins origines clients
-      var pins = <?= json_encode($_mapPins, JSON_UNESCAPED_UNICODE) ?>;
-      var bounds = [[<?= $_villaLat ?>, <?= $_villaLng ?>]];
-      pins.forEach(function(pin) {
-        var guestIcon = L.divIcon({
-          className: 'map-pin-guest',
-          html: '<div class="pin-guest-inner"></div>',
-          iconSize: [12, 12], iconAnchor: [6, 6]
-        });
-        L.marker([pin.lat, pin.lng], {icon: guestIcon})
-          .addTo(map)
-          .bindTooltip(pin.label, {direction: 'top', offset: [0, -8]});
-        bounds.push([pin.lat, pin.lng]);
-      });
-      if (bounds.length > 1) {
-        map.fitBounds(bounds, {padding: [40, 40], maxZoom: 5});
-      }
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initGuestMap);
-    } else { initGuestMap(); }
-  })();
-  </script>
 </section>
 
 <!-- ============ 06 · TÉMOIGNAGES ============ -->
