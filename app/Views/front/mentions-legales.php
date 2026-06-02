@@ -43,6 +43,18 @@
       <span aria-current="page" data-en="Legal notice">Mentions légales</span>
     </nav>
 
+    <?php
+    $_v8HeroLegal = null;
+    foreach (BlockService::getSections('mentions-legales', $lang) as $_s) {
+        if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+            $_v8HeroLegal = BlockService::renderBlock($_s);
+            break;
+        }
+    }
+    ?>
+    <?php if ($_v8HeroLegal): ?>
+    <?= $_v8HeroLegal ?>
+    <?php else: ?>
     <div class="page-hero">
       <div class="page-hero-inner">
         <div>
@@ -55,6 +67,7 @@
         <p class="lede" data-en="The legal owner of this site, hosting details, intellectual property, photo credits and liability — all you need to know in a single page.">L'éditeur du site, l'hébergement, la propriété intellectuelle, les crédits photo et la responsabilité — tout ce qu'il faut savoir réuni sur une page.</p>
       </div>
     </div>
+    <?php endif; ?>
 
     <div class="legal-body">
       <h2 data-en="1. Site publisher">1. Éditeur du site</h2>

@@ -73,6 +73,18 @@
       <span aria-current="page" data-en="Privacy policy">Politique de confidentialité</span>
     </nav>
 
+    <?php
+    $_v8HeroPriv = null;
+    foreach (BlockService::getSections('politique-confidentialite', $lang) as $_s) {
+        if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+            $_v8HeroPriv = BlockService::renderBlock($_s);
+            break;
+        }
+    }
+    ?>
+    <?php if ($_v8HeroPriv): ?>
+    <?= $_v8HeroPriv ?>
+    <?php else: ?>
     <div class="page-hero">
       <div class="page-hero-inner">
         <div>
@@ -85,6 +97,7 @@
         <p class="lede" data-en="What data we collect, why, how long we keep it, and your rights under GDPR. No tracking unless you explicitly accept it.">Quelles données on collecte, pourquoi, combien de temps on les garde, et vos droits selon le RGPD. Aucun suivi tant que vous ne l'avez pas explicitement accepté.</p>
       </div>
     </div>
+    <?php endif; ?>
 
     <div class="legal-body">
 

@@ -46,6 +46,18 @@
       <span aria-current="page" data-en="Site map">Plan du site</span>
     </nav>
 
+    <?php
+    $_v8HeroPlan = null;
+    foreach (BlockService::getSections('plan-du-site', $lang) as $_s) {
+        if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+            $_v8HeroPlan = BlockService::renderBlock($_s);
+            break;
+        }
+    }
+    ?>
+    <?php if ($_v8HeroPlan): ?>
+    <?= $_v8HeroPlan ?>
+    <?php else: ?>
     <div class="page-hero">
       <div class="page-hero-inner">
         <div>
@@ -58,6 +70,7 @@
         <p class="lede" data-en="A bird's-eye view of every public page. If something's missing, write to us — we'll add it.">Une vue d'ensemble de toutes les pages publiques. Si quelque chose manque, écrivez-nous, on l'ajoutera.</p>
       </div>
     </div>
+    <?php endif; ?>
 
     <div class="sm-grid">
 
