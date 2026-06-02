@@ -65,7 +65,6 @@ class SeoService
             'fr' => 'fr_FR',
             'en' => 'en_GB',
             'es' => 'es_ES',
-            'de' => 'de_DE',
             default => 'fr_FR',
         };
     }

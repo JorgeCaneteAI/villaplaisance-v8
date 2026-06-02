@@ -101,7 +101,7 @@ class ImageService
         if (!isset(self::$mediaCache[$cleanName])) {
             try {
                 $row = Database::fetchOne(
-                    "SELECT alt_fr, alt_en, alt_es, alt_de FROM vp_media WHERE filename = ?",
+                    "SELECT alt_fr, alt_en, alt_es FROM vp_media WHERE filename = ?",
                     [$cleanName]
                 );
                 self::$mediaCache[$cleanName] = $row;

@@ -205,7 +205,6 @@ class MediaController extends AdminBaseController
             'alt_fr' => trim($_POST['alt_fr'] ?? ''),
             'alt_en' => trim($_POST['alt_en'] ?? ''),
             'alt_es' => trim($_POST['alt_es'] ?? ''),
-            'alt_de' => trim($_POST['alt_de'] ?? ''),
             'title' => trim($_POST['title'] ?? ''),
             'caption' => trim($_POST['caption'] ?? ''),
             'credit' => trim($_POST['credit'] ?? ''),

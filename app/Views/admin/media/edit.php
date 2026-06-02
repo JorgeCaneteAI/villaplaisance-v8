@@ -42,15 +42,9 @@ $src = file_exists(ROOT . '/public/uploads/' . $media['filename'])
             <label for="alt_en">Alt EN</label>
             <input type="text" id="alt_en" name="alt_en" value="<?= htmlspecialchars($media['alt_en'] ?? '') ?>" placeholder="Ex: Private pool at Villa Plaisance in Bédarrides">
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label for="alt_es">Alt ES</label>
-                <input type="text" id="alt_es" name="alt_es" value="<?= htmlspecialchars($media['alt_es'] ?? '') ?>" placeholder="Alt en espagnol">
-            </div>
-            <div class="form-group">
-                <label for="alt_de">Alt DE</label>
-                <input type="text" id="alt_de" name="alt_de" value="<?= htmlspecialchars($media['alt_de'] ?? '') ?>" placeholder="Alt en allemand">
-            </div>
+        <div class="form-group">
+            <label for="alt_es">Alt ES</label>
+            <input type="text" id="alt_es" name="alt_es" value="<?= htmlspecialchars($media['alt_es'] ?? '') ?>" placeholder="Alt en espagnol">
         </div>
 
         <h2 class="mt-2">Métadonnées</h2>

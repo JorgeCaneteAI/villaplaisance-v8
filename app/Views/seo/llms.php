@@ -37,4 +37,3 @@
 - Français (langue principale)
 - English
 - Español
-- Deutsch
