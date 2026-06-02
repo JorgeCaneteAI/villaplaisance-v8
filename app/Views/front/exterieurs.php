@@ -123,7 +123,19 @@
 </style>
 
 
-<!-- ============ 1 · HERO ============ -->
+<!-- ============ 1 · HERO (BDD vp_sections or fallback HTML) ============ -->
+<?php
+$_v8HeroExt = null;
+foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
+    if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+        $_v8HeroExt = BlockService::renderBlock($_s);
+        break;
+    }
+}
+?>
+<?php if ($_v8HeroExt): ?>
+<?= $_v8HeroExt ?>
+<?php else: ?>
 <section class="page-hero">
   <div class="page-hero-inner">
     <div>
@@ -142,6 +154,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ 2 · INTRO ============ -->
 <section class="section">

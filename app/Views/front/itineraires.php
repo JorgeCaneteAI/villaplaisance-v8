@@ -181,7 +181,19 @@ $totalCount = ($featured ? 1 : 0) + count($articles);
 </style>
 
 
-<!-- ============ MASTHEAD ============ -->
+<!-- ============ MASTHEAD (BDD vp_sections or fallback HTML) ============ -->
+<?php
+$_v8HeroItin = null;
+foreach (BlockService::getSections('itineraire', $lang) as $_s) {
+    if ((int)$_s['position'] === 1 && $_s['block_type'] === 'hero') {
+        $_v8HeroItin = BlockService::renderBlock($_s);
+        break;
+    }
+}
+?>
+<?php if ($_v8HeroItin): ?>
+<?= $_v8HeroItin ?>
+<?php else: ?>
 <section class="qf-masthead">
   <div class="qf-masthead-inner">
     <div>
@@ -194,6 +206,7 @@ $totalCount = ($featured ? 1 : 0) + count($articles);
     <p class="qf-lede" data-en="Sites to visit, tables and restaurants, shops, things to do with children — what we'd point to ourselves over breakfast.">Sites à visiter, tables et restaurants, commerces, activités avec les enfants — ce qu'on vous indiquerait nous-mêmes au petit-déjeuner.</p>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- ============ FILTER ============ -->
 <?php if (!empty($categories) && $totalCount > 0): ?>
