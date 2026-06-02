@@ -1,8 +1,14 @@
 <?php
 declare(strict_types=1);
 
-// Maps: page_key => localized slug (used in URLs)
-// FR slugs are the canonical reference (used directly in Router)
+// Mapping des slugs de page par langue.
+//
+// La clé est TOUJOURS le slug FR canonique (celui utilisé dans le Router
+// comme route principale). La valeur est le slug effectivement servi dans
+// la langue donnée.
+//
+// LangService::url('chambres-d-hotes', 'en') → '/en/bed-and-breakfast'
+// Le Router résout une URL entrante en inversant ce map.
 return [
     'fr' => [
         'accueil' => '/',
@@ -10,8 +16,10 @@ return [
         'location-villa-provence' => 'location-villa-provence',
         'espaces-exterieurs' => 'espaces-exterieurs',
         'journal' => 'journal',
-        'sur-place' => 'sur-place',
+        'itineraire' => 'itineraire',
         'contact' => 'contact',
+        'avis' => 'avis',
+        'votre-hote' => 'votre-hote',
         'disponibilites' => 'disponibilites',
         'mentions-legales' => 'mentions-legales',
         'politique-confidentialite' => 'politique-confidentialite',
@@ -20,30 +28,34 @@ return [
     ],
     'en' => [
         'accueil' => '/',
-        'bed-and-breakfast' => 'chambres-d-hotes',
-        'villa-rental-provence' => 'location-villa-provence',
-        'outdoor-spaces' => 'espaces-exterieurs',
+        'chambres-d-hotes' => 'bed-and-breakfast',
+        'location-villa-provence' => 'villa-rental-provence',
+        'espaces-exterieurs' => 'outdoor-spaces',
         'journal' => 'journal',
-        'nearby' => 'sur-place',
+        'itineraire' => 'things-to-do',
         'contact' => 'contact',
-        'availability' => 'disponibilites',
-        'legal-notice' => 'mentions-legales',
-        'privacy-policy' => 'politique-confidentialite',
-        'sitemap' => 'plan-du-site',
-        'guest-booklet' => 'livret',
+        'avis' => 'guest-reviews',
+        'votre-hote' => 'your-host',
+        'disponibilites' => 'availability',
+        'mentions-legales' => 'legal-notice',
+        'politique-confidentialite' => 'privacy-policy',
+        'plan-du-site' => 'sitemap',
+        'livret' => 'guest-booklet',
     ],
     'es' => [
         'accueil' => '/',
-        'habitaciones' => 'chambres-d-hotes',
-        'villa-provenza' => 'location-villa-provence',
-        'espacios-exteriores' => 'espaces-exterieurs',
-        'diario' => 'journal',
-        'alrededores' => 'sur-place',
-        'contacto' => 'contact',
-        'disponibilidad' => 'disponibilites',
-        'aviso-legal' => 'mentions-legales',
-        'politica-privacidad' => 'politique-confidentialite',
-        'mapa-del-sitio' => 'plan-du-site',
-        'guia-de-acogida' => 'livret',
+        'chambres-d-hotes' => 'habitaciones',
+        'location-villa-provence' => 'alquiler-villa-provenza',
+        'espaces-exterieurs' => 'espacios-exteriores',
+        'journal' => 'diario',
+        'itineraire' => 'que-hacer',
+        'contact' => 'contacto',
+        'avis' => 'opiniones',
+        'votre-hote' => 'su-anfitrion',
+        'disponibilites' => 'disponibilidad',
+        'mentions-legales' => 'aviso-legal',
+        'politique-confidentialite' => 'politica-privacidad',
+        'plan-du-site' => 'mapa-del-sitio',
+        'livret' => 'guia-de-acogida',
     ],
 ];

@@ -48,7 +48,12 @@ class LangService
     public static function url(string $page, ?string $lang = null): string
     {
         $lang = $lang ?? self::$currentLang;
-        $slug = self::$slugMap[$lang][$page] ?? $page;
+        // $page = slug FR canonique (clé du Router). On résout le slug localisé.
+        $slug = self::$slugMap[$lang][$page] ?? self::$slugMap[DEFAULT_LANG][$page] ?? $page;
+
+        if ($slug === '/') {
+            return $lang === DEFAULT_LANG ? '/' : '/' . $lang . '/';
+        }
 
         if ($lang === DEFAULT_LANG) {
             return '/' . ltrim($slug, '/');
@@ -56,9 +61,61 @@ class LangService
         return '/' . $lang . '/' . ltrim($slug, '/');
     }
 
-    public static function switchLangUrl(string $targetLang, string $currentPage): string
+    /**
+     * URL de la page courante dans une autre langue.
+     * Décompose REQUEST_URI, identifie la page-key FR canonique
+     * via le slug entrant, reconstruit l'URL dans la langue cible.
+     * Préserve la query string.
+     */
+    public static function switchLangUrl(string $targetLang): string
     {
-        return self::url($currentPage, $targetLang);
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+        $parts = parse_url($uri);
+        $path = $parts['path'] ?? '/';
+        $query = isset($parts['query']) && $parts['query'] !== '' ? '?' . $parts['query'] : '';
+
+        // Strip préfixe langue
+        $currentLang = DEFAULT_LANG;
+        if (preg_match('#^/(en|es|de)(/.*)?$#', $path, $m)) {
+            $currentLang = $m[1];
+            $path = $m[2] ?? '/';
+        }
+        $path = '/' . trim($path, '/');
+        if ($path === '') $path = '/';
+
+        // Cas accueil
+        if ($path === '/') {
+            return self::url('accueil', $targetLang) . $query;
+        }
+
+        // Cas /journal/{slug}, /itineraire/{slug}, /sur-place/{slug} — détail d'article
+        // Slug d'article = donnée DB partagée entre langues, on garde tel quel.
+        foreach (['/journal/', '/itineraire/', '/sur-place/'] as $prefix) {
+            if (str_starts_with($path, $prefix)) {
+                $pageKeyFr = trim($prefix, '/'); // 'journal' / 'itineraire' / 'sur-place'
+                $rest = substr($path, strlen($prefix));
+                $base = self::url($pageKeyFr, $targetLang);
+                return rtrim($base, '/') . '/' . $rest . $query;
+            }
+        }
+
+        // Cas page statique : on cherche la page-key FR à partir du slug courant
+        $currentSlug = ltrim($path, '/');
+        $localMap = self::$slugMap[$currentLang] ?? [];
+        $pageKey = null;
+        foreach ($localMap as $key => $slug) {
+            if ($slug === $currentSlug) {
+                $pageKey = $key;
+                break;
+            }
+        }
+
+        if ($pageKey !== null) {
+            return self::url($pageKey, $targetLang) . $query;
+        }
+
+        // Fallback : on ne sait pas mapper, renvoie l'accueil dans la langue cible.
+        return self::url('accueil', $targetLang);
     }
 
     public static function getAllLangs(): array

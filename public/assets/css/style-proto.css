@@ -265,11 +265,16 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
   color: var(--stone-600);
 }
+.lang-toggle a,
 .lang-toggle button {
   background: transparent; border: 0; padding: 6px 6px;
   font: inherit; color: var(--stone-500); cursor: pointer;
   border-radius: 0;
+  text-decoration: none;
+  line-height: 1;
 }
+.lang-toggle a:hover { color: var(--ink-900); }
+.lang-toggle a.active,
 .lang-toggle button.active { color: var(--ink-900); }
 .lang-toggle .sep { color: var(--stone-400); }
 

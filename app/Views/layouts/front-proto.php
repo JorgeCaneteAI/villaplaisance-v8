@@ -61,8 +61,6 @@
     <?php endforeach; ?>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Aller au contenu</a>
-
     <!-- Nav du proto Claude design -->
     <header class="nav">
         <div class="nav-inner">
@@ -73,23 +71,24 @@
                     <span class="brand-mark">VP &middot; 84</span>
                 </span>
             </a>
-            <nav class="nav-links" aria-label="Principal">
-                <a href="<?= LangService::url('chambres-d-hotes') ?>" data-en="B&amp;B rooms" data-page="chambres-hotes">Chambres d'hôtes</a>
-                <a href="<?= LangService::url('location-villa-provence') ?>" data-en="Whole house" data-page="maison-hotes">Maison d'hôtes</a>
-                <a href="<?= LangService::url('disponibilites') ?>" data-en="Availability" data-page="disponibilites">Disponibilités</a>
-                <a href="<?= LangService::url('espaces-exterieurs') ?>" data-en="Outdoors" data-page="exterieurs">Extérieurs</a>
-                <a href="<?= LangService::url('journal') ?>" data-en="Tourism" data-page="journal-tourisme">Tourisme</a>
-                <a href="<?= LangService::url('itineraire') ?>" data-en="Things to do" data-page="journal-que-faire">Que faire</a>
+            <nav class="nav-links" aria-label="<?= t('proto.nav.menu_principal') ?>">
+                <a href="<?= LangService::url('chambres-d-hotes') ?>" data-page="chambres-hotes"><?= t('proto.nav.chambres') ?></a>
+                <a href="<?= LangService::url('location-villa-provence') ?>" data-page="maison-hotes"><?= t('proto.nav.villa') ?></a>
+                <a href="<?= LangService::url('disponibilites') ?>" data-page="disponibilites"><?= t('proto.nav.disponibilites') ?></a>
+                <a href="<?= LangService::url('espaces-exterieurs') ?>" data-page="exterieurs"><?= t('proto.nav.exterieurs') ?></a>
+                <a href="<?= LangService::url('journal') ?>" data-page="journal-tourisme"><?= t('proto.nav.journal') ?></a>
+                <a href="<?= LangService::url('itineraire') ?>" data-page="journal-que-faire"><?= t('proto.nav.itineraire') ?></a>
             </nav>
             <div class="nav-right">
-                <div class="lang-toggle" role="group" aria-label="Langue">
-                    <button data-lang="fr" class="active">FR</button>
+                <?php $currentLang = LangService::current(); ?>
+                <div class="lang-toggle" role="group" aria-label="<?= t('proto.nav.lang_label') ?>">
+                    <a href="<?= LangService::switchLangUrl('fr') ?>" hreflang="fr" class="<?= $currentLang === 'fr' ? 'active' : '' ?>"<?= $currentLang === 'fr' ? ' aria-current="true"' : '' ?>>FR</a>
                     <span class="sep">/</span>
-                    <button data-lang="en">EN</button>
+                    <a href="<?= LangService::switchLangUrl('en') ?>" hreflang="en" class="<?= $currentLang === 'en' ? 'active' : '' ?>"<?= $currentLang === 'en' ? ' aria-current="true"' : '' ?>>EN</a>
                     <span class="sep">/</span>
-                    <button data-lang="es">ES</button>
+                    <a href="<?= LangService::switchLangUrl('es') ?>" hreflang="es" class="<?= $currentLang === 'es' ? 'active' : '' ?>"<?= $currentLang === 'es' ? ' aria-current="true"' : '' ?>>ES</a>
                 </div>
-                <a href="<?= LangService::url('contact') ?>" class="btn" data-en="Contact">Contact</a>
+                <a href="<?= LangService::url('contact') ?>" class="btn"><?= t('proto.nav.contact') ?></a>
             </div>
         </div>
     </header>
@@ -101,61 +100,61 @@
     <!-- Footer du proto Claude design (avec CTA) -->
     <footer class="footer" style="margin-top: 0;">
         <div class="container-wide">
-            <h2 data-en="Want to come?">Envie de <em>venir</em> ?</h2>
+            <h2><?= t('proto.footer.cta_title') ?></h2>
             <div style="display:flex; gap: 16px; flex-wrap: wrap;">
-                <a class="btn" style="background: var(--linen-50); color: var(--olive-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span data-en="Send an enquiry">Envoyer une demande</span> &rarr;</a>
+                <a class="btn" style="background: var(--linen-50); color: var(--olive-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span><?= t('proto.footer.cta_send') ?></span> &rarr;</a>
                 <a class="btn btn-ghost" style="color: var(--linen-50); border-color: rgba(251,247,238,0.4);" href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
             </div>
 
             <div class="footer-grid">
                 <div>
                     <div style="font-family: var(--font-display); font-size: 28px; color: var(--linen-50); letter-spacing: -0.01em; margin-bottom: 12px;">Villa Plaisance</div>
-                    <p style="margin: 0; max-width: 36ch; color: rgba(251,247,238,0.65); font-size: 14px; line-height: 1.6;" data-en="A maison de charme in Bédarrides, at the heart of Provence's Golden Triangle.">Maison de charme à Bédarrides, au cœur du Triangle d'Or provençal.</p>
+                    <p style="margin: 0; max-width: 36ch; color: rgba(251,247,238,0.65); font-size: 14px; line-height: 1.6;"><?= t('proto.footer.tagline') ?></p>
                 </div>
                 <div>
-                    <h4 data-en="The house">La maison</h4>
+                    <h4><?= t('proto.footer.col_house') ?></h4>
                     <ul>
-                        <li><a href="<?= LangService::url('chambres-d-hotes') ?>" data-en="B&amp;B rooms (Sept → June)">Chambres d'hôtes (sept &rarr; juin)</a></li>
-                        <li><a href="<?= LangService::url('location-villa-provence') ?>" data-en="Whole house">Maison d'hôtes (villa entière)</a></li>
-                        <li><a href="<?= LangService::url('disponibilites') ?>" data-en="Availability">Disponibilités</a></li>
-                        <li><a href="<?= LangService::url('espaces-exterieurs') ?>" data-en="The outdoors">Les extérieurs</a></li>
+                        <li><a href="<?= LangService::url('chambres-d-hotes') ?>"><?= t('proto.footer.chambres') ?></a></li>
+                        <li><a href="<?= LangService::url('location-villa-provence') ?>"><?= t('proto.footer.villa') ?></a></li>
+                        <li><a href="<?= LangService::url('disponibilites') ?>"><?= t('proto.footer.disponibilites') ?></a></li>
+                        <li><a href="<?= LangService::url('espaces-exterieurs') ?>"><?= t('proto.footer.exterieurs') ?></a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 data-en="Journal">Journal</h4>
+                    <h4><?= t('proto.footer.col_journal') ?></h4>
                     <ul>
-                        <li><a href="<?= LangService::url('journal') ?>" data-en="Tourism">Tourisme</a></li>
-                        <li><a href="<?= LangService::url('itineraire') ?>" data-en="What to do nearby">Que faire sur place</a></li>
+                        <li><a href="<?= LangService::url('journal') ?>"><?= t('proto.footer.journal') ?></a></li>
+                        <li><a href="<?= LangService::url('itineraire') ?>"><?= t('proto.footer.itineraire') ?></a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 data-en="Stay close">Rester proche</h4>
+                    <h4><?= t('proto.footer.col_stay_close') ?></h4>
                     <ul>
-                        <li><a href="<?= LangService::url('contact') ?>" data-en="Contact">Contact</a></li>
-                        <li><a href="<?= LangService::url('avis') ?>" data-en="Guest reviews">Avis clients</a></li>
-                        <li><a href="<?= LangService::url('votre-hote') ?>" data-en="Your host">Votre hôte</a></li>
+                        <li><a href="<?= LangService::url('contact') ?>"><?= t('proto.footer.contact') ?></a></li>
+                        <li><a href="<?= LangService::url('avis') ?>"><?= t('proto.footer.avis') ?></a></li>
+                        <li><a href="<?= LangService::url('votre-hote') ?>"><?= t('proto.footer.votre_hote') ?></a></li>
                         <li><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></li>
-                        <li><a href="#" data-en="Instagram">Instagram</a></li>
-                        <li style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(251,247,238,0.12);"><a href="<?= LangService::url('livret') ?>" data-en="Welcome booklet">Livret d'accueil</a></li>
+                        <li><a href="#"><?= t('proto.footer.instagram') ?></a></li>
+                        <li style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(251,247,238,0.12);"><a href="<?= LangService::url('livret') ?>"><?= t('proto.footer.livret') ?></a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
                 <span>&copy; <?= date('Y') ?> Villa Plaisance</span>
-                <span data-en="Bédarrides · Vaucluse · Provence">Bédarrides &middot; Vaucluse &middot; Provence</span>
+                <span><?= t('proto.footer.region') ?></span>
             </div>
         </div>
     </footer>
 
     <!-- Cookie consent RGPD (hérité v8) -->
     <?php if (!isset($_COOKIE['vp_consent'])): ?>
-    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="Gestion des cookies">
+    <div id="cookie-banner" class="cookie-banner" role="dialog" aria-label="<?= t('proto.cookie.dialog') ?>">
         <div class="cookie-inner">
-            <p class="cookie-text">Ce site utilise des cookies pour mesurer l'audience et améliorer votre expérience. Vous pouvez accepter ou refuser leur utilisation.</p>
+            <p class="cookie-text"><?= t('proto.cookie.text') ?></p>
             <div class="cookie-actions">
-                <button id="cookie-refuse" class="cookie-btn cookie-btn-refuse">Refuser</button>
-                <button id="cookie-accept" class="cookie-btn cookie-btn-accept">Accepter</button>
+                <button id="cookie-refuse" class="cookie-btn cookie-btn-refuse"><?= t('proto.cookie.refuse') ?></button>
+                <button id="cookie-accept" class="cookie-btn cookie-btn-accept"><?= t('proto.cookie.accept') ?></button>
             </div>
         </div>
     </div>
@@ -191,7 +190,5 @@
     </script>
     <?php endif; ?>
 
-    <!-- i18n FR/EN du proto (toggle client-side via data-en) -->
-    <script src="/assets/js/i18n-proto.js?v=<?= filemtime(ROOT . '/public/assets/js/i18n-proto.js') ?>" defer></script>
 </body>
 </html>

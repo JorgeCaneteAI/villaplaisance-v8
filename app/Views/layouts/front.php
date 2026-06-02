@@ -80,9 +80,6 @@
     }
     ?>
 
-    <!-- Skip to content -->
-    <a href="#main-content" class="skip-link">Aller au contenu</a>
-
     <!-- Header V8 (frame : wordmark + nav 7 liens + langues + burger) -->
     <header class="frame" role="banner">
         <a class="wordmark" href="<?= LangService::url('/') ?>" aria-label="Villa Plaisance, accueil">

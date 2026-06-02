@@ -108,11 +108,14 @@ class Router
         ];
 
         // Multilingual slug resolution
+        // $slugMap = [pageKeyFr => slugLocalized] pour la langue courante.
+        // On cherche la pageKeyFr dont le slug localisé matche l'URI entrante,
+        // puis on appelle la route FR canonique correspondante.
         if ($this->lang !== 'fr') {
-            foreach ($slugMap as $slug => $page) {
-                if ('/' . $slug === $normalized) {
-                    if (isset($routes['/' . $page]) || isset($routes[$page])) {
-                        $route = $routes['/' . $page] ?? $routes[$page];
+            foreach ($slugMap as $pageKeyFr => $localizedSlug) {
+                if ('/' . $localizedSlug === $normalized) {
+                    $route = $routes['/' . $pageKeyFr] ?? null;
+                    if ($route !== null) {
                         $this->callController($route[0], $route[1]);
                         return;
                     }
@@ -124,6 +127,20 @@ class Router
         if (isset($routes[$normalized])) {
             $this->callController($routes[$normalized][0], $routes[$normalized][1]);
             return;
+        }
+
+        // Normalisation des préfixes pour les routes dynamiques (sous-pages).
+        // Ex : /en/things-to-do/calanques → /itineraire/calanques pour matcher la regex.
+        if ($this->lang !== 'fr') {
+            $dynamicPrefixes = ['journal', 'itineraire', 'sur-place'];
+            foreach ($dynamicPrefixes as $pageKeyFr) {
+                $localizedSlug = $slugMap[$pageKeyFr] ?? null;
+                if ($localizedSlug && $localizedSlug !== $pageKeyFr
+                    && str_starts_with($normalized, '/' . $localizedSlug . '/')) {
+                    $normalized = '/' . $pageKeyFr . substr($normalized, strlen('/' . $localizedSlug));
+                    break;
+                }
+            }
         }
 
         // Dynamic routes: /itineraire/{slug}/comment (POST)
