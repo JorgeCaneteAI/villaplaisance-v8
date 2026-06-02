@@ -592,8 +592,20 @@ class Router
         }
 
         // FAQ CRUD
+        if ($normalized === '/admin/faq') {
+            $this->callController('Controllers\\Admin\\FaqController', 'index');
+            return;
+        }
+        if (preg_match('#^/admin/faq/(\d+)/edit$#', $normalized, $m)) {
+            $this->callController('Controllers\\Admin\\FaqController', 'edit', ['id' => (int)$m[1]]);
+            return;
+        }
         if (preg_match('#^/admin/faq/(\d+)/save$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\FaqController', 'save', ['id' => (int)$m[1]]);
+            return;
+        }
+        if (preg_match('#^/admin/faq/(\d+)/toggle$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\FaqController', 'toggle', ['id' => (int)$m[1]]);
             return;
         }
         if ($normalized === '/admin/faq/create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
