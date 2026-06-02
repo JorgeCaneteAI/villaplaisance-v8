@@ -36,7 +36,13 @@
             <a href="/admin/analytics" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/analytics') ? 'active' : '' ?>">Stats</a>
             <a href="/admin/messages" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/messages') ? 'active' : '' ?>">Messages</a>
             <a href="/admin/calendrier" class="topbar-link is-fresh <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/calendrier') ? 'active' : '' ?>">Calendrier</a>
-            <a href="/admin/pages" class="topbar-link is-fresh <?= (str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/pages') || str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/sections')) ? 'active' : '' ?>">Pages</a>
+            <div class="topbar-group is-fresh">
+                <button class="topbar-group-btn <?= (str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/pages') || str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/admin/sections')) ? 'active' : '' ?>">Pages ▾</button>
+                <div class="topbar-dropdown">
+                    <a href="/admin/pages" class="topbar-dd-link">Toutes les pages</a>
+                    <a href="/admin/sections" class="topbar-dd-link">🔍 Rechercher dans les blocs</a>
+                </div>
+            </div>
             <div class="topbar-group is-fresh">
                 <button class="topbar-group-btn">Contenu ▾</button>
                 <div class="topbar-dropdown">
