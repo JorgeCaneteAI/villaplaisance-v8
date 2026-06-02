@@ -1,13 +1,10 @@
 <?php declare(strict_types=1); ?>
 <?php /**
- * Vue : Votre hôte (Jorge) — V8 portée sur vp_sections.
- *
- * Préférence : rendre depuis vp_sections (édition unifiée via /admin/sections).
- * Fallback HTML legacy si aucun bloc en BDD pour cette page+langue.
- *
- * Le système legacy lit vp_host_profile + vp_host_blocks + vp_reviews —
- * conservé tant que les blocs vp_sections n'ont pas été seedés.
- *
+ * Vue : Votre hôte (Jorge).
+ * Branchée sur les données dynamiques de l'admin :
+ *   - vp_host_profile (name, subtitle, photo, intro, origin, passions, philosophy, fun_facts, quote)
+ *   - vp_host_blocks  (title_{lang}, content_{lang}, image, position) — blocs CV
+ *   - vp_reviews      (avis mentionnant Jorge / Georges / George)
  * Layout : front-proto.
  * @var string $lang  @var array $seo  @var array $jsonLd
  * @var array|null $profile  @var array $blocks  @var array $reviews
@@ -17,40 +14,6 @@ $profile  = $profile ?? [];
 $blocks   = $blocks ?? [];
 $reviews  = $reviews ?? [];
 
-// Charge les sections vp_sections pour cette page + langue, indexées par position
-$_v8SectionsByPos = [];
-foreach (BlockService::getSections('votre-hote', $lang) as $_s) {
-    $_v8SectionsByPos[(int)$_s['position']] = $_s;
-}
-$renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8SectionsByPos): ?string {
-    $s = $_v8SectionsByPos[$pos] ?? null;
-    if (!$s) return null;
-    if ($s['block_type'] !== $expectedType) {
-        error_log("V8 votre-hote: position $pos attendu '$expectedType' mais BDD a '{$s['block_type']}'");
-        return null;
-    }
-    return BlockService::renderBlock($s);
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Si AU MOINS un bloc vp_sections existe pour cette page, on rend depuis là
-// (8 blocs attendus : hero, prose quote, 5 prose sections, cta).
-// Sinon, fallback complet sur le HTML legacy ci-dessous.
-// ─────────────────────────────────────────────────────────────────────────────
-if (!empty($_v8SectionsByPos)):
-    for ($pos = 1; $pos <= 8; $pos++) {
-        $section = $_v8SectionsByPos[$pos] ?? null;
-        if ($section && (int)$section['active'] === 1) {
-            echo BlockService::renderBlock($section);
-        }
-    }
-    return;  // Évite le fallback ci-dessous
-endif;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// FALLBACK V7 (legacy vp_host_profile/blocks/reviews)
-// Conservé en bloc tant qu'on n'a pas migré chaque langue.
-// ─────────────────────────────────────────────────────────────────────────────
 $name     = $profile['name'] ?? 'Jorge';
 $subtitle = $profile['subtitle'] ?? 'Votre hôte à Villa Plaisance';
 $photo    = $profile['photo'] ?? '';
@@ -61,10 +24,12 @@ $philo    = $profile['philosophy'] ?? '';
 $facts    = $profile['fun_facts'] ?? '';
 $quote    = $profile['quote'] ?? '';
 
+// Sépare prénom / nom pour le H1 stylisé (italique sur le nom)
 $nameParts = preg_split('/\s+/', trim($name), 2);
 $firstName = $nameParts[0] ?? $name;
 $lastName  = $nameParts[1] ?? '';
 
+// Initiales pour le placeholder portrait (si pas de photo)
 $initials = '';
 foreach (preg_split('/\s+/', trim($name)) as $p) {
     if ($p !== '') $initials .= mb_strtoupper(mb_substr($p, 0, 1), 'UTF-8');
