@@ -65,14 +65,28 @@ class SectionController extends AdminBaseController
             }
         } catch (\Throwable) {}
 
-        // V8 — on utilise la nouvelle vue simplifiée list_v8.php quand un page_slug est fourni.
-        // L'ancienne vue index.php (massive, mélange édition inline + FAQ + pieces + stats)
-        // est conservée pour référence mais n'est plus appelée.
+        // V8 — vue simplifiée list_v8.php quand un page_slug est fourni.
+        // Sinon (slug vide) : page recherche globale dans tous les blocs.
         if ($page_slug !== '') {
             $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf', 'currentLang', 'langs', 'sectionsByLang'));
-        } else {
-            $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf', 'currentLang', 'langs', 'sectionsByLang'));
+            return;
         }
+
+        // ── Recherche globale dans tous les vp_sections ────────────────────
+        $q = trim((string)($_GET['q'] ?? ''));
+        $results = [];
+        if ($q !== '') {
+            $like = '%' . $q . '%';
+            $results = \Database::fetchAll(
+                "SELECT id, page_slug, lang, block_type, title, content, position, active
+                 FROM vp_sections
+                 WHERE title LIKE ? OR content LIKE ? OR page_slug LIKE ? OR block_type LIKE ?
+                 ORDER BY page_slug ASC, lang ASC, position ASC
+                 LIMIT 200",
+                [$like, $like, $like, $like]
+            );
+        }
+        $this->render('admin/sections/search_v8', compact('q', 'results', 'pages', 'blockTypes', 'csrf', 'langs'));
     }
 
     public function edit(int $id): void

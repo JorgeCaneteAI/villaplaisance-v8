@@ -15,9 +15,15 @@ $fields = BlockFieldsService::fieldsFor($blockType);
 $content = json_decode($section['content'] ?? '{}', true) ?: [];
 ?>
 
+<?php
+$_publicUrl = '/' . ($section['page_slug'] === 'accueil' ? '' : $section['page_slug']);
+?>
 <div class="page-header">
     <h1>Éditer un bloc</h1>
-    <a href="/admin/sections/page/<?= htmlspecialchars($section['page_slug']) ?>" class="btn">← Retour</a>
+    <div class="btn-group">
+        <a href="<?= htmlspecialchars($_publicUrl) ?>" target="_blank" rel="noopener" class="btn">Voir la page ↗</a>
+        <a href="/admin/sections/page/<?= htmlspecialchars($section['page_slug']) ?>?lang=<?= htmlspecialchars($section['lang']) ?>" class="btn">← Retour</a>
+    </div>
 </div>
 
 <p class="text-muted mb-2">
