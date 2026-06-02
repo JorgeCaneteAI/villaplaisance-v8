@@ -114,7 +114,7 @@
                     <h4 data-en="The house">La maison</h4>
                     <ul>
                         <li><a href="<?= LangService::url('chambres-d-hotes') ?>" data-en="B&amp;B rooms (Sept → June)">Chambres d'hôtes (sept &rarr; juin)</a></li>
-                        <li><a href="<?= LangService::url('location-villa-provence') ?>" data-en="Whole house (July – Aug)">Maison d'hôtes (juil &ndash; août)</a></li>
+                        <li><a href="<?= LangService::url('location-villa-provence') ?>" data-en="Whole house">Maison d'hôtes (villa entière)</a></li>
                         <li><a href="<?= LangService::url('disponibilites') ?>" data-en="Availability">Disponibilités</a></li>
                         <li><a href="<?= LangService::url('espaces-exterieurs') ?>" data-en="The outdoors">Les extérieurs</a></li>
                     </ul>
