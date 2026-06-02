@@ -30,7 +30,7 @@
 
   /* Type */
   --font-display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-  --font-sans: "Manrope", "Söhne", "Helvetica Neue", system-ui, sans-serif;
+  --font-sans: "Barlow Condensed", "Roboto Condensed", "Helvetica Neue Condensed", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
 
   /* Rhythm */
@@ -53,10 +53,11 @@ body {
   background: var(--linen-50);
   color: var(--ink-700);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 17px;
+  font-weight: 300;
   line-height: 1.55;
   font-feature-settings: "ss01", "ss02", "cv01";
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
 
 img, picture, video { max-width: 100%; display: block; }

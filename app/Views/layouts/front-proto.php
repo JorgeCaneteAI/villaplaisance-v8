@@ -48,10 +48,10 @@
     <meta name="twitter:description" content="<?= htmlspecialchars($seo['og']['description'] ?? $seo['description'] ?? '') ?>">
     <meta name="twitter:image" content="<?= htmlspecialchars($seo['og']['image'] ?? '') ?>">
 
-    <!-- Fonts proto Claude design : Cormorant Garamond + Manrope + JetBrains Mono -->
+    <!-- Fonts proto Claude design : Cormorant Garamond + Barlow Condensed + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Barlow+Condensed:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- CSS proto Claude design -->
     <link rel="stylesheet" href="/assets/css/style-proto.css?v=<?= filemtime(ROOT . '/public/assets/css/style-proto.css') ?>">
