@@ -756,7 +756,8 @@ $_normRating = static function (float $rating, string $platform): float {
       ?>
       <article class="testimonial">
         <div class="stars" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
-          <?= str_repeat('★ ', $_fullStars) ?><?= str_repeat('☆ ', 5 - $_fullStars) ?>
+          <?php for ($_s = 0; $_s < $_fullStars; $_s++): ?><svg class="star" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
+          <?php for ($_s = $_fullStars; $_s < 5; $_s++): ?><svg class="star star-empty" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile"/></svg><?php endfor; ?>
         </div>
         <blockquote>« <?= htmlspecialchars($_quote) ?> »</blockquote>
         <cite>

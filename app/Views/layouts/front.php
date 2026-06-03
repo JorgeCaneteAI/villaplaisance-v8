@@ -192,5 +192,6 @@
 
     <script src="/assets/js/main.js?v=<?= filemtime(ROOT . '/public/assets/js/main.js') ?>" defer></script>
     <script src="/assets/js/main-v8.js?v=<?= filemtime(ROOT . '/public/assets/js/main-v8.js') ?>" defer></script>
+    <script src="/assets/js/motion-v8.js?v=<?= filemtime(ROOT . '/public/assets/js/motion-v8.js') ?>" defer></script>
 </body>
 </html>

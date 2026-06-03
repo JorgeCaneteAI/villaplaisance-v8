@@ -251,7 +251,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
           <span>04 / <span data-en="Garden">Jardin</span></span>
           <span data-en="Provençal · 1 500 m²">Provençal · 1 500 m²</span>
         </div>
-        <h2 class="h-xl" style="margin: 0 0 24px;">Jardin <em>provençal</em><br/>— oliviers, lavandes,<br/>herbes aromatiques.</h2>
+        <h2 class="h-xl" style="margin: 0 0 24px;">Jardin <em>provençal</em><br/>oliviers, lavandes,<br/>herbes aromatiques.</h2>
         <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;" data-en="A garden of century-old olive trees, lavender, old roses and aromatic herbs. A charcoal BBQ space with a 12-seat table, a pétanque court under the trees, a children's play area.">Un jardin arboré planté d'oliviers centenaires, de lavandes, de rosiers anciens et d'herbes aromatiques. Espace BBQ charbon avec table 12 couverts, terrain de pétanque sous les arbres, aire de jeux pour les enfants.</p>
         <p class="body" style="margin: 0; max-width: 56ch;" data-en="The Châteauneuf-du-Pape vineyards start at the end of the lane.">Les vignes de Châteauneuf-du-Pape commencent au bout du chemin.</p>
 

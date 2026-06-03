@@ -54,7 +54,7 @@ $formatDate = static function (?string $d): string {
 
   .av-filters { max-width: var(--container-wide); margin: 0 auto; padding: 36px var(--gutter) 24px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .av-filters .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; margin-right: 12px; }
-  .av-filter { padding: 8px 18px; border: 1px solid var(--admin-border, #DCD0B7); background: transparent; cursor: pointer; font: inherit; font-size: 14px; color: var(--ink-700); border-radius: 4px; text-decoration: none; }
+  .av-filter { padding: 8px 18px; border: 1px solid var(--admin-border); background: transparent; cursor: pointer; font: inherit; font-size: 14px; color: var(--ink-700); border-radius: 4px; text-decoration: none; }
   .av-filter:hover { background: var(--linen-100); }
   .av-filter.active { background: var(--ink-900); color: var(--linen-50); border-color: var(--ink-900); }
 
@@ -62,7 +62,7 @@ $formatDate = static function (?string $d): string {
   @media (max-width: 960px) { .av-grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 640px) { .av-grid { grid-template-columns: 1fr; } }
 
-  .av-card { background: #fff; border: var(--hairline); padding: clamp(20px, 2.5vw, 32px); display: flex; flex-direction: column; gap: 14px; }
+  .av-card { background: var(--linen-50); border: var(--hairline); padding: clamp(20px, 2.5vw, 32px); display: flex; flex-direction: column; gap: 14px; }
   .av-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .av-card-stars { font-family: var(--font-mono); font-size: 13px; color: var(--terra-500); letter-spacing: 0.15em; }
   .av-card-platform { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--stone-400); border-radius: 12px; }
@@ -76,7 +76,7 @@ $formatDate = static function (?string $d): string {
   .av-cta { background: var(--ink-900); color: var(--linen-50); padding: clamp(48px, 7vw, 96px) var(--gutter); text-align: center; margin-top: 0; }
   .av-cta h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 4vw, 52px); line-height: 1; letter-spacing: -0.02em; color: var(--linen-50); margin: 0 0 16px; }
   .av-cta h2 em { font-style: italic; color: var(--sage-200); }
-  .av-cta p { font-size: 16px; color: rgba(251,247,238,0.78); margin: 0 auto 28px; max-width: 50ch; line-height: 1.55; }
+  .av-cta p { font-size: 16px; color: rgba(var(--linen-50-rgb), 0.78); margin: 0 auto 28px; max-width: 50ch; line-height: 1.55; }
   .av-cta .btn { background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50); }
 </style>
 
@@ -97,7 +97,7 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
   <div class="av-hero-inner av-hero">
     <p class="av-overline">07 · Avis clients</p>
     <h1>Ce qu'ils en <em>disent</em>.</h1>
-    <p class="lede">Les mots laissés par nos hôtes au fil des saisons — Airbnb, Booking, Google et nos propres carnets de séjour.</p>
+    <p class="lede">Les mots laissés par nos hôtes au fil des saisons : Airbnb, Booking, Google et nos propres carnets de séjour.</p>
   </div>
 </section>
 <?php endif; ?>
@@ -146,8 +146,8 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
   <article class="av-card">
     <div class="av-card-top">
       <div class="av-card-stars" aria-label="<?= number_format($rating, 1, ',', '') ?> sur 5">
-        <?php for ($i = 0; $i < $starsFull; $i++) echo '★'; ?>
-        <?php for ($i = $starsFull; $i < 5; $i++) echo '<span style="color: var(--linen-300);">★</span>'; ?>
+        <?php for ($i = 0; $i < $starsFull; $i++): ?><svg class="star" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
+        <?php for ($i = $starsFull; $i < 5; $i++): ?><svg class="star star-empty" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile"/></svg><?php endfor; ?>
       </div>
       <span class="av-card-platform"><?= htmlspecialchars($platformLabels[$platform] ?? ucfirst($platform)) ?></span>
     </div>
@@ -170,6 +170,6 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
 <!-- CTA -->
 <section class="av-cta">
   <h2>Préparer votre <em>séjour</em>.</h2>
-  <p>Une lettre, un appel — nous vous répondons à la main, dans la journée.</p>
+  <p>Une lettre, un appel, et nous vous répondons à la main, dans la journée.</p>
   <a href="<?= \LangService::url('contact') ?>" class="btn">Demander un séjour →</a>
 </section>

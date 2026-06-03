@@ -162,7 +162,7 @@
   .faq details[open] .icon::after { transform: scaleY(0); }
   .faq details[open] .icon { background: var(--ink-900); }
   .faq details[open] .icon::before { background: var(--linen-50); }
-  .faq .answer { padding-top: 14px; color: var(--stone-600); font-size: 15px; line-height: 1.65; max-width: 64ch; }
+  .faq .answer { padding-top: 14px; color: var(--stone-600); font-size: 15px; line-height: 1.65; max-width: min(100%, 64ch); }
 
   @media (max-width: 720px) {
     .ch-room, .ch-room.alt { grid-template-columns: 1fr; }
@@ -171,6 +171,9 @@
     .breakfast-list { grid-template-columns: 1fr; }
     .equip-grid { grid-template-columns: 1fr; }
     .practical .row { grid-template-columns: 1fr; gap: 4px; padding: 18px 0; }
+  }
+  @media (max-width: 480px) {
+    .faq .answer { max-width: 48ch; font-size: 14.5px; }
   }
 </style>
 

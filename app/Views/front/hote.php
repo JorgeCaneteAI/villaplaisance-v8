@@ -77,7 +77,7 @@ $initials = mb_substr($initials, 0, 2, 'UTF-8') ?: 'JC';
 .hote-portrait { aspect-ratio: 4/5; overflow: hidden; background: var(--linen-100); position: relative; }
 .hote-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hote-portrait .placeholder { width: 100%; height: 100%; display: grid; place-items: center; background: var(--ink-900); color: var(--linen-50); font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: clamp(80px, 14vw, 180px); letter-spacing: -0.03em; line-height: 1; }
-.hote-portrait .placeholder::after { content: "À COMPLÉTER"; position: absolute; bottom: 16px; left: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: rgba(251,247,238,0.45); text-transform: uppercase; }
+.hote-portrait .placeholder::after { content: "À COMPLÉTER"; position: absolute; bottom: 16px; left: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: rgba(var(--linen-50-rgb), 0.72); text-transform: uppercase; }
 .hote-hero .overline { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--terra-500); text-transform: uppercase; margin: 0 0 18px; }
 .hote-hero h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(56px, 9vw, 132px); line-height: 0.92; letter-spacing: -0.025em; color: var(--ink-900); margin: 0 0 18px; }
 .hote-hero h1 em { font-style: italic; color: var(--sage-700); }
@@ -108,7 +108,7 @@ $initials = mb_substr($initials, 0, 2, 'UTF-8') ?: 'JC';
 .hote-cta { background: var(--ink-900); color: var(--linen-50); padding: clamp(56px, 8vw, 120px) var(--gutter); text-align: center; margin-top: clamp(40px, 5vw, 80px); }
 .hote-cta h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 5vw, 68px); line-height: 0.95; letter-spacing: -0.02em; color: var(--linen-50); margin: 0 0 18px; }
 .hote-cta h2 em { font-style: italic; color: var(--sage-200); }
-.hote-cta p { font-size: 17px; color: rgba(251,247,238,0.75); margin: 0 auto 32px; max-width: 48ch; line-height: 1.55; }
+.hote-cta p { font-size: 17px; color: rgba(var(--linen-50-rgb), 0.75); margin: 0 auto 32px; max-width: 48ch; line-height: 1.55; }
 .hote-cta .btn { background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50); }
 </style>
 

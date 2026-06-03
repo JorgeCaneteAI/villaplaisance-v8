@@ -40,7 +40,7 @@
   }
   .ct-tabs .t-name em { font-style: italic; color: var(--sage-700); }
   .ct-tabs button[aria-pressed="true"] { background: var(--ink-900); }
-  .ct-tabs button[aria-pressed="true"] .t-when { color: rgba(251,247,238,0.7); }
+  .ct-tabs button[aria-pressed="true"] .t-when { color: rgba(var(--linen-50-rgb), 0.7); }
   .ct-tabs button[aria-pressed="true"] .t-name { color: var(--linen-50); }
   .ct-tabs button[aria-pressed="true"] .t-name em { color: var(--sage-200); }
 
@@ -187,14 +187,14 @@
     color: var(--linen-50); margin: 0;
   }
   .ct-info h2 em { font-style: italic; color: var(--sage-200); }
-  .ct-info .body-lg { color: rgba(251,247,238,0.78); margin: 0; }
+  .ct-info .body-lg { color: rgba(var(--linen-50-rgb), 0.78); margin: 0; }
   .ct-info .row {
-    border-top: 1px solid rgba(251,247,238,0.16);
+    border-top: 1px solid rgba(var(--linen-50-rgb), 0.16);
     padding-top: 18px;
   }
   .ct-info .row .lbl {
     font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
-    color: rgba(251,247,238,0.55); text-transform: uppercase;
+    color: rgba(var(--linen-50-rgb), 0.55); text-transform: uppercase;
     margin-bottom: 8px;
   }
   .ct-info .row a, .ct-info .row .v {
@@ -202,7 +202,7 @@
     line-height: 1.25; display: block;
   }
   .ct-info .row a:hover { color: var(--sage-200); }
-  .ct-info .row .sub { font-family: var(--font-sans); font-size: 13px; color: rgba(251,247,238,0.55); margin-top: 6px; }
+  .ct-info .row .sub { font-family: var(--font-sans); font-size: 13px; color: rgba(var(--linen-50-rgb), 0.55); margin-top: 6px; }
   @media (max-width: 960px) { .ct-info { position: static; } }
 
   /* Submit */
@@ -250,7 +250,7 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
       </div>
       <h1>Une lettre,<br/>un <em>appel</em>.</h1>
     </div>
-    <p class="lede" data-en="No booking engine, no automatic confirmation. Tell us what you'd like, we check the calendar, we write back — by hand, within the day.">Pas de moteur de réservation, pas de confirmation automatique. Dites-nous ce que vous souhaitez, on vérifie le calendrier, on vous répond — à la main, dans la journée.</p>
+    <p class="lede" data-en="No booking engine, no automatic confirmation. Tell us what you'd like, we check the calendar, we write back, by hand, within the day.">Pas de moteur de réservation, pas de confirmation automatique. Dites-nous ce que vous souhaitez, on vérifie le calendrier, on vous répond, à la main, dans la journée.</p>
   </div>
 </section>
 <?php endif; ?>
@@ -431,15 +431,15 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
           <div class="form-grid" style="margin-top: 28px;">
             <div class="field">
               <label data-en="Your name">Votre nom</label>
-              <input type="text" name="name" required />
+              <input type="text" name="name" required autocomplete="name" aria-required="true" />
             </div>
             <div class="field">
               <label data-en="Email">Courriel</label>
-              <input type="email" name="email" required />
+              <input type="email" name="email" required autocomplete="email" inputmode="email" aria-required="true" />
             </div>
             <div class="field">
               <label data-en="Phone (optional)">Téléphone (facultatif)</label>
-              <input type="tel" name="phone" />
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" />
             </div>
             <div class="field">
               <label data-en="How did you find us?">Comment nous avez-vous trouvés ?</label>
@@ -458,48 +458,48 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
           </div>
 
           <div class="submit-bar">
-            <div class="note" data-en="No payment at this stage — only an enquiry.">Aucun paiement à cette étape — uniquement une demande.</div>
+            <div class="note" data-en="No payment at this stage, only an enquiry.">Aucun paiement à cette étape, uniquement une demande.</div>
             <button type="submit" class="btn" data-en="Send →">Envoyer →</button>
           </div>
 
           <div class="success" id="success">
             <div class="numeral" style="margin-bottom: 14px;" data-en="Got it.">Bien reçu.</div>
             <h3 class="h-lg" style="margin: 0 0 14px;" data-en="A reply is on its way.">Notre réponse <em>est en route</em>.</h3>
-            <p class="body-lg" style="margin: 0;" data-en="We'll write you back within the day from contact@villaplaisance.fr — please check your spam folder, just in case.">Nous vous répondons dans la journée depuis contact@villaplaisance.fr — pensez aux indésirables, au cas où.</p>
+            <p class="body-lg" style="margin: 0;" data-en="We'll write you back within the day from contact@villaplaisance.fr; please check your spam folder, just in case.">Nous vous répondons dans la journée depuis contact@villaplaisance.fr ; pensez aux indésirables, au cas où.</p>
           </div>
         </form>
       </main>
 
       <!-- RIGHT — INFO -->
       <aside class="ct-info">
-        <div class="kicker dark" style="background: transparent; border: 1px solid rgba(251,247,238,0.25); color: var(--linen-200);">
+        <div class="kicker dark" style="background: transparent; border: 1px solid rgba(var(--linen-50-rgb), 0.25); color: var(--linen-200);">
           <span class="dot" style="background: var(--sage-200);"></span>
           <span data-en="Contact">Coordonnées</span>
         </div>
 
         <h2 data-en="Three ways/to reach us.">Trois façons<br/>de <em>nous joindre</em>.</h2>
-        <p class="body-lg" data-en="Email is best — we keep the conversation written so nothing gets lost.">L'écrit, idéalement — la conversation reste écrite, rien ne se perd.</p>
+        <p class="body-lg" data-en="Email is best: we keep the conversation written so nothing gets lost.">L'écrit, idéalement : la conversation reste écrite, rien ne se perd.</p>
 
         <div class="row">
-          <div class="lbl" data-en="By email">Par courriel</div>
+          <div class="lbl" data-en="By email"><?= IconService::svg('email', 14, 'row-icon') ?> Par courriel</div>
           <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
           <div class="sub" data-en="The fastest way to a real answer.">Le chemin le plus court vers une vraie réponse.</div>
         </div>
 
         <div class="row">
-          <div class="lbl" data-en="In person">Sur place</div>
+          <div class="lbl" data-en="In person"><?= IconService::svg('localisation', 14, 'row-icon') ?> Sur place</div>
           <span class="v">Bédarrides<br/>Vaucluse · 84</span>
           <div class="sub" data-en="The full address is sent with your booking confirmation.">L'adresse complète est transmise avec la confirmation de séjour.</div>
         </div>
 
         <div class="row">
-          <div class="lbl" data-en="Reply time">Délai de réponse</div>
+          <div class="lbl" data-en="Reply time"><?= IconService::svg('horloge', 14, 'row-icon') ?> Délai de réponse</div>
           <span class="v" data-en="Within the day"><em>Dans la journée</em></span>
           <div class="sub" data-en="Every enquiry is read and answered by hand, not by a bot.">Chaque demande est lue et signée à la main, jamais par un robot.</div>
         </div>
 
         <div class="row">
-          <div class="lbl" data-en="And to follow along">Et pour suivre</div>
+          <div class="lbl" data-en="And to follow along"><?= IconService::svg('instagram', 14, 'row-icon') ?> Et pour suivre</div>
           <a href="#" data-en="Instagram · @villaplaisance">Instagram · @villaplaisance</a>
         </div>
       </aside>

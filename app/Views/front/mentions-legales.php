@@ -64,7 +64,7 @@
           </div>
           <h1 data-en="Legal <em>notice</em>.">Mentions <em>légales</em>.</h1>
         </div>
-        <p class="lede" data-en="The legal owner of this site, hosting details, intellectual property, photo credits and liability — all you need to know in a single page.">L'éditeur du site, l'hébergement, la propriété intellectuelle, les crédits photo et la responsabilité — tout ce qu'il faut savoir réuni sur une page.</p>
+        <p class="lede" data-en="The legal owner of this site, hosting details, intellectual property, photo credits and liability, all you need to know in a single page.">L'éditeur du site, l'hébergement, la propriété intellectuelle, les crédits photo et la responsabilité, tout ce qu'il faut savoir réuni sur une page.</p>
       </div>
     </div>
     <?php endif; ?>
@@ -91,10 +91,13 @@
       </p>
 
       <h2 data-en="3. Intellectual property">3. Propriété intellectuelle</h2>
-      <p data-en="All content on this site (texts, photographs, illustrations, logo, videos, structure) is protected by the French Intellectual Property Code. Any reproduction, representation or distribution, in whole or in part, is prohibited without the prior written consent of Villa Plaisance.">
+      <p data-en="All content on this site (texts, photographs, illustrations, logo, videos, structure) is protected by the French Intellectual Property Code.">
         L'ensemble du contenu de ce site (textes, photographies, illustrations, logo, vidéos, structure)
-        est protégé par le Code de la propriété intellectuelle. Toute reproduction, représentation
-        ou diffusion, totale ou partielle, est interdite sans autorisation écrite préalable de Villa Plaisance.
+        est protégé par le Code de la propriété intellectuelle.
+      </p>
+      <p data-en="Any reproduction, representation or distribution, in whole or in part, is prohibited without the prior written consent of Villa Plaisance.">
+        Toute reproduction, représentation ou diffusion, totale ou partielle, est interdite
+        sans autorisation écrite préalable de Villa Plaisance.
       </p>
 
       <h2 data-en="4. Photo credits">4. Crédits photographiques</h2>

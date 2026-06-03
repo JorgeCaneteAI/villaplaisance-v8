@@ -46,9 +46,9 @@
     position: sticky;
     top: 60px;
     z-index: 30;
-    background: color-mix(in oklab, var(--linen-50) 94%, transparent);
-    backdrop-filter: saturate(140%) blur(10px);
-    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    background: color-mix(in oklab, var(--linen-50) 96%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border-bottom: var(--hairline);
   }
   .j-filter-inner {
@@ -187,12 +187,12 @@
   }
   .nl-form input {
     flex: 1; background: transparent;
-    border: 0; border-bottom: 1px solid rgba(251,247,238,0.4);
+    border: 0; border-bottom: 1px solid rgba(var(--linen-50-rgb), 0.4);
     color: var(--linen-50);
     font: inherit; font-size: 16px;
     padding: 12px 0;
   }
-  .nl-form input::placeholder { color: rgba(251,247,238,0.5); }
+  .nl-form input::placeholder { color: rgba(var(--linen-50-rgb), 0.5); }
   .nl-form input:focus { outline: 0; border-bottom-color: var(--linen-50); }
 
   /* Placeholder banner */
@@ -239,7 +239,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
     <span class="dot"></span>
     <div class="txt">
       <span class="lbl" data-en="DESIGN MOCKUP">ÉBAUCHE GRAPHIQUE</span>
-      Articles d'exemple — l'organisation et les filtres sont définitifs, le contenu sera remplacé par vos vrais articles.
+      Articles d'exemple. L'organisation et les filtres sont définitifs, le contenu sera remplacé par vos vrais articles.
     </div>
   </div>
 </section>
@@ -268,7 +268,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
           <span class="j-cat solid" data-en="Contemporary Provence">Provence contemporaine</span>
           <span class="j-date" data-en="May 2026 · 12 min read">Mai 2026 · 12 min de lecture</span>
         </div>
-        <h2><em>À la une</em> — La nouvelle Provence,<br/>celle qu'on ne regarde plus assez.</h2>
+        <h2><em>À la une</em><br/>La nouvelle Provence,<br/>celle qu'on ne regarde plus assez.</h2>
         <p class="excerpt" data-en="Behind the lavender postcards, a young generation of hoteliers, winemakers and farmers is quietly redrawing the region. Portraits of those who do, far from the clichés.">Derrière les cartes postales aux lavandes, une jeune génération d'hôteliers, de vignerons et de paysans redessine doucement la région. Portraits, loin des clichés.</p>
         <a class="btn-link" href="#"><span data-en="Read the article">Lire l'article</span> →</a>
       </div>
@@ -373,7 +373,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
   <div class="nl-inner">
     <div class="kicker dark" style="display: inline-flex; margin-bottom: 24px;"><span class="dot" style="background: var(--sage-200);"></span><span data-en="The letter">La lettre</span></div>
     <h2 data-en="The journal,/once a season, in your inbox.">Le journal, une fois<br/>par saison, dans <em>votre</em> boîte.</h2>
-    <p class="body-lg" style="color: rgba(251,247,238,0.7); max-width: 44ch; margin: 16px auto 0;" data-en="Four letters a year. The articles, the small news of the house, the things we'd whisper at breakfast.">Quatre lettres par an. Les articles, les petites nouvelles de la maison, ce qu'on glisserait au petit-déjeuner.</p>
+    <p class="body-lg" style="color: rgba(var(--linen-50-rgb), 0.7); max-width: 44ch; margin: 16px auto 0;" data-en="Four letters a year. The articles, the small news of the house, the things we'd whisper at breakfast.">Quatre lettres par an. Les articles, les petites nouvelles de la maison, ce qu'on glisserait au petit-déjeuner.</p>
     <form class="nl-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Merci ·';">
       <input type="email" placeholder="votre@adresse.fr" required />
       <button type="submit" class="btn" style="background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50);" data-en="Subscribe →">S'inscrire →</button>

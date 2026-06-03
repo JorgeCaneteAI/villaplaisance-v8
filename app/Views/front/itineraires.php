@@ -292,7 +292,7 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
   <div class="container-wide" style="text-align: center;">
     <div class="kicker dark" style="display: inline-flex; margin-bottom: 24px;"><span class="dot" style="background: var(--sage-200);"></span><span data-en="The shortcut">Le raccourci</span></div>
     <h2 class="h-xl" style="margin: 0 auto; max-width: 22ch; color: var(--linen-50);" data-en="The shortest way is/to ask us at breakfast.">Le plus court chemin<br/>reste de nous demander<br/><em>au petit-déjeuner</em>.</h2>
-    <p class="body-lg" style="color: rgba(251,247,238,0.72); max-width: 50ch; margin: 24px auto 32px;" data-en="A list is a list. We know what's worth your morning, your evening, your detour. Ask us — that's the whole point of staying with people who live here.">Une liste est une liste. Nous savons ce qui vaut votre matinée, votre soirée, votre détour. Demandez — c'est tout l'intérêt de dormir chez ceux qui vivent ici.</p>
+    <p class="body-lg" style="color: rgba(var(--linen-50-rgb), 0.72); max-width: 50ch; margin: 24px auto 32px;" data-en="A list is a list. We know what's worth your morning, your evening, your detour. Ask us, that's the whole point of staying with people who live here.">Une liste est une liste. Nous savons ce qui vaut votre matinée, votre soirée, votre détour. Demandez, c'est tout l'intérêt de dormir chez ceux qui vivent ici.</p>
     <div style="display:flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
       <a class="btn" style="background: var(--linen-50); color: var(--olive-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span data-en="Write to us">Nous écrire</span> →</a>
     </div>

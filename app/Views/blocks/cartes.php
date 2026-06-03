@@ -88,7 +88,8 @@ if ($offer === 'bb' || $offer === 'both'):
         <?php if (!empty($pills)): ?>
         <div class="ch-pills">
           <?php foreach ($pills as $pill): $lines = $pillLines($pill); ?>
-          <span class="pill"><?= htmlspecialchars($lines[0]) ?><?php if (isset($lines[1])): ?> <span style="color: var(--stone-500); margin-left: 4px;"><?= htmlspecialchars($lines[1]) ?></span><?php endif; ?></span>
+          <?php $pillIcon = IconService::pillIcon($lines[0]); ?>
+          <span class="pill"><?php if ($pillIcon !== null): ?><?= IconService::svg($pillIcon, 14, 'pill-icon') ?><?php endif; ?><?= htmlspecialchars($lines[0]) ?><?php if (isset($lines[1])): ?> <span style="color: var(--stone-500); margin-left: 4px;"><?= htmlspecialchars($lines[1]) ?></span><?php endif; ?></span>
           <?php endforeach; ?>
         </div>
         <?php endif; ?>
@@ -159,7 +160,8 @@ if ($offer === 'villa' || $offer === 'both'):
         <?php if (!empty($pills) || $solidPill !== ''): ?>
         <div class="pills">
           <?php foreach ($pills as $pill): $lines = $pillLines($pill); ?>
-          <span class="pill"><?= htmlspecialchars($lines[0]) ?><?php if (isset($lines[1])): ?> <span style="color: var(--stone-500); margin-left: 4px;"><?= htmlspecialchars($lines[1]) ?></span><?php endif; ?></span>
+          <?php $pillIcon = IconService::pillIcon($lines[0]); ?>
+          <span class="pill"><?php if ($pillIcon !== null): ?><?= IconService::svg($pillIcon, 14, 'pill-icon') ?><?php endif; ?><?= htmlspecialchars($lines[0]) ?><?php if (isset($lines[1])): ?> <span style="color: var(--stone-500); margin-left: 4px;"><?= htmlspecialchars($lines[1]) ?></span><?php endif; ?></span>
           <?php endforeach; ?>
           <?php if ($solidPill !== ''): ?>
           <span class="pill solid"><?= htmlspecialchars($solidPill) ?></span>

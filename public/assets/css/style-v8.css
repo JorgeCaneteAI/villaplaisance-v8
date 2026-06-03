@@ -46,6 +46,20 @@
   /* ---- Motion ---- */
   --ease-out-expo: cubic-bezier(.16, 1, .3, 1);
   --reveal-time:   1.4s;
+
+  /* Motion T1 — durées + stagger pour cards/boutons/form */
+  --dur-quick:     0.4s;
+  --dur-base:      0.6s;
+  --dur-slow:      1s;
+  --dur-hover:     0.5s;
+  --stagger-card:  0.12s;
+  --stagger-item:  0.08s;
+
+  /* Couleurs derived — channels RGB pour rgba() avec alpha dynamique.
+     Évite les rgba(251,247,238,X) ad-hoc disséminés dans les Views. */
+  --linen-50-rgb:  251, 247, 238;
+  --ink-900-rgb:   31, 28, 22;
+  --admin-border:  #DCD0B7;
 }
 
 /* ---- Reset ---- */
@@ -118,15 +132,24 @@ p { margin: 0; }
 .frame__nav a {
   text-decoration: none;
   opacity: 0.7;
-  border-bottom: 1px solid transparent;
+  position: relative;
   padding-bottom: 2px;
-  transition: opacity .5s var(--ease-out-expo), border-color .5s var(--ease-out-expo);
+  transition: opacity var(--dur-hover) var(--ease-out-expo);
+}
+.frame__nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 0;
+  background: currentColor;
+  transition: width var(--dur-base) var(--ease-out-expo);
 }
 .frame__nav a:hover { opacity: 1; }
-.frame__nav a[aria-current="page"] {
-  opacity: 1;
-  border-bottom-color: currentColor;
-}
+.frame__nav a:hover::after,
+.frame__nav a[aria-current="page"]::after { width: 100%; }
+.frame__nav a[aria-current="page"] { opacity: 1; }
 
 .frame__right {
   display: flex;
@@ -2286,6 +2309,325 @@ body.menu-open { overflow: hidden; }
   .opening__sub { opacity: 1; transform: none; }
   .opening__hint { animation: none; }
   html { scroll-behavior: auto; }
+
+  /* Neutralise motion T1 : pas de stagger reveal, pas de hover scale. */
+  .article-card, .av-card, .room-card-x,
+  .cellule, .chambre, .saison, .qf-card { opacity: 1; transform: none; }
+  .btn:hover, .contact__bouton:hover, .duo__envoyer:hover,
+  button.btn:hover { transform: none; box-shadow: none; }
+  .success { opacity: 1; transform: none; }
+  button.is-loading::after { animation: none; }
+
+  /* Neutralise motion T2 : pas d'animation hero ni calendar. */
+  .page-hero, .av-hero-section, .ch-hero,
+  .hote-hero, .j-hero,
+  .cal-month { animation: none; opacity: 1; transform: none; }
+  .frame__nav a::after { transition: none; }
+
+  /* Neutralise motion T3 : pas de pulse, footer immédiat. */
+  .pied, .footer { opacity: 1; transform: none; }
+  .av-empty, .empty-state, [data-empty],
+  [data-loading="true"] { animation: none; opacity: 1; }
+}
+
+/* =========================================================================
+   Motion T1 — Stagger cards, boutons CTA, form focus, submit feedback
+   Activé par motion-v8.js (ajoute .is-in sur les cards et .has-focus
+   sur les .champ/.field). Respecte prefers-reduced-motion (override en bas).
+   ========================================================================= */
+
+/* --- 1. Stagger reveal cards ---
+   Sélecteurs des cards V8 : article-card (journal), av-card (avis),
+   room-card-x (villa), cellule/chambre/saison (proto layout),
+   qf-card (itineraires). Chacune se révèle au scroll avec décalage --i. */
+.article-card,
+.av-card,
+.room-card-x,
+.cellule,
+.chambre,
+.saison,
+.qf-card {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out-expo),
+    transform var(--dur-slow) var(--ease-out-expo);
+  transition-delay: calc(var(--stagger-card) * var(--i, 0));
+  will-change: opacity, transform;
+}
+.article-card.is-in,
+.av-card.is-in,
+.room-card-x.is-in,
+.cellule.is-in,
+.chambre.is-in,
+.saison.is-in,
+.qf-card.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- 2. Boutons CTA hover enrichi ---
+   Scale 1.02 + shadow + arrow shift. Sans toucher au background existant
+   (déjà géré par les CSS spécifiques de chaque variante de bouton). */
+.btn,
+.contact__bouton,
+.duo__envoyer,
+button.btn {
+  transition:
+    transform var(--dur-hover) var(--ease-out-expo),
+    box-shadow var(--dur-hover) var(--ease-out-expo),
+    background var(--dur-hover) var(--ease-out-expo),
+    color var(--dur-hover) var(--ease-out-expo),
+    gap var(--dur-hover) var(--ease-out-expo);
+}
+.btn:hover,
+.contact__bouton:hover,
+.duo__envoyer:hover,
+button.btn:hover {
+  transform: translateY(-1px) scale(1.015);
+  box-shadow: 0 6px 18px rgba(31, 28, 22, 0.10);
+}
+.btn:active,
+.contact__bouton:active,
+.duo__envoyer:active,
+button.btn:active {
+  transform: translateY(0) scale(0.99);
+  box-shadow: 0 2px 6px rgba(31, 28, 22, 0.08);
+}
+.btn:focus-visible,
+.contact__bouton:focus-visible,
+.duo__envoyer:focus-visible,
+button.btn:focus-visible {
+  outline: 2px solid var(--terra-500);
+  outline-offset: 3px;
+}
+
+/* --- 3. Form focus glow ---
+   La classe .has-focus est togglée par motion-v8.js sur le wrapper
+   (.champ, .field). On colore le label, on épaissit la border-bottom. */
+.champ,
+.field {
+  transition: background var(--dur-quick) var(--ease-out-expo);
+}
+.champ.has-focus label,
+.field.has-focus label {
+  color: var(--terra-500);
+}
+.champ input,
+.champ textarea,
+.field input,
+.field textarea,
+.field select {
+  transition:
+    border-color var(--dur-quick) var(--ease-out-expo),
+    box-shadow var(--dur-quick) var(--ease-out-expo),
+    background var(--dur-quick) var(--ease-out-expo);
+}
+.champ input:focus,
+.champ textarea:focus,
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--terra-500);
+  box-shadow: 0 1px 0 0 var(--terra-500);
+}
+
+/* État erreur : appliqué soit en JS via aria-invalid="true", soit par le
+   navigateur via :user-invalid (après que l'utilisateur a interagi). */
+.champ input[aria-invalid="true"],
+.field input[aria-invalid="true"],
+.champ textarea[aria-invalid="true"],
+.field textarea[aria-invalid="true"],
+.champ input:user-invalid:not(:focus),
+.field input:user-invalid:not(:focus),
+.champ textarea:user-invalid:not(:focus),
+.field textarea:user-invalid:not(:focus) {
+  border-color: var(--terra-500);
+  box-shadow: 0 1px 0 0 var(--terra-500);
+  background: rgba(var(--terra-500-rgb, 165, 92, 51), 0.04);
+}
+
+/* --- 4. Submit feedback ---
+   Pendant le fetch : bouton .is-loading affiche un spinner inline
+   (pseudo-element), désactive le hover scale, garde le clic interdit.
+   Le success div s'anime en fade-up via .is-shown. */
+button.is-loading {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+button.is-loading::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 8px;
+  vertical-align: -2px;
+  border: 1.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: vp-spin 0.7s linear infinite;
+}
+@keyframes vp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.success {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--dur-base) var(--ease-out-expo),
+    transform var(--dur-base) var(--ease-out-expo);
+}
+.success.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================================
+   Motion T3 — Footer reveal, empty states pulse, loading pulse.
+   ========================================================================= */
+
+/* Footer : fade-up doux quand .is-in (ajouté par motion-v8.js).
+   Pattern identique aux cards T1 pour cohérence. */
+.pied, .footer {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out-expo),
+    transform var(--dur-slow) var(--ease-out-expo);
+  will-change: opacity, transform;
+}
+.pied.is-in, .footer.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Empty states : pulsation très douce, attire l'œil sans agressivité.
+   Cible les zones "il n'y a rien à montrer" pour les rendre vivantes. */
+@keyframes vp-empty-pulse {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1;    }
+}
+.av-empty,
+.empty-state,
+[data-empty] {
+  animation: vp-empty-pulse 2.6s ease-in-out infinite;
+}
+
+/* Loading pulse global : élément avec [data-loading] toggle par JS.
+   Plus discret que le spinner du bouton submit (réutilisé ailleurs). */
+@keyframes vp-loading-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1;    }
+}
+[data-loading="true"] {
+  animation: vp-loading-pulse 1.2s ease-in-out infinite;
+}
+
+/* =========================================================================
+   Polish accessibilité — focus-within sur details, skip-ink sur underlines,
+   focus-visible sur la sitemap. Petits ajouts qui ne touchent pas au design.
+   ========================================================================= */
+
+/* Cohérence focus clavier sur les accordéons (FAQ chambres, villa, contact). */
+details:focus-within {
+  outline: 2px solid var(--sage-200);
+  outline-offset: 4px;
+}
+details:focus-within > summary {
+  outline: none; /* l'outline parent suffit, évite le double anneau */
+}
+
+/* Liens soulignés : ne pas couper les descendantes (p, q, g) avec le trait. */
+a {
+  text-decoration-skip-ink: auto;
+}
+
+/* Plan du site : focus-visible explicite (a11y clavier). */
+.sm-bloc a:focus-visible {
+  outline: 2px solid var(--sage-200);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* =========================================================================
+   Motion T2 — Heroes fade-in au load, calendars subtle reveal, nav underline
+   Animations passives (CSS keyframes), pas de dépendance JS.
+   ========================================================================= */
+
+/* Hero des pages internes : fade-up doux au chargement.
+   Le hero de l'accueil (`.opening`) est animé séparément via la classe
+   .opening.is-ready (main-v8.js), on ne le touche pas ici. */
+@keyframes vp-hero-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-hero,
+.av-hero-section,
+.ch-hero,
+.hote-hero,
+.j-hero {
+  animation: vp-hero-in var(--dur-slow) var(--ease-out-expo) both;
+  animation-delay: 80ms;
+}
+
+/* Calendrier : chaque .cal-month apparaît avec un léger décalage horizontal
+   (impression de "glissement" en lecture européenne) puis se stabilise. */
+@keyframes vp-cal-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.cal-month {
+  animation: vp-cal-in var(--dur-base) var(--ease-out-expo) both;
+}
+.focus-grid .cal-month:nth-child(2) { animation-delay: 80ms; }
+.focus-grid .cal-month:nth-child(3) { animation-delay: 160ms; }
+
+/* =========================================================================
+   Icônes — préfixes utilitaires utilisés via IconService::svg()
+   ========================================================================= */
+
+/* Icône à gauche d'une pill (équipements chambres). */
+.pill .pill-icon {
+  vertical-align: -2px;
+  margin-right: 6px;
+  color: var(--terra-500);
+  flex-shrink: 0;
+}
+
+/* Icône à gauche d'un label de row (contact info). */
+.row .row-icon,
+.ct-info .row-icon {
+  vertical-align: -2px;
+  margin-right: 6px;
+  color: var(--terra-500);
+  flex-shrink: 0;
+}
+
+/* =========================================================================
+   Stars (sprite SVG /assets/img/icons.svg)
+   Remplace les emojis ★ ☆ par les symbols icon-etoile / icon-etoile-pleine.
+   ========================================================================= */
+
+.stars,
+.av-card-stars {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  line-height: 1;
+  color: var(--terra-500);
+}
+.stars .star,
+.av-card-stars .star {
+  color: inherit;
+  vertical-align: -1px;
+  flex-shrink: 0;
+}
+.stars .star-empty,
+.av-card-stars .star-empty {
+  color: var(--linen-300);
 }
 
 /* =========================================================================
