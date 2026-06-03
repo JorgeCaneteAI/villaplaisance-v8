@@ -190,16 +190,46 @@
     .journal-card { grid-template-columns: 1fr; }
   }
 
-  /* Placeholder banner (used in testimonials) */
-  .pl-inline {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
-    color: var(--terra-600); text-transform: uppercase;
-    padding: 6px 12px;
-    border: 1px dashed color-mix(in oklab, var(--terra-500) 50%, transparent);
-    background: color-mix(in oklab, var(--terra-500) 6%, var(--linen-50));
+  /* Section témoignages (refondue : kicker + h2 + CTA "Lire tous les avis") */
+  .reviews-section { padding-top: clamp(64px, 10vh, 144px); padding-bottom: clamp(64px, 10vh, 144px); }
+  .reviews-intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 72px);
   }
-  .pl-inline .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terra-500); }
+  @media (min-width: 900px) {
+    .reviews-intro { grid-template-columns: 1.4fr 1fr; gap: clamp(40px, 5vw, 80px); }
+  }
+  .reviews-kicker {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--terra-500);
+    margin-bottom: clamp(20px, 2.4vw, 32px);
+  }
+  .reviews-title { margin: 0; max-width: 14ch; }
+  .reviews-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px; letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-900);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--ink-900);
+    transition: gap .2s ease-out, color .2s ease-out;
+    align-self: end;
+    justify-self: end;
+  }
+  .reviews-cta:hover { gap: 16px; color: var(--terra-500); }
+  .reviews-empty {
+    font-family: var(--font-display); font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    color: var(--stone-600); text-align: center;
+    max-width: 40ch; margin: 0 auto;
+  }
+  .reviews-empty a { color: var(--terra-500); text-decoration: underline; text-underline-offset: 4px; }
 </style>
 
 
@@ -680,39 +710,68 @@ $_nPins = count($_mapPins);
   </script>
 </section>
 
-<!-- ============ 06 · TÉMOIGNAGES ============ -->
+<!-- ============ 06 · TÉMOIGNAGES (vp_reviews — 3 avis) ============ -->
 <?php if ($_avisHtml = $renderV8BlockAt(6, 'avis')): ?>
 <?= $_avisHtml ?>
 <?php else: ?>
-<section class="section">
+<?php
+// Récupération des 3 meilleurs avis : featured d'abord, puis note la plus haute,
+// puis date la plus récente. Seuls les avis publiés avec un contenu non vide.
+$_homeReviews = [];
+try {
+    $_homeReviews = Database::fetchAll(
+        "SELECT author, content, rating, platform, origin, offer, review_date
+         FROM vp_reviews
+         WHERE status = 'published' AND content IS NOT NULL AND LENGTH(content) > 0
+         ORDER BY featured DESC, rating DESC, review_date DESC
+         LIMIT 3"
+    );
+} catch (\Throwable) {}
+
+// Normalisation rating (Booking note sur 10)
+$_normRating = static function (float $rating, string $platform): float {
+    if ($platform === 'booking' && $rating > 5) return $rating / 2;
+    return $rating;
+};
+?>
+<section class="section reviews-section">
   <div class="container-wide">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
+    <div class="reviews-intro">
       <div>
-        <div class="section-label">
-          <span class="numeral">— 05 / <span data-en="What guests say">Ce qu'on en dit</span></span>
-        </div>
-        <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Quelques <em>mots</em><br/>laissés au départ.</h2>
+        <div class="reviews-kicker">Avis</div>
+        <h2 class="h-xl reviews-title">Quelques <em>mots</em><br/>laissés au départ.</h2>
       </div>
-      <span class="pl-inline"><span class="dot"></span><span>Témoignages d'exemple — à remplacer par vos vrais avis</span></span>
+      <a class="reviews-cta" href="<?= LangService::url('avis') ?>">
+        <?= count($_homeReviews) > 0 ? 'Lire tous les avis' : 'Découvrir la maison' ?>
+        <span aria-hidden="true">&rarr;</span>
+      </a>
     </div>
 
+    <?php if (!empty($_homeReviews)): ?>
     <div class="testimonials">
+      <?php foreach ($_homeReviews as $_r):
+        $_rating = $_normRating((float)$_r['rating'], (string)($_r['platform'] ?? ''));
+        $_fullStars = (int)floor($_rating);
+        $_quote = mb_strimwidth((string)$_r['content'], 0, 240, '…', 'UTF-8');
+      ?>
       <article class="testimonial">
-        <div class="stars">★ ★ ★ ★ ★</div>
-        <blockquote>« <em>Placeholder</em> — un mot du voyageur sur la chambre, le petit-déjeuner, l'accueil. Deux ou trois phrases au maximum. »</blockquote>
-        <cite>— Visiteur · ville</cite>
+        <div class="stars" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
+          <?= str_repeat('★ ', $_fullStars) ?><?= str_repeat('☆ ', 5 - $_fullStars) ?>
+        </div>
+        <blockquote>« <?= htmlspecialchars($_quote) ?> »</blockquote>
+        <cite>
+          <strong><?= htmlspecialchars((string)$_r['author']) ?></strong><?php
+          if (!empty($_r['origin'])): ?>, <?= htmlspecialchars((string)$_r['origin']) ?><?php endif; ?>
+        </cite>
       </article>
-      <article class="testimonial">
-        <div class="stars">★ ★ ★ ★ ★</div>
-        <blockquote>« <em>Placeholder</em> — un mot sur la villa entière, la piscine, la cuisine, le calme. Témoignage à venir. »</blockquote>
-        <cite>— Visiteur · ville</cite>
-      </article>
-      <article class="testimonial">
-        <div class="stars">★ ★ ★ ★ ★</div>
-        <blockquote>« <em>Placeholder</em> — un mot sur la région, les conseils, la disponibilité des hôtes. »</blockquote>
-        <cite>— Visiteur · ville</cite>
-      </article>
+      <?php endforeach; ?>
     </div>
+    <?php else: ?>
+    <p class="reviews-empty">
+      Les premiers mots des voyageurs arriveront bientôt sur cette page.
+      <a href="<?= LangService::url('contact') ?>">Écrivez-nous</a> en attendant.
+    </p>
+    <?php endif; ?>
   </div>
 </section>
 <?php endif; ?>
