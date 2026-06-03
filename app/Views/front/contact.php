@@ -361,4 +361,61 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
   </div>
 </section>
 
+<!-- ============ TABS B&B / VILLA — toggle binding ============ -->
+<script>
+(function () {
+  var tablist = document.querySelector('.ct-tabs[role="tablist"]');
+  if (!tablist) return;
+  var tabs = Array.prototype.slice.call(tablist.querySelectorAll('button[role="tab"]'));
+  var panels = Array.prototype.slice.call(document.querySelectorAll('.panel[data-panel]'));
+  if (!tabs.length || !panels.length) return;
+
+  function activate(target, focus) {
+    tabs.forEach(function (t) {
+      var isActive = (t === target);
+      t.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      t.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+    var key = target.getAttribute('data-tab');
+    panels.forEach(function (p) {
+      p.classList.toggle('active', p.getAttribute('data-panel') === key);
+    });
+    if (focus) target.focus();
+  }
+
+  // Init : assure la cohérence si jamais le HTML n'a pas le bon état actif
+  var preActive = tabs.filter(function (t) { return t.getAttribute('aria-pressed') === 'true'; })[0] || tabs[0];
+  activate(preActive, false);
+
+  tabs.forEach(function (tab, idx) {
+    tab.addEventListener('click', function () { activate(tab, false); });
+    tab.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        activate(tabs[(idx + 1) % tabs.length], true);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        activate(tabs[(idx - 1 + tabs.length) % tabs.length], true);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        activate(tabs[0], true);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        activate(tabs[tabs.length - 1], true);
+      }
+    });
+  });
+
+  // Deep-link via hash : #bnb ou #villa
+  function applyHash() {
+    var h = (location.hash || '').replace('#', '');
+    if (!h) return;
+    var match = tabs.filter(function (t) { return t.getAttribute('data-tab') === h; })[0];
+    if (match) activate(match, false);
+  }
+  applyHash();
+  window.addEventListener('hashchange', applyHash);
+})();
+</script>
+
 <!-- ============ FOOTER ============ -->
