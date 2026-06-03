@@ -30,16 +30,33 @@ class HomeController extends BaseController
             $jsonLd[] = \SeoService::faqJsonLd($faqs);
         }
 
-        // Add aggregate rating
+        // Add aggregate rating — normalise Booking (/10) → /5 avant moyenne,
+        // sinon ratingValue peut dépasser bestRating=5 (rejeté par Google).
         $reviews = [];
         try {
             $reviews = \Database::fetchAll(
-                "SELECT rating FROM vp_reviews WHERE status = 'published' AND featured = 1"
+                "SELECT rating, platform FROM vp_reviews WHERE status = 'published' AND featured = 1"
             );
         } catch (\Throwable) {}
         if (!empty($reviews)) {
-            $avgRating = array_sum(array_column($reviews, 'rating')) / count($reviews);
-            $jsonLd[0]['aggregateRating'] = \SeoService::aggregateRatingJsonLd($avgRating, count($reviews));
+            $sum = 0.0;
+            $n = 0;
+            foreach ($reviews as $r) {
+                $rating = (float) ($r['rating'] ?? 0);
+                if (($r['platform'] ?? '') === 'booking' && $rating > 5) {
+                    $rating = $rating / 2;
+                }
+                if ($rating > 0 && $rating <= 5) {
+                    $sum += $rating;
+                    $n++;
+                }
+            }
+            if ($n > 0) {
+                $avgRating = round($sum / $n, 1);
+                // Clamp final pour blinder le Schema (ne devrait jamais déclencher).
+                $avgRating = min(5.0, max(0.0, $avgRating));
+                $jsonLd[0]['aggregateRating'] = \SeoService::aggregateRatingJsonLd($avgRating, $n);
+            }
         }
 
         // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).

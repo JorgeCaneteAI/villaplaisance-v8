@@ -202,11 +202,15 @@ class SeoService
 
     public static function aggregateRatingJsonLd(float $rating, int $count): array
     {
+        // Clamp dans [0;5] pour ne jamais dépasser bestRating (rejeté par Google).
+        $rating = max(0.0, min(5.0, $rating));
+        // Format anglais (point), Schema.org n'accepte pas la virgule décimale FR.
         return [
             '@type' => 'AggregateRating',
-            'ratingValue' => number_format($rating, 1),
+            'ratingValue' => number_format($rating, 1, '.', ''),
             'reviewCount' => $count,
             'bestRating' => '5',
+            'worstRating' => '1',
         ];
     }
 }
