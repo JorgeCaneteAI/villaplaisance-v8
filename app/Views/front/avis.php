@@ -71,7 +71,31 @@ $formatDate = static function (?string $d): string {
   .av-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .av-card-stars { font-family: var(--font-mono); font-size: 13px; color: var(--terra-500); letter-spacing: 0.15em; }
   .av-card-platform { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--stone-400); border-radius: 12px; }
-  .av-card-quote { font-family: var(--font-display); font-style: italic; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.5; color: var(--ink-900); margin: 0; }
+  .av-card-quote {
+    font-family: var(--font-display); font-style: italic;
+    font-size: clamp(16px, 1.4vw, 19px); line-height: 1.5; color: var(--ink-900);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    overflow: hidden;
+  }
+  .av-card.is-expanded .av-card-quote {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+  .av-card-expand {
+    align-self: flex-start;
+    background: none; border: 0; padding: 0;
+    cursor: pointer;
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--terra-500);
+    transition: color .2s;
+  }
+  .av-card-expand[hidden] { display: none; }
+  .av-card-expand:hover { color: var(--ink-900); }
+  .av-card-expand:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 4px; }
   .av-card-meta { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em; color: var(--stone-500); text-transform: uppercase; border-top: var(--hairline); padding-top: 12px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
   .av-card-author { font-family: var(--font-display); font-style: normal; font-size: 14px; color: var(--ink-700); letter-spacing: 0; text-transform: none; }
   .av-card-author strong { font-weight: 500; }
@@ -156,7 +180,8 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
       </div>
       <span class="av-card-platform"><?= htmlspecialchars($platformLabels[$platform] ?? ucfirst($platform)) ?></span>
     </div>
-    <blockquote class="av-card-quote">« <?= htmlspecialchars(mb_strimwidth((string)$r['content'], 0, 320, '…', 'UTF-8')) ?> »</blockquote>
+    <blockquote class="av-card-quote">« <?= htmlspecialchars((string)$r['content']) ?> »</blockquote>
+    <button type="button" class="av-card-expand" hidden aria-expanded="false">Lire la suite &rarr;</button>
     <div class="av-card-meta">
       <span class="av-card-author">
         <strong><?= htmlspecialchars((string)$r['author']) ?></strong>
@@ -170,6 +195,26 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
   </article>
   <?php endforeach; ?>
 </div>
+<script>
+(function () {
+  var cards = document.querySelectorAll('.av-grid .av-card');
+  var labelOpen = 'Réduire ↑';
+  var labelShut = 'Lire la suite →';
+  cards.forEach(function (card) {
+    var bq  = card.querySelector('.av-card-quote');
+    var btn = card.querySelector('.av-card-expand');
+    if (!bq || !btn) return;
+    if (bq.scrollHeight > bq.clientHeight + 2) {
+      btn.hidden = false;
+    }
+    btn.addEventListener('click', function () {
+      var open = card.classList.toggle('is-expanded');
+      btn.textContent = open ? labelOpen : labelShut;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+})();
+</script>
 <?php endif; ?>
 
 <!-- CTA -->
