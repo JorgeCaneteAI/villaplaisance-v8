@@ -44,28 +44,103 @@
   .ct-tabs button[aria-pressed="true"] .t-name { color: var(--linen-50); }
   .ct-tabs button[aria-pressed="true"] .t-name em { color: var(--sage-200); }
 
-  /* Room picker (B&B) */
+  /* ----- Bedding heading (sub-titre fort, remplace l'ancien <label> discret) ----- */
+  .field-bedding { margin-top: 8px; }
+  .bedding-heading { display: block; margin-bottom: 10px; }
+  .bedding-kicker {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--terra-500);
+    margin-bottom: 10px;
+  }
+  .bedding-title {
+    display: block;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(22px, 1.8vw, 28px);
+    line-height: 1.2;
+    color: var(--ink-900);
+    letter-spacing: -0.005em;
+  }
+  .bedding-help {
+    margin: 8px 0 22px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--stone-600);
+    max-width: 56ch;
+  }
+
+  /* ----- Room picker (B&B) : liste verticale lisible avec radio custom ----- */
   .room-picker {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 6px;
+    border-top: 1px solid color-mix(in oklab, var(--ink-900) 10%, transparent);
   }
   .room-picker label {
     position: relative;
-    border: var(--hairline);
-    padding: 16px 14px;
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    grid-auto-rows: auto;
+    align-items: center;
+    column-gap: clamp(18px, 2vw, 28px);
+    row-gap: 2px;
+    padding: clamp(18px, 2.2vw, 26px) clamp(8px, 1.4vw, 18px);
+    border-bottom: 1px solid color-mix(in oklab, var(--ink-900) 10%, transparent);
+    border-left: 3px solid transparent;
     cursor: pointer;
-    display: flex; flex-direction: column; gap: 6px;
-    transition: background .2s, border-color .2s, color .2s;
+    transition: background .2s ease-out, border-left-color .2s ease-out, padding-left .2s ease-out;
     background: transparent;
   }
-  .room-picker label .rn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--stone-500); }
-  .room-picker label .nm { font-family: var(--font-display); font-style: italic; font-size: 22px; color: var(--ink-900); letter-spacing: -0.005em; }
-  .room-picker label .det { font-size: 13px; color: var(--stone-600); margin-top: 2px; }
+  .room-picker label:hover {
+    background: color-mix(in oklab, var(--ink-900) 3%, transparent);
+    padding-left: clamp(14px, 1.8vw, 22px);
+  }
+  .room-picker label::before {
+    content: "";
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--stone-400);
+    background: transparent;
+    box-sizing: border-box;
+    align-self: center;
+    transition: border-color .2s ease-out, background .2s ease-out, box-shadow .2s ease-out;
+  }
+  .room-picker label .rn  { grid-column: 2; grid-row: 1;
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--stone-500); }
+  .room-picker label .rn strong {
+    font-weight: 500; color: var(--terra-500); letter-spacing: 0.18em;
+  }
+  .room-picker label .nm  { grid-column: 2; grid-row: 2;
+    font-family: var(--font-display); font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px); line-height: 1.2;
+    color: var(--ink-900); letter-spacing: -0.005em; margin-top: 4px; }
+  .room-picker label .det { grid-column: 2; grid-row: 3;
+    font-size: 14px; line-height: 1.5; color: var(--stone-600); margin-top: 4px; }
   .room-picker input { position: absolute; opacity: 0; pointer-events: none; }
-  .room-picker label:has(input:checked) { background: var(--ink-900); border-color: var(--ink-900); }
-  .room-picker label:has(input:checked) .rn { color: rgba(251,247,238,0.65); }
-  .room-picker label:has(input:checked) .nm { color: var(--linen-50); }
-  .room-picker label:has(input:checked) .det { color: rgba(251,247,238,0.65); }
+
+  /* Sélection : indicator terra + bg subtil + border-left terra */
+  .room-picker label:has(input:checked) {
+    background: color-mix(in oklab, var(--terra-500) 6%, transparent);
+    border-left-color: var(--terra-500);
+    padding-left: clamp(14px, 1.8vw, 22px);
+  }
+  .room-picker label:has(input:checked)::before {
+    background: var(--terra-500);
+    border-color: var(--terra-500);
+    box-shadow: inset 0 0 0 3px var(--linen-50);
+  }
+  .room-picker label:has(input:checked) .rn { color: var(--terra-500); }
+  .room-picker label:has(input:checked) .nm { color: var(--ink-900); }
+
+  /* Focus clavier accessible */
+  .room-picker label:focus-within { outline: 2px solid var(--terra-500); outline-offset: 2px; }
 
   .panel { display: none; }
   .panel.active { display: block; }
@@ -204,25 +279,28 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                 <label data-en="Departure">Départ</label>
                 <input type="date" name="departure_bnb" />
               </div>
-              <div class="field full">
-                <label data-en="Bedding configuration">Configuration du couchage</label>
-                <p class="body-sm" style="margin: -2px 0 14px; color: var(--stone-600);" data-en="The two communicating bedrooms form a single suite, rented as one for 1 to 5 guests.">Les deux chambres communicantes forment une seule suite, louée d'un seul tenant pour 1 à 5 personnes.</p>
+              <div class="field full field-bedding">
+                <div class="bedding-heading">
+                  <span class="bedding-kicker" data-en="Your bedding">Votre couchage</span>
+                  <span class="bedding-title" data-en="How would you like the rooms made up?">Configuration du couchage</span>
+                </div>
+                <p class="bedding-help" data-en="The two communicating bedrooms form a single suite, rented as one for 1 to 5 guests.">Les deux chambres communicantes forment une seule suite, louée d'un seul tenant pour 1 à 5 personnes.</p>
                 <div class="room-picker">
                   <label>
                     <input type="radio" name="config" value="lit-double" checked />
                     <span class="rn" data-en="As a couple">À deux</span>
                     <span class="nm" data-en="Double bed">Lit double</span>
-                    <span class="det" data-en="Chambre Verte prepared · Bleue stays as a lounge">Chambre Verte préparée · Bleue en salon</span>
+                    <span class="det" data-en="Chambre Verte prepared, Bleue stays as a lounge">Chambre Verte préparée, Bleue en salon</span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="lits-simples" />
                     <span class="rn" data-en="As a couple">À deux</span>
                     <span class="nm" data-en="Two single beds">Deux lits simples</span>
-                    <span class="det" data-en="Chambre Bleue prepared · Verte stays as a lounge">Chambre Bleue préparée · Verte en salon</span>
+                    <span class="det" data-en="Chambre Bleue prepared, Verte stays as a lounge">Chambre Bleue préparée, Verte en salon</span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="chacun" />
-                    <span class="rn" data-en="As a couple · + € 30 / night">À deux · + 30 €/nuit</span>
+                    <span class="rn" data-en="As a couple · Paid option">À deux &middot; <strong>option payante</strong></span>
                     <span class="nm" data-en="A room each">Une chambre chacun</span>
                     <span class="det" data-en="Both rooms prepared">Les deux chambres préparées</span>
                   </label>
@@ -230,7 +308,7 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                     <input type="radio" name="config" value="famille" />
                     <span class="rn" data-en="3 to 5 guests">À 3, 4 ou 5</span>
                     <span class="nm" data-en="Family / small group">Famille / groupe</span>
-                    <span class="det" data-en="Both rooms prepared · sofa bed if needed">Les deux chambres · clic-clac si besoin</span>
+                    <span class="det" data-en="Both rooms prepared, sofa bed if needed">Les deux chambres, clic-clac si besoin</span>
                   </label>
                 </div>
               </div>
