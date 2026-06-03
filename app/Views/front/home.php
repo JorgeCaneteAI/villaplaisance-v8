@@ -160,6 +160,16 @@
     overflow: visible;
   }
   .testimonial blockquote em { font-style: italic; }
+  .testimonial blockquote a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--terra-500);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color .2s, text-decoration-color .2s;
+  }
+  .testimonial blockquote a:hover { color: var(--terra-500); }
+  .testimonial blockquote a:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 2px; }
   .testimonial .t-expand {
     align-self: flex-start;
     background: none; border: 0; padding: 0;
@@ -753,6 +763,18 @@ $_normRating = static function (float $rating, string $platform): float {
     if ($platform === 'booking' && $rating > 5) return $rating / 2;
     return $rating;
 };
+
+// Linkifie la 1re mention de Jorge ou Georges vers /votre-hote
+$_linkifyHost = static function (string $content): string {
+    $url = LangService::url('votre-hote');
+    $escaped = htmlspecialchars($content);
+    return preg_replace(
+        '/\b(Jorge|Georges)\b/u',
+        '<a href="' . htmlspecialchars($url) . '" class="t-host-link">$1</a>',
+        $escaped,
+        1
+    );
+};
 ?>
 <section class="section reviews-section">
   <div class="container-wide">
@@ -777,7 +799,7 @@ $_normRating = static function (float $rating, string $platform): float {
         <div class="stars" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
           <?php for ($_s = 0; $_s < $_fullStars; $_s++): ?><svg class="star" width="12" height="12" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
         </div>
-        <blockquote>« <?= htmlspecialchars((string)$_r['content']) ?> »</blockquote>
+        <blockquote>« <?= $_linkifyHost((string)$_r['content']) ?> »</blockquote>
         <button type="button" class="t-expand" hidden aria-expanded="false">Lire la suite &rarr;</button>
         <cite>
           <strong><?= htmlspecialchars((string)$_r['author']) ?></strong><?php

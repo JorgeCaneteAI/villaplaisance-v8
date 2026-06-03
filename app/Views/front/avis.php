@@ -36,6 +36,18 @@ $formatDate = static function (?string $d): string {
     ];
     return $months[(int) date('n', $ts)] . ' ' . date('Y', $ts);
 };
+
+// Linkifie la 1re mention de Jorge ou Georges vers /votre-hote
+$linkifyHost = static function (string $content): string {
+    $url = \LangService::url('votre-hote');
+    $escaped = htmlspecialchars($content);
+    return preg_replace(
+        '/\b(Jorge|Georges)\b/u',
+        '<a href="' . htmlspecialchars($url) . '" class="av-host-link">$1</a>',
+        $escaped,
+        1
+    );
+};
 ?>
 <style>
   .av-hero-section { padding: clamp(48px, 7vw, 120px) var(--gutter) clamp(40px, 5vw, 80px); }
@@ -85,6 +97,16 @@ $formatDate = static function (?string $d): string {
     -webkit-line-clamp: unset;
     overflow: visible;
   }
+  .av-card-quote a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--terra-500);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color .2s, text-decoration-color .2s;
+  }
+  .av-card-quote a:hover { color: var(--terra-500); }
+  .av-card-quote a:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 2px; }
   .av-card-expand {
     align-self: flex-start;
     background: none; border: 0; padding: 0;
@@ -180,7 +202,7 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
       </div>
       <span class="av-card-platform"><?= htmlspecialchars($platformLabels[$platform] ?? ucfirst($platform)) ?></span>
     </div>
-    <blockquote class="av-card-quote">« <?= htmlspecialchars((string)$r['content']) ?> »</blockquote>
+    <blockquote class="av-card-quote">« <?= $linkifyHost((string)$r['content']) ?> »</blockquote>
     <button type="button" class="av-card-expand" hidden aria-expanded="false">Lire la suite &rarr;</button>
     <div class="av-card-meta">
       <span class="av-card-author">
