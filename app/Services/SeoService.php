@@ -61,9 +61,12 @@ class SeoService
 
     public static function locale(string $lang): string
     {
+        // OpenGraph locale codes. Cible EN = international (US format), pas UK
+        // spécifique (le public anglophone de Villa Plaisance touche US/CA/AU/IE
+        // autant que UK). ES = ES (Espagne), public hispanique principal.
         return match ($lang) {
             'fr' => 'fr_FR',
-            'en' => 'en_GB',
+            'en' => 'en_US',
             'es' => 'es_ES',
             default => 'fr_FR',
         };

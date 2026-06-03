@@ -15,8 +15,14 @@ class HomeController extends BaseController
             'Chambres d\'hôtes de septembre à juin, villa entière en juillet-août. Piscine privée, 4 chambres, entre Avignon et Orange. Bédarrides, Vaucluse.'
         );
 
-        // JSON-LD
-        $jsonLd = [\SeoService::lodgingBusinessJsonLd()];
+        // JSON-LD : la maison offre 2 modèles distincts (BedAndBreakfast
+        // sept-juin + VacationRental juillet-août). On émet les 2 schemas
+        // sous-types plutôt qu'un LodgingBusiness générique : Google peut
+        // alors indexer les 2 offres et adapter le Local Pack à la saison.
+        $jsonLd = [
+            \SeoService::bedAndBreakfastJsonLd(),
+            \SeoService::vacationRentalJsonLd(),
+        ];
 
         // Add FAQ JSON-LD
         $faqs = [];
