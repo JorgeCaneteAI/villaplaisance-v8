@@ -87,6 +87,17 @@ if (APP_ENV === 'production') {
 
     set_error_handler(static function (int $errno, string $errstr, string $errfile, int $errline): bool {
         if (!(error_reporting() & $errno)) return false;
-        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+
+        // Ne convertit en exception fatale QUE les vraies erreurs critiques.
+        // Les warnings, notices, deprecated (ex. strftime sur PHP 8.x) sont
+        // loggés mais ne cassent pas le rendu en cours.
+        $fatal = E_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR
+               | E_CORE_ERROR | E_COMPILE_ERROR | E_PARSE;
+        if ($errno & $fatal) {
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        }
+
+        @error_log("[VP non-fatal $errno] $errstr in $errfile:$errline");
+        return true; // PHP n'exécute pas son handler interne
     });
 }

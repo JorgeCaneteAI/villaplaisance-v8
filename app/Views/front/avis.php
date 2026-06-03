@@ -29,7 +29,12 @@ $formatDate = static function (?string $d): string {
     if (!$d) return '';
     $ts = strtotime($d);
     if (!$ts) return $d;
-    return strftime('%B %Y', $ts) ?: date('M Y', $ts);
+    // strftime() est deprecated PHP 8.1 et supprimé PHP 8.4 — mapping FR maison.
+    static $months = [
+        1 => 'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+    ];
+    return $months[(int) date('n', $ts)] . ' ' . date('Y', $ts);
 };
 ?>
 <style>
