@@ -20,7 +20,7 @@ declare(strict_types=1);
  */
 class IconService
 {
-    /** Liste des symbols disponibles dans le sprite (préfixe `icon-` retiré). */
+    /** Sprite custom Villa Plaisance (préfixe `icon-` retiré). */
     public const AVAILABLE = [
         // équipements chambres
         'lit', 'climatisation', 'tv', 'wifi', 'bibliotheque',
@@ -45,19 +45,99 @@ class IconService
     ];
 
     /**
+     * Catalogue Lucide curated (ISC license, https://lucide.dev/license),
+     * ~75 icônes tourisme/hôtellerie organisées par catégorie. Préfixe `lc-`
+     * dans le sprite : <use xlink:href="/assets/img/icons-lucide.svg#icon-lc-bed-double"/>.
+     *
+     * À regénérer via `php bin/build_lucide_sprite.php` quand on étend la liste.
+     */
+    public const LUCIDE_CATALOG = [
+        'hebergement' => [
+            'label' => 'Hébergement',
+            'icons' => ['bed-double', 'bed-single', 'bed', 'hotel', 'key', 'key-round', 'accessibility', 'baby'],
+        ],
+        'confort' => [
+            'label' => 'Confort',
+            'icons' => ['wifi', 'tv', 'monitor', 'air-vent', 'fan', 'thermometer-sun', 'thermometer-snowflake', 'plug-zap', 'lamp', 'lightbulb'],
+        ],
+        'salle_de_bain' => [
+            'label' => 'Salle de bain',
+            'icons' => ['shower-head', 'bath', 'droplet', 'droplets'],
+        ],
+        'cuisine' => [
+            'label' => 'Cuisine & repas',
+            'icons' => ['coffee', 'utensils', 'utensils-crossed', 'wine', 'beer', 'croissant', 'cake', 'soup', 'refrigerator', 'chef-hat'],
+        ],
+        'nature' => [
+            'label' => 'Nature & jardin',
+            'icons' => ['tree-deciduous', 'tree-pine', 'trees', 'leaf', 'flower', 'flower-2', 'sprout', 'sun', 'mountain', 'palmtree'],
+        ],
+        'activites' => [
+            'label' => 'Activités',
+            'icons' => ['waves', 'bike', 'footprints', 'music', 'book', 'camera', 'palette'],
+        ],
+        'transport' => [
+            'label' => 'Transport',
+            'icons' => ['car', 'plane', 'train', 'bus', 'parking-circle'],
+        ],
+        'animaux' => [
+            'label' => 'Animaux',
+            'icons' => ['dog', 'cat', 'paw-print'],
+        ],
+        'famille' => [
+            'label' => 'Famille',
+            'icons' => ['users'],
+        ],
+        'avis' => [
+            'label' => 'Avis & réactions',
+            'icons' => ['star', 'heart', 'thumbs-up', 'quote'],
+        ],
+        'contact' => [
+            'label' => 'Contact & lieu',
+            'icons' => ['mail', 'phone', 'message-circle', 'calendar', 'clock', 'map-pin', 'map', 'navigation'],
+        ],
+        'saison' => [
+            'label' => 'Saison & climat',
+            'icons' => ['sunrise', 'sunset', 'snowflake', 'umbrella', 'cloud-sun'],
+        ],
+    ];
+
+    /** Aplatit le catalogue Lucide en simple liste de noms. */
+    public static function availableLucide(): array
+    {
+        $out = [];
+        foreach (self::LUCIDE_CATALOG as $cat) {
+            foreach ($cat['icons'] as $name) {
+                $out[] = 'lc-' . $name;
+            }
+        }
+        return $out;
+    }
+
+    /**
      * Retourne le markup SVG pointant sur un symbol du sprite.
+     *
+     * Convention :
+     *   - `lc-bed-double` → sprite Lucide (icons-lucide.svg)
+     *   - `wifi` ou `icon-wifi` → sprite custom (icons.svg)
+     *
      * Le `aria-hidden` est forcé : l'icône est toujours décorative, le sens
      * est porté par le texte voisin (label, sr-only, etc.).
      */
     public static function svg(string $name, int $size = 20, string $cls = ''): string
     {
         $name = ltrim($name, 'icon-');
+        $isLucide = str_starts_with($name, 'lc-');
+        $sprite = $isLucide ? '/assets/img/icons-lucide.svg' : '/assets/img/icons.svg';
+        $symbolId = 'icon-' . $name;
+
         $classAttr = $cls !== '' ? ' class="' . htmlspecialchars($cls, ENT_QUOTES) . '"' : '';
         return sprintf(
-            '<svg width="%1$d" height="%1$d" aria-hidden="true"%2$s><use xlink:href="/assets/img/icons.svg#icon-%3$s"/></svg>',
+            '<svg width="%1$d" height="%1$d" aria-hidden="true"%2$s><use xlink:href="%3$s#%4$s"/></svg>',
             $size,
             $classAttr,
-            htmlspecialchars($name, ENT_QUOTES)
+            $sprite,
+            htmlspecialchars($symbolId, ENT_QUOTES)
         );
     }
 

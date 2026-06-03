@@ -1,0 +1,105 @@
+{
+    "catalog": {
+        "hebergement": [
+            "bed-double",
+            "bed-single",
+            "bed",
+            "hotel",
+            "key",
+            "key-round",
+            "accessibility",
+            "baby"
+        ],
+        "confort": [
+            "wifi",
+            "tv",
+            "monitor",
+            "air-vent",
+            "fan",
+            "thermometer-sun",
+            "thermometer-snowflake",
+            "plug-zap",
+            "lamp",
+            "lightbulb"
+        ],
+        "salle_de_bain": [
+            "shower-head",
+            "bath",
+            "droplet",
+            "droplets"
+        ],
+        "cuisine": [
+            "coffee",
+            "utensils",
+            "utensils-crossed",
+            "wine",
+            "beer",
+            "croissant",
+            "cake",
+            "soup",
+            "refrigerator",
+            "chef-hat"
+        ],
+        "nature": [
+            "tree-deciduous",
+            "tree-pine",
+            "trees",
+            "leaf",
+            "flower",
+            "flower-2",
+            "sprout",
+            "sun",
+            "mountain",
+            "palmtree"
+        ],
+        "activites": [
+            "waves",
+            "bike",
+            "footprints",
+            "music",
+            "book",
+            "camera",
+            "palette"
+        ],
+        "transport": [
+            "car",
+            "plane",
+            "train",
+            "bus",
+            "parking-circle"
+        ],
+        "animaux": [
+            "dog",
+            "cat",
+            "paw-print"
+        ],
+        "famille": [
+            "users"
+        ],
+        "avis": [
+            "star",
+            "heart",
+            "thumbs-up",
+            "quote"
+        ],
+        "contact": [
+            "mail",
+            "phone",
+            "message-circle",
+            "calendar",
+            "clock",
+            "map-pin",
+            "map",
+            "navigation"
+        ],
+        "saison": [
+            "sunrise",
+            "sunset",
+            "snowflake",
+            "umbrella",
+            "cloud-sun"
+        ]
+    },
+    "generated_at": "2026-06-03T08:18:05+00:00",
+    "source": "lucide-static@latest"
+}
