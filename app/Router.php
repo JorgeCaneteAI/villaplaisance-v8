@@ -25,6 +25,17 @@ class Router
         \LangService::init($this->lang);
         $this->uri = $requestUri;
 
+        // Session conditionnelle : /admin/*, /api/*, ou méthode non-GET.
+        // Les pages front en lecture pure (GET non-admin) restent sans session
+        // pour rester cacheable côté CDN/browser/Googlebot (cf. fix B4 audit SEO).
+        $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $needsSession = str_starts_with($this->uri, '/admin')
+            || str_starts_with($this->uri, '/api/')
+            || $method !== 'GET';
+        if ($needsSession && function_exists('vp_session_start')) {
+            vp_session_start();
+        }
+
         // Admin routes
         if (str_starts_with($this->uri, '/admin')) {
             $this->dispatchAdmin();

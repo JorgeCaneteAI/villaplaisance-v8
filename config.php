@@ -52,8 +52,17 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-// Secure session
-if (session_status() === PHP_SESSION_NONE) {
+// Secure session — DÉMARRAGE CONDITIONNEL
+// Avant : session_start() à chaque hit du front → PHP envoie automatiquement
+// Cache-Control: no-store/no-cache, ce qui empêche Googlebot et le CDN o2switch
+// de mettre en cache les pages HTML (gros pénalité crawl budget).
+// Désormais : session_start() est déclenché par le Router uniquement pour
+// /admin/*, /api/*, ou toute méthode non-GET (formulaires CSRF). Les pages
+// front en lecture (GET) restent cacheable, sans cookie PHPSESSID posé sur
+// les visiteurs anonymes (bonus RGPD).
+function vp_session_start(): void
+{
+    if (session_status() !== PHP_SESSION_NONE) return;
     session_set_cookie_params([
         'lifetime' => 0,
         'path' => '/',

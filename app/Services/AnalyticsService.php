@@ -34,6 +34,14 @@ class AnalyticsService
             return;
         }
 
+        // RGPD/CNIL : aucun cookie de tracking ni écriture en BDD avant
+        // consentement explicite via la bannière (front-proto pose
+        // `vp_consent=accept` au clic Accepter). Sans consent, on n'écrit
+        // rien et on ne pose pas vp_vid.
+        if (($_COOKIE['vp_consent'] ?? '') !== 'accept') {
+            return;
+        }
+
         // Set or read visitor cookie
         $visitorRaw = $_COOKIE['vp_vid'] ?? '';
         if ($visitorRaw === '') {
