@@ -609,7 +609,7 @@ $_nPins = count($_mapPins);
       var midY = (y1 + villaY) / 2 - arcHeight;
       arc.setAttribute('d', 'M ' + x1 + ' ' + y1 + ' Q ' + midX + ' ' + midY + ' ' + villaX + ' ' + villaY);
 
-      // Animation de tracé : strokeDasharray = totalLength, offset = totalLength → 0
+      // Animation de tracé rapide (350ms) : strokeDasharray = totalLength, offset = totalLength → 0
       var length = arc.getTotalLength ? arc.getTotalLength() : 800;
       arc.style.transition = 'none';
       arc.style.strokeDasharray = length;
@@ -617,12 +617,12 @@ $_nPins = count($_mapPins);
       arc.classList.add('is-visible');
       // Force reflow pour rejouer la transition
       void arc.getBoundingClientRect();
-      arc.style.transition = 'stroke-dashoffset 700ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms ease-out';
+      arc.style.transition = 'stroke-dashoffset 350ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms ease-out';
       arc.style.strokeDashoffset = '0';
     }
 
     function hideArc() {
-      arc.style.transition = 'opacity 200ms ease-out';
+      arc.style.transition = 'opacity 240ms ease-out';
       arc.classList.remove('is-visible');
     }
 
@@ -653,10 +653,12 @@ $_nPins = count($_mapPins);
       }
     }
 
+    // Tooltip : disparaît au mouseleave du pin.
+    // Arc : RESTE persistant jusqu'au hover d'un autre pin (drawArc redessine)
+    // ou jusqu'au quit complet de la frame.
     function hideTooltip() {
       hideTimer = setTimeout(function () {
         tooltip.classList.remove('is-visible');
-        hideArc();
       }, 80);
     }
 
@@ -668,6 +670,7 @@ $_nPins = count($_mapPins);
       pin.addEventListener('blur',       hideTooltip);
     });
 
+    // Quit complet de la frame : on cache tooltip + arc.
     frame.addEventListener('mouseleave', function () {
       clearTimeout(hideTimer);
       tooltip.classList.remove('is-visible');
