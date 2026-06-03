@@ -128,79 +128,55 @@
   /* (anciens styles .worldmap-section / .worldmap / .origins-list retirés —
      remplacés par la nouvelle architecture full-bleed dans style-proto.css) */
 
-  /* Testimonials — Direction A : héro + marginalia magazine */
-  .testimonials-hero {
+  /* Testimonials — grid 8 cards compactes + "Lire la suite" inline */
+  .testimonials {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(40px, 5vw, 72px);
-    align-items: start;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(16px, 1.6vw, 24px);
   }
-  @media (min-width: 900px) {
-    .testimonials-hero { grid-template-columns: 1.6fr 1fr; gap: clamp(48px, 6vw, 96px); }
+  .testimonial {
+    background: var(--linen-50);
+    border: var(--hairline);
+    padding: clamp(20px, 2vw, 26px);
+    display: flex; flex-direction: column; gap: 14px;
   }
-  .testimonial-lead { display: flex; flex-direction: column; gap: clamp(24px, 3vw, 36px); }
-  .testimonial-lead .meta-row {
-    display: flex; align-items: center; gap: 20px;
-    padding-bottom: 18px; border-bottom: var(--hairline);
+  .testimonial .stars {
+    color: var(--terra-500);
+    font-size: 12px; letter-spacing: 2px;
   }
-  .testimonial-lead .stars { color: var(--terra-500); font-size: 14px; letter-spacing: 2px; }
-  .testimonial-lead .meta {
-    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--stone-500);
-  }
-  .testimonial-lead blockquote {
+  .testimonial blockquote {
     margin: 0;
     font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(28px, 3.4vw, 48px);
-    line-height: 1.15; letter-spacing: -0.015em;
-    color: var(--ink-900);
-    text-wrap: balance;
-    max-width: 22ch;
+    font-size: clamp(14px, 1vw, 15.5px); line-height: 1.5; color: var(--ink-900);
+    text-wrap: pretty;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
   }
-  .testimonial-lead blockquote em { font-style: italic; color: var(--sage-700); }
-  .testimonial-lead cite {
-    font-style: normal;
-    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em;
-    color: var(--ink-700); text-transform: uppercase;
+  .testimonial.is-expanded blockquote {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
   }
-  .testimonial-lead cite strong { font-weight: 500; color: var(--ink-900); }
-
-  .testimonials-aside { display: flex; flex-direction: column; }
-  .testimonial-mini {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 16px;
-    padding: clamp(18px, 2vw, 22px) 0;
-    border-top: var(--hairline);
-    text-decoration: none;
-    color: inherit;
+  .testimonial blockquote em { font-style: italic; }
+  .testimonial .t-expand {
+    align-self: flex-start;
+    background: none; border: 0; padding: 0;
     cursor: pointer;
-    transition: padding-left .35s cubic-bezier(.16, 1, .3, 1);
-  }
-  .testimonial-mini:last-child { border-bottom: var(--hairline); }
-  .testimonial-mini:hover,
-  .testimonial-mini:focus-within { padding-left: 8px; }
-  .testimonial-mini:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 4px; }
-  .testimonial-mini .num {
     font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
-    color: var(--terra-500); padding-top: 4px;
+    text-transform: uppercase; color: var(--terra-500);
+    transition: color .2s;
   }
-  .testimonial-mini .body { display: flex; flex-direction: column; gap: 6px; }
-  .testimonial-mini .who {
-    font-family: var(--font-display); font-weight: 400;
-    font-size: 16px; line-height: 1.25; color: var(--ink-900);
+  .testimonial .t-expand[hidden] { display: none; }
+  .testimonial .t-expand:hover { color: var(--ink-900); }
+  .testimonial .t-expand:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 4px; }
+  .testimonial cite {
+    font-style: normal;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
+    color: var(--stone-500); text-transform: uppercase;
+    margin-top: auto;
   }
-  .testimonial-mini .where {
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--stone-500);
-  }
-  .testimonial-mini .snippet {
-    font-family: var(--font-display); font-style: italic;
-    font-size: 14.5px; line-height: 1.45; color: var(--stone-600);
-    margin-top: 4px;
-  }
-  @media (max-width: 720px) { .testimonial-mini:nth-child(4) { display: none; } }
 
   /* Journal teasers */
   .journal-grid {
@@ -762,18 +738,14 @@ $_nPins = count($_mapPins);
 // Récupération des 3 meilleurs avis : featured d'abord, puis note la plus haute,
 // puis date la plus récente. Seuls les avis publiés avec un contenu non vide.
 $_homeReviews = [];
-$_totalReviews = 0;
 try {
     $_homeReviews = Database::fetchAll(
         "SELECT author, content, rating, platform, origin, offer, review_date
          FROM vp_reviews
          WHERE status = 'published' AND content IS NOT NULL AND LENGTH(content) > 0
          ORDER BY featured DESC, rating DESC, review_date DESC
-         LIMIT 4"
+         LIMIT 8"
     );
-    $_totalReviews = (int) (Database::fetchOne(
-        "SELECT COUNT(*) AS c FROM vp_reviews WHERE status = 'published' AND LENGTH(content) > 0"
-    )['c'] ?? 0);
 } catch (\Throwable) {}
 
 // Normalisation rating (Booking note sur 10)
@@ -781,10 +753,6 @@ $_normRating = static function (float $rating, string $platform): float {
     if ($platform === 'booking' && $rating > 5) return $rating / 2;
     return $rating;
 };
-
-// Direction A : 1 héro + 3 marginalia
-$_lead  = !empty($_homeReviews) ? array_shift($_homeReviews) : null;
-$_aside = $_homeReviews; // les 3 (ou moins) restants
 ?>
 <section class="section reviews-section">
   <div class="container-wide">
@@ -794,56 +762,51 @@ $_aside = $_homeReviews; // les 3 (ou moins) restants
         <h2 class="h-xl reviews-title">Quelques <em>mots</em><br/>laissés au départ.</h2>
       </div>
       <a class="reviews-cta" href="<?= LangService::url('avis') ?>">
-        <?= $_lead ? 'Lire tous les avis' : 'Découvrir la maison' ?>
+        <?= count($_homeReviews) > 0 ? 'Lire tous les avis' : 'Découvrir la maison' ?>
         <span aria-hidden="true">&rarr;</span>
       </a>
     </div>
 
-    <?php if ($_lead): ?>
-    <?php
-      $_leadRating = $_normRating((float)$_lead['rating'], (string)($_lead['platform'] ?? ''));
-      $_leadFull   = (int)floor($_leadRating);
-      $_leadQuote  = mb_strimwidth((string)$_lead['content'], 0, 280, '…', 'UTF-8');
-      $_leadDate   = !empty($_lead['review_date']) ? strtoupper(date('M Y', strtotime((string)$_lead['review_date']))) : '';
-      $_leadPlat   = !empty($_lead['platform']) ? strtoupper(htmlspecialchars((string)$_lead['platform'])) : 'DIRECT';
-      $_countDisplay = $_totalReviews ?: (count($_aside) + 1);
-    ?>
-    <div class="testimonials-hero">
-
-      <div class="testimonial-lead">
-        <div class="meta-row">
-          <div class="stars" aria-label="<?= number_format($_leadRating, 1, ',', '') ?> sur 5">
-            <?php for ($_s = 0; $_s < $_leadFull; $_s++): ?><svg class="star" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
-          </div>
-          <span class="meta">
-            01 / <?= sprintf('%02d', $_countDisplay) ?> · <?= $_leadPlat ?><?php if ($_leadDate): ?> · <?= $_leadDate ?><?php endif; ?>
-          </span>
+    <?php if (!empty($_homeReviews)): ?>
+    <div class="testimonials">
+      <?php foreach ($_homeReviews as $_r):
+        $_rating = $_normRating((float)$_r['rating'], (string)($_r['platform'] ?? ''));
+        $_fullStars = (int)floor($_rating);
+      ?>
+      <article class="testimonial">
+        <div class="stars" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
+          <?php for ($_s = 0; $_s < $_fullStars; $_s++): ?><svg class="star" width="12" height="12" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
         </div>
-        <blockquote>« <?= htmlspecialchars($_leadQuote) ?> »</blockquote>
+        <blockquote>« <?= htmlspecialchars((string)$_r['content']) ?> »</blockquote>
+        <button type="button" class="t-expand" hidden aria-expanded="false">Lire la suite &rarr;</button>
         <cite>
-          <strong><?= htmlspecialchars((string)$_lead['author']) ?></strong><?php
-          if (!empty($_lead['origin'])): ?> · <?= htmlspecialchars((string)$_lead['origin']) ?><?php endif; ?>
+          <strong><?= htmlspecialchars((string)$_r['author']) ?></strong><?php
+          if (!empty($_r['origin'])): ?>, <?= htmlspecialchars((string)$_r['origin']) ?><?php endif; ?>
         </cite>
-      </div>
-
-      <?php if (!empty($_aside)): ?>
-      <div class="testimonials-aside">
-        <?php foreach ($_aside as $_i => $_r): ?>
-        <a class="testimonial-mini" href="<?= LangService::url('avis') ?>">
-          <span class="num"><?= sprintf('%02d', $_i + 2) ?></span>
-          <div class="body">
-            <span class="who"><?= htmlspecialchars((string)$_r['author']) ?></span>
-            <?php if (!empty($_r['origin'])): ?>
-            <span class="where"><?= htmlspecialchars((string)$_r['origin']) ?></span>
-            <?php endif; ?>
-            <span class="snippet">« <?= htmlspecialchars(mb_strimwidth((string)$_r['content'], 0, 95, '…', 'UTF-8')) ?> »</span>
-          </div>
-        </a>
-        <?php endforeach; ?>
-      </div>
-      <?php endif; ?>
-
+      </article>
+      <?php endforeach; ?>
     </div>
+    <script>
+    (function () {
+      var cards = document.querySelectorAll('.reviews-section .testimonial');
+      var labelOpen  = 'Réduire ↑';
+      var labelShut  = 'Lire la suite →';
+      cards.forEach(function (card) {
+        var bq  = card.querySelector('blockquote');
+        var btn = card.querySelector('.t-expand');
+        if (!bq || !btn) return;
+        // Mesure : ne montrer le bouton que si le contenu déborde du clamp.
+        if (bq.scrollHeight > bq.clientHeight + 2) {
+          btn.hidden = false;
+        }
+        btn.addEventListener('click', function () {
+          var open = card.classList.toggle('is-expanded');
+          btn.textContent = open ? labelOpen : labelShut;
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      });
+    })();
+    </script>
     <?php else: ?>
     <p class="reviews-empty">
       Les premiers mots des voyageurs arriveront bientôt sur cette page.
