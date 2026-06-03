@@ -94,56 +94,8 @@
   }
   @media (max-width: 720px) { .formulas { grid-template-columns: 1fr; } }
 
-  /* World map — full bleed */
-  .worldmap-full {
-    width: 100%;
-    background: var(--linen-50);
-    border-top: var(--hairline);
-    border-bottom: var(--hairline);
-    overflow: hidden;
-    position: relative;
-  }
-  .worldmap-full svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 60vh;
-  }
-  .continents { fill: color-mix(in oklab, var(--sage-200) 35%, var(--linen-100)); stroke: var(--stone-400); stroke-width: 0.5; opacity: 0.95; }
-  .worldmap-full .legend {
-    position: absolute;
-    bottom: 16px; left: 50%; transform: translateX(-50%);
-    background: var(--linen-50);
-    padding: 8px 14px;
-    border: var(--hairline);
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--stone-600);
-    display: flex; gap: 20px; align-items: center;
-  }
-  .worldmap-full .legend .swatch { width: 8px; height: 8px; border-radius: 50%; }
-
-  /* Origins inline list */
-  .origins-inline {
-    display: flex; flex-wrap: wrap; justify-content: center;
-    gap: 10px 0;
-    list-style: none; padding: 0; margin: 0;
-    font-family: var(--font-display); font-style: italic;
-    font-size: clamp(18px, 1.6vw, 22px);
-    color: var(--ink-900);
-    text-align: center;
-    max-width: 1100px;
-    margin-left: auto; margin-right: auto;
-  }
-  .origins-inline li {
-    display: inline-flex; align-items: baseline; gap: 12px;
-  }
-  .origins-inline li:not(:last-child)::after {
-    content: "·";
-    color: var(--terra-500);
-    margin-left: 12px;
-    font-style: normal;
-    font-weight: 700;
-  }
+  /* World map styles vivent dans style-proto.css (.worldmap-section, .worldmap-svg,
+     .worldmap-pins, .origins-inline, etc.) — section 'WORLD MAP'. */
 
   /* Triangle d'Or list */
   .destinations {
@@ -173,53 +125,8 @@
     color: var(--stone-500); text-transform: uppercase;
   }
 
-  /* World map */
-  .worldmap-section {
-    display: grid; grid-template-columns: 1.4fr 1fr;
-    gap: clamp(32px, 5vw, 80px);
-    align-items: start;
-  }
-  .worldmap {
-    aspect-ratio: 2 / 1;
-    background: var(--linen-50);
-    border: var(--hairline);
-    position: relative;
-    overflow: hidden;
-  }
-  .worldmap svg { width: 100%; height: 100%; display: block; }
-  .pin-origin {
-    fill: var(--stone-500);
-    transition: fill .2s, r .2s;
-  }
-  .pin-here {
-    fill: var(--terra-500);
-  }
-  .worldmap .legend {
-    position: absolute;
-    bottom: 14px; left: 14px;
-    background: var(--linen-50);
-    padding: 8px 12px;
-    border: var(--hairline);
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--stone-600);
-    display: flex; gap: 14px; align-items: center;
-  }
-  .worldmap .legend .swatch { width: 8px; height: 8px; border-radius: 50%; }
-  .origins-list {
-    columns: 1; column-gap: 24px;
-    list-style: none; padding: 0; margin: 0;
-    font-size: 14.5px; line-height: 1.9;
-    color: var(--ink-700);
-    border-top: var(--hairline);
-  }
-  .origins-list li {
-    padding: 4px 0;
-    break-inside: avoid;
-  }
-  .origins-list li::before {
-    content: "·"; color: var(--terra-500); margin-right: 10px; font-weight: 700;
-  }
-  @media (max-width: 960px) { .worldmap-section { grid-template-columns: 1fr; } }
+  /* (anciens styles .worldmap-section / .worldmap / .origins-list retirés —
+     remplacés par la nouvelle architecture full-bleed dans style-proto.css) */
 
   /* Testimonials */
   .testimonials {
