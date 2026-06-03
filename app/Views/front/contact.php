@@ -310,14 +310,24 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                   <span class="bedding-title" data-en="How would you like the rooms made up?">Configuration du couchage</span>
                 </div>
                 <p class="bedding-help" data-en="The two communicating bedrooms form a single suite, rented as one for 1 to 5 guests.">Les deux chambres communicantes forment une seule suite, louée d'un seul tenant pour 1 à 5 personnes.</p>
+                <!--
+                  Échelle stricte pour les icônes :
+                    - 1 lit simple = 9 unités de large × 20 unités de long
+                    - 1 lit double = 20 unités de large × 20 unités de long
+                    - 1 chambre   = 32 × 32 unités (vue de dessus carrée, padding 6 sur chaque côté)
+                    - Gap entre 2 chambres = 6 unités
+                  ViewBox commun : 70 × 36.
+                  Position chambre simple : (19, 2) → centrée horizontalement.
+                  Position 2 chambres : (2, 2) et (36, 2).
+                -->
                 <div class="room-picker">
                   <label>
                     <input type="radio" name="config" value="lit-double" checked />
-                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                      <!-- une chambre, un lit double -->
-                      <rect x="2" y="2" width="68" height="40" rx="1.5"/>
-                      <rect x="13" y="13" width="46" height="22" rx="1.5"/>
-                      <line x1="13" y1="20" x2="59" y2="20"/>
+                    <svg class="rp-icon" viewBox="0 0 70 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- 1 chambre avec 1 lit double centré -->
+                      <rect x="19" y="2" width="32" height="32" rx="1.5"/>
+                      <rect x="25" y="8" width="20" height="20" rx="1.5"/>
+                      <line x1="25" y1="13" x2="45" y2="13"/>
                     </svg>
                     <span class="rn" data-en="As a couple">À deux</span>
                     <span class="nm" data-en="Double bed">Lit double</span>
@@ -325,13 +335,13 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                   </label>
                   <label>
                     <input type="radio" name="config" value="lits-simples" />
-                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                      <!-- une chambre, deux lits simples côte à côte -->
-                      <rect x="2" y="2" width="68" height="40" rx="1.5"/>
-                      <rect x="13" y="13" width="20" height="22" rx="1.5"/>
-                      <rect x="39" y="13" width="20" height="22" rx="1.5"/>
-                      <line x1="13" y1="20" x2="33" y2="20"/>
-                      <line x1="39" y1="20" x2="59" y2="20"/>
+                    <svg class="rp-icon" viewBox="0 0 70 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- 1 chambre avec 2 lits simples (9 chacun + gap 2 = 20 total = 1 lit double équivalent) -->
+                      <rect x="19" y="2" width="32" height="32" rx="1.5"/>
+                      <rect x="25" y="8" width="9" height="20" rx="1"/>
+                      <rect x="36" y="8" width="9" height="20" rx="1"/>
+                      <line x1="25" y1="13" x2="34" y2="13"/>
+                      <line x1="36" y1="13" x2="45" y2="13"/>
                     </svg>
                     <span class="rn" data-en="As a couple">À deux</span>
                     <span class="nm" data-en="Two single beds">Deux lits simples</span>
@@ -339,14 +349,14 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                   </label>
                   <label>
                     <input type="radio" name="config" value="chacun" />
-                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                      <!-- deux chambres séparées, chacune avec un lit double -->
-                      <rect x="2" y="2" width="32" height="40" rx="1.5"/>
-                      <rect x="38" y="2" width="32" height="40" rx="1.5"/>
-                      <rect x="9" y="13" width="18" height="22" rx="1.5"/>
-                      <rect x="45" y="13" width="18" height="22" rx="1.5"/>
-                      <line x1="9" y1="20" x2="27" y2="20"/>
-                      <line x1="45" y1="20" x2="63" y2="20"/>
+                    <svg class="rp-icon" viewBox="0 0 70 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- 2 chambres séparées (32+6+32=70), chacune avec 1 lit double -->
+                      <rect x="2" y="2" width="32" height="32" rx="1.5"/>
+                      <rect x="36" y="2" width="32" height="32" rx="1.5"/>
+                      <rect x="8" y="8" width="20" height="20" rx="1.5"/>
+                      <rect x="42" y="8" width="20" height="20" rx="1.5"/>
+                      <line x1="8" y1="13" x2="28" y2="13"/>
+                      <line x1="42" y1="13" x2="62" y2="13"/>
                     </svg>
                     <span class="rn" data-en="As a couple · Paid option">À deux &middot; <strong>option payante</strong></span>
                     <span class="nm" data-en="A room each">Une chambre chacun</span>
@@ -354,16 +364,16 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                   </label>
                   <label>
                     <input type="radio" name="config" value="famille" />
-                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
-                      <!-- deux chambres : une double, une avec deux lits simples -->
-                      <rect x="2" y="2" width="32" height="40" rx="1.5"/>
-                      <rect x="38" y="2" width="32" height="40" rx="1.5"/>
-                      <rect x="9" y="13" width="18" height="22" rx="1.5"/>
-                      <line x1="9" y1="20" x2="27" y2="20"/>
-                      <rect x="44" y="13" width="9" height="22" rx="1"/>
-                      <rect x="55" y="13" width="9" height="22" rx="1"/>
-                      <line x1="44" y1="20" x2="53" y2="20"/>
-                      <line x1="55" y1="20" x2="64" y2="20"/>
+                    <svg class="rp-icon" viewBox="0 0 70 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- 2 chambres : 1 lit double à gauche, 2 lits simples à droite (échelle conservée) -->
+                      <rect x="2" y="2" width="32" height="32" rx="1.5"/>
+                      <rect x="36" y="2" width="32" height="32" rx="1.5"/>
+                      <rect x="8" y="8" width="20" height="20" rx="1.5"/>
+                      <line x1="8" y1="13" x2="28" y2="13"/>
+                      <rect x="42" y="8" width="9" height="20" rx="1"/>
+                      <rect x="53" y="8" width="9" height="20" rx="1"/>
+                      <line x1="42" y1="13" x2="51" y2="13"/>
+                      <line x1="53" y1="13" x2="62" y2="13"/>
                     </svg>
                     <span class="rn" data-en="3 to 5 guests">À 3, 4 ou 5</span>
                     <span class="nm" data-en="Family / small group">Famille / groupe</span>
