@@ -557,16 +557,14 @@ $_villaLng = 4.8945;
 shuffle($_mapCityList);
 $_nPins = count($_mapPins);
 ?>
-<section class="section surface-stone" style="background: var(--linen-100); padding-left: 0; padding-right: 0;">
-  <div class="container-wide">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
+<section class="section worldmap-section">
+  <div class="container-wide worldmap-intro">
+    <div class="worldmap-intro-grid">
       <div>
-        <div class="section-label">
-          <span class="numeral">— 04 / <span><?= t('home.map.kicker') ?></span></span>
-        </div>
-        <h2 class="h-xl" style="margin: 0; max-width: 14ch;"><?= t('home.map.title') ?></h2>
+        <div class="worldmap-kicker"><?= t('home.map.kicker') ?></div>
+        <h2 class="h-xl worldmap-title"><?= t('home.map.title') ?></h2>
       </div>
-      <p class="body-lg" style="max-width: 40ch; margin: 0;">
+      <p class="worldmap-subtitle">
         <?= $_nPins > 0 ? t('home.map.subtitle_n', ['n' => (string)$_nPins]) : t('home.map.subtitle_empty') ?>
       </p>
     </div>
@@ -601,10 +599,10 @@ $_nPins = count($_mapPins);
         1
       ) ?>
       <svg class="worldmap-pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <!-- Pins origines clients -->
+        <!-- Pins origines clients (stagger via --i) -->
         <g class="pins-guests">
-          <?php foreach ($_pinsXY as $_p): ?>
-          <g class="pin-guest" transform="translate(<?= $_p['x'] ?>, <?= $_p['y'] ?>)">
+          <?php foreach ($_pinsXY as $_i => $_p): ?>
+          <g class="pin-guest" transform="translate(<?= $_p['x'] ?>, <?= $_p['y'] ?>)" style="--i: <?= $_i ?>">
             <circle r="3"></circle>
             <title><?= htmlspecialchars($_p['label']) ?></title>
           </g>
@@ -612,11 +610,11 @@ $_nPins = count($_mapPins);
         </g>
         <!-- Pin Villa Plaisance (Bédarrides) avec halo + label -->
         <g class="pin-home" transform="translate(<?= $_villaX ?>, <?= $_villaY ?>)">
-          <circle class="pin-home-halo-3" r="14"></circle>
-          <circle class="pin-home-halo-2" r="8"></circle>
-          <circle class="pin-home-dot" r="3.5"></circle>
-          <text class="pin-home-label" y="-12" text-anchor="middle">BÉDARRIDES</text>
-          <title>Villa Plaisance — Bédarrides</title>
+          <circle class="pin-home-halo-3" cx="0" cy="0" r="3.5"></circle>
+          <circle class="pin-home-halo-2" cx="0" cy="0" r="3.5"></circle>
+          <circle class="pin-home-dot" cx="0" cy="0" r="3.5"></circle>
+          <text class="pin-home-label" y="-10" text-anchor="middle">BÉDARRIDES</text>
+          <title>Villa Plaisance, Bédarrides</title>
         </g>
       </svg>
     </div>
@@ -632,7 +630,7 @@ $_nPins = count($_mapPins);
 
   <?php if (!empty($_mapCityList)): ?>
   <!-- Liste des origines réelles (depuis vp_reviews, ordre mélangé) -->
-  <div class="container-wide" style="margin-top: clamp(32px, 4vw, 48px);">
+  <div class="container-wide worldmap-origins-wrap">
     <ul class="origins-inline">
       <?php foreach ($_mapCityList as $_city): ?>
       <li><?= htmlspecialchars($_city) ?></li>
@@ -640,6 +638,26 @@ $_nPins = count($_mapPins);
     </ul>
   </div>
   <?php endif; ?>
+
+  <script>
+  (function () {
+    var section = document.querySelector('.worldmap-section');
+    if (!section) return;
+    if (!('IntersectionObserver' in window)) {
+      section.classList.add('is-in-view');
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          section.classList.add('is-in-view');
+          io.unobserve(section);
+        }
+      });
+    }, { threshold: 0.18 });
+    io.observe(section);
+  })();
+  </script>
 </section>
 
 <!-- ============ 06 · TÉMOIGNAGES ============ -->
