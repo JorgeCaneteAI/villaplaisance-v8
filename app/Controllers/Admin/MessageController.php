@@ -31,8 +31,11 @@ class MessageController extends AdminBaseController
             $message['read_at'] = date('Y-m-d H:i:s');
         }
 
+        // Enrichissement IP (cache 30j, échoue gracieusement)
+        $ipInfo = \IpInfoService::format(\IpInfoService::lookup($message['ip'] ?? null));
+
         $csrf = $this->csrf();
-        $this->render('admin/messages/show', compact('message', 'csrf'));
+        $this->render('admin/messages/show', compact('message', 'ipInfo', 'csrf'));
     }
 
     public function delete(int $id): void
