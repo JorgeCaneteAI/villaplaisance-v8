@@ -73,7 +73,7 @@
     max-width: 56ch;
   }
 
-  /* ----- Room picker (B&B) : liste verticale lisible avec radio custom ----- */
+  /* ----- Room picker (B&B) : liste verticale avec radio + icône SVG ----- */
   .room-picker {
     display: flex;
     flex-direction: column;
@@ -83,21 +83,23 @@
   .room-picker label {
     position: relative;
     display: grid;
-    grid-template-columns: 14px 1fr;
+    /* indicator | icone | texte */
+    grid-template-columns: 14px clamp(56px, 6vw, 72px) 1fr;
     grid-auto-rows: auto;
     align-items: center;
-    column-gap: clamp(18px, 2vw, 28px);
+    column-gap: clamp(14px, 1.6vw, 22px);
     row-gap: 2px;
-    padding: clamp(18px, 2.2vw, 26px) clamp(8px, 1.4vw, 18px);
+    padding: clamp(14px, 1.8vw, 20px) clamp(8px, 1.4vw, 18px);
     border-bottom: 1px solid color-mix(in oklab, var(--ink-900) 10%, transparent);
     border-left: 3px solid transparent;
     cursor: pointer;
     transition: background .2s ease-out, border-left-color .2s ease-out, padding-left .2s ease-out;
     background: transparent;
+    color: var(--stone-500);   /* base couleur de l'icône via currentColor */
   }
   .room-picker label:hover {
     background: color-mix(in oklab, var(--ink-900) 3%, transparent);
-    padding-left: clamp(14px, 1.8vw, 22px);
+    padding-left: clamp(12px, 1.6vw, 20px);
   }
   .room-picker label::before {
     content: "";
@@ -111,36 +113,59 @@
     align-self: center;
     transition: border-color .2s ease-out, background .2s ease-out, box-shadow .2s ease-out;
   }
-  .room-picker label .rn  { grid-column: 2; grid-row: 1;
-    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em;
+  .room-picker .rp-icon {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+    width: 100%;
+    height: auto;
+    color: var(--stone-500);
+    transition: color .2s ease-out, opacity .2s ease-out;
+    opacity: 0.85;
+  }
+  .room-picker label .rn  { grid-column: 3; grid-row: 1;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--stone-500); }
   .room-picker label .rn strong {
     font-weight: 500; color: var(--terra-500); letter-spacing: 0.18em;
   }
-  .room-picker label .nm  { grid-column: 2; grid-row: 2;
+  .room-picker label .nm  { grid-column: 3; grid-row: 2;
     font-family: var(--font-display); font-style: italic;
-    font-size: clamp(20px, 1.8vw, 26px); line-height: 1.2;
-    color: var(--ink-900); letter-spacing: -0.005em; margin-top: 4px; }
-  .room-picker label .det { grid-column: 2; grid-row: 3;
-    font-size: 14px; line-height: 1.5; color: var(--stone-600); margin-top: 4px; }
+    font-size: clamp(17px, 1.3vw, 20px); line-height: 1.2;
+    color: var(--ink-900); letter-spacing: -0.005em; margin-top: 3px; }
+  .room-picker label .det { grid-column: 3; grid-row: 3;
+    font-size: 13px; line-height: 1.5; color: var(--stone-600); margin-top: 3px; }
   .room-picker input { position: absolute; opacity: 0; pointer-events: none; }
 
-  /* Sélection : indicator terra + bg subtil + border-left terra */
+  /* Sélection : indicator terra + bg subtil + border-left terra + icône terra */
   .room-picker label:has(input:checked) {
     background: color-mix(in oklab, var(--terra-500) 6%, transparent);
     border-left-color: var(--terra-500);
-    padding-left: clamp(14px, 1.8vw, 22px);
+    padding-left: clamp(12px, 1.6vw, 20px);
   }
   .room-picker label:has(input:checked)::before {
     background: var(--terra-500);
     border-color: var(--terra-500);
     box-shadow: inset 0 0 0 3px var(--linen-50);
   }
+  .room-picker label:has(input:checked) .rp-icon {
+    color: var(--terra-500);
+    opacity: 1;
+  }
   .room-picker label:has(input:checked) .rn { color: var(--terra-500); }
   .room-picker label:has(input:checked) .nm { color: var(--ink-900); }
 
   /* Focus clavier accessible */
   .room-picker label:focus-within { outline: 2px solid var(--terra-500); outline-offset: 2px; }
+
+  /* Sur petit écran : on cache l'icône pour ne pas étouffer le texte */
+  @media (max-width: 520px) {
+    .room-picker label { grid-template-columns: 14px 1fr; }
+    .room-picker .rp-icon { display: none; }
+    .room-picker label .rn,
+    .room-picker label .nm,
+    .room-picker label .det { grid-column: 2; }
+  }
 
   .panel { display: none; }
   .panel.active { display: block; }
@@ -288,24 +313,58 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                 <div class="room-picker">
                   <label>
                     <input type="radio" name="config" value="lit-double" checked />
+                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- une chambre, un lit double -->
+                      <rect x="2" y="2" width="68" height="40" rx="1.5"/>
+                      <rect x="13" y="13" width="46" height="22" rx="1.5"/>
+                      <line x1="13" y1="20" x2="59" y2="20"/>
+                    </svg>
                     <span class="rn" data-en="As a couple">À deux</span>
                     <span class="nm" data-en="Double bed">Lit double</span>
                     <span class="det" data-en="Chambre Verte prepared, Bleue stays as a lounge">Chambre Verte préparée, Bleue en salon</span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="lits-simples" />
+                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- une chambre, deux lits simples côte à côte -->
+                      <rect x="2" y="2" width="68" height="40" rx="1.5"/>
+                      <rect x="13" y="13" width="20" height="22" rx="1.5"/>
+                      <rect x="39" y="13" width="20" height="22" rx="1.5"/>
+                      <line x1="13" y1="20" x2="33" y2="20"/>
+                      <line x1="39" y1="20" x2="59" y2="20"/>
+                    </svg>
                     <span class="rn" data-en="As a couple">À deux</span>
                     <span class="nm" data-en="Two single beds">Deux lits simples</span>
                     <span class="det" data-en="Chambre Bleue prepared, Verte stays as a lounge">Chambre Bleue préparée, Verte en salon</span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="chacun" />
+                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- deux chambres séparées, chacune avec un lit double -->
+                      <rect x="2" y="2" width="32" height="40" rx="1.5"/>
+                      <rect x="38" y="2" width="32" height="40" rx="1.5"/>
+                      <rect x="9" y="13" width="18" height="22" rx="1.5"/>
+                      <rect x="45" y="13" width="18" height="22" rx="1.5"/>
+                      <line x1="9" y1="20" x2="27" y2="20"/>
+                      <line x1="45" y1="20" x2="63" y2="20"/>
+                    </svg>
                     <span class="rn" data-en="As a couple · Paid option">À deux &middot; <strong>option payante</strong></span>
                     <span class="nm" data-en="A room each">Une chambre chacun</span>
                     <span class="det" data-en="Both rooms prepared">Les deux chambres préparées</span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="famille" />
+                    <svg class="rp-icon" viewBox="0 0 72 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">
+                      <!-- deux chambres : une double, une avec deux lits simples -->
+                      <rect x="2" y="2" width="32" height="40" rx="1.5"/>
+                      <rect x="38" y="2" width="32" height="40" rx="1.5"/>
+                      <rect x="9" y="13" width="18" height="22" rx="1.5"/>
+                      <line x1="9" y1="20" x2="27" y2="20"/>
+                      <rect x="44" y="13" width="9" height="22" rx="1"/>
+                      <rect x="55" y="13" width="9" height="22" rx="1"/>
+                      <line x1="44" y1="20" x2="53" y2="20"/>
+                      <line x1="55" y1="20" x2="64" y2="20"/>
+                    </svg>
                     <span class="rn" data-en="3 to 5 guests">À 3, 4 ou 5</span>
                     <span class="nm" data-en="Family / small group">Famille / groupe</span>
                     <span class="det" data-en="Both rooms prepared, sofa bed if needed">Les deux chambres, clic-clac si besoin</span>
