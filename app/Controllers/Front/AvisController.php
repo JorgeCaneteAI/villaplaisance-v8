@@ -64,8 +64,14 @@ class AvisController extends BaseController
             'Découvrez les témoignages de nos hôtes, chambres d\'hôtes et villa entière à Bédarrides en Provence.'
         );
 
-        // JSON-LD : LodgingBusiness + AggregateRating + array de Reviews
-        $jsonLd = [\SeoService::lodgingBusinessJsonLd()];
+        // JSON-LD : LodgingBusiness + Breadcrumb + AggregateRating + Reviews
+        $jsonLd = [
+            \SeoService::lodgingBusinessJsonLd(),
+            \SeoService::breadcrumbJsonLd([
+                ['name' => t('nav.home'), 'url' => APP_URL . '/'],
+                ['name' => 'Avis clients'],
+            ]),
+        ];
         if ($stats['total'] > 0) {
             $jsonLd[] = [
                 '@context' => 'https://schema.org',

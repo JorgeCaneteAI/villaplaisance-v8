@@ -27,7 +27,13 @@ class DisponibilitesController extends BaseController
             . "Synchronisé avec Airbnb et Booking."
         );
 
-        $jsonLd = [];
+        $jsonLd = [
+            \SeoService::lodgingBusinessJsonLd(),
+            \SeoService::breadcrumbJsonLd([
+                ['name' => t('nav.home'), 'url' => APP_URL . '/'],
+                ['name' => 'Disponibilités'],
+            ]),
+        ];
 
         $this->render(
             'front/disponibilites',

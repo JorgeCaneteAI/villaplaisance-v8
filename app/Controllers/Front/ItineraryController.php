@@ -99,7 +99,13 @@ class ItineraryController extends BaseController
             'hreflang' => [],
         ];
 
-        $jsonLd = [];
+        $jsonLd = [
+            \SeoService::breadcrumbJsonLd([
+                ['name' => t('nav.home'), 'url' => APP_URL . '/'],
+                ['name' => 'Itinéraires', 'url' => APP_URL . '/itineraire'],
+                ['name' => $itinerary['guest_name'] ?? $slug],
+            ]),
+        ];
         $csrf = $this->csrf();
 
         $this->render('front/itinerary', compact('seo', 'itinerary', 'steps', 'comments', 'jsonLd', 'lang', 'csrf'), 'front-proto');

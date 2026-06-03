@@ -47,7 +47,13 @@ class HoteController extends BaseController
             $profile['intro'] ?? 'Découvrez votre hôte à Villa Plaisance, chambres d\'hôtes et villa de charme à Bédarrides.'
         );
 
-        $jsonLd = [];
+        $jsonLd = [
+            \SeoService::lodgingBusinessJsonLd(),
+            \SeoService::breadcrumbJsonLd([
+                ['name' => t('nav.home'), 'url' => APP_URL . '/'],
+                ['name' => 'Votre hôte'],
+            ]),
+        ];
 
         // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
         $this->render('front/hote', compact('profile', 'blocks', 'reviews', 'seo', 'jsonLd', 'lang'), 'front-proto');
