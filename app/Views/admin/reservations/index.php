@@ -116,18 +116,4 @@ use App\Services\ReservationConstants;
     </table>
 </div>
 
-<style>
-.calendrier__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; }
-.calendrier__nav h1 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.8rem; letter-spacing: -0.01em; color: var(--ink-900); }
-.calendrier__toolbar { display: flex; gap: 8px; margin: 12px 0 20px; flex-wrap: wrap; }
-.calendrier__grid { width: 100%; border-collapse: collapse; table-layout: fixed; background: #fff; border: 1px solid var(--admin-border); border-radius: var(--admin-radius); overflow: hidden; }
-.calendrier__grid th { background: var(--olive-900); color: #fff; padding: 10px 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-.calendrier__grid td.cell { border: 1px solid var(--admin-border); vertical-align: top; height: 110px; width: 14.28%; padding: 4px; }
-.calendrier__grid td.outside { background: var(--linen-100); }
-.calendrier__grid td.today { background: color-mix(in oklab, var(--terra-500) 7%, #fff); }
-.calendrier__grid .day-num { font-weight: 700; font-size: 12px; color: var(--ink-700); margin-bottom: 2px; }
-.calendrier__grid td.outside .day-num { color: var(--stone-400); }
-.calendrier__grid td.today .day-num { color: var(--terra-600); }
-.calendrier__grid .resa { display: block; padding: 3px 5px; margin-top: 2px; border-radius: 3px; font-size: 10.5px; text-decoration: none; line-height: 1.2; }
-.calendrier__grid .resa:hover { opacity: 0.85; }
-</style>
+<?php /* Styles déplacés dans /assets/css/admin.css (section 17.3) */ ?>

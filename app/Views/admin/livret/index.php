@@ -8,10 +8,10 @@
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
         <input type="hidden" name="type" value="<?= htmlspecialchars($type) ?>">
         <input type="hidden" name="lang" value="fr">
-        <label><strong>Code d'accès client :</strong></label>
-        <input type="text" name="livret_password" value="<?= htmlspecialchars($password) ?>" style="width:200px;margin:0 0.5rem" required>
+        <label for="livret_password"><strong>Code d'accès client</strong></label>
+        <input type="text" id="livret_password" name="livret_password" value="<?= htmlspecialchars($password) ?>" required>
         <button type="submit" class="btn btn-primary btn-sm">Enregistrer</button>
-        <span class="text-muted" style="margin-left:1rem;font-size:0.8rem">URL : /livret?type=bb ou /livret?type=villa</span>
+        <span class="text-muted text-sm">URL : <code>/livret?type=bb</code> ou <code>/livret?type=villa</code></span>
     </form>
 </div>
 
@@ -46,7 +46,7 @@
             <div class="livret-trilang-label"><?= $label ?></div>
             <?php if (isset($langs[$l])): ?>
             <?php $s = $langs[$l]; ?>
-            <form method="POST" action="/admin/livret/save">
+            <form method="POST" action="/admin/livret/save" class="livret-form">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                 <input type="hidden" name="id" value="<?= $s['id'] ?>">
                 <input type="hidden" name="type" value="<?= htmlspecialchars($type) ?>">
@@ -58,8 +58,8 @@
                 <div class="form-group">
                     <textarea name="content" rows="4" placeholder="Contenu"><?= htmlspecialchars($s['content']) ?></textarea>
                 </div>
-                <div style="display:flex;align-items:center;gap:0.5rem">
-                    <label style="font-size:0.8rem"><input type="checkbox" name="active" <?= $s['active'] ? 'checked' : '' ?>> Actif</label>
+                <div class="livret-form-foot">
+                    <label class="text-sm"><input type="checkbox" name="active" <?= $s['active'] ? 'checked' : '' ?>> Actif</label>
                     <button type="submit" class="btn btn-primary btn-sm">Sauver</button>
                 </div>
             </form>

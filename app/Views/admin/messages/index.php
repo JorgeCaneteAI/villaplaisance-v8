@@ -46,7 +46,7 @@ $preview = static function(string $body): string {
     <div class="mail-count">
         <strong><?= count($messages) ?></strong> message<?= count($messages) > 1 ? 's' : '' ?>
         <?php if ($unreadCount > 0): ?>
-            · <strong style="color: var(--terra-500)"><?= $unreadCount ?></strong> non lu<?= $unreadCount > 1 ? 's' : '' ?>
+            · <span class="badge badge-warning"><?= $unreadCount ?> non lu<?= $unreadCount > 1 ? 's' : '' ?></span>
         <?php endif; ?>
     </div>
 </div>

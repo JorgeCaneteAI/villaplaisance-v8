@@ -14,13 +14,13 @@
     Aucune page enregistrée dans <code>vp_pages</code>.
 </div>
 <?php else: ?>
-<div class="admin-card" style="padding: 0; overflow: hidden;">
+<div class="admin-card admin-card--flush">
     <table class="admin-table">
         <thead>
             <tr>
                 <th>Page</th>
                 <th>URL</th>
-                <th class="text-center">Blocs</th>
+                <th class="cell-center">Blocs</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -31,17 +31,15 @@
             ?>
             <tr>
                 <td>
-                    <strong style="font-family: var(--font-display); font-size: 1.05rem; color: var(--ink-900);">
-                        <?= htmlspecialchars($page['title'] ?? $page['slug']) ?>
-                    </strong>
+                    <strong class="text-strong"><?= htmlspecialchars($page['title'] ?? $page['slug']) ?></strong>
                     <?php if (!empty($page['meta_title'])): ?>
-                    <div class="text-sm text-muted" style="margin-top: 2px;"><?= htmlspecialchars(mb_strimwidth($page['meta_title'], 0, 70, '…')) ?></div>
+                    <div class="text-sm text-muted"><?= htmlspecialchars(mb_strimwidth($page['meta_title'], 0, 70, '…')) ?></div>
                     <?php endif; ?>
                 </td>
                 <td>
-                    <code class="text-sm" style="background: var(--linen-100); padding: 2px 8px; border-radius: 3px;">/<?= htmlspecialchars($page['slug']) ?></code>
+                    <code class="badge badge-meta">/<?= htmlspecialchars($page['slug']) ?></code>
                 </td>
-                <td class="text-center">
+                <td class="cell-center">
                     <?php if ($hasBlocks): ?>
                     <span class="badge badge-success"><?= $count ?> bloc<?= $count > 1 ? 's' : '' ?></span>
                     <?php else: ?>
@@ -49,8 +47,8 @@
                     <?php endif; ?>
                 </td>
                 <td>
-                    <a href="/admin/sections/page/<?= htmlspecialchars($page['slug']) ?>" class="btn btn-primary btn-sm">
-                        <?= $hasBlocks ? 'Éditer les blocs' : 'Ajouter des blocs' ?>
+                    <a href="/admin/sections/page/<?= htmlspecialchars($page['slug']) ?>" class="btn btn-sm">
+                        <?= $hasBlocks ? 'Éditer' : 'Ajouter' ?>
                     </a>
                 </td>
             </tr>
