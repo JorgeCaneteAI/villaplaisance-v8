@@ -1,80 +1,84 @@
 <?php
 /**
  * Vue d'édition d'un bloc V8.
- *
  * Génère un formulaire structuré à partir de BlockFieldsService::fieldsFor($type)
- * au lieu d'exposer le JSON brut. Pour les types complexes (repeater, media_id),
- * fallback temporaire en textarea JSON tant qu'on n'a pas le JS de la Session 2.
+ * au lieu d'exposer le JSON brut.
  *
  * @var array $section
- * @var array $blockTypes  (liste des types via BlockService::getBlockTypes())
+ * @var array $blockTypes
  * @var string $csrf
  */
 $blockType = $section['block_type'] ?? 'prose';
-$fields = BlockFieldsService::fieldsFor($blockType);
-$content = json_decode($section['content'] ?? '{}', true) ?: [];
+$fields    = BlockFieldsService::fieldsFor($blockType);
+$content   = json_decode($section['content'] ?? '{}', true) ?: [];
+$publicUrl = '/' . ($section['page_slug'] === 'accueil' ? '' : $section['page_slug']);
+$typeLabel = $blockTypes[$blockType] ?? $blockType;
+$langLabels = ['fr' => 'Français', 'en' => 'English', 'es' => 'Español'];
 ?>
 
-<?php
-$_publicUrl = '/' . ($section['page_slug'] === 'accueil' ? '' : $section['page_slug']);
-?>
 <div class="page-header">
-    <h1>Éditer un bloc</h1>
+    <div>
+        <h1>Éditer un bloc</h1>
+        <p>
+            Page <a href="/admin/sections/page/<?= htmlspecialchars($section['page_slug']) ?>" class="text-strong"><?= htmlspecialchars($section['page_slug']) ?></a>
+            · Langue <strong><?= htmlspecialchars($langLabels[$section['lang']] ?? strtoupper($section['lang'])) ?></strong>
+            · Position <span class="info-mono"><?= sprintf('%02d', (int)$section['position']) ?></span>
+            · Type <code class="badge badge-meta info-mono"><?= htmlspecialchars($blockType) ?></code>
+        </p>
+    </div>
     <div class="btn-group">
-        <a href="<?= htmlspecialchars($_publicUrl) ?>" target="_blank" rel="noopener" class="btn">Voir la page ↗</a>
-        <a href="/admin/sections/page/<?= htmlspecialchars($section['page_slug']) ?>?lang=<?= htmlspecialchars($section['lang']) ?>" class="btn">← Retour</a>
+        <a href="<?= htmlspecialchars($publicUrl) ?>" target="_blank" rel="noopener" class="btn btn-sm">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>
+            Voir la page
+        </a>
+        <a href="/admin/sections/page/<?= htmlspecialchars($section['page_slug']) ?>?lang=<?= htmlspecialchars($section['lang']) ?>" class="btn btn-sm">← Retour</a>
     </div>
 </div>
 
-<p class="text-muted mb-2">
-    Page : <code><?= htmlspecialchars($section['page_slug']) ?></code> · Langue : <strong><?= htmlspecialchars($section['lang']) ?></strong> · Position : <?= (int)$section['position'] ?>
-</p>
-
-<form method="POST" action="/admin/sections/<?= (int)$section['id'] ?>/save" class="admin-card">
+<form method="POST" action="/admin/sections/<?= (int)$section['id'] ?>/save" class="admin-form-shell">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
+    <input type="hidden" name="block_type" value="<?= htmlspecialchars($blockType) ?>">
 
-    <div class="form-row">
-        <div class="form-group">
-            <label for="title">Titre (admin)</label>
-            <input type="text" id="title" name="title" value="<?= htmlspecialchars($section['title'] ?? '') ?>">
-            <p class="text-sm text-muted" style="margin-top: 4px;">Libellé interne pour t'aider à reconnaître ce bloc dans la liste. Pas visible côté visiteur.</p>
+    <!-- Méta du bloc -->
+    <section class="admin-card">
+        <h2>Métadonnées du bloc</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="title">Titre admin</label>
+                <input type="text" id="title" name="title" value="<?= htmlspecialchars($section['title'] ?? '') ?>" placeholder="ex. Hero accueil V8">
+                <p class="form-hint">Libellé interne pour repérer ce bloc dans la liste. Pas visible côté visiteur.</p>
+            </div>
+            <div class="form-group">
+                <label for="block_type_disabled">Type</label>
+                <input type="text" id="block_type_disabled" value="<?= htmlspecialchars($typeLabel) ?>" disabled>
+                <p class="form-hint">Le type ne se change pas (champs JSON incompatibles entre types).</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="block_type">Type de bloc</label>
-            <select id="block_type" name="block_type" disabled>
-                <?php foreach ($blockTypes as $key => $label): ?>
-                <option value="<?= htmlspecialchars($key) ?>" <?= $blockType === $key ? 'selected' : '' ?>><?= htmlspecialchars($label) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <input type="hidden" name="block_type" value="<?= htmlspecialchars($blockType) ?>">
-            <p class="text-sm text-muted" style="margin-top: 4px;">Le type ne se change pas en édition (les champs JSON sont incompatibles entre types).</p>
-        </div>
-    </div>
+    </section>
 
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">
+    <!-- Contenu du bloc -->
+    <section class="admin-card">
+        <h2>Contenu du bloc</h2>
+        <?php foreach ($fields as $field): ?>
+            <?php BlockFormRenderer::renderField($field, $content); ?>
+        <?php endforeach; ?>
+    </section>
 
-    <h2 style="font-size: 1.1rem; margin: 0 0 16px; font-family: var(--font-display); font-weight: 500;">
-        Contenu du bloc
-    </h2>
-
-    <?php foreach ($fields as $field): ?>
-        <?php BlockFormRenderer::renderField($field, $content); ?>
-    <?php endforeach; ?>
-
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">
-
-    <div style="display: flex; align-items: center; gap: 16px;">
-        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+    <!-- Activation + Submit -->
+    <section class="admin-card form-card-actions">
+        <label class="form-toggle">
             <input type="hidden" name="active" value="0">
             <input type="checkbox" name="active" value="1" <?= $section['active'] ? 'checked' : '' ?>>
-            <span>Bloc actif (visible côté visiteur)</span>
+            <span class="form-toggle-label">
+                <strong>Bloc actif</strong>
+                <span class="text-muted text-sm">Visible côté visiteur</span>
+            </span>
         </label>
-
-        <button type="submit" class="btn btn-primary" style="margin-left: auto;">Enregistrer</button>
-    </div>
+        <button type="submit" class="btn btn-primary btn-lg">Enregistrer</button>
+    </section>
 </form>
 
-<!-- MediaPicker (Phase 4 Session 2 / L1) — modal partagé pour tous les champs media_id -->
+<!-- MediaPicker (modal partagé) -->
 <div id="vp-media-picker" class="vp-mp-backdrop" hidden>
     <div class="vp-mp-modal" role="dialog" aria-modal="true" aria-labelledby="vp-mp-title">
         <header class="vp-mp-head">
@@ -93,7 +97,7 @@ $_publicUrl = '/' . ($section['page_slug'] === 'accueil' ? '' : $section['page_s
         </div>
         <footer class="vp-mp-foot">
             <span class="vp-mp-count"></span>
-            <button type="button" class="vp-mp-cancel">Annuler</button>
+            <button type="button" class="vp-mp-cancel btn btn-sm">Annuler</button>
         </footer>
     </div>
 </div>

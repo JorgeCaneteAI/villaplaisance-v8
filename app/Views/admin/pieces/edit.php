@@ -16,175 +16,174 @@ $labelB = $meta['label_b'] ?? '';
 $layout = $meta['layout'] ?? '';
 
 $offerLabels = ['bb' => "Chambres d'hôtes (B&B)", 'villa' => 'Villa entière', 'both' => 'Commun'];
+$langLabels  = ['fr' => 'Français', 'en' => 'English', 'es' => 'Español'];
 
-// Helper : URL miniature ou image originale en fallback
+// URL miniature ou image originale en fallback
 $thumbUrl = function (string $filename): string {
     if ($filename === '') return '';
     $thumbName = pathinfo($filename, PATHINFO_FILENAME) . '.webp';
     $thumbPath = ROOT . '/public/uploads/thumb/' . $thumbName;
     return file_exists($thumbPath) ? '/uploads/thumb/' . $thumbName : '/uploads/' . $filename;
 };
+
+// Rendu d'un item du repeater images — utilisé pour items existants ET template
+$renderImageItem = function (string $filename, $index) use ($thumbUrl) {
+    $url = $thumbUrl($filename);
+    $inputId = 'img-' . $index;
+    $num = is_int($index) ? ($index + 1) : '#';
+    ?>
+    <div class="vp-rp-item piece-image-item" data-index="<?= htmlspecialchars((string)$index) ?>">
+        <div class="vp-rp-item-handle"><span class="vp-rp-item-num"><?= $num ?></span></div>
+        <div class="vp-rp-item-body piece-image-body">
+            <?php if ($url): ?>
+                <img class="vp-mp-preview piece-image-thumb" data-for="<?= $inputId ?>" src="<?= htmlspecialchars($url) ?>" alt="">
+            <?php else: ?>
+                <div class="vp-mp-preview vp-mp-preview--empty piece-image-thumb" data-for="<?= $inputId ?>">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </div>
+            <?php endif; ?>
+            <div class="piece-image-meta">
+                <input type="text" id="<?= $inputId ?>" name="images[<?= htmlspecialchars((string)$index) ?>]" value="<?= htmlspecialchars($filename) ?>" data-mp-mode="filename" placeholder="nom-du-fichier.webp" class="piece-image-input">
+                <button type="button" class="btn btn-sm vp-mp-trigger" data-target="<?= $inputId ?>">Choisir…</button>
+            </div>
+        </div>
+        <div class="vp-rp-item-actions">
+            <button type="button" class="vp-rp-up" title="Monter">↑</button>
+            <button type="button" class="vp-rp-down" title="Descendre">↓</button>
+            <button type="button" class="vp-rp-remove" title="Supprimer">×</button>
+        </div>
+    </div>
+    <?php
+};
 ?>
 
 <div class="page-header">
-    <h1>Éditer une pièce</h1>
-    <a href="/admin/pieces" class="btn">← Retour à la liste</a>
+    <div>
+        <h1>Éditer une pièce</h1>
+        <p>
+            ID <span class="info-mono">#<?= (int)$piece['id'] ?></span>
+            · Langue <strong><?= htmlspecialchars($langLabels[$piece['lang']] ?? strtoupper($piece['lang'])) ?></strong>
+            · Offre <strong><?= htmlspecialchars($offerLabels[$piece['offer']] ?? $piece['offer']) ?></strong>
+            · Position <span class="info-mono"><?= sprintf('%02d', (int)$piece['position']) ?></span>
+        </p>
+    </div>
+    <a href="/admin/pieces" class="btn btn-sm">← Toutes les pièces</a>
 </div>
 
-<p class="text-muted mb-2">
-    ID : <code><?= (int)$piece['id'] ?></code> ·
-    Langue : <strong><?= htmlspecialchars($piece['lang']) ?></strong> ·
-    Offre : <strong><?= htmlspecialchars($offerLabels[$piece['offer']] ?? $piece['offer']) ?></strong> ·
-    Position : <?= (int)$piece['position'] ?>
-</p>
-
-<form method="POST" action="/admin/pieces/<?= (int)$piece['id'] ?>/save" class="admin-card">
+<form method="POST" action="/admin/pieces/<?= (int)$piece['id'] ?>/save" class="admin-form-shell">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
-
-    <h2 style="font-size: 1.1rem; margin: 0 0 16px; font-family: var(--font-display); font-weight: 500;">Identité</h2>
-
-    <div class="form-row">
-        <div class="form-group">
-            <label for="name">Nom (h2 affiché en italique)</label>
-            <input type="text" id="name" name="name" value="<?= htmlspecialchars($piece['name']) ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="sous_titre">Tagline (sous-titre court — affiché en uppercase sur B&B)</label>
-            <input type="text" id="sous_titre" name="sous_titre" value="<?= htmlspecialchars($piece['sous_titre'] ?? '') ?>">
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group">
-            <label for="offer">Offre</label>
-            <select id="offer" name="offer">
-                <?php foreach ($offerLabels as $k => $lbl): ?>
-                <option value="<?= $k ?>" <?= $piece['offer'] === $k ? 'selected' : '' ?>><?= htmlspecialchars($lbl) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="type">Type</label>
-            <select id="type" name="type">
-                <option value="chambre" <?= $piece['type'] === 'chambre' ? 'selected' : '' ?>>Chambre</option>
-                <option value="espace" <?= $piece['type'] === 'espace' ? 'selected' : '' ?>>Espace</option>
-            </select>
-        </div>
-    </div>
-
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">
-
-    <h2 style="font-size: 1.1rem; margin: 0 0 16px; font-family: var(--font-display); font-weight: 500;">Contenu éditorial</h2>
-
-    <div class="form-group">
-        <label for="description">Description (paragraphe long affiché en body-lg)</label>
-        <textarea id="description" name="description" rows="4"><?= htmlspecialchars($piece['description'] ?? '') ?></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="equip">Pills d'équipement (séparés par virgule, ex. <code>Lit 160×200, Vue jardin, Wifi</code>)</label>
-        <input type="text" id="equip" name="equip" value="<?= htmlspecialchars($piece['equip'] ?? '') ?>">
-        <p class="text-sm text-muted" style="margin-top: 4px;">Pour un pill 2-lignes : utilise <code>|</code>, ex. <code>2 lits 90×200|jumelables</code>.</p>
-    </div>
-
-    <div class="form-group">
-        <label for="note">Pill spécial (affiché en <code>.pill.solid</code> à la fin sur le markup villa)</label>
-        <input type="text" id="note" name="note" value="<?= htmlspecialchars($piece['note'] ?? '') ?>" placeholder="ex. « Rez-de-chaussée », « Accès direct jardin »">
-    </div>
-
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">
-
-    <h2 style="font-size: 1.1rem; margin: 0 0 16px; font-family: var(--font-display); font-weight: 500;">Images</h2>
-
-    <p class="text-sm text-muted">
-        Format <strong>WebP</strong> uniquement. Pour le markup B&B : 1 grande + 2 petites (3 images). Pour le markup villa : 1 seule image suffit.
-    </p>
-
-    <div class="vp-rp" data-name-prefix="images" data-id-prefix="img" data-item-kind="filename">
-        <div class="vp-rp-items">
-            <?php foreach ($images as $i => $filename):
-                $url = $thumbUrl($filename);
-                $inputId = 'img-' . $i;
-            ?>
-            <div class="vp-rp-item" data-index="<?= $i ?>">
-                <div class="vp-rp-item-handle"><span class="vp-rp-item-num"><?= $i + 1 ?></span></div>
-                <div class="vp-rp-item-body">
-                    <div class="vp-mp-row">
-                        <input type="text" id="<?= $inputId ?>" name="images[<?= $i ?>]" value="<?= htmlspecialchars($filename) ?>" data-mp-mode="filename" placeholder="(filename .webp)" style="flex:1; min-width: 220px;">
-                        <button type="button" class="vp-mp-trigger" data-target="<?= $inputId ?>">Choisir…</button>
-                        <img class="vp-mp-preview" data-for="<?= $inputId ?>" src="<?= htmlspecialchars($url) ?>" alt="" <?= $url ? '' : 'hidden' ?>>
-                        <span class="vp-mp-preview-label" data-for="<?= $inputId ?>"><?= htmlspecialchars($filename) ?></span>
-                    </div>
-                </div>
-                <div class="vp-rp-item-actions">
-                    <button type="button" class="vp-rp-up" title="Monter">↑</button>
-                    <button type="button" class="vp-rp-down" title="Descendre">↓</button>
-                    <button type="button" class="vp-rp-remove" title="Supprimer">×</button>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <template class="vp-rp-tpl">
-            <div class="vp-rp-item" data-index="__INDEX__">
-                <div class="vp-rp-item-handle"><span class="vp-rp-item-num">#</span></div>
-                <div class="vp-rp-item-body">
-                    <div class="vp-mp-row">
-                        <input type="text" id="img-__INDEX__" name="images[__INDEX__]" value="" data-mp-mode="filename" placeholder="(filename .webp)" style="flex:1; min-width: 220px;">
-                        <button type="button" class="vp-mp-trigger" data-target="img-__INDEX__">Choisir…</button>
-                        <img class="vp-mp-preview" data-for="img-__INDEX__" src="" alt="" hidden>
-                        <span class="vp-mp-preview-label" data-for="img-__INDEX__"></span>
-                    </div>
-                </div>
-                <div class="vp-rp-item-actions">
-                    <button type="button" class="vp-rp-up" title="Monter">↑</button>
-                    <button type="button" class="vp-rp-down" title="Descendre">↓</button>
-                    <button type="button" class="vp-rp-remove" title="Supprimer">×</button>
-                </div>
-            </div>
-        </template>
-        <button type="button" class="vp-rp-add">+ Ajouter une image</button>
-    </div>
-
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">
-
-    <h2 style="font-size: 1.1rem; margin: 0 0 16px; font-family: var(--font-display); font-weight: 500;">
-        Meta (markup B&B uniquement)
-    </h2>
-    <p class="text-sm text-muted">
-        Ces 3 champs ne servent que sur le markup B&B (<code>.ch-room</code>). Sur le markup villa, ils sont ignorés.
-    </p>
-
-    <div class="form-row">
-        <div class="form-group">
-            <label for="meta_label_a">Label A (au-dessus du tagline)</label>
-            <input type="text" id="meta_label_a" name="meta_label_a" value="<?= htmlspecialchars($labelA) ?>" placeholder="ex. « I · Première chambre de la suite »">
-        </div>
-        <div class="form-group">
-            <label for="meta_label_b">Label B (à droite du label A)</label>
-            <input type="text" id="meta_label_b" name="meta_label_b" value="<?= htmlspecialchars($labelB) ?>" placeholder="ex. « Côté jardin »">
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="meta_layout">Mise en page de la section</label>
-        <select id="meta_layout" name="meta_layout">
-            <option value="" <?= $layout === '' ? 'selected' : '' ?>>(auto : alternance selon position)</option>
-            <option value="normal" <?= $layout === 'normal' ? 'selected' : '' ?>>Normal — image à droite</option>
-            <option value="alt" <?= $layout === 'alt' ? 'selected' : '' ?>>Alt — image à gauche (fond stone)</option>
-        </select>
-    </div>
-
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--admin-border);">
-
     <input type="hidden" name="image" value="<?= htmlspecialchars($piece['image'] ?? '') ?>">
 
-    <div style="display: flex; align-items: center; gap: 16px;">
+    <!-- Identité -->
+    <section class="admin-card">
+        <h2>Identité</h2>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" id="name" name="name" value="<?= htmlspecialchars($piece['name']) ?>" required>
+                <p class="form-hint">H2 affiché en italique sur le front.</p>
+            </div>
+            <div class="form-group">
+                <label for="sous_titre">Tagline</label>
+                <input type="text" id="sous_titre" name="sous_titre" value="<?= htmlspecialchars($piece['sous_titre'] ?? '') ?>">
+                <p class="form-hint">Sous-titre court, affiché en uppercase sur B&amp;B.</p>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="offer">Offre</label>
+                <select id="offer" name="offer">
+                    <?php foreach ($offerLabels as $k => $lbl): ?>
+                    <option value="<?= $k ?>" <?= $piece['offer'] === $k ? 'selected' : '' ?>><?= htmlspecialchars($lbl) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type" name="type">
+                    <option value="chambre" <?= $piece['type'] === 'chambre' ? 'selected' : '' ?>>Chambre</option>
+                    <option value="espace" <?= $piece['type'] === 'espace' ? 'selected' : '' ?>>Espace</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenu éditorial -->
+    <section class="admin-card">
+        <h2>Contenu éditorial</h2>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4"><?= htmlspecialchars($piece['description'] ?? '') ?></textarea>
+            <p class="form-hint">Paragraphe long affiché en body-lg.</p>
+        </div>
+        <div class="form-group">
+            <label for="equip">Pills d'équipement</label>
+            <input type="text" id="equip" name="equip" value="<?= htmlspecialchars($piece['equip'] ?? '') ?>" placeholder="Lit 160×200, Vue jardin, Wifi">
+            <p class="form-hint">Séparés par une virgule. Pour un pill 2-lignes : utilise <code class="info-mono">|</code>, ex. <code class="info-mono">2 lits 90×200|jumelables</code>.</p>
+        </div>
+        <div class="form-group">
+            <label for="note">Pill spécial</label>
+            <input type="text" id="note" name="note" value="<?= htmlspecialchars($piece['note'] ?? '') ?>" placeholder="ex. « Rez-de-chaussée », « Accès direct jardin »">
+            <p class="form-hint">Affiché en pill solide à la fin sur le markup villa.</p>
+        </div>
+    </section>
+
+    <!-- Images -->
+    <section class="admin-card">
+        <h2>Images</h2>
+        <p class="form-hint mb-2">Format <strong>WebP</strong> uniquement. Markup B&amp;B : 1 grande + 2 petites (3 images). Markup villa : 1 seule image suffit.</p>
+
+        <div class="vp-rp" data-name-prefix="images" data-id-prefix="img" data-item-kind="filename">
+            <div class="vp-rp-items">
+                <?php foreach ($images as $i => $filename): ?>
+                    <?php $renderImageItem((string)$filename, (int)$i); ?>
+                <?php endforeach; ?>
+            </div>
+            <template class="vp-rp-tpl">
+                <?php $renderImageItem('', '__INDEX__'); ?>
+            </template>
+            <div class="vp-rp-footer">
+                <button type="button" class="btn btn-sm vp-rp-add">+ Ajouter une image</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Meta B&B -->
+    <section class="admin-card">
+        <h2>Meta <span class="card-meta">markup B&amp;B uniquement</span></h2>
+        <p class="form-hint mb-2">Ces 3 champs ne servent que sur le markup B&amp;B (<code class="info-mono">.ch-room</code>). Sur le markup villa, ils sont ignorés.</p>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="meta_label_a">Label A</label>
+                <input type="text" id="meta_label_a" name="meta_label_a" value="<?= htmlspecialchars($labelA) ?>" placeholder="I · Première chambre de la suite">
+                <p class="form-hint">Au-dessus du tagline.</p>
+            </div>
+            <div class="form-group">
+                <label for="meta_label_b">Label B</label>
+                <input type="text" id="meta_label_b" name="meta_label_b" value="<?= htmlspecialchars($labelB) ?>" placeholder="Côté jardin">
+                <p class="form-hint">À droite du label A.</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="meta_layout">Mise en page de la section</label>
+            <select id="meta_layout" name="meta_layout">
+                <option value="" <?= $layout === '' ? 'selected' : '' ?>>Auto — alternance selon position</option>
+                <option value="normal" <?= $layout === 'normal' ? 'selected' : '' ?>>Normal — image à droite</option>
+                <option value="alt" <?= $layout === 'alt' ? 'selected' : '' ?>>Alt — image à gauche (fond stone)</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- Submit -->
+    <section class="admin-card form-card-actions">
         <a href="/admin/pieces" class="btn">Annuler</a>
-        <button type="submit" class="btn btn-primary" style="margin-left: auto;">Enregistrer</button>
-    </div>
+        <button type="submit" class="btn btn-primary btn-lg">Enregistrer</button>
+    </section>
 </form>
 
-<!-- MediaPicker modal partagé (réutilisé depuis sections/edit) -->
+<!-- MediaPicker modal partagé -->
 <div id="vp-media-picker" class="vp-mp-backdrop" hidden>
     <div class="vp-mp-modal" role="dialog" aria-modal="true" aria-labelledby="vp-mp-title">
         <header class="vp-mp-head">
@@ -203,7 +202,7 @@ $thumbUrl = function (string $filename): string {
         </div>
         <footer class="vp-mp-foot">
             <span class="vp-mp-count"></span>
-            <button type="button" class="vp-mp-cancel">Annuler</button>
+            <button type="button" class="vp-mp-cancel btn btn-sm">Annuler</button>
         </footer>
     </div>
 </div>

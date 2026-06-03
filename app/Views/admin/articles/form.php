@@ -90,10 +90,45 @@ $frQualityTotal = count($frQuality);
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" data-category-field>
                     <label for="category">Catégorie</label>
-                    <input type="text" id="category" name="category" value="<?= htmlspecialchars($frArticle['category'] ?? '') ?>" placeholder="Ex: Territoire, Restaurants…">
+                    <?php
+                    $currentCat = $frArticle['category'] ?? '';
+                    $catGroups = $categories ?? [];
+                    // Vérifie si la catégorie courante existe dans un groupe ; sinon, l'ajouter dans "Autres"
+                    $knownAll = $catGroups ? array_merge(...array_values($catGroups)) : [];
+                    if ($currentCat !== '' && !in_array($currentCat, $knownAll, true)) {
+                        $catGroups['Autres'] = array_merge($catGroups['Autres'] ?? [], [$currentCat]);
+                    }
+                    ?>
+                    <select id="category" name="category" data-category-select>
+                        <option value="">— Aucune catégorie —</option>
+                        <?php foreach ($catGroups as $groupLabel => $cats): ?>
+                            <optgroup label="<?= htmlspecialchars($groupLabel) ?>">
+                                <?php foreach ($cats as $cat): ?>
+                                    <option value="<?= htmlspecialchars($cat) ?>" <?= $currentCat === $cat ? 'selected' : '' ?>><?= htmlspecialchars($cat) ?></option>
+                                <?php endforeach; ?>
+                            </optgroup>
+                        <?php endforeach; ?>
+                        <option value="__new__">+ Créer une nouvelle catégorie…</option>
+                    </select>
+                    <input type="text" name="category_new" placeholder="Nom de la nouvelle catégorie" data-category-new hidden style="margin-top: 6px;">
                 </div>
+                <script>
+                (function () {
+                    const field = document.querySelector('[data-category-field]');
+                    if (!field) return;
+                    const select = field.querySelector('[data-category-select]');
+                    const input  = field.querySelector('[data-category-new]');
+                    const sync = () => {
+                        const isNew = select.value === '__new__';
+                        input.hidden = !isNew;
+                        if (isNew) { input.required = true; input.focus(); }
+                        else { input.required = false; input.value = ''; }
+                    };
+                    select.addEventListener('change', sync);
+                })();
+                </script>
 
                 <div class="form-group">
                     <label for="slug">Slug (URL)</label>
@@ -451,7 +486,9 @@ $frQualityTotal = count($frQuality);
 
             const subtitle = document.getElementById('ai_subtitle')?.value?.trim() || '';
             const type = document.querySelector('select[name="type"]')?.value || 'journal';
-            const category = document.querySelector('input[name="category"]')?.value?.trim() || '';
+            const catSelect = document.querySelector('select[name="category"]');
+            const catNew    = document.querySelector('input[name="category_new"]');
+            const category  = (catSelect?.value === '__new__' ? catNew?.value : catSelect?.value)?.trim() || '';
 
             const status = document.getElementById('ai-status');
             const statusText = document.getElementById('ai-status-text');

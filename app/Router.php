@@ -299,6 +299,28 @@ class Router
             return;
         }
 
+        // Google Business Profile (OAuth + sync avis + réponse)
+        if ($normalized === '/admin/google/connect') {
+            $this->callController('Controllers\\Admin\\GoogleReviewsController', 'connect');
+            return;
+        }
+        if ($normalized === '/admin/google/callback') {
+            $this->callController('Controllers\\Admin\\GoogleReviewsController', 'callback');
+            return;
+        }
+        if ($normalized === '/admin/google/sync' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\GoogleReviewsController', 'sync');
+            return;
+        }
+        if ($normalized === '/admin/google/disconnect' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\GoogleReviewsController', 'disconnect');
+            return;
+        }
+        if (preg_match('#^/admin/google/reply/(\d+)$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\GoogleReviewsController', 'reply', ['id' => (int)$m[1]]);
+            return;
+        }
+
         // Livret
         if ($normalized === '/admin/livret/save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\LivretController', 'save');

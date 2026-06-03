@@ -100,7 +100,7 @@ class BlockFormRenderer
         }
 
         if ($help !== '') {
-            echo '<p class="text-sm text-muted" style="margin-top: 4px;">' . htmlspecialchars($help) . '</p>';
+            echo '<p class="form-hint">' . htmlspecialchars($help) . '</p>';
         }
         echo '</div>';
     }
@@ -158,17 +158,17 @@ class BlockFormRenderer
 
     private static function renderBool(string $name, string $id, bool $value): void
     {
-        echo '<label style="display:flex; align-items:center; gap:8px; cursor:pointer;">';
+        echo '<label class="form-bool">';
         echo '<input type="hidden" name="' . htmlspecialchars($name) . '" value="0">';
         echo '<input type="checkbox" id="' . htmlspecialchars($id) . '" name="' . htmlspecialchars($name) . '" value="1"' . ($value ? ' checked' : '') . '>';
-        echo '<span class="text-sm text-muted">Activer</span>';
+        echo '<span>Activer</span>';
         echo '</label>';
     }
 
     private static function renderInt(string $name, string $id, $value): void
     {
         printf(
-            '<input type="number" id="%s" name="%s" value="%s" style="max-width: 120px;">',
+            '<input type="number" id="%s" name="%s" value="%s" class="input-num">',
             htmlspecialchars($id),
             htmlspecialchars($name),
             htmlspecialchars(is_scalar($value) ? (string)$value : '')
@@ -181,13 +181,23 @@ class BlockFormRenderer
         $previewUrl = $idVal > 0 ? ImageService::urlById($idVal) : null;
         ?>
         <div class="vp-mp-row">
-            <input type="number" id="<?= htmlspecialchars($id) ?>" name="<?= htmlspecialchars($name) ?>" value="<?= $idVal ?: '' ?>" placeholder="ID" style="max-width: 100px;">
-            <button type="button" class="vp-mp-trigger" data-target="<?= htmlspecialchars($id) ?>">Choisir une image…</button>
-            <img class="vp-mp-preview" data-for="<?= htmlspecialchars($id) ?>" src="<?= htmlspecialchars($previewUrl ?? '') ?>" alt="" <?= $previewUrl ? '' : 'hidden' ?>>
-            <span class="vp-mp-preview-label" data-for="<?= htmlspecialchars($id) ?>"><?= $idVal > 0 ? 'id=' . $idVal : '' ?></span>
-            <?php if ($idVal > 0 && !$previewUrl): ?>
-                <span class="text-sm" style="color: var(--admin-error);">image introuvable</span>
+            <?php if ($previewUrl): ?>
+                <img class="vp-mp-preview" data-for="<?= htmlspecialchars($id) ?>" src="<?= htmlspecialchars($previewUrl) ?>" alt="">
+            <?php else: ?>
+                <div class="vp-mp-preview vp-mp-preview--empty" data-for="<?= htmlspecialchars($id) ?>">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </div>
             <?php endif; ?>
+            <div class="vp-mp-row-body">
+                <button type="button" class="btn btn-sm vp-mp-trigger" data-target="<?= htmlspecialchars($id) ?>">
+                    <?= $idVal > 0 ? 'Changer l’image…' : 'Choisir une image…' ?>
+                </button>
+                <input type="number" id="<?= htmlspecialchars($id) ?>" name="<?= htmlspecialchars($name) ?>" value="<?= $idVal ?: '' ?>" placeholder="ID" class="input-num input-num--small">
+                <span class="vp-mp-preview-label" data-for="<?= htmlspecialchars($id) ?>"><?= $idVal > 0 ? '#' . $idVal : '' ?></span>
+                <?php if ($idVal > 0 && !$previewUrl): ?>
+                    <span class="badge badge-danger">image introuvable</span>
+                <?php endif; ?>
+            </div>
         </div>
         <?php
     }
@@ -238,10 +248,12 @@ class BlockFormRenderer
         echo '</template>';
 
         $atMax = $max > 0 && count($items) >= $max;
-        echo '<button type="button" class="vp-rp-add"' . ($atMax ? ' disabled' : '') . '>+ Ajouter</button>';
+        echo '<div class="vp-rp-footer">';
+        echo '<button type="button" class="btn btn-sm vp-rp-add"' . ($atMax ? ' disabled' : '') . '>+ Ajouter un item</button>';
         if ($max > 0) {
             echo '<span class="vp-rp-max-note">Max ' . $max . ' item' . ($max > 1 ? 's' : '') . '</span>';
         }
+        echo '</div>';
         echo '</div>';
     }
 

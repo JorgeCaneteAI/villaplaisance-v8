@@ -58,8 +58,54 @@ class ArticleController extends AdminBaseController
             ];
         }
 
+        $categories = $this->loadCategories();
         $isEdit = false;
-        $this->render('admin/articles/form', compact('articlesByLang', 'langs', 'langLabels', 'csrf', 'isEdit', 'type'));
+        $this->render('admin/articles/form', compact('articlesByLang', 'langs', 'langLabels', 'csrf', 'isEdit', 'type', 'categories'));
+    }
+
+    /**
+     * Catégories groupées pour le select de l'admin.
+     * Renvoie un tableau ['Groupe' => ['Cat1', 'Cat2', …]].
+     * - 2 groupes éditoriaux fixes (Journal / Sur place).
+     * - Un 3e groupe "Autres" ajouté dynamiquement si la DB contient des
+     *   catégories qui n'appartiennent à aucun des deux groupes connus
+     *   (cas d'import ou de catégorie créée à la main).
+     */
+    private function loadCategories(): array
+    {
+        $groups = [
+            'Journal' => [
+                'Provence contemporaine',
+                'Voyager autrement',
+                'Hôtes & hôteliers',
+                'Territoire & transition',
+                "L'art de séjourner",
+            ],
+            'Sur place' => [
+                'Que faire avec des enfants',
+                'Commerces',
+                'Sites à visiter',
+                'Restaurants & tables',
+            ],
+        ];
+
+        try {
+            $rows = \Database::fetchAll(
+                "SELECT DISTINCT category FROM vp_articles WHERE lang='fr' AND category IS NOT NULL AND category != '' ORDER BY category ASC"
+            );
+            $known = array_merge(...array_values($groups));
+            $orphans = [];
+            foreach ($rows as $r) {
+                if (!in_array($r['category'], $known, true)) {
+                    $orphans[] = $r['category'];
+                }
+            }
+            if (!empty($orphans)) {
+                $groups['Autres'] = $orphans;
+            }
+        } catch (\Throwable) {}
+
+        return $groups;
     }
 
     public function edit(int $id): void
@@ -104,7 +150,8 @@ class ArticleController extends AdminBaseController
 
         $isEdit = true;
         $csrf = $this->csrf();
-        $this->render('admin/articles/form', compact('articlesByLang', 'langs', 'langLabels', 'csrf', 'isEdit', 'type'));
+        $categories = $this->loadCategories();
+        $this->render('admin/articles/form', compact('articlesByLang', 'langs', 'langLabels', 'csrf', 'isEdit', 'type', 'categories'));
     }
 
     public function store(): void
@@ -123,6 +170,10 @@ class ArticleController extends AdminBaseController
 
         $type = $_POST['type'] ?? 'journal';
         $category = trim($_POST['category'] ?? '');
+        // "__new__" = sentinel "créer une nouvelle catégorie" → on prend le champ texte
+        if ($category === '__new__') {
+            $category = trim($_POST['category_new'] ?? '');
+        }
         $coverImage = trim($_POST['cover_image'] ?? '');
         $ogImage = trim($_POST['og_image'] ?? '');
         $status = $_POST['status'] ?? 'draft';
@@ -177,6 +228,10 @@ class ArticleController extends AdminBaseController
         $slug = trim($_POST['slug'] ?? '') ?: $article['slug'];
         $type = $_POST['type'] ?? $article['type'];
         $category = trim($_POST['category'] ?? '');
+        // "__new__" = sentinel "créer une nouvelle catégorie" → on prend le champ texte
+        if ($category === '__new__') {
+            $category = trim($_POST['category_new'] ?? '');
+        }
         $coverImage = trim($_POST['cover_image'] ?? '');
         $ogImage = trim($_POST['og_image'] ?? '');
         $status = $_POST['status'] ?? 'draft';

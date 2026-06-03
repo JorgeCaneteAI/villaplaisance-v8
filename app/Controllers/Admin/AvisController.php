@@ -29,8 +29,18 @@ class AvisController extends AdminBaseController
         $stats['avg_airbnb'] = $airbnbRatings ? round(array_sum($airbnbRatings) / count($airbnbRatings), 2) : 0;
         $stats['avg_booking'] = $bookingRatings ? round(array_sum($bookingRatings) / count($bookingRatings), 1) : 0;
 
+        // Dernière sync Google (max synced_at sur les avis google)
+        $lastGoogleSync = null;
+        try {
+            $row = \Database::fetchOne("SELECT MAX(synced_at) AS last FROM vp_reviews WHERE platform = 'google'");
+            $lastGoogleSync = $row['last'] ?? null;
+        } catch (\Throwable) {}
+
+        $google = \GoogleBusinessProfileService::status();
+        $google['last_sync'] = $lastGoogleSync;
+
         $csrf = $this->csrf();
-        $this->render('admin/avis/index', compact('reviews', 'csrf', 'stats'));
+        $this->render('admin/avis/index', compact('reviews', 'csrf', 'stats', 'google'));
     }
 
     public function create(): void
