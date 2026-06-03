@@ -55,11 +55,14 @@ class AvisController extends BaseController
             }
         } catch (\Throwable) {}
 
-        // SEO (vp_pages avis seedé en 021)
-        $seo = \SeoService::forPage('avis', $lang, [
-            'title' => 'Avis clients · Villa Plaisance',
-            'description' => 'Découvrez les témoignages de nos hôtes — chambres d\'hôtes et villa entière à Bédarrides en Provence.',
-        ]);
+        // SEO (vp_pages avis seedé en 021).
+        // Signature SeoService::forPage(slug, lang, fallbackTitle, fallbackDesc) — paramètres positionnels.
+        $seo = \SeoService::forPage(
+            'avis',
+            $lang,
+            'Avis clients, Villa Plaisance',
+            'Découvrez les témoignages de nos hôtes, chambres d\'hôtes et villa entière à Bédarrides en Provence.'
+        );
 
         // JSON-LD : LodgingBusiness + AggregateRating + array de Reviews
         $jsonLd = [\SeoService::lodgingBusinessJsonLd()];
