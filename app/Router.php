@@ -362,6 +362,14 @@ class Router
             $this->callController('Controllers\\Admin\\MediaController', 'upload');
             return;
         }
+        if ($normalized === '/admin/media/unsplash/search') {
+            $this->callController('Controllers\\Admin\\MediaController', 'unsplashSearch');
+            return;
+        }
+        if ($normalized === '/admin/media/unsplash/import' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\MediaController', 'unsplashImport');
+            return;
+        }
         if (preg_match('#^/admin/media/(\d+)/edit$#', $normalized, $m)) {
             $this->callController('Controllers\\Admin\\MediaController', 'edit', ['id' => (int)$m[1]]);
             return;

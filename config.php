@@ -39,6 +39,7 @@ require ROOT . '/app/Services/AnthropicService.php';
 require ROOT . '/app/Services/AnalyticsService.php';
 require ROOT . '/app/Services/IpInfoService.php';
 require ROOT . '/app/Services/GoogleBusinessProfileService.php';
+require ROOT . '/app/Services/UnsplashService.php';
 
 // PSR-4 minimal autoloader for App\ namespace
 spl_autoload_register(function (string $class): void {

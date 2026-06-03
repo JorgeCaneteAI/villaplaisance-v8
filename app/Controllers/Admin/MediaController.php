@@ -196,6 +196,111 @@ class MediaController extends AdminBaseController
         $this->redirect('/admin/media' . ($folder !== 'general' ? '?folder=' . $folder : ''));
     }
 
+    /**
+     * Recherche Unsplash (renvoie JSON pour la modale admin).
+     * Route : GET /admin/media/unsplash/search?q=...&page=N
+     */
+    public function unsplashSearch(): void
+    {
+        $q    = trim($_GET['q'] ?? '');
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        try {
+            $data = \UnsplashService::search($q, $page);
+            $this->json(['ok' => true] + $data);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Import d'une photo Unsplash dans la médiathèque locale.
+     * Route : POST /admin/media/unsplash/import
+     * Form : photo_id, folder, alt_fr, credit_shown, + tout le payload utile
+     *        envoyé par le JS (photographer, photographer_url, source_url, tags, …)
+     */
+    public function unsplashImport(): void
+    {
+        if (!$this->verifyCsrf()) {
+            $this->json(['ok' => false, 'error' => 'CSRF invalide'], 400);
+            return;
+        }
+        $photoId = trim($_POST['photo_id'] ?? '');
+        if ($photoId === '') {
+            $this->json(['ok' => false, 'error' => 'photo_id manquant'], 400);
+            return;
+        }
+
+        $folder = $_POST['folder'] ?? 'general';
+        if (!in_array($folder, self::FOLDERS, true)) $folder = 'general';
+
+        $altFr        = trim($_POST['alt_fr'] ?? '');
+        $altEn        = trim($_POST['alt_en'] ?? '');
+        $photographer = trim($_POST['photographer'] ?? '');
+        $photogUrl    = trim($_POST['photographer_url'] ?? '');
+        $sourceUrl    = trim($_POST['source_url'] ?? '');
+        $downloadUrl  = trim($_POST['download_url'] ?? '');
+        $downloadTrack= trim($_POST['download_track'] ?? '');
+        $tagsArr      = $_POST['tags'] ?? [];
+        if (is_string($tagsArr)) $tagsArr = array_map('trim', explode(',', $tagsArr));
+        $tagsArr      = array_filter(array_map('trim', $tagsArr));
+
+        try {
+            // Slug du sujet + suffix d'unicité (6 premiers chars du photo_id)
+            $base = $altFr !== '' ? $altFr : ($altEn !== '' ? $altEn : ('unsplash ' . $photoId));
+            $slug = $this->seoFilename($base);
+            $slug = mb_substr($slug, 0, 60) ?: ('unsplash-' . $photoId);
+            $filename = $slug . '-' . substr($photoId, 0, 6) . '.webp';
+            $absPath  = self::UPLOAD_DIR . $filename;
+
+            // Tracker (ping) puis téléchargement
+            \UnsplashService::trackDownload($downloadTrack);
+            \UnsplashService::downloadBinary($downloadUrl, $absPath);
+
+            // Conversion WebP si pas déjà
+            $mime = mime_content_type($absPath) ?: 'image/jpeg';
+            if ($mime !== 'image/webp') {
+                $tmpPath = $absPath . '.tmp.webp';
+                if ($this->convertToWebp($absPath, $tmpPath, $mime)) {
+                    @unlink($absPath);
+                    @rename($tmpPath, $absPath);
+                }
+            }
+
+            // Dimensions
+            $size = filesize($absPath) ?: 0;
+            [$w, $h] = @getimagesize($absPath) ?: [0, 0];
+
+            $credit = $photographer
+                ? "Photo : {$photographer} · Unsplash"
+                : 'Unsplash';
+
+            $id = \Database::insert('vp_media', [
+                'filename'      => $filename,
+                'original_name' => $sourceUrl ?: ('https://unsplash.com/photos/' . $photoId),
+                'alt_fr'        => $altFr,
+                'alt_en'        => $altEn,
+                'alt_es'        => '',
+                'title'         => '',
+                'caption'       => '',
+                'credit'        => $credit . ($photogUrl ? " ({$photogUrl})" : ''),
+                'mime_type'     => 'image/webp',
+                'file_size'     => (int)$size,
+                'width'         => (int)$w,
+                'height'        => (int)$h,
+                'folder'        => $folder,
+                'tags'          => implode(', ', array_slice($tagsArr, 0, 12)),
+                'seo_filename'  => $slug,
+            ]);
+
+            // Génère la miniature
+            self::generateThumb($absPath, self::thumbAbsolutePath($filename));
+
+            $this->json(['ok' => true, 'id' => $id, 'filename' => $filename]);
+        } catch (\Throwable $e) {
+            $this->json(['ok' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
     public function update(int $id): void
     {
         if (!$this->verifyCsrf()) {
