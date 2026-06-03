@@ -71,17 +71,21 @@ class SeoService
 
     public static function lodgingBusinessJsonLd(): array
     {
+        $base = APP_ENV === 'production' ? 'https://villaplaisance.fr' : APP_URL;
         return [
             '@context' => 'https://schema.org',
             '@type' => 'LodgingBusiness',
             'name' => 'Villa Plaisance',
             'description' => 'Chambres d\'hôtes et villa de charme à Bédarrides, au cœur du Triangle d\'Or provençal.',
-            'url' => APP_URL,
-            'telephone' => '+33 6 00 00 00 00',
+            'url' => $base,
+            // Format E.164 (international) recommandé par Schema.org.
+            'telephone' => '+33490330049',
             'email' => 'contact@villaplaisance.fr',
+            // L'adresse rue n'est pas publiée (transmise après confirmation de
+            // séjour, cf. /contact). On expose commune + CP + région + pays,
+            // suffisant pour les fiches locales Google et les LLMs.
             'address' => [
                 '@type' => 'PostalAddress',
-                'streetAddress' => 'Bédarrides',
                 'addressLocality' => 'Bédarrides',
                 'postalCode' => '84370',
                 'addressRegion' => 'Vaucluse',
@@ -92,7 +96,7 @@ class SeoService
                 'latitude' => 44.0386,
                 'longitude' => 4.8972,
             ],
-            'image' => APP_URL . '/assets/img/og-default.webp',
+            'image' => $base . '/assets/img/og-default.webp',
             'priceRange' => '€€',
             'starRating' => [
                 '@type' => 'Rating',

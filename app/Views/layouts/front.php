@@ -33,8 +33,19 @@
     <title><?= htmlspecialchars($seo['title'] ?? 'Villa Plaisance') ?></title>
     <meta name="description" content="<?= htmlspecialchars($seo['description'] ?? '') ?>">
 
+    <!-- Robots — autorise un extrait illimité + grande miniature.
+         Sert autant à Google qu'aux LLMs (ChatGPT, Claude, Perplexity, Gemini)
+         qui respectent les directives standards. -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
     <!-- Canonical -->
     <link rel="canonical" href="<?= htmlspecialchars($seo['canonical'] ?? '') ?>">
+
+    <!-- hreflang — variantes linguistiques.
+         x-default pointe sur FR (langue par défaut). -->
+    <?php foreach (($seo['hreflang'] ?? []) as $alt): ?>
+    <link rel="alternate" hreflang="<?= htmlspecialchars($alt['lang']) ?>" href="<?= htmlspecialchars($alt['url']) ?>">
+    <?php endforeach; ?>
 
 
     <!-- Open Graph -->
@@ -116,6 +127,7 @@
     <footer class="pied" role="contentinfo">
         <p class="pied__nom">
             Villa Plaisance &middot; Bédarrides 84370 Vaucluse &middot;
+            <a href="tel:+33490330049">04 90 33 00 49</a> &middot;
             <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
         </p>
         <nav class="pied__nav" aria-label="Mentions">
