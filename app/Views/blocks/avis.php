@@ -38,18 +38,27 @@ if ($surface === 'stone')      $surfaceStyle = 'background: var(--linen-100);';
 if ($surface === 'sage')       $surfaceStyle = 'background: var(--sage-200);';
 if ($surface === 'sage-light') $surfaceStyle = 'background: color-mix(in oklab, var(--sage-200) 28%, var(--linen-50));';
 
-// Mode auto : lire vp_reviews
+// Mode auto : lire vp_reviews (colonnes réelles : content, author, origin, review_date)
+// Fallback : si pas assez d'avis featured, élargit à tous les published.
 if ($source === 'auto') {
     try {
         $rows = Database::fetchAll(
-            "SELECT * FROM vp_reviews WHERE status='published' AND featured=1 ORDER BY date_review DESC LIMIT " . max(1, $limit)
+            "SELECT * FROM vp_reviews
+             WHERE status = 'published' AND content IS NOT NULL AND LENGTH(content) > 0
+             ORDER BY featured DESC, rating DESC, review_date DESC
+             LIMIT " . max(1, $limit)
         );
-        $items = array_map(static function (array $r): array {
+        // Normalisation Booking (note /10 → /5)
+        $normalizeRating = static function (float $rating, string $platform): float {
+            if ($platform === 'booking' && $rating > 5) return $rating / 2;
+            return $rating;
+        };
+        $items = array_map(static function (array $r) use ($normalizeRating): array {
             return [
-                'rating'   => (int)($r['rating'] ?? 5),
-                'quote'    => (string)($r['comment'] ?? ''),
-                'author'   => (string)($r['author_name'] ?? ''),
-                'location' => (string)($r['author_location'] ?? ''),
+                'rating'   => (int)floor($normalizeRating((float)($r['rating'] ?? 5), (string)($r['platform'] ?? ''))),
+                'quote'    => (string)($r['content'] ?? ''),
+                'author'   => (string)($r['author']  ?? ''),
+                'location' => (string)($r['origin']  ?? ''),
             ];
         }, $rows);
     } catch (\Throwable) {
