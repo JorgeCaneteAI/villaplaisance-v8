@@ -76,6 +76,47 @@ use App\Services\ReservationConstants;
         </div>
     </div>
 
+    <?php
+    /**
+     * Rendu d'une résa dans un slot du calendrier.
+     * $slot : 'full' (pleine largeur), 'morning' (1/4 gauche = départ),
+     *         'evening' (1/4 droite = arrivée).
+     * Sur les slots étroits on n'affiche pas le label (juste la bande couleur).
+     */
+    $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): void {
+        $isAvignon = ($r['propriete'] ?? '') === 'AV-ANN';
+        // Avignon : couleur unique violet (identifie le studio en un coup d'œil)
+        $bg  = $isAvignon ? '#7E57C2' : $r['couleur']['bg'];
+        $txt = $isAvignon ? '#ffffff' : $r['couleur']['text'];
+
+        $cls = ['resa', 'resa--' . $slot];
+        if (!$isCurrentMonth) $cls[] = 'resa--outside';
+
+        $slotLabel = match ($slot) {
+            'morning' => 'Départ matin · ',
+            'evening' => 'Arrivée soir · ',
+            default   => '',
+        };
+        $title = ($isAvignon ? 'AVIGNON · ' . ($r['source'] ?? '') . ' — ' : '')
+               . (!$isCurrentMonth ? '(hors mois) ' : '')
+               . $slotLabel
+               . ($r['code'] ?? '') . ' · ' . ($r['nom_client'] ?? '')
+               . (!empty($r['commentaire']) ? ' — ' . $r['commentaire'] : '');
+        ?>
+        <a href="/admin/calendrier/saisie/<?= (int) $r['id'] ?>"
+           class="<?= implode(' ', $cls) ?>"
+           title="<?= htmlspecialchars($title) ?>"
+           style="background: <?= htmlspecialchars($bg) ?>; color: <?= htmlspecialchars($txt) ?>;">
+            <?php if ($slot === 'full'): ?>
+                <strong><?= htmlspecialchars($r['code']) ?></strong>
+                <span class="resa-sep">·</span>
+                <?= htmlspecialchars($r['nom_client']) ?>
+            <?php endif; ?>
+        </a>
+        <?php
+    };
+    ?>
+
     <table class="calendrier__grid">
         <thead>
             <tr>
@@ -94,20 +135,48 @@ use App\Services\ReservationConstants;
                         $isToday = $day->format('Y-m-d') === $today->format('Y-m-d');
                         $classes = ['cell', $isCurrent ? 'current' : 'outside'];
                         if ($isToday) $classes[] = 'today';
+
+                        // Ranger les résas du jour par lane (= propriété).
+                        // Ordre fixe pour qu'une propriété reste sur la même ligne
+                        // horizontale tout le mois (lecture rapide).
+                        $LANES = ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2];
+                        $byLane = [0 => [], 1 => [], 2 => []];
+                        foreach ($resa_by_day[$key] ?? [] as $r) {
+                            $l = $LANES[$r['propriete']] ?? null;
+                            if ($l === null) continue;
+                            $byLane[$l][] = $r;
+                        }
                         ?>
                         <td class="<?= implode(' ', $classes) ?>">
                             <div class="day-num"><?= (int) $day->format('j') ?></div>
-                            <?php if ($isCurrent && isset($resa_by_day[$key])): ?>
-                                <?php foreach ($resa_by_day[$key] as $r): ?>
-                                    <a href="/admin/calendrier/saisie/<?= (int) $r['id'] ?>"
-                                       class="resa"
-                                       title="<?= htmlspecialchars($r['commentaire'] ?? '') ?>"
-                                       style="background: <?= htmlspecialchars($r['couleur']['bg']) ?>; color: <?= htmlspecialchars($r['couleur']['text']) ?>;">
-                                        <strong><?= htmlspecialchars($r['code']) ?></strong>
-                                        &middot; <?= htmlspecialchars($r['nom_client']) ?>
-                                    </a>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                            <div class="lanes">
+                                <?php for ($lane = 0; $lane < 3; $lane++):
+                                    // Pour cette lane (= propriété), classer les résas :
+                                    // - is_end = true → dernière nuit (départ le lendemain matin) → slot morning
+                                    // - is_start = true → arrivée ce soir → slot evening
+                                    // - sinon → nuit pleine → slot full
+                                    $morn = $evn = $full = null;
+                                    foreach ($byLane[$lane] as $r) {
+                                        if (!empty($r['is_end']))       $morn = $r;
+                                        elseif (!empty($r['is_start'])) $evn = $r;
+                                        else                             $full = $r;
+                                    }
+                                ?>
+                                <div class="lane lane--<?= $lane ?>">
+                                    <?php if ($full): ?>
+                                        <?php $renderResa($full, $isCurrent, 'full'); ?>
+                                    <?php elseif ($morn || $evn): ?>
+                                        <div class="slot slot--morning">
+                                            <?php if ($morn) $renderResa($morn, $isCurrent, 'morning'); ?>
+                                        </div>
+                                        <div class="slot slot--day"></div>
+                                        <div class="slot slot--evening">
+                                            <?php if ($evn) $renderResa($evn, $isCurrent, 'evening'); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <?php endfor; ?>
+                            </div>
                         </td>
                     <?php endforeach; ?>
                 </tr>

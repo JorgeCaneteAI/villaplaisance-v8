@@ -147,22 +147,23 @@ class ReservationService
      */
     public static function buildCalendarData(int $year, int $month): array
     {
-        $reservations = self::getForMonth($year, $month);
-
         $firstDay = new \DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month));
-        $lastDay = new \DateTimeImmutable($firstDay->format('Y-m-t'));
+        $lastDay  = new \DateTimeImmutable($firstDay->format('Y-m-t'));
 
-        // Construire les semaines (lundi premier) couvrant tout le mois.
+        // Calculer la fenêtre RÉELLEMENT affichée par la grille (lundi de la
+        // 1ère semaine du mois → dimanche de la dernière semaine). C'est cette
+        // fenêtre qui pilote la requête SQL et l'explosion en jours, pour que
+        // les jours débordants en début/fin de grille montrent aussi les
+        // résas qui les couvrent (atténuées via .resa--outside côté CSS).
+        $gridStart = $firstDay->modify('monday this week');
+        if ($gridStart > $firstDay) $gridStart = $gridStart->modify('-1 week');
+        $gridEnd = $lastDay->modify('sunday this week');
+        if ($gridEnd < $lastDay) $gridEnd = $gridEnd->modify('+1 week');
+
+        // Construire les semaines (lun→dim) sur la fenêtre grille.
         $weeks = [];
-        $cursor = $firstDay->modify('monday this week');
-        if ($cursor > $firstDay) {
-            $cursor = $cursor->modify('-1 week');
-        }
-        $endCursor = $lastDay->modify('sunday this week');
-        if ($endCursor < $lastDay) {
-            $endCursor = $endCursor->modify('+1 week');
-        }
-        while ($cursor <= $endCursor) {
+        $cursor = $gridStart;
+        while ($cursor <= $gridEnd) {
             $week = [];
             for ($i = 0; $i < 7; $i++) {
                 $week[] = $cursor;
@@ -170,6 +171,15 @@ class ReservationService
             }
             $weeks[] = $week;
         }
+
+        // Récupérer toutes les résas qui chevauchent la fenêtre grille
+        // (pas juste celles qui chevauchent le mois — sinon les débords manquent).
+        $reservations = \Database::fetchAll(
+            "SELECT * FROM vp_reservations
+             WHERE arrivee <= ? AND depart > ?
+             ORDER BY arrivee, id",
+            [$gridEnd->format('Y-m-d'), $gridStart->format('Y-m-d')]
+        );
 
         $couleurs = [
             'Airbnb'   => ['bg' => '#FF5A5F', 'text' => '#ffffff'],
@@ -179,15 +189,16 @@ class ReservationService
             'Absence'  => ['bg' => '#2C2C2A', 'text' => '#ffffff'],
         ];
 
-        // Exploser les résas en jours couverts (arrivée incluse, départ exclu).
+        // Exploser les résas en jours couverts (arrivée incluse, départ exclu),
+        // clampées sur la fenêtre grille (pas la fenêtre mois).
         $resaByDay = [];
         foreach ($reservations as $r) {
             $arr = new \DateTimeImmutable($r['arrivee']);
             $dep = new \DateTimeImmutable($r['depart']);
 
-            $start = $arr > $firstDay ? $arr : $firstDay;
+            $start = $arr > $gridStart ? $arr : $gridStart;
             $depMinus1 = $dep->modify('-1 day');
-            $end = $depMinus1 < $lastDay ? $depMinus1 : $lastDay;
+            $end = $depMinus1 < $gridEnd ? $depMinus1 : $gridEnd;
 
             $d = $start;
             while ($d <= $end) {
@@ -196,14 +207,18 @@ class ReservationService
                     'id'           => (int) $r['id'],
                     'code'         => $r['code'],
                     'nom_client'   => $r['nom_client'],
+                    'propriete'    => $r['propriete'] ?? '',
                     'source'       => $r['source'],
                     'provenance'   => $r['provenance'] ?? '',
                     'commentaire'  => $r['commentaire'] ?? '',
                     'couleur'      => $couleurs[$r['source']] ?? ['bg' => '#888780', 'text' => '#ffffff'],
                     'arrivee'      => $r['arrivee'],
                     'depart'       => $r['depart'],
-                    'is_start'     => $d == $arr || $d == $firstDay,
-                    'is_end'       => $d == $depMinus1 || $d == $lastDay,
+                    // is_start/is_end pointent les vraies arrivées/départs.
+                    // Plus de clamp au premier/dernier du mois — un débord
+                    // ne doit pas être marqué comme "arrivée" artificielle.
+                    'is_start'     => $d == $arr,
+                    'is_end'       => $d == $depMinus1,
                 ];
                 $d = $d->modify('+1 day');
             }

@@ -1,82 +1,134 @@
 <?php
 /**
- * Vue : calendrier annuel (12 mini-calendriers).
+ * Vue : calendrier annuel — 12 mois empilés verticalement,
+ * chaque mois rendu avec la même logique que la vue mensuelle
+ * (lanes par propriété + slots départ/ménage/arrivée).
  * @var int $year
  * @var array $mois_data
  * @var \DateTimeImmutable $today
  * @var int $prev_year
  * @var int $next_year
- * @var array $couleurs
  */
 use App\Services\ReservationConstants;
+
+/* Renderer de bandeau partagé entre les 12 mois — identique à la vue mois */
+$renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): void {
+    $isAvignon = ($r['propriete'] ?? '') === 'AV-ANN';
+    $bg  = $isAvignon ? '#7E57C2' : $r['couleur']['bg'];
+    $txt = $isAvignon ? '#ffffff' : $r['couleur']['text'];
+
+    $cls = ['resa', 'resa--' . $slot];
+    if (!$isCurrentMonth) $cls[] = 'resa--outside';
+
+    $slotLabel = match ($slot) {
+        'morning' => 'Départ matin · ',
+        'evening' => 'Arrivée soir · ',
+        default   => '',
+    };
+    $title = ($isAvignon ? 'AVIGNON · ' . ($r['source'] ?? '') . ' — ' : '')
+           . (!$isCurrentMonth ? '(hors mois) ' : '')
+           . $slotLabel
+           . ($r['code'] ?? '') . ' · ' . ($r['nom_client'] ?? '')
+           . (!empty($r['commentaire']) ? ' — ' . $r['commentaire'] : '');
+    ?>
+    <a href="/admin/calendrier/saisie/<?= (int) $r['id'] ?>"
+       class="<?= implode(' ', $cls) ?>"
+       title="<?= htmlspecialchars($title) ?>"
+       style="background: <?= htmlspecialchars($bg) ?>; color: <?= htmlspecialchars($txt) ?>;">
+        <?php if ($slot === 'full'): ?>
+            <strong><?= htmlspecialchars($r['code']) ?></strong>
+            <span class="resa-sep">·</span>
+            <?= htmlspecialchars($r['nom_client']) ?>
+        <?php endif; ?>
+    </a>
+    <?php
+};
 ?>
-<div class="annee">
-    <header class="annee__nav">
+
+<div class="calendrier annee">
+    <header class="calendrier__nav">
         <a href="/admin/calendrier/annee/<?= $prev_year ?>" class="btn">&larr; <?= $prev_year ?></a>
         <h1><?= $year ?></h1>
         <a href="/admin/calendrier/annee/<?= $next_year ?>" class="btn"><?= $next_year ?> &rarr;</a>
     </header>
 
-    <div class="annee__toolbar">
-        <a href="/admin/calendrier/<?= $year ?>/<?= (int) $today->format('n') ?>" class="btn">Vue mensuelle</a>
-        <a href="/admin/calendrier/liste?mois=<?= $year ?>" class="btn">Liste <?= $year ?></a>
+    <div class="calendrier__toolbar">
+        <a href="/admin/calendrier/<?= $year ?>/<?= (int) $today->format('n') ?>" class="btn btn-primary">Vue mensuelle</a>
+        <a href="/admin/calendrier/liste?mois=<?= $year ?>" class="btn">Liste</a>
         <a href="/admin/calendrier/export/pdf/annee/<?= $year ?>" class="btn">PDF année</a>
     </div>
 
-    <div class="annee__grid">
-        <?php foreach ($mois_data as $m): ?>
-            <div class="annee__mois">
-                <h2>
-                    <a href="/admin/calendrier/<?= $year ?>/<?= (int) $m['month'] ?>">
-                        <?= htmlspecialchars($m['nom']) ?>
-                    </a>
-                </h2>
-                <table class="mini-cal">
-                    <thead>
+    <div class="annee-stack">
+        <?php foreach ($mois_data as $m):
+            $currentMonth = (int) $m['month'];
+        ?>
+        <section class="annee-mois" id="mois-<?= $currentMonth ?>">
+            <header class="annee-mois-head">
+                <a href="/admin/calendrier/<?= $year ?>/<?= $currentMonth ?>" class="annee-mois-title">
+                    <span class="annee-mois-num"><?= sprintf('%02d', $currentMonth) ?></span>
+                    <span class="annee-mois-nom"><?= htmlspecialchars($m['nom']) ?></span>
+                </a>
+            </header>
+
+            <table class="calendrier__grid">
+                <thead>
+                    <tr>
+                        <?php foreach (ReservationConstants::JOURS_FR as $jour): ?>
+                            <th><?= $jour ?></th>
+                        <?php endforeach; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($m['weeks'] as $week): ?>
                         <tr>
-                            <?php foreach (ReservationConstants::JOURS_FR_COURT as $jour): ?>
-                                <th><?= $jour ?></th>
+                            <?php foreach ($week as $day):
+                                $isCurrent = (int) $day->format('n') === $currentMonth;
+                                $key = $day->format('Y-m-d');
+                                $isToday = $day->format('Y-m-d') === $today->format('Y-m-d');
+                                $classes = ['cell', $isCurrent ? 'current' : 'outside'];
+                                if ($isToday) $classes[] = 'today';
+
+                                $LANES = ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2];
+                                $byLane = [0 => [], 1 => [], 2 => []];
+                                foreach ($m['resa_by_day'][$key] ?? [] as $r) {
+                                    $l = $LANES[$r['propriete']] ?? null;
+                                    if ($l === null) continue;
+                                    $byLane[$l][] = $r;
+                                }
+                            ?>
+                            <td class="<?= implode(' ', $classes) ?>">
+                                <div class="day-num"><?= (int) $day->format('j') ?></div>
+                                <div class="lanes">
+                                    <?php for ($lane = 0; $lane < 3; $lane++):
+                                        $morn = $evn = $full = null;
+                                        foreach ($byLane[$lane] as $r) {
+                                            if (!empty($r['is_end']))       $morn = $r;
+                                            elseif (!empty($r['is_start'])) $evn = $r;
+                                            else                             $full = $r;
+                                        }
+                                    ?>
+                                    <div class="lane lane--<?= $lane ?>">
+                                        <?php if ($full): ?>
+                                            <?php $renderResa($full, $isCurrent, 'full'); ?>
+                                        <?php elseif ($morn || $evn): ?>
+                                            <div class="slot slot--morning">
+                                                <?php if ($morn) $renderResa($morn, $isCurrent, 'morning'); ?>
+                                            </div>
+                                            <div class="slot slot--day"></div>
+                                            <div class="slot slot--evening">
+                                                <?php if ($evn) $renderResa($evn, $isCurrent, 'evening'); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php endfor; ?>
+                                </div>
+                            </td>
                             <?php endforeach; ?>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($m['weeks'] as $week): ?>
-                            <tr>
-                                <?php foreach ($week as $day): ?>
-                                    <?php
-                                    $isCurrent = (int) $day->format('n') === (int) $m['month'];
-                                    $key = $day->format('Y-m-d');
-                                    $firstResa = $isCurrent && !empty($m['resa_by_day'][$key]) ? $m['resa_by_day'][$key][0] : null;
-                                    $bg = $firstResa ? $firstResa['couleur']['bg'] : '';
-                                    $text = $firstResa ? ($firstResa['couleur']['text'] ?? '#fff') : '';
-                                    $style = $bg ? 'background:' . htmlspecialchars($bg) . ';color:' . htmlspecialchars($text) . ';' : '';
-                                    ?>
-                                    <td class="<?= $isCurrent ? 'current' : 'outside' ?>"
-                                        style="<?= $style ?>">
-                                        <?= $isCurrent ? (int) $day->format('j') : '' ?>
-                                    </td>
-                                <?php endforeach; ?>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </section>
         <?php endforeach; ?>
     </div>
 </div>
-
-<style>
-.annee__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.annee__nav h1 { margin: 0; font-size: 32px; }
-.annee__toolbar { display: flex; gap: 8px; margin-bottom: 20px; }
-.annee__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-@media (max-width: 900px) { .annee__grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 640px) { .annee__grid { grid-template-columns: repeat(2, 1fr); } }
-.annee__mois h2 { font-size: 14px; margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-.annee__mois h2 a { color: inherit; text-decoration: none; }
-.annee__mois h2 a:hover { text-decoration: underline; }
-.mini-cal { width: 100%; border-collapse: collapse; font-size: 10px; table-layout: fixed; }
-.mini-cal th { padding: 2px; background: #2C2C2A; color: #fff; font-weight: 600; }
-.mini-cal td { text-align: center; padding: 3px 1px; border: 1px solid #eee; }
-.mini-cal td.outside { color: #bbb; }
-</style>

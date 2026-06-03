@@ -1115,9 +1115,9 @@ input:disabled, textarea:disabled, select:disabled {
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   vertical-align: top;
-  height: 112px;
+  height: 124px;
   width: 14.28%;
-  padding: var(--sp-2);
+  padding: 0; /* pas de padding cellule → continuité visuelle entre les jours */
   background: var(--surface);
 }
 .calendrier__grid td.cell:last-child { border-right: none; }
@@ -1128,25 +1128,90 @@ input:disabled, textarea:disabled, select:disabled {
   font-weight: 600;
   font-size: 12px;
   color: var(--text);
-  margin-bottom: 4px;
+  padding: 6px 8px 4px;
   font-variant-numeric: tabular-nums;
 }
 .calendrier__grid td.outside .day-num { color: var(--text-3); }
 .calendrier__grid td.today .day-num { color: var(--accent); }
+
+/* Lanes : 3 lignes fixes par cellule (VP-BB / VP-ETE / AV-ANN).
+   L'œil suit horizontalement la ligne d'une propriété sur tout le mois.
+   Pas de gap horizontal → les bandeaux d'une même propriété sur des jours
+   adjacents se touchent visuellement (continuité). */
+.calendrier__grid .lanes {
+  display: grid;
+  grid-template-rows: repeat(3, 22px);
+  gap: 4px;
+  padding-bottom: 4px;
+}
+.calendrier__grid .lane {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* 1/4 départ · 2/4 ménage · 1/4 arrivée */
+  min-height: 22px;
+}
+.calendrier__grid .slot { min-height: 22px; overflow: hidden; }
+
+/* Slot "ménage" — fond warning doux + label centré, pas de border-radius
+   (collé aux bandeaux de gauche et droite pour fluidité visuelle) */
+.calendrier__grid .slot--day {
+  background: var(--warning-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--warning);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.calendrier__grid .slot--day::before { content: "ménage"; }
+
+/* Résa pleine largeur : pas de border-radius par défaut → continuité avec
+   les jours suivants. Le radius est appliqué uniquement sur les bords
+   "vrais débuts" / "vraies fins" via les classes .is-first / .is-last. */
 .calendrier__grid .resa {
-  display: block;
-  padding: 3px 6px;
-  margin-top: 2px;
-  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  height: 22px;
   font-size: 10.5px;
   font-weight: 500;
   text-decoration: none;
-  line-height: 1.3;
+  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: opacity 0.12s;
+}
+.calendrier__grid .lane > .resa.resa--full {
+  grid-column: 1 / -1;
 }
 .calendrier__grid .resa:hover { opacity: 0.85; }
+.calendrier__grid .resa-sep { opacity: 0.7; }
+
+/* Slots étroits matin / soir : pas de texte, juste la bande couleur.
+   Le slot morning (départ) finit à droite (côté ménage) → radius à droite.
+   Le slot evening (arrivée) commence à gauche (côté ménage) → radius à gauche.
+   Les bords extérieurs (vers cellule voisine) restent carrés pour la
+   continuité avec la résa qui continue. */
+.calendrier__grid .slot--morning .resa,
+.calendrier__grid .slot--evening .resa {
+  font-size: 0;
+  padding: 0;
+  height: 22px;
+  width: 100%;
+}
+.calendrier__grid .slot--morning .resa {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.calendrier__grid .slot--evening .resa {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+/* Résas hors mois courant : atténuées pour ne pas voler l'attention */
+.calendrier__grid .resa--outside { opacity: 0.45; filter: saturate(0.6); }
+.calendrier__grid .resa--outside:hover { opacity: 0.85; filter: saturate(1); }
 
 /* Sync widget */
 .sync-widget {
@@ -1182,7 +1247,52 @@ input:disabled, textarea:disabled, select:disabled {
 .sync-widget-note { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
 .sync-widget-actions { display: flex; gap: var(--sp-2); }
 
-/* Vue annuelle */
+/* Vue annuelle — 12 mois empilés verticalement, mêmes lanes/slots
+   que la vue mensuelle. Chaque mois est une card autonome. */
+.annee-stack { display: flex; flex-direction: column; gap: var(--sp-8); }
+.annee-mois {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  scroll-margin-top: calc(var(--header-h) + var(--sp-4));
+}
+.annee-mois-head {
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.annee-mois-title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  text-decoration: none;
+  color: var(--text);
+}
+.annee-mois-title:hover { color: var(--accent); }
+.annee-mois-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+}
+.annee-mois-nom {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: capitalize;
+}
+.annee-mois .calendrier__grid {
+  border: none;
+  border-radius: 0;
+}
+.annee-mois .calendrier__grid th {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Legacy classes annee__* (au cas où des vues les utilisent encore) */
 .annee__nav, .annee__toolbar {
   display: flex; align-items: center; gap: var(--sp-2);
   margin-bottom: var(--sp-4);
@@ -1191,8 +1301,8 @@ input:disabled, textarea:disabled, select:disabled {
 .annee__nav { justify-content: space-between; }
 .annee__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-4);
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
 }
 .annee__mois {
   background: var(--surface);
