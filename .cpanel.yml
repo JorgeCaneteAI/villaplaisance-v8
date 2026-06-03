@@ -1,14 +1,13 @@
 ---
 deployment:
   tasks:
-    # IMPORTANT — repo V8 = environnement de DEV, déploie sur le
-    # sous-domaine v2.villaplaisance.fr.
-    # La prod villaplaisance.fr est servie par le repo `villaplaisance-v7`,
-    # on n'y touche pas tant que la bascule n'a pas été décidée.
-    - export DEPLOYPATH=/home/efkz3012/v2.villaplaisance.fr/
+    # Repo qui sert la PROD villaplaisance.fr (depuis la bascule du 2026-06-03).
+    # Le repo s'appelle encore "villaplaisance-v8" pour des raisons historiques
+    # mais sert la prod. Le repo v7 (villaplaisance-v7) est archivé, ne plus
+    # toucher. Cible serveur : /home/efkz3012/villaplaisance.fr/
+    - export DEPLOYPATH=/home/efkz3012/villaplaisance.fr/
     - /bin/cp -R * $DEPLOYPATH
-    # Le .htaccess racine (125b, juste "redirige vers /public/") sert
-    # uniquement quand le DocumentRoot Apache est à la racine du projet.
-    # Ici le sous-domaine pointe directement sur public/, donc on ne le
-    # copie PAS et on laisse public/.htaccess (le vrai, complet) tranquille.
+    # public/.htaccess est le routeur principal — on le laisse intact.
+    # Le .htaccess racine (125b, juste "redirige vers /public/") est inutile
+    # ici puisque le DocumentRoot Apache pointe directement sur public/.
     - chmod -R 755 $DEPLOYPATH
