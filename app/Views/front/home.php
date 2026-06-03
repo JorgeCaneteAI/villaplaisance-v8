@@ -505,7 +505,11 @@ $_nPins = count($_mapPins);
         $_worldSvg,
         1
       ) ?>
-      <svg class="worldmap-pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <svg class="worldmap-pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true"
+           data-villa-x="<?= $_villaX ?>" data-villa-y="<?= $_villaY ?>">
+        <!-- Arc trajet aérien (dessiné par JS au hover, sous les pins pour que les pins restent au-dessus) -->
+        <path class="worldmap-arc" fill="none" />
+
         <!-- Pins origines clients (stagger via --i, tooltip via data-* lus en JS) -->
         <g class="pins-guests">
           <?php foreach ($_pinsXY as $_i => $_p): ?>
@@ -514,6 +518,8 @@ $_nPins = count($_mapPins);
              data-label="<?= htmlspecialchars($_p['label'], ENT_QUOTES) ?>"
              data-x="<?= round($_p['x'] / 10, 2) ?>"
              data-y="<?= round($_p['y'] / 5, 2) ?>"
+             data-svg-x="<?= $_p['x'] ?>"
+             data-svg-y="<?= $_p['y'] ?>"
              tabindex="0">
             <circle r="3"></circle>
           </g>
@@ -522,7 +528,6 @@ $_nPins = count($_mapPins);
         <!-- Pin Villa Plaisance (Bédarrides) avec halo + label -->
         <g class="pin-home" transform="translate(<?= $_villaX ?>, <?= $_villaY ?>)"
            data-label="Villa Plaisance, Bédarrides"
-           data-kicker="ICI"
            data-x="<?= round($_villaX / 10, 2) ?>"
            data-y="<?= round($_villaY / 5, 2) ?>"
            tabindex="0">
@@ -535,7 +540,6 @@ $_nPins = count($_mapPins);
 
       <!-- Tooltip custom (positionné par JS, masque le tooltip natif <title>) -->
       <div class="worldmap-tooltip" aria-hidden="true">
-        <span class="worldmap-tooltip-kicker" data-default="DEPUIS">DEPUIS</span>
         <span class="worldmap-tooltip-label"></span>
       </div>
     </div>
@@ -580,30 +584,58 @@ $_nPins = count($_mapPins);
       section.classList.add('is-in-view');
     }
 
-    // ---------- 2. Tooltip custom (vire le tooltip natif <title>) ----------
+    // ---------- 2. Tooltip custom + arc de trajet aérien ----------
     var frame = section.querySelector('.worldmap-svg-frame');
     var tooltip = section.querySelector('.worldmap-tooltip');
-    if (!frame || !tooltip) return;
+    var pinsSvg = section.querySelector('.worldmap-pins');
+    var arc = section.querySelector('.worldmap-arc');
+    if (!frame || !tooltip || !pinsSvg || !arc) return;
 
-    var tooltipLabel  = tooltip.querySelector('.worldmap-tooltip-label');
-    var tooltipKicker = tooltip.querySelector('.worldmap-tooltip-kicker');
-    var defaultKicker = tooltipKicker.getAttribute('data-default') || 'DEPUIS';
+    var tooltipLabel = tooltip.querySelector('.worldmap-tooltip-label');
+    var villaX = parseFloat(pinsSvg.getAttribute('data-villa-x')) || 0;
+    var villaY = parseFloat(pinsSvg.getAttribute('data-villa-y')) || 0;
     var hideTimer = null;
-    var openSince = 0;   // pour le "skip animation" Emil-style
+    var openSince = 0;   // skip-animation Emil-style
+
+    function drawArc(pin) {
+      var x1 = parseFloat(pin.getAttribute('data-svg-x'));
+      var y1 = parseFloat(pin.getAttribute('data-svg-y'));
+      if (isNaN(x1) || isNaN(y1)) return;
+      var dx = villaX - x1, dy = villaY - y1;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      // Hauteur d'arc proportionnelle à la distance, plafonnée
+      var arcHeight = Math.min(Math.max(dist * 0.32, 25), 130);
+      var midX = (x1 + villaX) / 2;
+      var midY = (y1 + villaY) / 2 - arcHeight;
+      arc.setAttribute('d', 'M ' + x1 + ' ' + y1 + ' Q ' + midX + ' ' + midY + ' ' + villaX + ' ' + villaY);
+
+      // Animation de tracé : strokeDasharray = totalLength, offset = totalLength → 0
+      var length = arc.getTotalLength ? arc.getTotalLength() : 800;
+      arc.style.transition = 'none';
+      arc.style.strokeDasharray = length;
+      arc.style.strokeDashoffset = length;
+      arc.classList.add('is-visible');
+      // Force reflow pour rejouer la transition
+      void arc.getBoundingClientRect();
+      arc.style.transition = 'stroke-dashoffset 700ms cubic-bezier(0.23, 1, 0.32, 1), opacity 220ms ease-out';
+      arc.style.strokeDashoffset = '0';
+    }
+
+    function hideArc() {
+      arc.style.transition = 'opacity 200ms ease-out';
+      arc.classList.remove('is-visible');
+    }
 
     function showTooltip(pin) {
       clearTimeout(hideTimer);
-      var label  = pin.getAttribute('data-label')  || '';
-      var kicker = pin.getAttribute('data-kicker') || defaultKicker;
-      var xPct   = parseFloat(pin.getAttribute('data-x')) || 0;
-      var yPct   = parseFloat(pin.getAttribute('data-y')) || 0;
+      var label = pin.getAttribute('data-label') || '';
+      var xPct  = parseFloat(pin.getAttribute('data-x')) || 0;
+      var yPct  = parseFloat(pin.getAttribute('data-y')) || 0;
 
-      tooltipLabel.textContent  = label;
-      tooltipKicker.textContent = kicker;
+      tooltipLabel.textContent = label;
       tooltip.style.left = xPct + '%';
       tooltip.style.top  = yPct + '%';
 
-      // Emil : skip animation si un tooltip vient juste de fermer (toolbar feel)
       var now = Date.now();
       if (now - openSince < 350) {
         tooltip.classList.add('is-instant');
@@ -612,11 +644,19 @@ $_nPins = count($_mapPins);
       }
       tooltip.classList.add('is-visible');
       openSince = now;
+
+      // Arc : seulement pour les pins guests (Bédarrides est la destination)
+      if (pin.classList.contains('pin-guest')) {
+        drawArc(pin);
+      } else {
+        hideArc();
+      }
     }
 
     function hideTooltip() {
       hideTimer = setTimeout(function () {
         tooltip.classList.remove('is-visible');
+        hideArc();
       }, 80);
     }
 
@@ -628,10 +668,10 @@ $_nPins = count($_mapPins);
       pin.addEventListener('blur',       hideTooltip);
     });
 
-    // Si la souris quitte la carte, on cache immédiatement
     frame.addEventListener('mouseleave', function () {
       clearTimeout(hideTimer);
       tooltip.classList.remove('is-visible');
+      hideArc();
     });
   })();
   </script>
