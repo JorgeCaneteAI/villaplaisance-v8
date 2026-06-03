@@ -23,6 +23,7 @@ define('SUPPORTED_LANGS', ['fr', 'en', 'es']);
 define('DEFAULT_LANG', 'fr');
 define('APP_ENV', $_ENV['APP_ENV'] ?? 'development');
 define('APP_URL', $_ENV['APP_URL'] ?? 'http://localhost:8000');
+define('DB_NAME', $_ENV['DB_NAME'] ?? '');
 
 // Load core services (no namespace, loaded explicitly)
 require ROOT . '/app/Services/Database.php';
