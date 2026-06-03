@@ -66,11 +66,29 @@ class IconService
         ],
         'cuisine' => [
             'label' => 'Cuisine & repas',
-            'icons' => ['coffee', 'utensils', 'utensils-crossed', 'wine', 'beer', 'croissant', 'cake', 'soup', 'refrigerator', 'chef-hat'],
+            'icons' => ['coffee', 'utensils', 'utensils-crossed', 'wine', 'beer', 'croissant', 'cake', 'soup', 'refrigerator', 'chef-hat',
+                        'salad', 'milk', 'egg', 'candy', 'cookie'],
+        ],
+        'terroir' => [
+            'label' => 'Terroir & vignoble',
+            'icons' => ['grape', 'wheat', 'wine-off', 'vault'],
+        ],
+        'marches' => [
+            'label' => 'Marchés & artisanat',
+            'icons' => ['shopping-bag', 'shopping-basket', 'store', 'gift', 'scissors'],
+        ],
+        'patrimoine' => [
+            'label' => 'Patrimoine & lieux',
+            'icons' => ['landmark', 'church', 'castle', 'building-2', 'archive'],
+        ],
+        'bien_etre' => [
+            'label' => 'Bien-être & spa',
+            'icons' => ['sparkles', 'sun-medium', 'moon', 'flame'],
         ],
         'nature' => [
             'label' => 'Nature & jardin',
-            'icons' => ['tree-deciduous', 'tree-pine', 'trees', 'leaf', 'flower', 'flower-2', 'sprout', 'sun', 'mountain', 'palmtree'],
+            'icons' => ['tree-deciduous', 'tree-pine', 'trees', 'leaf', 'flower', 'flower-2', 'sprout', 'sun', 'mountain', 'palmtree',
+                        'cloud', 'wind', 'rainbow', 'bird', 'bug'],
         ],
         'activites' => [
             'label' => 'Activités',
@@ -86,7 +104,7 @@ class IconService
         ],
         'famille' => [
             'label' => 'Famille',
-            'icons' => ['users'],
+            'icons' => ['users', 'users-round', 'gamepad-2', 'puzzle', 'party-popper'],
         ],
         'avis' => [
             'label' => 'Avis & réactions',

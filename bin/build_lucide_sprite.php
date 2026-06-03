@@ -26,52 +26,16 @@ $cdn = 'https://unpkg.com/lucide-static@latest/icons/';
 $out = $ROOT . '/public/assets/img/icons-lucide.svg';
 
 // ──────────────────────────────────────────────────────────────────────
-// Catalogue curated tourisme + hôtellerie (par catégorie).
-// L'ordre ici sert aussi à la page admin icons-lab pour le tri/affichage.
+// Catalogue partagé — source de vérité = IconService::LUCIDE_CATALOG.
+// On le require ici directement pour éviter toute divergence entre la
+// liste affichée dans /admin/icons-lab et les icônes vraiment téléchargées
+// dans le sprite.
 // ──────────────────────────────────────────────────────────────────────
-$catalog = [
-    'hebergement' => [
-        'bed-double', 'bed-single', 'bed', 'hotel', 'key', 'key-round',
-        'accessibility', 'baby',
-    ],
-    'confort' => [
-        'wifi', 'tv', 'monitor', 'air-vent', 'fan',
-        'thermometer-sun', 'thermometer-snowflake', 'plug-zap', 'lamp', 'lightbulb',
-    ],
-    'salle_de_bain' => [
-        'shower-head', 'bath', 'droplet', 'droplets',
-    ],
-    'cuisine' => [
-        'coffee', 'utensils', 'utensils-crossed', 'wine', 'beer',
-        'croissant', 'cake', 'soup', 'refrigerator', 'chef-hat',
-    ],
-    'nature' => [
-        'tree-deciduous', 'tree-pine', 'trees', 'leaf', 'flower', 'flower-2',
-        'sprout', 'sun', 'mountain', 'palmtree',
-    ],
-    'activites' => [
-        'waves', 'bike', 'footprints', 'music', 'book', 'camera', 'palette',
-    ],
-    'transport' => [
-        'car', 'plane', 'train', 'bus', 'parking-circle',
-    ],
-    'animaux' => [
-        'dog', 'cat', 'paw-print',
-    ],
-    'famille' => [
-        'users',
-    ],
-    'avis' => [
-        'star', 'heart', 'thumbs-up', 'quote',
-    ],
-    'contact' => [
-        'mail', 'phone', 'message-circle', 'calendar', 'clock',
-        'map-pin', 'map', 'navigation',
-    ],
-    'saison' => [
-        'sunrise', 'sunset', 'snowflake', 'umbrella', 'cloud-sun',
-    ],
-];
+require $ROOT . '/app/Services/IconService.php';
+$catalog = [];
+foreach (IconService::LUCIDE_CATALOG as $catKey => $cat) {
+    $catalog[$catKey] = $cat['icons'];
+}
 
 $allIcons = [];
 foreach ($catalog as $category => $icons) {

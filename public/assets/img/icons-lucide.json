@@ -38,7 +38,38 @@
             "cake",
             "soup",
             "refrigerator",
-            "chef-hat"
+            "chef-hat",
+            "salad",
+            "milk",
+            "egg",
+            "candy",
+            "cookie"
+        ],
+        "terroir": [
+            "grape",
+            "wheat",
+            "wine-off",
+            "vault"
+        ],
+        "marches": [
+            "shopping-bag",
+            "shopping-basket",
+            "store",
+            "gift",
+            "scissors"
+        ],
+        "patrimoine": [
+            "landmark",
+            "church",
+            "castle",
+            "building-2",
+            "archive"
+        ],
+        "bien_etre": [
+            "sparkles",
+            "sun-medium",
+            "moon",
+            "flame"
         ],
         "nature": [
             "tree-deciduous",
@@ -50,7 +81,12 @@
             "sprout",
             "sun",
             "mountain",
-            "palmtree"
+            "palmtree",
+            "cloud",
+            "wind",
+            "rainbow",
+            "bird",
+            "bug"
         ],
         "activites": [
             "waves",
@@ -74,7 +110,11 @@
             "paw-print"
         ],
         "famille": [
-            "users"
+            "users",
+            "users-round",
+            "gamepad-2",
+            "puzzle",
+            "party-popper"
         ],
         "avis": [
             "star",
@@ -100,6 +140,6 @@
             "cloud-sun"
         ]
     },
-    "generated_at": "2026-06-03T08:18:05+00:00",
+    "generated_at": "2026-06-03T18:49:51+02:00",
     "source": "lucide-static@latest"
 }
