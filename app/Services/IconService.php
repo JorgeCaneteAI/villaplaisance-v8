@@ -61,18 +61,61 @@ class IconService
         );
     }
 
+    /** Cache statique du mapping vp_icon_mapping (label → icon_name). */
+    private static ?array $dbMapping = null;
+
+    /**
+     * Charge tous les mappings depuis la table vp_icon_mapping une seule fois
+     * par requête. Si la table n'existe pas (avant migration 024), tableau
+     * vide retourné silencieusement.
+     */
+    private static function getDbMapping(): array
+    {
+        if (self::$dbMapping !== null) return self::$dbMapping;
+        self::$dbMapping = [];
+        try {
+            $rows = \Database::fetchAll("SELECT label, icon_name FROM vp_icon_mapping");
+            foreach ($rows as $r) {
+                $key = mb_strtolower((string)($r['label'] ?? ''), 'UTF-8');
+                if ($key === '') continue;
+                self::$dbMapping[$key] = (string)($r['icon_name'] ?? '');
+            }
+        } catch (\Throwable) {
+            // Table absente ou inaccessible → silencieux, on bascule sur regex.
+        }
+        return self::$dbMapping;
+    }
+
     /**
      * Détecte si un libellé de pill correspond à un équipement connu et
      * retourne le nom d'icône à utiliser. Insensible à la casse + accents.
      * Retourne null si pas de match.
      *
-     * Couvre l'équipement-CSV admin actuel : "WiFi gratuit", "Climatisation",
-     * "Lit double 160×200", "TV smart 4K", "Vue jardin", "Salle de bain
-     * privative", etc.
+     * Ordre de résolution :
+     *   1. Table vp_icon_mapping (libellé exact, lowercase) — override admin.
+     *      Si icon_name est vide en BDD → null (pas d'icône, volontaire).
+     *   2. Fallback regex maison (mots-clés FR courants).
      */
     public static function pillIcon(string $label): ?string
     {
-        // Normalisation : lowercase + retire accents simples.
+        // 1. Lookup BDD par libellé exact lowercase.
+        $exact = mb_strtolower($label, 'UTF-8');
+        $db = self::getDbMapping();
+        if (array_key_exists($exact, $db)) {
+            return $db[$exact] !== '' ? $db[$exact] : null;
+        }
+
+        // 2. Fallback regex (mapping legacy maintenu par mots-clés).
+        return self::pillIconRegexOnly($label);
+    }
+
+    /**
+     * Calcule UNIQUEMENT le match auto par mots-clés, en bypass total de
+     * la table vp_icon_mapping. Utile pour la page admin /admin/icons-lab
+     * qui montre côte à côte « ce que ferait le regex » et « override BDD ».
+     */
+    public static function pillIconRegexOnly(string $label): ?string
+    {
         $n = mb_strtolower($label, 'UTF-8');
         $n = strtr($n, [
             'à' => 'a', 'â' => 'a', 'ä' => 'a',
@@ -131,9 +174,23 @@ class IconService
             'linge'             => 'linge',
             'cle'               => 'cle',
             'check-in'          => 'cle',
+            'instagram'         => 'instagram',
+            'facebook'          => 'facebook',
+            'airbnb'            => 'airbnb',
+            'booking'           => 'booking',
+            'google'            => 'google',
+            'superhost'         => 'superhost',
+            'courriel'          => 'email',
+            'email'             => 'email',
+            'e-mail'            => 'email',
+            'mail'              => 'email',
+            'sur place'         => 'localisation',
+            'adresse'           => 'localisation',
+            'localisation'      => 'localisation',
+            'delai'             => 'horloge',
+            'horloge'           => 'horloge',
         ];
 
-        // Padding pour " tv " (match exact, pas inclus dans "television")
         $padded = ' ' . $n . ' ';
         foreach ($map as $needle => $iconName) {
             if (str_contains($padded, $needle)) {

@@ -61,6 +61,7 @@
                 <div class="topbar-dropdown">
                     <a href="/admin/seo-files" class="topbar-dd-link">Fichiers SEO</a>
                     <a href="/admin/redirects" class="topbar-dd-link">Redirections</a>
+                    <a href="/admin/icons-lab" class="topbar-dd-link">Icônes</a>
                 </div>
             </div>
         </nav>

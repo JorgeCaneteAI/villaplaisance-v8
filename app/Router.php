@@ -684,6 +684,16 @@ class Router
             return;
         }
 
+        // Icons Lab — gouvernance des icônes (cachée, accessible via nav SEO ▾).
+        if ($normalized === '/admin/icons-lab') {
+            $this->callController('Controllers\\Admin\\IconLabController', 'index');
+            return;
+        }
+        if ($normalized === '/admin/icons-lab/save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\IconLabController', 'save');
+            return;
+        }
+
         // SEO Files CRUD
         if ($normalized === '/admin/seo-files/create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\SeoFileController', 'create');
