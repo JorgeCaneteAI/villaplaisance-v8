@@ -13,8 +13,10 @@ class Router
         $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
         $requestUri = '/' . trim($requestUri, '/');
 
-        // Extract language prefix
-        if (preg_match('#^/(en|es|de)(/.*)?$#', $requestUri, $m)) {
+        // Extract language prefix (FR par défaut sans préfixe, EN/ES préfixés).
+        // /de/* a été retiré 2026-06-03 (langue abandonnée). Tout /de/* renvoie
+        // désormais 404, ce qui est correct : pas de duplicate content FR.
+        if (preg_match('#^/(en|es)(/.*)?$#', $requestUri, $m)) {
             $this->lang = $m[1];
             $requestUri = $m[2] ?? '/';
             if ($requestUri === '') $requestUri = '/';

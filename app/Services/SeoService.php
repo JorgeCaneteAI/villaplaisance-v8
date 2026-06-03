@@ -93,8 +93,11 @@ class SeoService
             ],
             'geo' => [
                 '@type' => 'GeoCoordinates',
-                'latitude' => 44.0386,
-                'longitude' => 4.8972,
+                // String pour éviter la sérialisation IEEE 754 verbeuse de
+                // serialize_precision sur certaines configs PHP (o2switch).
+                // Schema.org accepte Number OR Text pour GeoCoordinates.
+                'latitude' => '44.0386',
+                'longitude' => '4.8972',
             ],
             'image' => $base . '/assets/img/og-default.webp',
             'priceRange' => '€€',
@@ -186,12 +189,18 @@ class SeoService
     {
         $list = [];
         foreach ($items as $i => $item) {
-            $list[] = [
+            $listItem = [
                 '@type' => 'ListItem',
                 'position' => $i + 1,
                 'name' => $item['name'],
-                'item' => $item['url'] ?? null,
             ];
+            // Google accepte d'omettre `item` sur le dernier élément (page
+            // courante), mais refuse `item: null` (warning GSC). On omet
+            // proprement quand l'URL n'est pas fournie.
+            if (!empty($item['url'])) {
+                $listItem['item'] = $item['url'];
+            }
+            $list[] = $listItem;
         }
         return [
             '@context' => 'https://schema.org',

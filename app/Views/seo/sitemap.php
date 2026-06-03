@@ -43,10 +43,12 @@ $pageImages = [
 ];
 
 // Articles dynamiques (journal + itineraires).
+// On ne ramène QUE les FR (slug unique par article — les EN/ES partagent le
+// même slug) ; les variantes EN/ES sont émises via <xhtml:link rel="alternate">.
 $articles = [];
 try {
     $articles = Database::fetchAll(
-        "SELECT slug, type, updated_at, cover_image FROM vp_articles WHERE status = 'published'"
+        "SELECT slug, type, updated_at, cover_image FROM vp_articles WHERE status = 'published' AND lang = 'fr'"
     );
 } catch (\Throwable $e) {}
 ?>
@@ -73,14 +75,18 @@ try {
 
 <?php foreach ($articles as $art):
     $section = $art['type'] === 'journal' ? 'journal' : 'itineraire';
-    $url = $base . '/' . $section . '/' . $art['slug'];
+    $frUrl = $base . LangService::url($section, 'fr') . '/' . $art['slug'];
     $img = !empty($art['cover_image'])
         ? $base . '/uploads/' . $art['cover_image']
         : $base . '/assets/img/og-default.webp';
 ?>
     <url>
-        <loc><?= htmlspecialchars($url) ?></loc>
+        <loc><?= htmlspecialchars($frUrl) ?></loc>
         <lastmod><?= htmlspecialchars(substr($art['updated_at'] ?? $today, 0, 10)) ?></lastmod>
+        <?php foreach (SUPPORTED_LANGS as $lang): ?>
+        <xhtml:link rel="alternate" hreflang="<?= $lang ?>" href="<?= htmlspecialchars($base . LangService::url($section, $lang) . '/' . $art['slug']) ?>"/>
+        <?php endforeach; ?>
+        <xhtml:link rel="alternate" hreflang="x-default" href="<?= htmlspecialchars($frUrl) ?>"/>
         <image:image>
             <image:loc><?= htmlspecialchars($img) ?></image:loc>
         </image:image>
