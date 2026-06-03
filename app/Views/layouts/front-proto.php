@@ -106,12 +106,8 @@
     <!-- Nav du proto Claude design -->
     <header class="nav">
         <div class="nav-inner">
-            <a href="<?= LangService::url('/') ?>" class="brand">
-                <img src="/assets/img/logo-proto.png" alt="" />
-                <span class="brand-wordmark">
-                    <span>Villa Plaisance</span>
-                    <span class="brand-mark">VP &middot; 84</span>
-                </span>
+            <a href="<?= LangService::url('/') ?>" class="brand" aria-label="Villa Plaisance, accueil">
+                <img src="/assets/img/logo-proto.png" alt="Villa Plaisance" />
             </a>
             <nav class="nav-links" aria-label="<?= t('proto.nav.menu_principal') ?>">
                 <a href="<?= LangService::url('chambres-d-hotes') ?>" data-page="chambres-hotes"><?= t('proto.nav.chambres') ?></a>
@@ -149,17 +145,7 @@
             <a href="<?= LangService::url('espaces-exterieurs') ?>"><?= t('proto.nav.exterieurs') ?></a>
             <a href="<?= LangService::url('journal') ?>"><?= t('proto.nav.journal') ?></a>
             <a href="<?= LangService::url('itineraire') ?>"><?= t('proto.nav.itineraire') ?></a>
-            <a href="<?= LangService::url('votre-hote') ?>">Votre hôte</a>
-            <a href="<?= LangService::url('avis') ?>">Avis</a>
         </nav>
-        <div class="mobile-menu__lang">
-            <a href="<?= LangService::switchLangUrl('fr') ?>" hreflang="fr" class="<?= $currentLang === 'fr' ? 'active' : '' ?>">FR</a>
-            <span class="sep">/</span>
-            <a href="<?= LangService::switchLangUrl('en') ?>" hreflang="en" class="<?= $currentLang === 'en' ? 'active' : '' ?>">EN</a>
-            <span class="sep">/</span>
-            <a href="<?= LangService::switchLangUrl('es') ?>" hreflang="es" class="<?= $currentLang === 'es' ? 'active' : '' ?>">ES</a>
-        </div>
-        <a href="<?= LangService::url('contact') ?>" class="mobile-menu__contact"><?= t('proto.nav.contact') ?> →</a>
     </div>
 
     <!-- Script toggle menu mobile (inline, vanilla). -->
