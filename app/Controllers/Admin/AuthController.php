@@ -22,6 +22,13 @@ class AuthController extends AdminBaseController
             return;
         }
 
+        // Rate-limit IP : 10 tentatives / 15 min. Bloque le brute-force.
+        if (!$this->checkRateLimit('login', 10, 900)) {
+            $this->flash('error', 'Trop de tentatives. Réessayez dans quelques minutes.');
+            $this->redirect('/admin/login');
+            return;
+        }
+
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
@@ -109,7 +116,7 @@ class AuthController extends AdminBaseController
         }
 
         $pin = trim($_POST['pin'] ?? '');
-        $userId = $_SESSION['admin_user_id'] ?? 0;
+        $userId = (int) ($_SESSION['admin_user_id'] ?? 0);
 
         if ($pin === '' || !$userId) {
             $this->flash('error', 'Veuillez saisir votre code PIN.');
@@ -117,35 +124,62 @@ class AuthController extends AdminBaseController
             return;
         }
 
-        // Track attempts
-        $_SESSION['admin_pin_attempts'] = ($_SESSION['admin_pin_attempts'] ?? 0) + 1;
-
-        if ($_SESSION['admin_pin_attempts'] > 5) {
-            unset($_SESSION['admin_pin_pending'], $_SESSION['admin_pin_attempts']);
-            session_destroy();
-            session_start();
-            $this->flash('error', 'Trop de tentatives. Veuillez vous reconnecter.');
-            $this->redirect('/admin/login');
-            return;
-        }
-
+        // Compteur stocké en DB (vp_users.pin_attempts + pin_locked_until)
+        // pour ne pas être réinitialisable via clear cookie navigateur.
         try {
-            $user = \Database::fetchOne("SELECT pin FROM vp_users WHERE id = ?", [$userId]);
+            $user = \Database::fetchOne(
+                "SELECT pin, pin_attempts, pin_locked_until FROM vp_users WHERE id = ?",
+                [$userId]
+            );
         } catch (\Throwable) {
             $this->flash('error', 'Erreur de base de données.');
             $this->redirect('/admin/pin');
             return;
         }
 
+        // Lockout actif ?
+        $lockedUntil = $user['pin_locked_until'] ?? null;
+        if ($lockedUntil && strtotime((string) $lockedUntil) > time()) {
+            unset($_SESSION['admin_pin_pending']);
+            session_destroy();
+            session_start();
+            $this->flash('error', 'Compte temporairement verrouillé. Réessayez plus tard.');
+            $this->redirect('/admin/login');
+            return;
+        }
+
         if (!$user || !password_verify($pin, $user['pin'])) {
-            $remaining = 5 - $_SESSION['admin_pin_attempts'];
+            $attempts = (int) ($user['pin_attempts'] ?? 0) + 1;
+            $update = ['pin_attempts' => $attempts];
+
+            if ($attempts >= 5) {
+                // Verrou 15 min, reset compteur (sera décrémenté au prochain check).
+                $update['pin_locked_until'] = date('Y-m-d H:i:s', time() + 900);
+                $update['pin_attempts'] = 0;
+                \Database::update('vp_users', $update, 'id = ?', [$userId]);
+                unset($_SESSION['admin_pin_pending']);
+                session_destroy();
+                session_start();
+                $this->flash('error', 'Trop de tentatives. Compte verrouillé 15 minutes.');
+                $this->redirect('/admin/login');
+                return;
+            }
+
+            \Database::update('vp_users', $update, 'id = ?', [$userId]);
+            $remaining = 5 - $attempts;
             $this->flash('error', "Code PIN incorrect. {$remaining} tentative(s) restante(s).");
             $this->redirect('/admin/pin');
             return;
         }
 
-        // PIN correct
-        unset($_SESSION['admin_pin_pending'], $_SESSION['admin_pin_attempts']);
+        // PIN correct — reset compteur + verrou.
+        \Database::update(
+            'vp_users',
+            ['pin_attempts' => 0, 'pin_locked_until' => null],
+            'id = ?',
+            [$userId]
+        );
+        unset($_SESSION['admin_pin_pending']);
         $_SESSION['admin_authenticated'] = true;
         session_regenerate_id(true);
 
@@ -180,6 +214,30 @@ class AuthController extends AdminBaseController
 
     public function logout(): void
     {
+        // Révoque le device de confiance courant si cookie présent.
+        $trustToken = $_COOKIE['vp_trust'] ?? '';
+        if ($trustToken) {
+            $tokenHash = hash('sha256', $trustToken);
+            try {
+                \Database::query(
+                    "DELETE FROM vp_trusted_devices WHERE token_hash = ?",
+                    [$tokenHash]
+                );
+            } catch (\Throwable) {}
+        }
+
+        // Supprime les cookies côté client (session + trust).
+        $expireOpts = [
+            'expires'  => time() - 3600,
+            'path'     => '/',
+            'secure'   => (APP_ENV === 'production'),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
+        setcookie(session_name(), '', $expireOpts);
+        setcookie('vp_trust', '', $expireOpts);
+
+        $_SESSION = [];
         session_destroy();
         header('Location: /admin/login');
         exit;

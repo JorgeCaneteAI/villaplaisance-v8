@@ -463,7 +463,10 @@ $frQualityTotal = count($frQuality);
             try {
                 const res = await fetch('/admin/api/generate-article', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': '<?= htmlspecialchars($csrf, ENT_QUOTES) ?>'
+                    },
                     body: JSON.stringify({ type, title, subtitle, category })
                 });
                 const json = await res.json();

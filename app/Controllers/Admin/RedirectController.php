@@ -30,6 +30,12 @@ class RedirectController extends AdminBaseController
             return;
         }
 
+        if (!$this->validUrlPair($urlFrom, $urlTo)) {
+            $this->flash('error', 'URL invalide. Caractères interdits ou format incorrect.');
+            $this->redirect('/admin/redirects');
+            return;
+        }
+
         if (!in_array($statusCode, [301, 302, 307, 308], true)) {
             $statusCode = 301;
         }
@@ -60,6 +66,12 @@ class RedirectController extends AdminBaseController
 
         if ($urlFrom === '' || $urlTo === '') {
             $this->flash('error', 'Les champs URL source et destination sont obligatoires.');
+            $this->redirect('/admin/redirects');
+            return;
+        }
+
+        if (!$this->validUrlPair($urlFrom, $urlTo)) {
+            $this->flash('error', 'URL invalide. Caractères interdits ou format incorrect.');
             $this->redirect('/admin/redirects');
             return;
         }
@@ -107,6 +119,32 @@ class RedirectController extends AdminBaseController
         $this->syncHtaccess();
         $this->flash('success', 'Redirection supprimée.');
         $this->redirect('/admin/redirects');
+    }
+
+    /**
+     * Garde-fou contre l'injection de directives Apache dans .htaccess
+     * (CR/LF, espaces, guillemets, backticks, métacaractères regex).
+     *
+     * - url_from : path local (sans schéma) ou domaine + path.
+     *   Caractères : a-z A-Z 0-9 . - _ / et / seulement.
+     * - url_to : path absolu local commençant par / OU URL https?:// complète.
+     *
+     * Toute valeur contenant \n, \r, \t, espace, " ou ' est rejetée :
+     * ces caractères permettent d'évader la ligne RewriteRule pour glisser
+     * un php_value, SetEnvIf ou autre directive arbitraire.
+     */
+    private function validUrlPair(string $from, string $to): bool
+    {
+        if (preg_match('/[\s\r\n\t"\'`\\\\]/', $from)) return false;
+        if (preg_match('/[\s\r\n\t"\'`\\\\]/', $to)) return false;
+        if (!preg_match('#^[a-zA-Z0-9._\-/]+$#', $from)) return false;
+        if (str_starts_with($to, '/')) {
+            return (bool) preg_match('#^/[a-zA-Z0-9._\-/?&=#%]*$#', $to);
+        }
+        if (preg_match('#^https?://#i', $to)) {
+            return (bool) filter_var($to, FILTER_VALIDATE_URL);
+        }
+        return false;
     }
 
     /**

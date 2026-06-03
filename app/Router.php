@@ -432,6 +432,15 @@ class Router
             @ini_set('display_errors', '0');
             ob_start();
             header('Content-Type: application/json');
+
+            // CSRF via header (POST JSON, pas de form-data).
+            $csrfHeader = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+            if (!hash_equals($_SESSION['csrf_token'] ?? '', $csrfHeader)) {
+                http_response_code(403);
+                echo json_encode(['error' => 'Token CSRF invalide.']);
+                return;
+            }
+
             $input = json_decode(file_get_contents('php://input'), true);
             $type = $input['type'] ?? 'journal';
             $title = trim($input['title'] ?? '');

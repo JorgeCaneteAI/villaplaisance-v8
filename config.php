@@ -58,3 +58,34 @@ if (session_status() === PHP_SESSION_NONE) {
     ]);
     session_start();
 }
+
+// Production : masquer les stacktraces (chemin serveur, DB, etc.) et logger.
+// Local : laisser PHP afficher pour le dev.
+if (APP_ENV === 'production') {
+    error_reporting(E_ALL);
+    @ini_set('display_errors', '0');
+    @ini_set('log_errors', '1');
+
+    set_exception_handler(static function (\Throwable $e): void {
+        @error_log('[VP] uncaught: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+        if (!headers_sent()) {
+            http_response_code(500);
+            header('Content-Type: text/html; charset=utf-8');
+        }
+        echo '<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>500 — Erreur</title>'
+           . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+           . '<style>body{font-family:Georgia,serif;max-width:560px;margin:15vh auto;padding:0 24px;'
+           . 'color:#2b2419;text-align:center;line-height:1.6}h1{font-weight:400;font-size:2rem}'
+           . 'a{color:#a0764f}</style></head><body>'
+           . '<h1>Une erreur est survenue</h1>'
+           . '<p>Désolé, quelque chose ne s\'est pas passé comme prévu.<br>'
+           . 'L\'incident a été noté ; nous le regardons.</p>'
+           . '<p><a href="/">← Retour à l\'accueil</a></p></body></html>';
+        exit;
+    });
+
+    set_error_handler(static function (int $errno, string $errstr, string $errfile, int $errline): bool {
+        if (!(error_reporting() & $errno)) return false;
+        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+    });
+}

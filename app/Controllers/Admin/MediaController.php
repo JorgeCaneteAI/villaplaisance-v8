@@ -83,6 +83,9 @@ class MediaController extends AdminBaseController
         }
 
         $folder = $_POST['folder'] ?? 'general';
+        if (!in_array($folder, self::FOLDERS, true)) {
+            $folder = 'general';
+        }
         $files = $_FILES['images'];
         $uploaded = 0;
         $errors = 0;
@@ -201,6 +204,11 @@ class MediaController extends AdminBaseController
             return;
         }
 
+        $folder = $_POST['folder'] ?? 'general';
+        if (!in_array($folder, self::FOLDERS, true)) {
+            $folder = 'general';
+        }
+
         $data = [
             'alt_fr' => trim($_POST['alt_fr'] ?? ''),
             'alt_en' => trim($_POST['alt_en'] ?? ''),
@@ -208,7 +216,7 @@ class MediaController extends AdminBaseController
             'title' => trim($_POST['title'] ?? ''),
             'caption' => trim($_POST['caption'] ?? ''),
             'credit' => trim($_POST['credit'] ?? ''),
-            'folder' => $_POST['folder'] ?? 'general',
+            'folder' => $folder,
             'tags' => trim($_POST['tags'] ?? ''),
         ];
 

@@ -170,13 +170,26 @@ class ReservationController extends AdminBaseController
     {
         if (!$this->verifyCsrf()) {
             $this->flash('error', 'Token CSRF invalide.');
-            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/admin/calendrier');
+            $this->redirect($this->safeReferer('/admin/calendrier'));
             return;
         }
         $ok = ReservationService::delete($id);
         $this->flash($ok ? 'success' : 'error',
                      $ok ? 'Réservation supprimée.' : 'Réservation introuvable.');
-        $this->redirect($_SERVER['HTTP_REFERER'] ?? '/admin/calendrier');
+        $this->redirect($this->safeReferer('/admin/calendrier'));
+    }
+
+    /**
+     * Strip le host du Referer pour bloquer open redirect.
+     * Renvoie un path local relatif (commence par /), jamais une URL absolue.
+     */
+    private function safeReferer(string $fallback): string
+    {
+        $ref = $_SERVER['HTTP_REFERER'] ?? '';
+        if ($ref === '') return $fallback;
+        $path = parse_url($ref, PHP_URL_PATH);
+        if (!is_string($path) || $path === '' || $path[0] !== '/') return $fallback;
+        return $path;
     }
 
     public function printMois(int $year, int $month): void
@@ -292,7 +305,7 @@ class ReservationController extends AdminBaseController
     {
         if (!$this->verifyCsrf()) {
             $this->flash('error', 'Token CSRF invalide.');
-            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/admin/calendrier');
+            $this->redirect($this->safeReferer('/admin/calendrier'));
             return;
         }
 
@@ -305,7 +318,7 @@ class ReservationController extends AdminBaseController
         } else {
             $this->flash('success', $msg);
         }
-        $this->redirect($_SERVER['HTTP_REFERER'] ?? '/admin/calendrier');
+        $this->redirect($this->safeReferer('/admin/calendrier'));
     }
 
     public function logs(): void
