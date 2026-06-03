@@ -128,35 +128,79 @@
   /* (anciens styles .worldmap-section / .worldmap / .origins-list retirés —
      remplacés par la nouvelle architecture full-bleed dans style-proto.css) */
 
-  /* Testimonials */
-  .testimonials {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: clamp(20px, 2.4vw, 36px);
+  /* Testimonials — Direction A : héro + marginalia magazine */
+  .testimonials-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(40px, 5vw, 72px);
+    align-items: start;
   }
-  .testimonial {
-    background: var(--linen-50);
-    border: var(--hairline);
-    padding: clamp(28px, 3vw, 36px);
-    display: flex; flex-direction: column; gap: 18px;
+  @media (min-width: 900px) {
+    .testimonials-hero { grid-template-columns: 1.6fr 1fr; gap: clamp(48px, 6vw, 96px); }
   }
-  .testimonial .stars {
-    color: var(--terra-500);
-    font-size: 16px; letter-spacing: 2px;
+  .testimonial-lead { display: flex; flex-direction: column; gap: clamp(24px, 3vw, 36px); }
+  .testimonial-lead .meta-row {
+    display: flex; align-items: center; gap: 20px;
+    padding-bottom: 18px; border-bottom: var(--hairline);
   }
-  .testimonial blockquote {
+  .testimonial-lead .stars { color: var(--terra-500); font-size: 14px; letter-spacing: 2px; }
+  .testimonial-lead .meta {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--stone-500);
+  }
+  .testimonial-lead blockquote {
     margin: 0;
     font-family: var(--font-display);
-    font-size: clamp(20px, 1.8vw, 24px); line-height: 1.35; color: var(--ink-900); letter-spacing: -0.005em;
-    text-wrap: pretty;
+    font-weight: 300;
+    font-size: clamp(28px, 3.4vw, 48px);
+    line-height: 1.15; letter-spacing: -0.015em;
+    color: var(--ink-900);
+    text-wrap: balance;
+    max-width: 22ch;
   }
-  .testimonial blockquote em { font-style: italic; }
-  .testimonial cite {
+  .testimonial-lead blockquote em { font-style: italic; color: var(--sage-700); }
+  .testimonial-lead cite {
     font-style: normal;
-    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-    color: var(--stone-500); text-transform: uppercase;
-    margin-top: auto;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em;
+    color: var(--ink-700); text-transform: uppercase;
   }
-  @media (max-width: 960px) { .testimonials { grid-template-columns: 1fr; } }
+  .testimonial-lead cite strong { font-weight: 500; color: var(--ink-900); }
+
+  .testimonials-aside { display: flex; flex-direction: column; }
+  .testimonial-mini {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+    padding: clamp(18px, 2vw, 22px) 0;
+    border-top: var(--hairline);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: padding-left .35s cubic-bezier(.16, 1, .3, 1);
+  }
+  .testimonial-mini:last-child { border-bottom: var(--hairline); }
+  .testimonial-mini:hover,
+  .testimonial-mini:focus-within { padding-left: 8px; }
+  .testimonial-mini:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 4px; }
+  .testimonial-mini .num {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
+    color: var(--terra-500); padding-top: 4px;
+  }
+  .testimonial-mini .body { display: flex; flex-direction: column; gap: 6px; }
+  .testimonial-mini .who {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: 16px; line-height: 1.25; color: var(--ink-900);
+  }
+  .testimonial-mini .where {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--stone-500);
+  }
+  .testimonial-mini .snippet {
+    font-family: var(--font-display); font-style: italic;
+    font-size: 14.5px; line-height: 1.45; color: var(--stone-600);
+    margin-top: 4px;
+  }
+  @media (max-width: 720px) { .testimonial-mini:nth-child(4) { display: none; } }
 
   /* Journal teasers */
   .journal-grid {
@@ -718,14 +762,18 @@ $_nPins = count($_mapPins);
 // Récupération des 3 meilleurs avis : featured d'abord, puis note la plus haute,
 // puis date la plus récente. Seuls les avis publiés avec un contenu non vide.
 $_homeReviews = [];
+$_totalReviews = 0;
 try {
     $_homeReviews = Database::fetchAll(
         "SELECT author, content, rating, platform, origin, offer, review_date
          FROM vp_reviews
          WHERE status = 'published' AND content IS NOT NULL AND LENGTH(content) > 0
          ORDER BY featured DESC, rating DESC, review_date DESC
-         LIMIT 3"
+         LIMIT 4"
     );
+    $_totalReviews = (int) (Database::fetchOne(
+        "SELECT COUNT(*) AS c FROM vp_reviews WHERE status = 'published' AND LENGTH(content) > 0"
+    )['c'] ?? 0);
 } catch (\Throwable) {}
 
 // Normalisation rating (Booking note sur 10)
@@ -733,6 +781,10 @@ $_normRating = static function (float $rating, string $platform): float {
     if ($platform === 'booking' && $rating > 5) return $rating / 2;
     return $rating;
 };
+
+// Direction A : 1 héro + 3 marginalia
+$_lead  = !empty($_homeReviews) ? array_shift($_homeReviews) : null;
+$_aside = $_homeReviews; // les 3 (ou moins) restants
 ?>
 <section class="section reviews-section">
   <div class="container-wide">
@@ -742,30 +794,55 @@ $_normRating = static function (float $rating, string $platform): float {
         <h2 class="h-xl reviews-title">Quelques <em>mots</em><br/>laissés au départ.</h2>
       </div>
       <a class="reviews-cta" href="<?= LangService::url('avis') ?>">
-        <?= count($_homeReviews) > 0 ? 'Lire tous les avis' : 'Découvrir la maison' ?>
+        <?= $_lead ? 'Lire tous les avis' : 'Découvrir la maison' ?>
         <span aria-hidden="true">&rarr;</span>
       </a>
     </div>
 
-    <?php if (!empty($_homeReviews)): ?>
-    <div class="testimonials">
-      <?php foreach ($_homeReviews as $_r):
-        $_rating = $_normRating((float)$_r['rating'], (string)($_r['platform'] ?? ''));
-        $_fullStars = (int)floor($_rating);
-        $_quote = mb_strimwidth((string)$_r['content'], 0, 240, '…', 'UTF-8');
-      ?>
-      <article class="testimonial">
-        <div class="stars" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
-          <?php for ($_s = 0; $_s < $_fullStars; $_s++): ?><svg class="star" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
-          <?php for ($_s = $_fullStars; $_s < 5; $_s++): ?><svg class="star star-empty" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile"/></svg><?php endfor; ?>
+    <?php if ($_lead): ?>
+    <?php
+      $_leadRating = $_normRating((float)$_lead['rating'], (string)($_lead['platform'] ?? ''));
+      $_leadFull   = (int)floor($_leadRating);
+      $_leadQuote  = mb_strimwidth((string)$_lead['content'], 0, 280, '…', 'UTF-8');
+      $_leadDate   = !empty($_lead['review_date']) ? strtoupper(date('M Y', strtotime((string)$_lead['review_date']))) : '';
+      $_leadPlat   = !empty($_lead['platform']) ? strtoupper(htmlspecialchars((string)$_lead['platform'])) : 'DIRECT';
+      $_countDisplay = $_totalReviews ?: (count($_aside) + 1);
+    ?>
+    <div class="testimonials-hero">
+
+      <div class="testimonial-lead">
+        <div class="meta-row">
+          <div class="stars" aria-label="<?= number_format($_leadRating, 1, ',', '') ?> sur 5">
+            <?php for ($_s = 0; $_s < $_leadFull; $_s++): ?><svg class="star" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
+          </div>
+          <span class="meta">
+            01 / <?= sprintf('%02d', $_countDisplay) ?> · <?= $_leadPlat ?><?php if ($_leadDate): ?> · <?= $_leadDate ?><?php endif; ?>
+          </span>
         </div>
-        <blockquote>« <?= htmlspecialchars($_quote) ?> »</blockquote>
+        <blockquote>« <?= htmlspecialchars($_leadQuote) ?> »</blockquote>
         <cite>
-          <strong><?= htmlspecialchars((string)$_r['author']) ?></strong><?php
-          if (!empty($_r['origin'])): ?>, <?= htmlspecialchars((string)$_r['origin']) ?><?php endif; ?>
+          <strong><?= htmlspecialchars((string)$_lead['author']) ?></strong><?php
+          if (!empty($_lead['origin'])): ?> · <?= htmlspecialchars((string)$_lead['origin']) ?><?php endif; ?>
         </cite>
-      </article>
-      <?php endforeach; ?>
+      </div>
+
+      <?php if (!empty($_aside)): ?>
+      <div class="testimonials-aside">
+        <?php foreach ($_aside as $_i => $_r): ?>
+        <a class="testimonial-mini" href="<?= LangService::url('avis') ?>">
+          <span class="num"><?= sprintf('%02d', $_i + 2) ?></span>
+          <div class="body">
+            <span class="who"><?= htmlspecialchars((string)$_r['author']) ?></span>
+            <?php if (!empty($_r['origin'])): ?>
+            <span class="where"><?= htmlspecialchars((string)$_r['origin']) ?></span>
+            <?php endif; ?>
+            <span class="snippet">« <?= htmlspecialchars(mb_strimwidth((string)$_r['content'], 0, 95, '…', 'UTF-8')) ?> »</span>
+          </div>
+        </a>
+        <?php endforeach; ?>
+      </div>
+      <?php endif; ?>
+
     </div>
     <?php else: ?>
     <p class="reviews-empty">
