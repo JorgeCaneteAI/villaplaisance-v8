@@ -506,24 +506,38 @@ $_nPins = count($_mapPins);
         1
       ) ?>
       <svg class="worldmap-pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-        <!-- Pins origines clients (stagger via --i) -->
+        <!-- Pins origines clients (stagger via --i, tooltip via data-* lus en JS) -->
         <g class="pins-guests">
           <?php foreach ($_pinsXY as $_i => $_p): ?>
-          <g class="pin-guest" transform="translate(<?= $_p['x'] ?>, <?= $_p['y'] ?>)" style="--i: <?= $_i ?>">
+          <g class="pin-guest" transform="translate(<?= $_p['x'] ?>, <?= $_p['y'] ?>)"
+             style="--i: <?= $_i ?>"
+             data-label="<?= htmlspecialchars($_p['label'], ENT_QUOTES) ?>"
+             data-x="<?= round($_p['x'] / 10, 2) ?>"
+             data-y="<?= round($_p['y'] / 5, 2) ?>"
+             tabindex="0">
             <circle r="3"></circle>
-            <title><?= htmlspecialchars($_p['label']) ?></title>
           </g>
           <?php endforeach; ?>
         </g>
         <!-- Pin Villa Plaisance (Bédarrides) avec halo + label -->
-        <g class="pin-home" transform="translate(<?= $_villaX ?>, <?= $_villaY ?>)">
+        <g class="pin-home" transform="translate(<?= $_villaX ?>, <?= $_villaY ?>)"
+           data-label="Villa Plaisance, Bédarrides"
+           data-kicker="ICI"
+           data-x="<?= round($_villaX / 10, 2) ?>"
+           data-y="<?= round($_villaY / 5, 2) ?>"
+           tabindex="0">
           <circle class="pin-home-halo-3" cx="0" cy="0" r="3.5"></circle>
           <circle class="pin-home-halo-2" cx="0" cy="0" r="3.5"></circle>
           <circle class="pin-home-dot" cx="0" cy="0" r="3.5"></circle>
           <text class="pin-home-label" y="-10" text-anchor="middle">BÉDARRIDES</text>
-          <title>Villa Plaisance, Bédarrides</title>
         </g>
       </svg>
+
+      <!-- Tooltip custom (positionné par JS, masque le tooltip natif <title>) -->
+      <div class="worldmap-tooltip" aria-hidden="true">
+        <span class="worldmap-tooltip-kicker" data-default="DEPUIS">DEPUIS</span>
+        <span class="worldmap-tooltip-label"></span>
+      </div>
     </div>
     <?php endif; ?>
   </div>
@@ -550,19 +564,75 @@ $_nPins = count($_mapPins);
   (function () {
     var section = document.querySelector('.worldmap-section');
     if (!section) return;
-    if (!('IntersectionObserver' in window)) {
+
+    // ---------- 1. Scroll-trigger pour le stagger + fade-in carte ----------
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            section.classList.add('is-in-view');
+            io.unobserve(section);
+          }
+        });
+      }, { threshold: 0.18 });
+      io.observe(section);
+    } else {
       section.classList.add('is-in-view');
-      return;
     }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          section.classList.add('is-in-view');
-          io.unobserve(section);
-        }
-      });
-    }, { threshold: 0.18 });
-    io.observe(section);
+
+    // ---------- 2. Tooltip custom (vire le tooltip natif <title>) ----------
+    var frame = section.querySelector('.worldmap-svg-frame');
+    var tooltip = section.querySelector('.worldmap-tooltip');
+    if (!frame || !tooltip) return;
+
+    var tooltipLabel  = tooltip.querySelector('.worldmap-tooltip-label');
+    var tooltipKicker = tooltip.querySelector('.worldmap-tooltip-kicker');
+    var defaultKicker = tooltipKicker.getAttribute('data-default') || 'DEPUIS';
+    var hideTimer = null;
+    var openSince = 0;   // pour le "skip animation" Emil-style
+
+    function showTooltip(pin) {
+      clearTimeout(hideTimer);
+      var label  = pin.getAttribute('data-label')  || '';
+      var kicker = pin.getAttribute('data-kicker') || defaultKicker;
+      var xPct   = parseFloat(pin.getAttribute('data-x')) || 0;
+      var yPct   = parseFloat(pin.getAttribute('data-y')) || 0;
+
+      tooltipLabel.textContent  = label;
+      tooltipKicker.textContent = kicker;
+      tooltip.style.left = xPct + '%';
+      tooltip.style.top  = yPct + '%';
+
+      // Emil : skip animation si un tooltip vient juste de fermer (toolbar feel)
+      var now = Date.now();
+      if (now - openSince < 350) {
+        tooltip.classList.add('is-instant');
+      } else {
+        tooltip.classList.remove('is-instant');
+      }
+      tooltip.classList.add('is-visible');
+      openSince = now;
+    }
+
+    function hideTooltip() {
+      hideTimer = setTimeout(function () {
+        tooltip.classList.remove('is-visible');
+      }, 80);
+    }
+
+    var pins = section.querySelectorAll('.pin-guest, .pin-home');
+    pins.forEach(function (pin) {
+      pin.addEventListener('mouseenter', function () { showTooltip(pin); });
+      pin.addEventListener('mouseleave', hideTooltip);
+      pin.addEventListener('focus',      function () { showTooltip(pin); });
+      pin.addEventListener('blur',       hideTooltip);
+    });
+
+    // Si la souris quitte la carte, on cache immédiatement
+    frame.addEventListener('mouseleave', function () {
+      clearTimeout(hideTimer);
+      tooltip.classList.remove('is-visible');
+    });
   })();
   </script>
 </section>
