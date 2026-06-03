@@ -56,4 +56,26 @@ class AdminBaseController
         unset($_SESSION['flash']);
         return $flash;
     }
+
+    /**
+     * Rate limiting par IP + action stocké en SESSION.
+     * Dupliqué depuis BaseController car AdminBaseController est volontairement
+     * indépendant (deux scopes distincts admin/front).
+     */
+    protected function checkRateLimit(string $action, int $maxAttempts = 5, int $windowSeconds = 3600): bool
+    {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $key = 'rate_' . $action . '_' . md5($ip);
+
+        if (!isset($_SESSION[$key])) {
+            $_SESSION[$key] = ['count' => 0, 'reset_at' => time() + $windowSeconds];
+        }
+
+        if (time() > $_SESSION[$key]['reset_at']) {
+            $_SESSION[$key] = ['count' => 0, 'reset_at' => time() + $windowSeconds];
+        }
+
+        $_SESSION[$key]['count']++;
+        return $_SESSION[$key]['count'] <= $maxAttempts;
+    }
 }
