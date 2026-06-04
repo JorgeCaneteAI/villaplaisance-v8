@@ -125,9 +125,25 @@ $totalCount = ($featured ? 1 : 0) + count($articles);
   }
   .qf-card.hidden { display: none; }
   .qf-card:hover { transform: translateY(-2px); }
+  /* <img class="img"> : aspect 3/2 iso source. Le background-size n'a plus
+     d'effet depuis la migration <div> → <img> (Pattern A). */
+  .qf-card img.img,
   .qf-card .img {
-    aspect-ratio: 4/3; background-size: cover; background-position: center;
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
     background-color: var(--linen-200);
+    background-size: cover; background-position: center; /* legacy fallback */
+  }
+  /* Toute la card est un lien → on neutralise underline + hérite couleur. */
+  a.qf-card, a.qf-featured { color: inherit; text-decoration: none; }
+  a.qf-card:focus-visible, a.qf-featured:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 4px; }
+  .qf-card .more-link {
+    color: var(--olive-900);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+    text-transform: none;
   }
   .qf-card .meta { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
   .qf-card h3 {
@@ -161,7 +177,15 @@ $totalCount = ($featured ? 1 : 0) + count($articles);
     padding: clamp(24px, 3vw, 40px);
     align-items: center;
   }
-  .qf-featured .img { aspect-ratio: 4/3; background-size: cover; background-position: center; background-color: var(--linen-200); }
+  .qf-featured img.img,
+  .qf-featured .img {
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
+    background-color: var(--linen-200);
+    background-size: cover; background-position: center; /* legacy fallback */
+  }
   .qf-featured h3 {
     font-family: var(--font-display); font-weight: 400;
     font-size: clamp(34px, 3.6vw, 52px); line-height: 1.0; letter-spacing: -0.02em;
@@ -230,10 +254,12 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
     <?php else: ?>
     <div class="qf-grid" id="grid">
 
-      <?php if ($featured): ?>
+      <?php if ($featured):
+        $featuredCover = !empty($featured['cover_image']) ? basename($featured['cover_image']) : 'placeholder/sur-place.webp';
+      ?>
       <!-- FEATURED -->
-      <article class="qf-featured qf-card" data-cat="<?= htmlspecialchars($catSlug($featured['category'] ?? '')) ?>">
-        <div class="img" style="background-image: url('<?= htmlspecialchars(!empty($featured['cover_image']) ? \ImageService::url($featured['cover_image']) : '/assets/img/placeholder/sur-place.webp') ?>')"></div>
+      <a class="qf-featured qf-card" href="<?= LangService::url('sur-place') ?>/<?= htmlspecialchars($featured['slug']) ?>" data-cat="<?= htmlspecialchars($catSlug($featured['category'] ?? '')) ?>">
+        <?= ImageService::imgFromBg($featuredCover, 'img', true) ?>
         <div>
           <div class="meta">
             <?php if (!empty($featured['category'])): ?>
@@ -251,16 +277,18 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
             <?php else: ?>
             <span></span>
             <?php endif; ?>
-            <a href="<?= LangService::url('sur-place') ?>/<?= htmlspecialchars($featured['slug']) ?>" data-en="More info →">Plus d'infos →</a>
+            <span class="more-link" data-en="More info →">Plus d'infos →</span>
           </div>
         </div>
-      </article>
+      </a>
       <?php endif; ?>
 
       <!-- CARDS -->
-      <?php foreach ($articles as $a): ?>
-      <article class="qf-card" data-cat="<?= htmlspecialchars($catSlug($a['category'] ?? '')) ?>">
-        <div class="img" style="background-image: url('<?= htmlspecialchars(!empty($a['cover_image']) ? \ImageService::url($a['cover_image']) : '/assets/img/placeholder/sur-place.webp') ?>')"></div>
+      <?php foreach ($articles as $a):
+        $cover = !empty($a['cover_image']) ? basename($a['cover_image']) : 'placeholder/sur-place.webp';
+      ?>
+      <a class="qf-card" href="<?= LangService::url('sur-place') ?>/<?= htmlspecialchars($a['slug']) ?>" data-cat="<?= htmlspecialchars($catSlug($a['category'] ?? '')) ?>">
+        <?= ImageService::imgFromBg($cover, 'img') ?>
         <?php if (!empty($a['category'])): ?>
         <div class="meta">
           <span class="badge <?= htmlspecialchars($catSlug($a['category'])) ?>"><?= htmlspecialchars($a['category']) ?></span>
@@ -276,9 +304,9 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
           <?php else: ?>
           <span></span>
           <?php endif; ?>
-          <a href="<?= LangService::url('sur-place') ?>/<?= htmlspecialchars($a['slug']) ?>" data-en="More info →">Plus d'infos →</a>
+          <span class="more-link" data-en="More info →">Plus d'infos →</span>
         </div>
-      </article>
+      </a>
       <?php endforeach; ?>
 
     </div>

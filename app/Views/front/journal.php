@@ -156,6 +156,10 @@
   .j-card.wide .img { aspect-ratio: 16/10; } /* wide = très panoramique */
   .j-card:hover img.img,
   .j-card:hover .img { filter: brightness(1.02); }
+  /* Toute la card est cliquable : <a class="j-card"> et <a class="j-featured">. */
+  a.j-card, a.j-featured { color: inherit; text-decoration: none; }
+  a.j-card:hover, a.j-featured:hover { color: inherit; }
+  a.j-card:focus-visible, a.j-featured:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 4px; }
   .j-card h3 {
     margin: 0;
     font-family: var(--font-display); font-weight: 400;
@@ -262,126 +266,122 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
 </section>
 <?php endif; ?>
 
+<?php
+// Rendu dynamique des articles depuis $articles (vp_articles type='journal').
+// Le 1er = featured, les suivants = grille de j-card (alternance lg/normal/tall).
+$articlesList = $articles ?? [];
+$featured = $articlesList[0] ?? null;
+$rest     = array_slice($articlesList, 1);
+
+// Mapping catégorie BDD → slug pour data-cat (filtre JS) + couleur badge.
+$catSlug = static function (string $cat): string {
+    $map = [
+        'Provence contemporaine'   => 'contemporaine',
+        'Voyager autrement'        => 'autrement',
+        'Hôtes & hôteliers'        => 'hotes',
+        'Territoire & transition'  => 'transition',
+        "L'art de séjourner"       => 'art',
+    ];
+    if (isset($map[$cat])) return $map[$cat];
+    return strtolower(preg_replace('/[^a-z0-9]+/i', '-', $cat) ?: 'other');
+};
+// Badge sage (Hôtes & hôteliers) ou solid (featured), sinon normal.
+$catClass = static function (string $cat, bool $solid = false): string {
+    if ($solid) return 'j-cat solid';
+    if (str_contains($cat, 'Hôtes')) return 'j-cat sage';
+    return 'j-cat';
+};
+// Date FR "Mai 2026", fallback vide si null.
+$frMonths = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+$dateFr = static function (?string $iso) use ($frMonths): string {
+    if (!$iso) return '';
+    $ts = strtotime($iso);
+    if ($ts === false) return '';
+    return $frMonths[(int)date('n', $ts)] . ' ' . date('Y', $ts);
+};
+// Cover image fallback pour les articles sans cover.
+$coverOf = static function (array $a): string {
+    return !empty($a['cover_image'])
+        ? basename($a['cover_image'])
+        : 'villa-plaisance-vignes-provence-01.webp';
+};
+// Pattern de span alterné pour effet magazine : lg lg, normal x3, tall x3, normal x2…
+$spanPattern = ['lg', 'lg', '', '', '', 'tall', 'tall', 'tall', ''];
+$colSpan = static function (string $variant): int {
+    return match ($variant) {
+        'lg'   => 6,
+        'tall' => 4,
+        default => 4,
+    };
+};
+// Catégories uniques présentes pour le filtre (depuis $categories controller).
+$cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c !== ''));
+?>
+
 <!-- ============ FILTER ============ -->
+<?php if (!empty($cats)): ?>
 <div class="j-filter">
   <div class="j-filter-inner" role="tablist">
     <button data-cat="all" aria-pressed="true">Tous</button>
-    <button data-cat="contemporaine" aria-pressed="false">Provence contemporaine</button>
-    <button data-cat="autrement" aria-pressed="false">Voyager autrement</button>
-    <button data-cat="hotes" aria-pressed="false">Hôtes &amp; hôteliers</button>
-    <button data-cat="transition" aria-pressed="false">Territoire &amp; transition</button>
-    <button data-cat="art" aria-pressed="false">L'art de séjourner</button>
-    <span class="count" id="filter-count">9 articles</span>
+    <?php foreach ($cats as $c): ?>
+    <button data-cat="<?= htmlspecialchars($catSlug($c)) ?>" aria-pressed="false"><?= htmlspecialchars($c) ?></button>
+    <?php endforeach; ?>
+    <span class="count" id="filter-count"><?= count($articlesList) ?> articles</span>
   </div>
 </div>
+<?php endif; ?>
 
-<!-- ============ FEATURED ============ -->
+<!-- ============ FEATURED + GRID ============ -->
 <section class="section">
   <div class="container-wide">
-    <div class="j-featured" data-cat="contemporaine">
-      <?= ImageService::imgFromBg('villa-plaisance-vignes-provence-01.webp', 'img') ?>
+
+    <?php if ($featured): ?>
+    <a class="j-featured" href="/journal/<?= htmlspecialchars($featured['slug']) ?>" data-cat="<?= htmlspecialchars($catSlug((string)$featured['category'])) ?>">
+      <?= ImageService::imgFromBg($coverOf($featured), 'img', true) ?>
       <div>
         <div class="meta">
-          <span class="j-cat solid" data-en="Contemporary Provence">Provence contemporaine</span>
-          <span class="j-date" data-en="May 2026 · 12 min read">Mai 2026 · 12 min de lecture</span>
+          <span class="<?= $catClass((string)$featured['category'], true) ?>"><?= htmlspecialchars((string)$featured['category']) ?></span>
+          <?php if ($d = $dateFr($featured['published_at'] ?? null)): ?>
+          <span class="j-date"><?= htmlspecialchars($d) ?></span>
+          <?php endif; ?>
         </div>
-        <h2><em>À la une</em><br/>La nouvelle Provence,<br/>celle qu'on ne regarde plus assez.</h2>
-        <p class="excerpt" data-en="Behind the lavender postcards, a young generation of hoteliers, winemakers and farmers is quietly redrawing the region. Portraits of those who do, far from the clichés.">Derrière les cartes postales aux lavandes, une jeune génération d'hôteliers, de vignerons et de paysans redessine doucement la région. Portraits, loin des clichés.</p>
-        <a class="btn-link" href="#"><span data-en="Read the article">Lire l'article</span> →</a>
+        <h2><em>À la une</em><br/><?= htmlspecialchars((string)$featured['title']) ?></h2>
+        <?php if (!empty($featured['excerpt'])): ?>
+        <p class="excerpt"><?= htmlspecialchars((string)$featured['excerpt']) ?></p>
+        <?php endif; ?>
+        <span class="btn-link">Lire l'article →</span>
       </div>
-    </div>
+    </a>
+    <?php endif; ?>
 
-    <!-- ============ ARTICLE GRID ============ -->
+    <?php if (!empty($rest)): ?>
     <div class="j-grid" id="grid">
-
-      <article class="j-card lg" style="grid-column: span 6;" data-cat="autrement">
-        <?= ImageService::imgFromBg('villa-plaisance-vp-itini-elisa-03-museeharibo.webp', 'img') ?>
+      <?php foreach ($rest as $i => $a):
+        $variant = $spanPattern[$i % count($spanPattern)];
+        $cls = 'j-card' . ($variant !== '' ? ' ' . $variant : '');
+        $span = $colSpan($variant);
+      ?>
+      <a class="<?= $cls ?>" style="grid-column: span <?= $span ?>;" data-cat="<?= htmlspecialchars($catSlug((string)$a['category'])) ?>" href="/journal/<?= htmlspecialchars($a['slug']) ?>">
+        <?= ImageService::imgFromBg($coverOf($a), 'img') ?>
         <div class="meta">
-          <span class="j-cat" data-en="Travel differently">Voyager autrement</span>
-          <span class="j-date" data-en="April 2026 · 8 min">Avril 2026 · 8 min</span>
+          <span class="<?= $catClass((string)$a['category']) ?>"><?= htmlspecialchars((string)$a['category']) ?></span>
+          <?php if ($d = $dateFr($a['published_at'] ?? null)): ?>
+          <span class="j-date"><?= htmlspecialchars($d) ?></span>
+          <?php endif; ?>
         </div>
-        <h3>Le train de nuit, retour <em>très lent</em><br/>vers la Provence.</h3>
-        <p class="excerpt" data-en="When the Intercités to Briançon rolls into Avignon at sunrise, you've already started your holiday. Notes on the slowest, gentlest way to come south.">Quand l'Intercités de Briançon arrive à Avignon au lever du soleil, les vacances ont déjà commencé. Notes sur la façon la plus lente, la plus douce, de descendre dans le Sud.</p>
-      </article>
-
-      <article class="j-card lg" style="grid-column: span 6;" data-cat="hotes">
-        <?= ImageService::imgFromBg('villa-plaisance-vp-itini-elisa-02-pont-du-gard.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat sage" data-en="Hosts &amp; hoteliers">Hôtes &amp; hôteliers</span>
-          <span class="j-date" data-en="April 2026 · 6 min">Avril 2026 · 6 min</span>
-        </div>
-        <h3>Rencontre avec un vigneron<br/>de <em>Châteauneuf-du-Pape</em>.</h3>
-        <p class="excerpt" data-en="Twenty hectares, three generations, and one question: how to keep making wine the way we like it.">Vingt hectares, trois générations, et une seule question : comment continuer à faire le vin comme on l'aime.</p>
-      </article>
-
-      <article class="j-card" style="grid-column: span 4;" data-cat="art">
-        <?= ImageService::imgFromBg('villa-plaisance-petit-dejeuner-confitures-01.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat" data-en="The art of staying">L'art de séjourner</span>
-          <span class="j-date" data-en="March 2026">Mars 2026</span>
-        </div>
-        <h3>Petit-déjeuner :<br/>la dernière <em>cérémonie</em>.</h3>
-      </article>
-
-      <article class="j-card" style="grid-column: span 4;" data-cat="transition">
-        <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-05.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat" data-en="Land &amp; transition">Territoire &amp; transition</span>
-          <span class="j-date" data-en="March 2026">Mars 2026</span>
-        </div>
-        <h3>Ce que change <em>un platane</em><br/>dans une cour d'école.</h3>
-      </article>
-
-      <article class="j-card" style="grid-column: span 4;" data-cat="contemporaine">
-        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-04.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat" data-en="Contemporary Provence">Provence contemporaine</span>
-          <span class="j-date" data-en="February 2026">Février 2026</span>
-        </div>
-        <h3>Quatre maisons d'hôtes<br/>qu'on aime, et <em>pourquoi</em>.</h3>
-      </article>
-
-      <article class="j-card tall" style="grid-column: span 4;" data-cat="autrement">
-        <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-01.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat" data-en="Travel differently">Voyager autrement</span>
-          <span class="j-date" data-en="February 2026">Février 2026</span>
-        </div>
-        <h3>La carte du <em>slow travel</em><br/>en Vaucluse.</h3>
-        <p class="excerpt" data-en="A 50-km loop, four days, two pairs of shoes. The route we'd send a friend on.">Une boucle de 50 km, quatre jours, deux paires de chaussures. L'itinéraire qu'on conseille à un ami.</p>
-      </article>
-
-      <article class="j-card tall" style="grid-column: span 4;" data-cat="hotes">
-        <?= ImageService::imgFromBg('villa-plaisance-salon-salle-a-manger-04.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat sage" data-en="Hosts &amp; hoteliers">Hôtes &amp; hôteliers</span>
-          <span class="j-date" data-en="January 2026">Janvier 2026</span>
-        </div>
-        <h3>Cinq questions à <em>celle</em><br/>qui tient la table d'à côté.</h3>
-        <p class="excerpt" data-en="A restaurant in the village, three menus a year, and a kitchen the size of a cupboard.">Un restaurant au village, trois menus par an, et une cuisine grande comme une armoire.</p>
-      </article>
-
-      <article class="j-card tall" style="grid-column: span 4;" data-cat="transition">
-        <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-12.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat" data-en="Land &amp; transition">Territoire &amp; transition</span>
-          <span class="j-date" data-en="December 2025">Décembre 2025</span>
-        </div>
-        <h3>L'eau, la <em>vigne</em>,<br/>et le siècle qui vient.</h3>
-        <p class="excerpt" data-en="What does climate change look like, vine by vine, here.">Le changement climatique vu d'ici, vigne par vigne.</p>
-      </article>
-
-      <article class="j-card" style="grid-column: span 6;" data-cat="art">
-        <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-06.webp', 'img') ?>
-        <div class="meta">
-          <span class="j-cat" data-en="The art of staying">L'art de séjourner</span>
-          <span class="j-date" data-en="December 2025">Décembre 2025</span>
-        </div>
-        <h3>Trois jours, deux livres,<br/>une <em>piscine</em>.</h3>
-        <p class="excerpt" data-en="A reasoned defence of staying put, what a long, slow weekend really repairs.">Petite défense raisonnée du « ne rien faire », ce que répare vraiment un week-end immobile.</p>
-      </article>
-
+        <h3><?= htmlspecialchars((string)$a['title']) ?></h3>
+        <?php if (!empty($a['excerpt'])): ?>
+        <p class="excerpt"><?= htmlspecialchars((string)$a['excerpt']) ?></p>
+        <?php endif; ?>
+      </a>
+      <?php endforeach; ?>
     </div>
+    <?php endif; ?>
+
+    <?php if (empty($articlesList)): ?>
+    <p class="body-lg" style="text-align: center; padding: clamp(40px, 6vw, 80px) 0; color: var(--stone-500);">Aucun article publié pour l'instant. Revenez bientôt.</p>
+    <?php endif; ?>
+
   </div>
 </section>
 
