@@ -517,7 +517,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <h2 class="h-xl" style="margin: 0 0 28px; max-width: 18ch;">Piscine privée, <em>12 × 6</em>.<br/>Pour vous seuls.</h2>
     <p class="lede" style="margin: 0; max-width: 52ch;" data-en="Exclusively yours, 24/7. No other family or tenant has access during your stay.">Exclusivement réservée à votre groupe, 24h/24. Aucune autre famille ou locataire n'y a accès pendant votre séjour.</p>
 
-    <div style="aspect-ratio: 21/9; background: center/cover url('/uploads/villa-plaisance-piscine-privee-05.webp'); margin-top: clamp(32px, 4vw, 56px);"></div>
+    <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-05.webp', 'piscine-banner') ?>
 
     <div class="pool-block">
       <div>

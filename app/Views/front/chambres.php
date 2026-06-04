@@ -398,7 +398,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section">
   <div class="container-wide">
     <div class="two-col reverse" style="align-items: center;">
-      <div style="aspect-ratio: 4/5; background: center/cover url('/uploads/villa-plaisance-salle-de-bain-chambre-hotes-01.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-salle-de-bain-chambre-hotes-01.webp', 'prose-aside-img') ?>
       <div>
         <div class="section-label">
           <span class="numeral">04 / <span data-en="Bath">Salle de bain</span></span>
