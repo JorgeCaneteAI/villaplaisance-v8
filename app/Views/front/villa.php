@@ -102,8 +102,15 @@
   .interior > div {
     display: flex; flex-direction: column; gap: 18px;
   }
+  /* <img class="img"> : aspect 3/2 iso source, object-fit cover. Le
+     background-size n'a plus d'effet depuis la migration <div> → <img>. */
+  .interior img.img,
   .interior .img {
-    aspect-ratio: 4/3; background-size: cover; background-position: center;
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
+    background-size: cover; background-position: center; /* legacy fallback */
   }
   @media (max-width: 720px) { .interior { grid-template-columns: 1fr; } }
 
