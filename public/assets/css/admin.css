@@ -1200,18 +1200,24 @@ input:disabled, textarea:disabled, select:disabled {
   font-weight: 500;
 }
 
-/* Slots étroits matin / soir : pas de texte, juste la bande couleur.
-   Le slot morning (départ) finit à droite (côté gouttière) → radius à droite.
-   Le slot evening (arrivée) commence à gauche (côté gouttière) → radius à gauche.
-   Les bords extérieurs (vers cellule voisine) restent carrés pour la
-   continuité avec la résa qui continue. */
+/* Slots étroits matin / soir : la date du check-in (evening) ou check-out
+   (morning) s'affiche dedans, alignée vers la gouttière (côté centre cellule)
+   pour rester loin de la cellule voisine.
+   Le slot morning (départ) finit à droite (côté gouttière) → radius à droite,
+   date alignée à droite (= côté gouttière).
+   Le slot evening (arrivée) commence à gauche (côté gouttière) → radius à gauche,
+   date alignée à gauche (= côté gouttière). */
 .calendrier__grid .slot--morning .resa,
 .calendrier__grid .slot--evening .resa {
-  font-size: 0;
-  padding: 0;
+  font-size: 10px;
+  padding: 0 6px;
   height: 22px;
   width: 100%;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
+.calendrier__grid .slot--morning .resa { justify-content: flex-end; }
+.calendrier__grid .slot--evening .resa { justify-content: flex-start; }
 .calendrier__grid .slot--morning .resa {
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
