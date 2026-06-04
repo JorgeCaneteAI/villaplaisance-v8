@@ -1116,7 +1116,7 @@ input:disabled, textarea:disabled, select:disabled {
   /* Border-bottom épaissie pour servir de séparateur visuel entre les
      rangées de semaines. Le ton --surface-2 (gris très clair) reste discret
      sur fond blanc des cellules current, sans agressivité. */
-  border-bottom: 6px solid var(--surface-2);
+  border-bottom: 10px solid var(--surface-2);
   vertical-align: top;
   height: 124px;
   width: 14.28%;
