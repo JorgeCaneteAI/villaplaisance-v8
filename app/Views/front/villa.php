@@ -203,6 +203,47 @@
   .faq details[open] .icon { background: var(--ink-900); }
   .faq details[open] .icon::before { background: var(--linen-50); }
   .faq .answer { padding-top: 14px; color: var(--stone-600); font-size: 15px; line-height: 1.65; max-width: 64ch; }
+
+  /* Room editorial layout (calqué sur chambres.php — pattern B&B big+sm).
+     Image 1 grande en haut + 2 vignettes en bas, alterné gauche/droite. */
+  .ch-room {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+  .ch-room.alt { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+  .ch-room.alt .ch-room-text { order: 2; }
+  .ch-room-images {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .ch-room-images > img.big {
+    grid-column: 1 / -1; aspect-ratio: 16/10;
+    width: 100%; height: auto; object-fit: cover; object-position: center; display: block;
+  }
+  .ch-room-images > img.sm {
+    aspect-ratio: 4/5;
+    width: 100%; height: auto; object-fit: cover; object-position: center; display: block;
+  }
+  .ch-room-num {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    color: var(--stone-500); text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: var(--hairline); padding-bottom: 14px; margin-bottom: 24px;
+  }
+  .ch-room-tagline {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    color: var(--terra-500); text-transform: uppercase;
+    margin: 0 0 14px;
+  }
+  .ch-pills {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 24px;
+  }
+  @media (max-width: 960px) {
+    .ch-room, .ch-room.alt { grid-template-columns: 1fr; }
+    .ch-room.alt .ch-room-text { order: 0; }
+  }
 </style>
 
 
@@ -292,7 +333,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <?php else: ?>
 <section class="section" id="chambres">
   <div class="container-wide">
-    <div style="display:flex; justify-content:space-between; align-items:flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 72px); flex-wrap: wrap;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; gap: 32px; flex-wrap: wrap;">
       <div>
         <div class="section-label">
           <span class="numeral">01 / <span data-en="The bedrooms">Les chambres</span></span>
@@ -301,78 +342,120 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       </div>
       <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="Each room has a personality of its own, books, an arch, the garden, the seventies. None of them lacks for shade or light.">Chaque chambre a sa personnalité, les livres, une arche, le jardin, les seventies. Aucune ne manque ni d'ombre ni de lumière.</p>
     </div>
+  </div>
+</section>
 
-    <div class="room-cards">
-
-      <!-- VERTE -->
-      <article class="room-card-x">
-        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-01.webp', 'img') ?>
-        <div class="head">
-          <div class="name"><em>Chambre Verte</em></div>
-          <div class="tagline" data-en="Large bed, garden view">Grand lit, vue jardin</div>
+<!-- VERTE -->
+<section class="section">
+  <div class="container-wide">
+    <div class="ch-room">
+      <div class="ch-room-text">
+        <div class="ch-room-num">
+          <span>I · <span data-en="First bedroom">Première chambre</span></span>
+          <span data-en="Garden side · ground floor">Côté jardin · rez-de-chaussée</span>
         </div>
-        <p class="desc" data-en="King-size bed 160×200, view of the garden and olive trees. Reversible air-conditioning, TV. On the ground floor.">Lit 160×200, vue sur le jardin et les oliviers. Climatisation réversible, TV. Au rez-de-chaussée.</p>
-        <div class="pills">
+        <p class="ch-room-tagline" data-en="Large bed, garden view">GRAND LIT, VUE JARDIN</p>
+        <h2 class="h-xl" style="margin: 0 0 24px;"><em>Chambre Verte</em></h2>
+        <p class="body-lg" style="margin: 0 0 16px;" data-en="King-size bed 160×200, view of the garden and olive trees. Reversible air-conditioning, TV. On the ground floor.">Lit 160×200, vue sur le jardin et les oliviers. Climatisation réversible, TV. Au rez-de-chaussée.</p>
+        <div class="ch-pills">
           <span class="pill">Lit 160 × 200</span>
           <span class="pill" data-en="Garden view">Vue jardin</span>
-          <span class="pill" data-en="A/C">Climatisation</span>
+          <span class="pill" data-en="Reversible A/C">Climatisation réversible</span>
           <span class="pill">TV</span>
           <span class="pill">Wifi</span>
-          <span class="pill solid" data-en="Ground floor">Rez-de-chaussée</span>
         </div>
-      </article>
+      </div>
+      <div class="ch-room-images">
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-01.webp', 'big') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-02.webp', 'sm') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-03.webp', 'sm') ?>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <!-- BLEUE -->
-      <article class="room-card-x">
-        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-01.webp', 'img') ?>
-        <div class="head">
-          <div class="name"><em>Chambre Bleue</em></div>
-          <div class="tagline" data-en="Library, 300 books">Bibliothèque · 300 livres</div>
+<!-- BLEUE -->
+<section class="section" style="background: var(--linen-100);">
+  <div class="container-wide">
+    <div class="ch-room alt">
+      <div class="ch-room-images">
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-01.webp', 'big') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-02.webp', 'sm') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-03.webp', 'sm') ?>
+      </div>
+      <div class="ch-room-text">
+        <div class="ch-room-num">
+          <span>II · <span data-en="Second bedroom">Deuxième chambre</span></span>
+          <span data-en="Library &amp; family-friendly">Bibliothèque · famille</span>
         </div>
-        <p class="desc" data-en="Two 90×200 single beds, joinable as a double. A clic-clac sofa bed and a 300-book library. Reversible air-conditioning.">Deux lits 90×200 jumelables, clic-clac, bibliothèque de 300 livres. Climatisation réversible.</p>
-        <div class="pills">
+        <p class="ch-room-tagline" data-en="Library, 300 books">BIBLIOTHÈQUE · 300 LIVRES</p>
+        <h2 class="h-xl" style="margin: 0 0 24px;"><em>Chambre Bleue</em></h2>
+        <p class="body-lg" style="margin: 0 0 16px;" data-en="Two 90×200 single beds, joinable as a double. A clic-clac sofa bed and a 300-book library. Reversible air-conditioning.">Deux lits 90×200 jumelables, clic-clac, bibliothèque de 300 livres. Climatisation réversible.</p>
+        <div class="ch-pills">
           <span class="pill">2 lits 90 × 200 <span style="color: var(--stone-500); margin-left: 4px;" data-en="joinable">jumelables</span></span>
           <span class="pill">Clic-clac</span>
           <span class="pill" data-en="300-book library">Bibliothèque 300 livres</span>
           <span class="pill" data-en="A/C">Climatisation</span>
           <span class="pill">Wifi</span>
         </div>
-      </article>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <!-- ARCHE -->
-      <article class="room-card-x">
-        <?= ImageService::imgFromBg('villa-plaisance-chambre-arche-01.webp', 'img') ?>
-        <div class="head">
-          <div class="name"><em>Chambre Arche</em></div>
-          <div class="tagline" data-en="Midnight-blue arch, floor-to-ceiling libraries">Arche bleu nuit, bibliothèques sol-plafond</div>
+<!-- ARCHE -->
+<section class="section">
+  <div class="container-wide">
+    <div class="ch-room">
+      <div class="ch-room-text">
+        <div class="ch-room-num">
+          <span>III · <span data-en="Third bedroom">Troisième chambre</span></span>
+          <span data-en="Garden access · ground floor">Accès jardin · rez-de-chaussée</span>
         </div>
-        <p class="desc" data-en="A 140×180 bed beneath a great midnight-blue painted arch. Floor-to-ceiling libraries on either side. On the ground floor, with a view onto the garden.">Lit 140×180 sous une grande arche peinte en bleu nuit. Bibliothèques sol-plafond des deux côtés. Au rez-de-chaussée, avec vue sur le jardin.</p>
-        <div class="pills">
+        <p class="ch-room-tagline" data-en="Midnight-blue arch, floor-to-ceiling libraries">ARCHE BLEU NUIT · BIBLIOTHÈQUES SOL-PLAFOND</p>
+        <h2 class="h-xl" style="margin: 0 0 24px;"><em>Chambre Arche</em></h2>
+        <p class="body-lg" style="margin: 0 0 16px;" data-en="A 140×180 bed beneath a great midnight-blue painted arch. Floor-to-ceiling libraries on either side. On the ground floor, with a view onto the garden.">Lit 140×180 sous une grande arche peinte en bleu nuit. Bibliothèques sol-plafond des deux côtés. Au rez-de-chaussée, avec vue sur le jardin.</p>
+        <div class="ch-pills">
           <span class="pill">Lit 140 × 180</span>
           <span class="pill" data-en="Midnight-blue arch">Arche bleu nuit</span>
           <span class="pill" data-en="Floor-to-ceiling libraries">Bibliothèques sol-plafond</span>
           <span class="pill" data-en="Garden view">Vue jardin</span>
           <span class="pill" data-en="A/C">Climatisation</span>
-          <span class="pill solid" data-en="Ground floor · garden access">Rez-de-chaussée · accès jardin</span>
         </div>
-      </article>
+      </div>
+      <div class="ch-room-images">
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-arche-01.webp', 'big') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-arche-02.webp', 'sm') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-arche-03.webp', 'sm') ?>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <!-- 70 -->
-      <article class="room-card-x">
-        <?= ImageService::imgFromBg('villa-plaisance-chambre-annees-70-01.webp', 'img') ?>
-        <div class="head">
-          <div class="name"><em>Chambre 70</em></div>
-          <div class="tagline" data-en="Vintage 1970s furniture">Mobilier vintage années 70</div>
+<!-- 70 -->
+<section class="section" style="background: var(--linen-100);">
+  <div class="container-wide">
+    <div class="ch-room alt">
+      <div class="ch-room-images">
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-annees-70-01.webp', 'big') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-annees-70-02.webp', 'sm') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-annees-70-03.webp', 'sm') ?>
+      </div>
+      <div class="ch-room-text">
+        <div class="ch-room-num">
+          <span>IV · <span data-en="Fourth bedroom">Quatrième chambre</span></span>
+          <span data-en="The most singular">La plus atypique</span>
         </div>
-        <p class="desc" data-en="A large double bed, vintage 1970s furniture picked up over the years. Direct access to the garden through a French window. The villa's most singular room.">Grand lit double, mobilier chiné des années 70. Accès direct sur le jardin par une porte-fenêtre. La chambre la plus atypique de la villa.</p>
-        <div class="pills">
+        <p class="ch-room-tagline" data-en="Vintage 1970s furniture">MOBILIER VINTAGE ANNÉES 70</p>
+        <h2 class="h-xl" style="margin: 0 0 24px;"><em>Chambre 70</em></h2>
+        <p class="body-lg" style="margin: 0 0 16px;" data-en="A large double bed, vintage 1970s furniture picked up over the years. Direct access to the garden through a French window. The villa's most singular room.">Grand lit double, mobilier chiné des années 70. Accès direct sur le jardin par une porte-fenêtre. La chambre la plus atypique de la villa.</p>
+        <div class="ch-pills">
           <span class="pill" data-en="Large double bed">Grand lit double</span>
           <span class="pill" data-en="Vintage furniture">Mobilier vintage</span>
           <span class="pill" data-en="Direct garden access">Accès direct jardin</span>
           <span class="pill" data-en="A/C">Climatisation</span>
         </div>
-      </article>
-
+      </div>
     </div>
   </div>
 </section>
