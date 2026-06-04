@@ -115,6 +115,13 @@ class SeoService
     {
         $base = self::lodgingBusinessJsonLd();
         $base['@type'] = 'BedAndBreakfast';
+        // Points d'ancrage croisés pour confirmer l'entité à Google et aux
+        // LLMs. Airbnb (chambres) + Booking (chambres) + Google Business.
+        $base['sameAs'] = [
+            'https://www.airbnb.fr/h/villaplaisance',
+            'https://www.booking.com/hotel/fr/villa-plaisance-bedarrides',
+            'https://maps.app.goo.gl/awAia9UD5BMeiXF26',
+        ];
         $base['amenityFeature'] = [
             ['@type' => 'LocationFeatureSpecification', 'name' => 'Piscine partagée', 'value' => true],
             ['@type' => 'LocationFeatureSpecification', 'name' => 'Petit-déjeuner inclus', 'value' => true],
@@ -128,6 +135,12 @@ class SeoService
     {
         $base = self::lodgingBusinessJsonLd();
         $base['@type'] = 'VacationRental';
+        // Airbnb (villa entière) + Google Business (même fiche que B&B).
+        // Pas de Booking : ne commercialise que les chambres.
+        $base['sameAs'] = [
+            'https://www.airbnb.fr/h/villaplaisance-bedarrides',
+            'https://maps.app.goo.gl/awAia9UD5BMeiXF26',
+        ];
         $base['numberOfRooms'] = 4;
         $base['occupancy'] = [
             '@type' => 'QuantitativeValue',
