@@ -127,9 +127,10 @@
   }
   @media (max-width: 720px) { .j-featured { grid-template-columns: 1fr; } }
 
-  /* Article grid */
+  /* Article grid — grille régulière 3 colonnes, aspect 3/2 partout pour
+     cohérence visuelle complète (plus de variantes tall/wide). */
   .j-grid {
-    display: grid; grid-template-columns: repeat(12, 1fr);
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(32px, 4vw, 56px) clamp(24px, 2.4vw, 36px);
   }
   .j-card {
@@ -138,8 +139,9 @@
   }
   .j-card.hidden { display: none; }
   .j-card:hover { transform: translateY(-2px); }
-  /* <img class="img"> : aspect 3/2 par défaut iso source. .tall et .wide
-     restent comme accents éditoriaux dans la grille. */
+  /* <img class="img"> : aspect 3/2 iso source, partout dans la grille.
+     Plus de variantes tall (portrait) ou wide (panoramique) — l'uniformité
+     prime sur la variation éditoriale. */
   .j-card img.img,
   .j-card .img {
     aspect-ratio: 3/2;
@@ -150,12 +152,10 @@
     background-size: cover; background-position: center; /* legacy fallback */
     transition: filter .3s;
   }
-  .j-card.tall img.img,
-  .j-card.tall .img { aspect-ratio: 4/5; }   /* tall = portrait mesuré, pas 3/4 violent */
-  .j-card.wide img.img,
-  .j-card.wide .img { aspect-ratio: 16/10; } /* wide = très panoramique */
   .j-card:hover img.img,
   .j-card:hover .img { filter: brightness(1.02); }
+  @media (max-width: 960px) { .j-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .j-grid { grid-template-columns: 1fr; } }
   /* Toute la card est cliquable : <a class="j-card"> et <a class="j-featured">. */
   a.j-card, a.j-featured { color: inherit; text-decoration: none; }
   a.j-card:hover, a.j-featured:hover { color: inherit; }
@@ -177,12 +177,7 @@
     margin: 0;
   }
 
-  @media (max-width: 960px) {
-    .j-card { grid-column: span 6 !important; }
-  }
-  @media (max-width: 560px) {
-    .j-card { grid-column: span 12 !important; }
-  }
+  /* Plus de grid-column inline : la grille gère son span via grid-template-columns. */
 
   /* Newsletter */
   .newsletter {
@@ -305,15 +300,7 @@ $coverOf = static function (array $a): string {
         ? basename($a['cover_image'])
         : 'villa-plaisance-vignes-provence-01.webp';
 };
-// Pattern de span alterné pour effet magazine : lg lg, normal x3, tall x3, normal x2…
-$spanPattern = ['lg', 'lg', '', '', '', 'tall', 'tall', 'tall', ''];
-$colSpan = static function (string $variant): int {
-    return match ($variant) {
-        'lg'   => 6,
-        'tall' => 4,
-        default => 4,
-    };
-};
+// Grille régulière : toutes les cards en même format (aspect 3/2 uniforme).
 // Catégories uniques présentes pour le filtre (depuis $categories controller).
 $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c !== ''));
 ?>
@@ -356,12 +343,8 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
 
     <?php if (!empty($rest)): ?>
     <div class="j-grid" id="grid">
-      <?php foreach ($rest as $i => $a):
-        $variant = $spanPattern[$i % count($spanPattern)];
-        $cls = 'j-card' . ($variant !== '' ? ' ' . $variant : '');
-        $span = $colSpan($variant);
-      ?>
-      <a class="<?= $cls ?>" style="grid-column: span <?= $span ?>;" data-cat="<?= htmlspecialchars($catSlug((string)$a['category'])) ?>" href="/journal/<?= htmlspecialchars($a['slug']) ?>">
+      <?php foreach ($rest as $a): ?>
+      <a class="j-card" data-cat="<?= htmlspecialchars($catSlug((string)$a['category'])) ?>" href="/journal/<?= htmlspecialchars($a['slug']) ?>">
         <?= ImageService::imgFromBg($coverOf($a), 'img') ?>
         <div class="meta">
           <span class="<?= $catClass((string)$a['category']) ?>"><?= htmlspecialchars((string)$a['category']) ?></span>
