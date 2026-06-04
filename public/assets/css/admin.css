@@ -1338,7 +1338,7 @@ input:disabled, textarea:disabled, select:disabled {
    1 lane unique au lieu de 3 → on récupère 50% de hauteur verticale.
    12 mois empilés deviennent beaucoup plus rapides à scanner. */
 .calendrier__grid .lanes--1 { grid-template-rows: 22px; }
-.calendrier.annee.is-filtered .calendrier__grid td.cell { height: 64px; }
+.calendrier.annee.is-filtered .calendrier__grid td.cell { height: 88px; }
 
 /* Legacy classes annee__* (au cas où des vues les utilisent encore) */
 .annee__nav, .annee__toolbar {
