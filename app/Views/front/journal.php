@@ -83,8 +83,15 @@
     margin-bottom: clamp(48px, 6vw, 96px);
     align-items: center;
   }
+  /* <img class="img"> : aspect 3/2 iso source, object-fit cover. Le
+     background-size n'a plus d'effet depuis la migration <div> → <img>. */
+  .j-featured img.img,
   .j-featured .img {
-    aspect-ratio: 4/3; background-size: cover; background-position: center;
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
+    background-size: cover; background-position: center; /* legacy fallback */
   }
   .j-featured .meta {
     display: flex; gap: 14px; align-items: baseline;
@@ -131,13 +138,23 @@
   }
   .j-card.hidden { display: none; }
   .j-card:hover { transform: translateY(-2px); }
+  /* <img class="img"> : aspect 3/2 par défaut iso source. .tall et .wide
+     restent comme accents éditoriaux dans la grille. */
+  .j-card img.img,
   .j-card .img {
-    aspect-ratio: 4/3; background-size: cover; background-position: center;
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
     background-color: var(--linen-200);
+    background-size: cover; background-position: center; /* legacy fallback */
     transition: filter .3s;
   }
-  .j-card.tall .img { aspect-ratio: 3/4; }
-  .j-card.wide .img { aspect-ratio: 16/10; }
+  .j-card.tall img.img,
+  .j-card.tall .img { aspect-ratio: 4/5; }   /* tall = portrait mesuré, pas 3/4 violent */
+  .j-card.wide img.img,
+  .j-card.wide .img { aspect-ratio: 16/10; } /* wide = très panoramique */
+  .j-card:hover img.img,
   .j-card:hover .img { filter: brightness(1.02); }
   .j-card h3 {
     margin: 0;
