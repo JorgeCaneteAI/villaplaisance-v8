@@ -58,7 +58,7 @@ $idAttr = $anchor_id !== '' ? ' id="' . htmlspecialchars($anchor_id) . '"' : '';
     <?php endif; ?>
 
     <?php if ($imgUrl): ?>
-    <div style="aspect-ratio: 21/9; background: center/cover url('<?= htmlspecialchars($imgUrl) ?>'); margin-top: clamp(32px, 4vw, 56px);" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+    <?= ImageService::imgFromBg(basename($imgUrl), 'piscine-banner') ?>
     <?php endif; ?>
 
     <?php if ($text !== '' || $note !== '' || !empty($features)): ?>

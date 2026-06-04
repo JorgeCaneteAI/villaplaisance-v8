@@ -149,7 +149,7 @@ $_renderStatsBand = function () use ($stats_band): string {
     <?php elseif ($layout === 'two-col-image-left' || $layout === 'two-col-image-right'): ?>
     <div class="two-col<?= $layout === 'two-col-image-left' ? ' reverse' : '' ?>" style="align-items: center;">
       <?php if ($imgUrl): ?>
-      <div style="aspect-ratio: 4/5; background: center/cover url('<?= htmlspecialchars($imgUrl) ?>');" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+      <?= ImageService::imgFromBg(basename($imgUrl), 'prose-aside-img') ?>
       <?php endif; ?>
       <div>
         <?= $_renderLabel() ?>

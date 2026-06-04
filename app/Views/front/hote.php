@@ -91,7 +91,7 @@ $initials = mb_substr($initials, 0, 2, 'UTF-8') ?: 'JC';
 .hote-section h2 em { font-style: italic; color: var(--sage-700); }
 .hote-section .content { font-size: 17px; line-height: 1.65; color: var(--ink-700); max-width: 64ch; }
 .hote-section .content p { margin: 0 0 16px; }
-.hote-section .block-image { aspect-ratio: 16/10; background-size: cover; background-position: center; margin: 28px 0; max-width: 64ch; }
+.hote-section .block-image { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; object-position: center; display: block; background-size: cover; background-position: center; margin: 28px 0; max-width: 64ch; }
 
 .hote-reviews { max-width: var(--container-wide); margin: 0 auto; padding: clamp(48px, 6vw, 88px) var(--gutter); border-top: var(--hairline); }
 .hote-reviews .overline { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--stone-500); text-transform: uppercase; margin-bottom: 16px; }
@@ -155,7 +155,7 @@ foreach ($blocks as $block):
     <div class="overline"><?= str_pad((string)$blockIdx, 2, '0', STR_PAD_LEFT) ?> &middot; <?= htmlspecialchars($bTitle) ?></div>
     <h2><?= htmlspecialchars($bTitle) ?></h2>
     <?php if (!empty($block['image'])): ?>
-        <div class="block-image" style="background-image: url('<?= htmlspecialchars($block['image']) ?>')"></div>
+        <?= ImageService::imgFromBg(basename($block['image']), 'block-image') ?>
     <?php endif; ?>
     <div class="content"><?= nl2br(htmlspecialchars($bCont)) ?></div>
 </section>

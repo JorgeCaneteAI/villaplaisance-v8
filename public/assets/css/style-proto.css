@@ -1223,6 +1223,23 @@ a { color: inherit; text-decoration: none; }
 .page-hero.has-image .btn-ghost { background: transparent; color: var(--linen-50); border-color: rgba(251,247,238,0.55); }
 .page-hero.has-image .btn-ghost:hover { background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50); }
 
+/* Bloc CMS prose mode two-col-image-* : aside image 3/2 cover. */
+img.prose-aside-img {
+  aspect-ratio: 3/2;
+  width: 100%; height: auto;
+  object-fit: cover; object-position: center;
+  display: block;
+}
+
+/* Bloc CMS piscine : bandeau panoramique 21/9 (large hero secondaire). */
+img.piscine-banner {
+  aspect-ratio: 21/9;
+  width: 100%; height: auto;
+  object-fit: cover; object-position: center;
+  display: block;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
 /* Pattern éditorial chambres (chambres.php + bloc cartes mode bb/villa) :
    .ch-room (grille texte+images, alterné via .alt) + .ch-room-images
    (1 big plein largeur + 2 sm portrait dessous) + meta typo (.ch-room-num,
