@@ -8,6 +8,7 @@
  * @var \DateTimeImmutable $today
  * @var int $prev_year
  * @var int $next_year
+ * @var ?string $propriete Filtre propriété : 'VP-BB' | 'VP-ETE' | 'AV-ANN' | null (toutes)
  */
 use App\Services\ReservationConstants;
 
@@ -45,7 +46,7 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
 };
 ?>
 
-<div class="calendrier annee">
+<div class="calendrier annee<?= $propriete ? ' is-filtered' : '' ?>">
     <header class="calendrier__nav">
         <a href="/admin/calendrier/annee/<?= $prev_year ?>" class="btn">&larr; <?= $prev_year ?></a>
         <h1><?= $year ?></h1>
@@ -56,6 +57,26 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
         <a href="/admin/calendrier/<?= $year ?>/<?= (int) $today->format('n') ?>" class="btn btn-primary">Vue mensuelle</a>
         <a href="/admin/calendrier/liste?mois=<?= $year ?>" class="btn">Liste</a>
         <a href="/admin/calendrier/export/pdf/annee/<?= $year ?>" class="btn">PDF année</a>
+    </div>
+
+    <div class="calendrier__filter" role="group" aria-label="Filtrer par propriété">
+        <?php
+        $filters = [
+            null      => 'Toutes',
+            'VP-BB'   => 'VP-BB',
+            'VP-ETE'  => 'VP-ETE',
+            'AV-ANN'  => 'AV-ANN',
+        ];
+        foreach ($filters as $val => $label):
+            $href = '/admin/calendrier/annee/' . $year . ($val ? '?propriete=' . $val : '');
+            $isActive = ($propriete === $val);
+        ?>
+            <a href="<?= htmlspecialchars($href) ?>"
+               class="btn filter-pill<?= $isActive ? ' is-active' : '' ?>"
+               <?= $isActive ? 'aria-current="page"' : '' ?>>
+                <?= htmlspecialchars($label) ?>
+            </a>
+        <?php endforeach; ?>
     </div>
 
     <div class="annee-stack">
@@ -88,8 +109,13 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
                                 $classes = ['cell', $isCurrent ? 'current' : 'outside'];
                                 if ($isToday) $classes[] = 'today';
 
-                                $LANES = ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2];
-                                $byLane = [0 => [], 1 => [], 2 => []];
+                                // Si un filtre propriété est actif, on ne rend qu'une seule lane
+                                // (celle de la propriété filtrée). Sinon, vue 3 lanes habituelle.
+                                $LANES = $propriete
+                                    ? [$propriete => 0]
+                                    : ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2];
+                                $laneCount = count($LANES);
+                                $byLane = array_fill(0, $laneCount, []);
                                 foreach ($m['resa_by_day'][$key] ?? [] as $r) {
                                     $l = $LANES[$r['propriete']] ?? null;
                                     if ($l === null) continue;
@@ -98,8 +124,8 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
                             ?>
                             <td class="<?= implode(' ', $classes) ?>">
                                 <div class="day-num"><?= (int) $day->format('j') ?></div>
-                                <div class="lanes">
-                                    <?php for ($lane = 0; $lane < 3; $lane++):
+                                <div class="lanes lanes--<?= $laneCount ?>">
+                                    <?php for ($lane = 0; $lane < $laneCount; $lane++):
                                         // Même logique que la vue mensuelle (cf. index.php).
                                         $morn = $evn = $full = null;
                                         foreach ($byLane[$lane] as $r) {

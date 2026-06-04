@@ -84,6 +84,14 @@ class ReservationController extends AdminBaseController
         $year = self::validateYear($year);
         $today = new \DateTimeImmutable('today');
 
+        // Filtre propriété (query string ?propriete=VP-BB | VP-ETE | AV-ANN).
+        // Null = toutes les propriétés (vue 3 lanes par cellule, comportement
+        // historique).
+        $propriete = $_GET['propriete'] ?? null;
+        if (!in_array($propriete, ['VP-BB', 'VP-ETE', 'AV-ANN'], true)) {
+            $propriete = null;
+        }
+
         $moisData = [];
         for ($m = 1; $m <= 12; $m++) {
             $d = ReservationService::buildCalendarData($year, $m);
@@ -102,6 +110,7 @@ class ReservationController extends AdminBaseController
             'prev_year' => $year - 1,
             'next_year' => $year + 1,
             'couleurs'  => ReservationConstants::SOURCES,
+            'propriete' => $propriete,
         ]);
     }
 

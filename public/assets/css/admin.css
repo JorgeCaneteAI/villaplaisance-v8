@@ -1291,6 +1291,35 @@ input:disabled, textarea:disabled, select:disabled {
   border-bottom: 1px solid var(--border);
 }
 
+/* Filtre propriété de la vue annuelle (pills sous la toolbar principale) */
+.calendrier__filter {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+.calendrier__filter .filter-pill {
+  border-color: var(--border);
+  color: var(--text-2);
+  font-weight: 500;
+}
+.calendrier__filter .filter-pill.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+.calendrier__filter .filter-pill.is-active:hover {
+  background: var(--accent);
+  color: #ffffff;
+  opacity: 0.92;
+}
+
+/* Vue annuelle filtrée (1 propriété seulement) : cellule plus compacte,
+   1 lane unique au lieu de 3 → on récupère 50% de hauteur verticale.
+   12 mois empilés deviennent beaucoup plus rapides à scanner. */
+.calendrier__grid .lanes--1 { grid-template-rows: 22px; }
+.calendrier.annee.is-filtered .calendrier__grid td.cell { height: 56px; }
+
 /* Legacy classes annee__* (au cas où des vues les utilisent encore) */
 .annee__nav, .annee__toolbar {
   display: flex; align-items: center; gap: var(--sp-2);
