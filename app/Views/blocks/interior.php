@@ -54,7 +54,7 @@ if ($surface === 'sage-light') $surfaceStyle = 'background: color-mix(in oklab, 
       ?>
       <div>
         <?php if ($imgUrl): ?>
-        <div class="img" style="background-image: url('<?= htmlspecialchars($imgUrl) ?>')" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+        <?= ImageService::imgFromBg(basename($imgUrl), 'img') ?>
         <?php endif; ?>
         <div>
           <?php if ($kicker !== ''): ?>

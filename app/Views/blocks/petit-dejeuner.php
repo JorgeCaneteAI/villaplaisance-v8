@@ -36,7 +36,7 @@ $imgAlt = $image_id ? ImageService::altById((int)$image_id) : '';
   <div class="container-wide">
     <div class="breakfast-layout">
       <?php if ($imgUrl): ?>
-      <div class="breakfast-img" style="background-image: url('<?= htmlspecialchars($imgUrl) ?>')" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+      <?= ImageService::imgFromBg(basename($imgUrl), 'breakfast-img') ?>
       <?php endif; ?>
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>

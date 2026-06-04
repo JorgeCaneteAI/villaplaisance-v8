@@ -120,7 +120,7 @@ $resolveUrl = static function (?string $url): ?string {
       ?>
       <a class="journal-card" href="<?= htmlspecialchars($ctaUrl ?? '#') ?>">
         <?php if ($imgUrl): ?>
-        <div class="img" style="background-image: url('<?= htmlspecialchars($imgUrl) ?>')" role="img" aria-label="<?= htmlspecialchars($imgAlt) ?>"></div>
+        <?= ImageService::imgFromBg(basename($imgUrl), 'img') ?>
         <?php endif; ?>
         <div>
           <?php if ($kicker !== ''): ?>
