@@ -110,16 +110,18 @@ if ($offer === 'bb' || $offer === 'both'):
 endif;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MODE VILLA, grille compacte, wrapper section-label + h2 + intro au dessus
+// MODE VILLA, pattern éditorial iso BB : 1 grande + 2 vignettes par chambre,
+// alternance gauche/droite section par section.
 // ─────────────────────────────────────────────────────────────────────────────
 if ($offer === 'villa' || $offer === 'both'):
     $villaRooms = array_values(array_filter($rooms, fn($r) => in_array($r['offer'], ['villa', 'both'], true)));
     if (!empty($villaRooms)):
+        // Header titre/intro (section indépendante).
+        if ($heading !== '' || $intro !== '' || $labelText !== ''):
 ?>
 <section class="section">
   <div class="container-wide">
-    <?php if ($heading !== '' || $intro !== '' || $labelText !== ''): ?>
-    <div class="prose-grid" style="align-items: end; gap: 32px; margin: 0 0 28px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; gap: 32px; flex-wrap: wrap;">
       <div>
         <?php if ($labelNumeral !== '' || $labelText !== ''): ?>
         <div class="section-label">
@@ -134,46 +136,69 @@ if ($offer === 'villa' || $offer === 'both'):
       <p class="body-lg" style="max-width: 38ch; margin: 0;"><?= htmlspecialchars($intro) ?></p>
       <?php endif; ?>
     </div>
-    <?php endif; ?>
-
-    <div class="room-cards">
-      <?php foreach ($villaRooms as $room):
-        $images = is_string($room['images'] ?? null) ? (json_decode($room['images'], true) ?: []) : [];
-        if (empty($images) && !empty($room['image'])) $images = [$room['image']];
-        $img = $images[0] ?? '';
-        $pills = $splitPills($room['equip'] ?? null);
-        $solidPill = trim((string)($room['note'] ?? ''));
-      ?>
-      <article class="room-card-x">
-        <?php if ($img !== ''): ?>
-        <?= ImageService::imgFromBg($img, 'img') ?>
-        <?php endif; ?>
-        <div class="head">
-          <div class="name"><em><?= htmlspecialchars($room['name'] ?? '') ?></em></div>
-          <?php if (!empty($room['sous_titre'])): ?>
-          <div class="tagline"><?= htmlspecialchars($room['sous_titre']) ?></div>
+  </div>
+</section>
+<?php
+        endif;
+        // Chiffres romains pour la numérotation des chambres.
+        $roman = ['I','II','III','IV','V','VI','VII','VIII'];
+        foreach ($villaRooms as $vidx => $room):
+            $images = is_string($room['images'] ?? null) ? (json_decode($room['images'], true) ?: []) : [];
+            if (empty($images) && !empty($room['image'])) $images = [$room['image']];
+            $imgBig = $images[0] ?? '';
+            $imgSm1 = $images[1] ?? '';
+            $imgSm2 = $images[2] ?? '';
+            $pills = $splitPills($room['equip'] ?? null);
+            $solidPill = trim((string)($room['note'] ?? ''));
+            $isAlt = $vidx % 2 === 1; // alternance gauche/droite
+            $bgInline = $isAlt ? ' style="background: var(--linen-100);"' : '';
+            $numLabel = $roman[$vidx] ?? (string)($vidx + 1);
+?>
+<section class="section"<?= $bgInline ?>>
+  <div class="container-wide">
+    <div class="ch-room<?= $isAlt ? ' alt' : '' ?>">
+      <?php if ($isAlt && $imgBig !== ''): ?>
+      <div class="ch-room-images">
+        <?= ImageService::imgFromBg($imgBig, 'big') ?>
+        <?php if ($imgSm1 !== ''): ?><?= ImageService::imgFromBg($imgSm1, 'sm') ?><?php endif; ?>
+        <?php if ($imgSm2 !== ''): ?><?= ImageService::imgFromBg($imgSm2, 'sm') ?><?php endif; ?>
+      </div>
+      <?php endif; ?>
+      <div class="ch-room-text">
+        <div class="ch-room-num">
+          <span><?= $numLabel ?> · <span><?= htmlspecialchars((string)($room['name'] ?? '')) ?></span></span>
+          <?php if (!empty($solidPill)): ?>
+          <span><?= htmlspecialchars($solidPill) ?></span>
           <?php endif; ?>
         </div>
-        <?php if (!empty($room['description'])): ?>
-        <p class="desc"><?= htmlspecialchars($room['description']) ?></p>
+        <?php if (!empty($room['sous_titre'])): ?>
+        <p class="ch-room-tagline"><?= htmlspecialchars(mb_strtoupper($room['sous_titre'], 'UTF-8')) ?></p>
         <?php endif; ?>
-        <?php if (!empty($pills) || $solidPill !== ''): ?>
-        <div class="pills">
+        <h2 class="h-xl" style="margin: 0 0 24px;"><em><?= htmlspecialchars((string)($room['name'] ?? '')) ?></em></h2>
+        <?php if (!empty($room['description'])): ?>
+        <p class="body-lg" style="margin: 0 0 16px;"><?= htmlspecialchars($room['description']) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($pills)): ?>
+        <div class="ch-pills">
           <?php foreach ($pills as $pill): $lines = $pillLines($pill); ?>
           <?php $pillIcon = IconService::pillIcon($lines[0]); ?>
           <span class="pill"><?php if ($pillIcon !== null): ?><?= IconService::svg($pillIcon, 14, 'pill-icon') ?><?php endif; ?><?= htmlspecialchars($lines[0]) ?><?php if (isset($lines[1])): ?> <span style="color: var(--stone-500); margin-left: 4px;"><?= htmlspecialchars($lines[1]) ?></span><?php endif; ?></span>
           <?php endforeach; ?>
-          <?php if ($solidPill !== ''): ?>
-          <span class="pill solid"><?= htmlspecialchars($solidPill) ?></span>
-          <?php endif; ?>
         </div>
         <?php endif; ?>
-      </article>
-      <?php endforeach; ?>
+      </div>
+      <?php if (!$isAlt && $imgBig !== ''): ?>
+      <div class="ch-room-images">
+        <?= ImageService::imgFromBg($imgBig, 'big') ?>
+        <?php if ($imgSm1 !== ''): ?><?= ImageService::imgFromBg($imgSm1, 'sm') ?><?php endif; ?>
+        <?php if ($imgSm2 !== ''): ?><?= ImageService::imgFromBg($imgSm2, 'sm') ?><?php endif; ?>
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>
 <?php
+        endforeach;
     endif;
 endif;
 ?>
