@@ -206,16 +206,31 @@ class RedirectController extends AdminBaseController
         // Read current .htaccess
         $content = file_get_contents($htaccessPath);
 
-        // Replace the redirect block (between markers)
-        $startMarker = "# ═══ 301 Redirect";
-        $endMarker = "# ═══ Force HTTPS";
+        // Délimite le bloc managed avec un marqueur de fin explicite.
+        $startMarker = "# ═══ 301 Redirects (managed by admin) ═══";
+        $endMarker   = "# ═══ END 301 Redirects ═══";
+
+        $managedBlock = $rules . $endMarker . "\n";
 
         $startPos = strpos($content, $startMarker);
-        $endPos = strpos($content, $endMarker);
+        $endPos   = strpos($content, $endMarker);
 
-        if ($startPos !== false && $endPos !== false) {
-            $newContent = substr($content, 0, $startPos) . $rules . "\n" . substr($content, $endPos);
-            file_put_contents($htaccessPath, $newContent);
+        if ($startPos !== false && $endPos !== false && $endPos > $startPos) {
+            // Remplace le bloc existant entre les deux markers (inclut endMarker).
+            $endPosFull  = $endPos + strlen($endMarker) + 1; // +1 pour le \n suivant
+            $newContent  = substr($content, 0, $startPos) . $managedBlock . substr($content, $endPosFull);
+        } else {
+            // Bloc absent : on l'insère juste avant le bloc tracking params
+            // (ou en fin de fichier si le repère n'existe pas).
+            $insertBefore = "# ═══ Strip tracking params";
+            $insertPos    = strpos($content, $insertBefore);
+            if ($insertPos === false) {
+                $newContent = rtrim($content) . "\n\n" . $managedBlock;
+            } else {
+                $newContent = substr($content, 0, $insertPos) . $managedBlock . "\n" . substr($content, $insertPos);
+            }
         }
+
+        file_put_contents($htaccessPath, $newContent);
     }
 }
