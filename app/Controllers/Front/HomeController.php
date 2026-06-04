@@ -16,12 +16,18 @@ class HomeController extends BaseController
         );
 
         // JSON-LD : la maison offre 2 modèles distincts (BedAndBreakfast
-        // sept-juin + VacationRental juillet-août). On émet les 2 schemas
-        // sous-types plutôt qu'un LodgingBusiness générique : Google peut
-        // alors indexer les 2 offres et adapter le Local Pack à la saison.
+        // sept-juin + VacationRental juillet-août). On n'émet ici que le
+        // BedAndBreakfast (catégorie principale, exigences raisonnables).
+        // Le VacationRental est conservé sur /location-villa-provence
+        // (VillaController) où il est contextuellement pertinent, mais
+        // il est volontairement retiré de la home : son rich result Google
+        // « Vacation rental » exige des champs très spécifiques (prix par
+        // nuit dynamiques, dates de dispo, photos par chambre) destinés
+        // aux chaînes hôtelières connectées à Google Hotels. Pas notre
+        // cible. Sans ce rich result précis, l'entité reste reconnue via
+        // BedAndBreakfast + LocalBusiness + Organisation + AggregateRating.
         $jsonLd = [
             \SeoService::bedAndBreakfastJsonLd(),
-            \SeoService::vacationRentalJsonLd(),
         ];
 
         // Add FAQ JSON-LD
