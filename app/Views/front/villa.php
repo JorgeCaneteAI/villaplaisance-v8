@@ -211,7 +211,7 @@
   .faq details[open] .icon::before { background: var(--linen-50); }
   .faq .answer { padding-top: 14px; color: var(--stone-600); font-size: 15px; line-height: 1.65; max-width: 64ch; }
 
-  /* Room editorial layout (calqué sur chambres.php — pattern B&B big+sm).
+  /* Room editorial layout (calqué sur chambres.php , pattern B&B big+sm).
      Image 1 grande en haut + 2 vignettes en bas, alterné gauche/droite. */
   .ch-room {
     display: grid;

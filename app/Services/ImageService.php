@@ -207,6 +207,13 @@ class ImageService
             $altField = "alt_{$lang}";
             $alt = (string)(!empty($row[$altField]) ? $row[$altField] : ($row['alt_fr'] ?? ''));
         }
+        // Fallback alt : titre dérivé du filename si pas trouvé en BDD. Évite
+        // les <img alt=""> qui dégradent l'accessibilité et le SEO Images.
+        if ($alt === '') {
+            $base = pathinfo($clean, PATHINFO_FILENAME);
+            $derived = trim(ucfirst(str_replace('-', ' ', $base)));
+            $alt = $derived !== '' ? $derived . ', Villa Plaisance, Bédarrides' : 'Villa Plaisance, Bédarrides';
+        }
         $width  = ($row && !empty($row['width']))  ? (int)$row['width']  : 1600;
         $height = ($row && !empty($row['height'])) ? (int)$row['height'] : 1067;
 

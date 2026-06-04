@@ -127,7 +127,7 @@
   }
   @media (max-width: 720px) { .j-featured { grid-template-columns: 1fr; } }
 
-  /* Article grid — grille régulière 3 colonnes, aspect 3/2 partout pour
+  /* Article grid , grille régulière 3 colonnes, aspect 3/2 partout pour
      cohérence visuelle complète (plus de variantes tall/wide). */
   .j-grid {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -140,7 +140,7 @@
   .j-card.hidden { display: none; }
   .j-card:hover { transform: translateY(-2px); }
   /* <img class="img"> : aspect 3/2 iso source, partout dans la grille.
-     Plus de variantes tall (portrait) ou wide (panoramique) — l'uniformité
+     Plus de variantes tall (portrait) ou wide (panoramique) , l'uniformité
      prime sur la variation éditoriale. */
   .j-card img.img,
   .j-card .img {
