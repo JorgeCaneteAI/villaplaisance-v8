@@ -78,6 +78,9 @@ class SeoService
         return [
             '@context' => 'https://schema.org',
             '@type' => 'LodgingBusiness',
+            // Identifiant stable pour Google (lève le critique "identifier manquant"
+            // remonté par l'inspection GSC sur VacationRental/BedAndBreakfast).
+            'identifier' => $base . '#villa-plaisance-bedarrides',
             'name' => 'Villa Plaisance',
             'description' => 'Chambres d\'hôtes et villa de charme à Bédarrides, au cœur du Triangle d\'Or provençal.',
             'url' => $base,
@@ -102,11 +105,78 @@ class SeoService
                 'latitude' => '44.0386',
                 'longitude' => '4.8972',
             ],
-            'image' => $base . '/assets/img/og-default.webp',
+            // Array de 8+ images (Google demande >= 8 pour la fiche hébergement
+            // riche). On pioche dans les uploads existants : façade + piscine +
+            // chambres + intérieurs + petit-déj. Note absolue.
+            'image' => [
+                $base . '/uploads/hero-piscine.webp',
+                $base . '/uploads/villa-plaisance-chambre-verte-01.webp',
+                $base . '/uploads/villa-plaisance-chambre-bleue-01.webp',
+                $base . '/uploads/villa-plaisance-chambre-arche-01.webp',
+                $base . '/uploads/villa-plaisance-chambre-annees-70-01.webp',
+                $base . '/uploads/villa-plaisance-salon-salle-a-manger-01.webp',
+                $base . '/uploads/villa-plaisance-cuisine-equipee-01.webp',
+                $base . '/uploads/villa-plaisance-petit-dejeuner-brioche-01.webp',
+            ],
             'priceRange' => '€€',
             'starRating' => [
                 '@type' => 'Rating',
                 'ratingValue' => '5',
+            ],
+            // Note moyenne agrégée depuis Google Business Profile (5.0 / 11 avis).
+            // À synchroniser quand le nombre d'avis évolue.
+            'aggregateRating' => [
+                '@type' => 'AggregateRating',
+                'ratingValue' => '5.0',
+                'reviewCount' => 11,
+                'bestRating' => '5',
+                'worstRating' => '1',
+            ],
+        ];
+    }
+
+    /**
+     * Liste des Place qui composent l'hébergement (4 chambres + cuisine + salon
+     * + jardin/piscine). Utilisé en containsPlace par BedAndBreakfast et
+     * VacationRental pour lever le critique GSC "containsPlace manquant".
+     */
+    public static function containsPlaces(): array
+    {
+        return [
+            [
+                '@type' => 'Room',
+                'name' => 'Chambre Verte',
+                'description' => 'Lit 160×200, vue jardin, climatisation, salle de bain privative.',
+            ],
+            [
+                '@type' => 'Room',
+                'name' => 'Chambre Bleue',
+                'description' => 'Deux lits 90×200 jumelables en 180, bibliothèque 300 livres, climatisation.',
+            ],
+            [
+                '@type' => 'Room',
+                'name' => 'Chambre Arche',
+                'description' => 'Lit 140×180 sous arche bleu nuit, bibliothèques sol-plafond, accès jardin.',
+            ],
+            [
+                '@type' => 'Room',
+                'name' => 'Chambre 70',
+                'description' => 'Grand lit double, mobilier vintage années 70, accès direct jardin.',
+            ],
+            [
+                '@type' => 'Place',
+                'name' => 'Cuisine équipée',
+                'description' => 'Cuisine entièrement équipée, lave-vaisselle, four, micro-ondes (offre villa entière).',
+            ],
+            [
+                '@type' => 'Place',
+                'name' => 'Salon et salle à manger',
+                'description' => 'Grande pièce de vie avec longue table commune, cheminée.',
+            ],
+            [
+                '@type' => 'Place',
+                'name' => 'Piscine privée 12 × 6 m',
+                'description' => 'Piscine extérieure clôturée, jardin sous oliviers.',
             ],
         ];
     }
@@ -115,6 +185,7 @@ class SeoService
     {
         $base = self::lodgingBusinessJsonLd();
         $base['@type'] = 'BedAndBreakfast';
+        $base['additionalType'] = 'https://schema.org/Accommodation';
         // Points d'ancrage croisés pour confirmer l'entité à Google et aux
         // LLMs. Airbnb (chambres) + Booking (chambres) + Google Business.
         $base['sameAs'] = [
@@ -122,6 +193,8 @@ class SeoService
             'https://www.booking.com/hotel/fr/villa-plaisance-bedarrides',
             'https://maps.app.goo.gl/awAia9UD5BMeiXF26',
         ];
+        // Pour BedAndBreakfast, on expose juste les 2 chambres B&B.
+        $base['containsPlace'] = array_slice(self::containsPlaces(), 0, 2);
         $base['amenityFeature'] = [
             ['@type' => 'LocationFeatureSpecification', 'name' => 'Piscine partagée', 'value' => true],
             ['@type' => 'LocationFeatureSpecification', 'name' => 'Petit-déjeuner inclus', 'value' => true],
@@ -135,12 +208,16 @@ class SeoService
     {
         $base = self::lodgingBusinessJsonLd();
         $base['@type'] = 'VacationRental';
+        $base['additionalType'] = 'https://schema.org/Accommodation';
         // Airbnb (villa entière) + Google Business (même fiche que B&B).
         // Pas de Booking : ne commercialise que les chambres.
         $base['sameAs'] = [
             'https://www.airbnb.fr/h/villaplaisance-bedarrides',
             'https://maps.app.goo.gl/awAia9UD5BMeiXF26',
         ];
+        // VacationRental = villa entière : on expose les 7 Place (4 chambres
+        // + cuisine + salon + piscine).
+        $base['containsPlace'] = self::containsPlaces();
         $base['numberOfRooms'] = 4;
         $base['occupancy'] = [
             '@type' => 'QuantitativeValue',
