@@ -8,7 +8,7 @@
  * @var \DateTimeImmutable $today
  * @var int $prev_year
  * @var int $next_year
- * @var ?string $propriete Filtre propriété : 'VP-BB' | 'VP-ETE' | 'AV-ANN' | null (toutes)
+ * @var ?string $propriete Filtre propriété : 'villa' (VP-BB+VP-ETE cumulés) | 'avignon' (AV-ANN) | null (toutes)
  */
 use App\Services\ReservationConstants;
 
@@ -62,10 +62,9 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
     <div class="calendrier__filter" role="group" aria-label="Filtrer par propriété">
         <?php
         $filters = [
-            null      => 'Toutes',
-            'VP-BB'   => 'VP-BB',
-            'VP-ETE'  => 'VP-ETE',
-            'AV-ANN'  => 'AV-ANN',
+            null      => 'Tous',
+            'villa'   => 'Villa',
+            'avignon' => 'Avignon',
         ];
         foreach ($filters as $val => $label):
             $href = '/admin/calendrier/annee/' . $year . ($val ? '?propriete=' . $val : '');
@@ -109,12 +108,16 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
                                 $classes = ['cell', $isCurrent ? 'current' : 'outside'];
                                 if ($isToday) $classes[] = 'today';
 
-                                // Si un filtre propriété est actif, on ne rend qu'une seule lane
-                                // (celle de la propriété filtrée). Sinon, vue 3 lanes habituelle.
-                                $LANES = $propriete
-                                    ? [$propriete => 0]
-                                    : ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2];
-                                $laneCount = count($LANES);
+                                // Mapping propriété → index de lane selon le filtre actif :
+                                //  - villa   : VP-BB et VP-ETE sur la même lane (maison cumulée)
+                                //  - avignon : AV-ANN seule
+                                //  - null    : 3 lanes (comportement historique)
+                                $LANES = match ($propriete) {
+                                    'villa'   => ['VP-BB' => 0, 'VP-ETE' => 0],
+                                    'avignon' => ['AV-ANN' => 0],
+                                    default   => ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2],
+                                };
+                                $laneCount = max($LANES) + 1;
                                 $byLane = array_fill(0, $laneCount, []);
                                 foreach ($m['resa_by_day'][$key] ?? [] as $r) {
                                     $l = $LANES[$r['propriete']] ?? null;

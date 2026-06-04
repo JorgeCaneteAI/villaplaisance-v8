@@ -84,11 +84,12 @@ class ReservationController extends AdminBaseController
         $year = self::validateYear($year);
         $today = new \DateTimeImmutable('today');
 
-        // Filtre propriété (query string ?propriete=VP-BB | VP-ETE | AV-ANN).
-        // Null = toutes les propriétés (vue 3 lanes par cellule, comportement
-        // historique).
+        // Filtre propriété (query string ?propriete=villa | avignon).
+        // - villa   = lane unique qui agrège VP-BB et VP-ETE (même maison)
+        // - avignon = lane unique AV-ANN (Studio Avignon)
+        // - null    = toutes les propriétés (vue 3 lanes, comportement historique)
         $propriete = $_GET['propriete'] ?? null;
-        if (!in_array($propriete, ['VP-BB', 'VP-ETE', 'AV-ANN'], true)) {
+        if (!in_array($propriete, ['villa', 'avignon'], true)) {
             $propriete = null;
         }
 
