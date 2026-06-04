@@ -103,19 +103,38 @@
     <?php endforeach; ?>
 </head>
 <body>
+    <?php
+        // Détection de la page courante pour marquer l'élément de nav actif.
+        $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $isNavActive = static function (string $itemUrl) use ($currentPath): bool {
+            $a = rtrim($itemUrl, '/');
+            $b = rtrim($currentPath, '/');
+            return $a !== '' && ($a === $b || str_starts_with($b, $a . '/'));
+        };
+        $navItems = [
+            ['url' => LangService::url('chambres-d-hotes'),         'label' => t('proto.nav.chambres'),       'page' => 'chambres-hotes'],
+            ['url' => LangService::url('location-villa-provence'),  'label' => t('proto.nav.villa'),          'page' => 'maison-hotes'],
+            ['url' => LangService::url('disponibilites'),           'label' => t('proto.nav.disponibilites'), 'page' => 'disponibilites'],
+            ['url' => LangService::url('espaces-exterieurs'),       'label' => t('proto.nav.exterieurs'),     'page' => 'exterieurs'],
+            ['url' => LangService::url('journal'),                  'label' => t('proto.nav.journal'),        'page' => 'journal-tourisme'],
+            ['url' => LangService::url('itineraire'),               'label' => t('proto.nav.itineraire'),     'page' => 'journal-que-faire'],
+        ];
+    ?>
     <!-- Nav du proto Claude design -->
     <header class="nav">
         <div class="nav-inner">
             <a href="<?= LangService::url('/') ?>" class="brand" aria-label="Villa Plaisance, accueil">
-                <img src="/assets/img/logo-proto.png" alt="Villa Plaisance" />
+                <img src="/assets/img/logo-proto.png" alt="" />
+                <span class="brand-wordmark">Villa Plaisance<span class="brand-mark">Bédarrides · 84</span></span>
             </a>
             <nav class="nav-links" aria-label="<?= t('proto.nav.menu_principal') ?>">
-                <a href="<?= LangService::url('chambres-d-hotes') ?>" data-page="chambres-hotes"><?= t('proto.nav.chambres') ?></a>
-                <a href="<?= LangService::url('location-villa-provence') ?>" data-page="maison-hotes"><?= t('proto.nav.villa') ?></a>
-                <a href="<?= LangService::url('disponibilites') ?>" data-page="disponibilites"><?= t('proto.nav.disponibilites') ?></a>
-                <a href="<?= LangService::url('espaces-exterieurs') ?>" data-page="exterieurs"><?= t('proto.nav.exterieurs') ?></a>
-                <a href="<?= LangService::url('journal') ?>" data-page="journal-tourisme"><?= t('proto.nav.journal') ?></a>
-                <a href="<?= LangService::url('itineraire') ?>" data-page="journal-que-faire"><?= t('proto.nav.itineraire') ?></a>
+                <?php foreach ($navItems as $item):
+                    $active = $isNavActive($item['url']);
+                ?>
+                <a href="<?= htmlspecialchars($item['url']) ?>"
+                   data-page="<?= htmlspecialchars($item['page']) ?>"
+                   <?= $active ? 'class="active" aria-current="page"' : '' ?>><?= htmlspecialchars((string)$item['label']) ?></a>
+                <?php endforeach; ?>
             </nav>
             <div class="nav-right">
                 <?php $currentLang = LangService::current(); ?>

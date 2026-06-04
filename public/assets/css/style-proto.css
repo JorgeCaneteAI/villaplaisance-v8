@@ -244,6 +244,11 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
   transform: translateY(-1px);
 }
+/* Cacher le wordmark + tagline en mobile : ne reste que le picto (logo image).
+   Visible en desktop et tablette à partir de 720px. */
+@media (max-width: 720px) {
+  .brand .brand-wordmark { display: none; }
+}
 .nav-links {
   display: flex; gap: 22px; justify-content: center;
   font-size: 13.5px; color: var(--ink-700);
@@ -255,10 +260,12 @@ a { color: inherit; text-decoration: none; }
   transition: color .2s ease;
 }
 .nav-links a:hover { color: var(--sage-700); }
-.nav-links a.active { color: var(--ink-900); }
+/* Page courante : trait terra plus marqué + poids un peu plus appuyé.
+   Le contraste visuel le distingue clairement des autres liens. */
+.nav-links a.active { color: var(--ink-900); font-weight: 500; }
 .nav-links a.active::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
-  height: 1px; background: var(--ink-900);
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
+  height: 2px; background: var(--terra-500);
 }
 .nav-right {
   display: flex; justify-content: flex-end; align-items: center; gap: 18px;

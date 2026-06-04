@@ -9,7 +9,7 @@
   /* Layout: form on left, contact info on right */
   .ct-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.9fr) minmax(0, 0.8fr);
     gap: clamp(40px, 5vw, 96px);
     align-items: start;
   }
