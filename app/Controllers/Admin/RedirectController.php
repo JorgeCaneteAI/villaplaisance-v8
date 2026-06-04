@@ -45,7 +45,11 @@ class RedirectController extends AdminBaseController
             [$urlFrom, $urlTo, $statusCode, $note]
         );
 
-        $this->syncHtaccess();
+        // ⚠️ syncHtaccess() désactivé : bug majeur (boucle infinie sur /contact, catch-all
+        //   dangereux qui matchait le domain principal). À refactor avant réactivation.
+        //   Procédure manuelle d'ajout : éditer directement /public/.htaccess, bloc
+        //   « Old page slugs → new URLs ».
+        // $this->syncHtaccess();
         $this->flash('success', 'Redirection ajoutée.');
         $this->redirect('/admin/redirects');
     }
@@ -88,7 +92,11 @@ class RedirectController extends AdminBaseController
             'active' => $active,
         ], 'id = ?', [$id]);
 
-        $this->syncHtaccess();
+        // ⚠️ syncHtaccess() désactivé : bug majeur (boucle infinie sur /contact, catch-all
+        //   dangereux qui matchait le domain principal). À refactor avant réactivation.
+        //   Procédure manuelle d'ajout : éditer directement /public/.htaccess, bloc
+        //   « Old page slugs → new URLs ».
+        // $this->syncHtaccess();
         $this->flash('success', 'Redirection mise à jour.');
         $this->redirect('/admin/redirects');
     }
@@ -102,7 +110,11 @@ class RedirectController extends AdminBaseController
         }
 
         \Database::query("UPDATE vp_redirects SET active = NOT active WHERE id = ?", [$id]);
-        $this->syncHtaccess();
+        // ⚠️ syncHtaccess() désactivé : bug majeur (boucle infinie sur /contact, catch-all
+        //   dangereux qui matchait le domain principal). À refactor avant réactivation.
+        //   Procédure manuelle d'ajout : éditer directement /public/.htaccess, bloc
+        //   « Old page slugs → new URLs ».
+        // $this->syncHtaccess();
         $this->flash('success', 'Statut modifié.');
         $this->redirect('/admin/redirects');
     }
@@ -116,7 +128,11 @@ class RedirectController extends AdminBaseController
         }
 
         \Database::delete('vp_redirects', 'id = ?', [$id]);
-        $this->syncHtaccess();
+        // ⚠️ syncHtaccess() désactivé : bug majeur (boucle infinie sur /contact, catch-all
+        //   dangereux qui matchait le domain principal). À refactor avant réactivation.
+        //   Procédure manuelle d'ajout : éditer directement /public/.htaccess, bloc
+        //   « Old page slugs → new URLs ».
+        // $this->syncHtaccess();
         $this->flash('success', 'Redirection supprimée.');
         $this->redirect('/admin/redirects');
     }
