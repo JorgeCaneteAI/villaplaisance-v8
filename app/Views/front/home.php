@@ -13,13 +13,15 @@
     background: var(--ink-900);
     border-bottom: 0;
   }
-  .page-hero.has-image .bg {
+  .page-hero.has-image > img.bg {
     position: absolute; inset: 0;
-    background-size: cover; background-position: center;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    display: block; z-index: 0;
   }
-  .page-hero.has-image .bg::after {
-    content: ""; position: absolute; inset: 0;
-    /* Subtle bottom-left scrim, keeps the photo bright while making the text readable */
+  /* Scrim porté par le wrapper (les <img> n'acceptent pas ::after). */
+  .page-hero.has-image::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background:
       radial-gradient(ellipse 90% 70% at 30% 95%, rgba(31,28,22,0.55) 0%, rgba(31,28,22,0) 60%),
       linear-gradient(180deg, rgba(31,28,22,0) 55%, rgba(31,28,22,0.35) 100%);
@@ -30,7 +32,7 @@
     text-shadow: 0 1px 24px rgba(31,28,22,0.45);
   }
   .page-hero.has-image .page-hero-inner {
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
     min-height: clamp(540px, 78vh, 780px);
     align-content: end;
   }
@@ -296,7 +298,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <?= $_heroHtml ?>
 <?php else: ?>
 <section class="page-hero has-image">
-  <div class="bg" style="background-image: url('/uploads/hero-piscine.webp')"></div>
+  <?= ImageService::imgFromBg('hero-piscine.webp', 'bg', true) ?>
   <div class="page-hero-inner">
     <div>
       <div class="page-hero-issue">
@@ -857,7 +859,7 @@ $_linkifyHost = static function (string $content): string {
 
     <div class="journal-grid">
       <a class="journal-card" href="<?= LangService::url('journal') ?>">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-vignes-provence-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-vignes-provence-01.webp', 'img') ?>
         <div>
           <div class="kicker-mono" data-en="Journal · Tourism">Journal · Tourisme</div>
           <h3>Voyager <em>autrement</em><br/>en Provence.</h3>
@@ -867,7 +869,7 @@ $_linkifyHost = static function (string $content): string {
       </a>
 
       <a class="journal-card" href="<?= LangService::url('itineraire') ?>">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-vp-itini-elisa-02-pont-du-gard.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-vp-itini-elisa-02-pont-du-gard.webp', 'img') ?>
         <div>
           <div class="kicker-mono" data-en="Journal · What to do nearby">Journal · Que faire sur place</div>
           <h3>Sur place,<br/>tout est <em>là</em>.</h3>

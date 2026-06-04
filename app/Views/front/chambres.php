@@ -352,9 +352,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </div>
       </div>
       <div class="ch-room-images">
-        <div class="big" style="background-image: url('/uploads/villa-plaisance-chambre-verte-01.webp')"></div>
-        <div class="sm" style="background-image: url('/uploads/villa-plaisance-chambre-verte-02.webp')"></div>
-        <div class="sm" style="background-image: url('/uploads/villa-plaisance-chambre-verte-03.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-01.webp', 'big') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-02.webp', 'sm') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-03.webp', 'sm') ?>
       </div>
     </div>
   </div>
@@ -364,9 +364,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
   <div class="container-wide">
     <div class="ch-room alt">
       <div class="ch-room-images">
-        <div class="big" style="background-image: url('/uploads/villa-plaisance-chambre-bleue-01.webp')"></div>
-        <div class="sm" style="background-image: url('/uploads/villa-plaisance-chambre-bleue-02.webp')"></div>
-        <div class="sm" style="background-image: url('/uploads/villa-plaisance-chambre-bleue-03.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-01.webp', 'big') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-02.webp', 'sm') ?>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-03.webp', 'sm') ?>
       </div>
       <div class="ch-room-text">
         <div class="ch-room-num">
@@ -418,7 +418,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section surface-sage" style="background: color-mix(in oklab, var(--sage-200) 28%, var(--linen-50));">
   <div class="container-wide">
     <div class="breakfast-layout">
-      <div class="breakfast-img" style="background-image: url('/uploads/villa-plaisance-petit-dejeuner-brioche-01.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-petit-dejeuner-brioche-01.webp', 'breakfast-img') ?>
       <div>
         <div class="section-label">
           <span class="numeral">05 / <span data-en="Breakfast">Petit-déjeuner</span></span>

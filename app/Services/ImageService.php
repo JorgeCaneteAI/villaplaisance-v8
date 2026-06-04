@@ -190,4 +190,39 @@ class ImageService
         $field = "alt_{$lang}";
         return (string)(!empty($row[$field]) ? $row[$field] : ($row['alt_fr'] ?? ''));
     }
+
+    /**
+     * Remplaçant de `<div style="background-image: url('/uploads/X.webp')">`.
+     * Lookup vp_media par filename pour alt + width + height (fallback 1600×1067).
+     * Si $eager=true, ajoute fetchpriority=high pour le LCP (hero de page).
+     */
+    public static function imgFromBg(string $filename, string $class = '', bool $eager = false): string
+    {
+        $clean = basename(ltrim($filename, '/'));
+        $row = self::getMedia($clean);
+
+        $lang = defined('CURRENT_LANG') ? CURRENT_LANG : (LangService::get() ?? 'fr');
+        $alt = '';
+        if ($row) {
+            $altField = "alt_{$lang}";
+            $alt = (string)(!empty($row[$altField]) ? $row[$altField] : ($row['alt_fr'] ?? ''));
+        }
+        $width  = ($row && !empty($row['width']))  ? (int)$row['width']  : 1600;
+        $height = ($row && !empty($row['height'])) ? (int)$row['height'] : 1067;
+
+        $loading = $eager
+            ? 'loading="eager" fetchpriority="high" decoding="async"'
+            : 'loading="lazy" decoding="async"';
+        $classAttr = $class !== '' ? ' class="' . htmlspecialchars($class) . '"' : '';
+
+        return sprintf(
+            '<img src="/uploads/%s" alt="%s" width="%d" height="%d" %s%s>',
+            htmlspecialchars($clean),
+            htmlspecialchars($alt),
+            $width,
+            $height,
+            $loading,
+            $classAttr
+        );
+    }
 }

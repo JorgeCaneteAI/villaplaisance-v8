@@ -66,7 +66,7 @@ if ($offer === 'bb' || $offer === 'both'):
       <?php if ($layout === 'alt'): ?>
       <div class="ch-room-images">
         <?php foreach ($images as $idx => $img): ?>
-        <div class="<?= $idx === 0 ? 'big' : 'sm' ?>" style="background-image: url('/uploads/<?= htmlspecialchars($img) ?>')"></div>
+        <?= ImageService::imgFromBg($img, $idx === 0 ? 'big' : 'sm') ?>
         <?php endforeach; ?>
       </div>
       <?php endif; ?>
@@ -98,7 +98,7 @@ if ($offer === 'bb' || $offer === 'both'):
       <?php if ($layout !== 'alt'): ?>
       <div class="ch-room-images">
         <?php foreach ($images as $idx => $img): ?>
-        <div class="<?= $idx === 0 ? 'big' : 'sm' ?>" style="background-image: url('/uploads/<?= htmlspecialchars($img) ?>')"></div>
+        <?= ImageService::imgFromBg($img, $idx === 0 ? 'big' : 'sm') ?>
         <?php endforeach; ?>
       </div>
       <?php endif; ?>
@@ -146,7 +146,7 @@ if ($offer === 'villa' || $offer === 'both'):
       ?>
       <article class="room-card-x">
         <?php if ($img !== ''): ?>
-        <div class="img" style="background-image: url('/uploads/<?= htmlspecialchars($img) ?>')"></div>
+        <?= ImageService::imgFromBg($img, 'img') ?>
         <?php endif; ?>
         <div class="head">
           <div class="name"><em><?= htmlspecialchars($room['name'] ?? '') ?></em></div>

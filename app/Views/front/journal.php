@@ -262,7 +262,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
 <section class="section">
   <div class="container-wide">
     <div class="j-featured" data-cat="contemporaine">
-      <div class="img" style="background-image: url('/uploads/villa-plaisance-vignes-provence-01.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-vignes-provence-01.webp', 'img') ?>
       <div>
         <div class="meta">
           <span class="j-cat solid" data-en="Contemporary Provence">Provence contemporaine</span>
@@ -278,7 +278,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
     <div class="j-grid" id="grid">
 
       <article class="j-card lg" style="grid-column: span 6;" data-cat="autrement">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-vp-itini-elisa-03-museeharibo.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-vp-itini-elisa-03-museeharibo.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="Travel differently">Voyager autrement</span>
           <span class="j-date" data-en="April 2026 · 8 min">Avril 2026 · 8 min</span>
@@ -288,7 +288,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card lg" style="grid-column: span 6;" data-cat="hotes">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-vp-itini-elisa-02-pont-du-gard.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-vp-itini-elisa-02-pont-du-gard.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat sage" data-en="Hosts &amp; hoteliers">Hôtes &amp; hôteliers</span>
           <span class="j-date" data-en="April 2026 · 6 min">Avril 2026 · 6 min</span>
@@ -298,7 +298,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card" style="grid-column: span 4;" data-cat="art">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-petit-dejeuner-confitures-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-petit-dejeuner-confitures-01.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="The art of staying">L'art de séjourner</span>
           <span class="j-date" data-en="March 2026">Mars 2026</span>
@@ -307,7 +307,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card" style="grid-column: span 4;" data-cat="transition">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-jardin-exterieur-05.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-05.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="Land &amp; transition">Territoire &amp; transition</span>
           <span class="j-date" data-en="March 2026">Mars 2026</span>
@@ -316,7 +316,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card" style="grid-column: span 4;" data-cat="contemporaine">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-chambre-verte-04.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-04.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="Contemporary Provence">Provence contemporaine</span>
           <span class="j-date" data-en="February 2026">Février 2026</span>
@@ -325,7 +325,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card tall" style="grid-column: span 4;" data-cat="autrement">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-jardin-exterieur-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-01.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="Travel differently">Voyager autrement</span>
           <span class="j-date" data-en="February 2026">Février 2026</span>
@@ -335,7 +335,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card tall" style="grid-column: span 4;" data-cat="hotes">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-salon-salle-a-manger-04.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-salon-salle-a-manger-04.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat sage" data-en="Hosts &amp; hoteliers">Hôtes &amp; hôteliers</span>
           <span class="j-date" data-en="January 2026">Janvier 2026</span>
@@ -345,7 +345,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card tall" style="grid-column: span 4;" data-cat="transition">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-jardin-exterieur-12.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-12.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="Land &amp; transition">Territoire &amp; transition</span>
           <span class="j-date" data-en="December 2025">Décembre 2025</span>
@@ -355,7 +355,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </article>
 
       <article class="j-card" style="grid-column: span 6;" data-cat="art">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-piscine-privee-06.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-06.webp', 'img') ?>
         <div class="meta">
           <span class="j-cat" data-en="The art of staying">L'art de séjourner</span>
           <span class="j-date" data-en="December 2025">Décembre 2025</span>

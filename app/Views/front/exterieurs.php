@@ -212,7 +212,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
           <span class="pill solid" data-en="Shared (Sept–June) or private (July–Aug)">Partagée (sept–juin) · privée (juil–août)</span>
         </div>
       </div>
-      <div class="ex-space-img" style="background-image: url('/uploads/villa-plaisance-piscine-privee-01.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-01.webp', 'ex-space-img') ?>
     </div>
   </div>
 </section>
@@ -221,7 +221,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
 <section class="section surface-stone" style="background: var(--linen-100);" id="terrasses">
   <div class="container-wide">
     <div class="ex-space alt">
-      <div class="ex-space-img" style="background-image: url('/uploads/villa-plaisance-jardin-exterieur-01.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-01.webp', 'ex-space-img') ?>
       <div class="ex-space-text">
         <div class="ex-space-num">
           <span>03 / <span data-en="Terraces">Terrasses</span></span>
@@ -264,14 +264,14 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
           <span class="pill" data-en="Children's play area">Aire de jeux enfants</span>
         </div>
       </div>
-      <div class="ex-space-img" style="background-image: url('/uploads/villa-plaisance-piscine-privee-08.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-08.webp', 'ex-space-img') ?>
     </div>
 
     <!-- Photo strip below garden -->
     <div class="photo-strip" style="margin-top: clamp(40px, 4vw, 56px);">
-      <div style="background-image: url('/uploads/villa-plaisance-jardin-exterieur-05.webp')"></div>
-      <div style="background-image: url('/uploads/villa-plaisance-jardin-exterieur-12.webp')"></div>
-      <div style="background-image: url('/uploads/villa-plaisance-piscine-privee-04.webp')"></div>
+      <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-05.webp', '') ?>
+      <?= ImageService::imgFromBg('villa-plaisance-jardin-exterieur-12.webp', '') ?>
+      <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-04.webp', '') ?>
     </div>
   </div>
 </section>

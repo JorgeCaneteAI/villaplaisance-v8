@@ -306,7 +306,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 
       <!-- VERTE -->
       <article class="room-card-x">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-chambre-verte-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-verte-01.webp', 'img') ?>
         <div class="head">
           <div class="name"><em>Chambre Verte</em></div>
           <div class="tagline" data-en="Large bed, garden view">Grand lit, vue jardin</div>
@@ -324,7 +324,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 
       <!-- BLEUE -->
       <article class="room-card-x">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-chambre-bleue-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-bleue-01.webp', 'img') ?>
         <div class="head">
           <div class="name"><em>Chambre Bleue</em></div>
           <div class="tagline" data-en="Library, 300 books">Bibliothèque · 300 livres</div>
@@ -341,7 +341,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 
       <!-- ARCHE -->
       <article class="room-card-x">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-chambre-arche-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-arche-01.webp', 'img') ?>
         <div class="head">
           <div class="name"><em>Chambre Arche</em></div>
           <div class="tagline" data-en="Midnight-blue arch, floor-to-ceiling libraries">Arche bleu nuit, bibliothèques sol-plafond</div>
@@ -359,7 +359,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 
       <!-- 70 -->
       <article class="room-card-x">
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-chambre-annees-70-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-chambre-annees-70-01.webp', 'img') ?>
         <div class="head">
           <div class="name"><em>Chambre 70</em></div>
           <div class="tagline" data-en="Vintage 1970s furniture">Mobilier vintage années 70</div>
@@ -393,7 +393,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 
     <div class="interior">
       <div>
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-cuisine-equipee-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-cuisine-equipee-01.webp', 'img') ?>
         <div>
           <div class="numeral" style="margin-bottom: 8px;" data-en="Kitchen, an all-in-one space">CUISINE · UN ESPACE TOUT-COMPRIS</div>
           <h3 class="h-md" style="margin: 0 0 8px;"><em data-en="Fully equipped">Entièrement équipée</em></h3>
@@ -402,7 +402,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       </div>
 
       <div>
-        <div class="img" style="background-image: url('/uploads/villa-plaisance-salon-salle-a-manger-01.webp')"></div>
+        <?= ImageService::imgFromBg('villa-plaisance-salon-salle-a-manger-01.webp', 'img') ?>
         <div>
           <div class="numeral" style="margin-bottom: 8px;" data-en="Living &amp; dining, conviviality, simple">SALON · SALLE À MANGER · LA CONVIVIALITÉ EN TOUTE SIMPLICITÉ</div>
           <h3 class="h-md" style="margin: 0 0 8px;"><em data-en="Air-conditioned, light, long">Climatisé, clair, long</em></h3>

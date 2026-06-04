@@ -1189,3 +1189,69 @@ a { color: inherit; text-decoration: none; }
 .origins-inline li:last-child { padding-right: 0; }
 .origins-inline li:last-child::after { content: none; }
 .origins-inline li:hover { color: var(--ink-900); }
+
+/* ============================================================================
+   R4 (SEO audit 2026-06-04) — migration <div style="background-image"> vers
+   <img>. Les classes ci-dessous remplacent le comportement cover/center qui
+   était porté par le <div> + inline style. Les <img> apportent un alt, des
+   dimensions intrinsèques (CLS minimisé) et l'indexabilité Google Images.
+   ============================================================================ */
+
+/* Hero pleine page (bloc CMS « hero ») — image en couche de fond,
+   contenu posé au-dessus via .page-hero-inner z-index 2. */
+.page-hero.has-image { position: relative; overflow: hidden; background: var(--ink-900); border-bottom: 0; }
+.page-hero.has-image > img.bg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  display: block; z-index: 0;
+}
+.page-hero.has-image::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 70% at 30% 95%, rgba(31,28,22,0.55) 0%, rgba(31,28,22,0) 60%),
+    linear-gradient(180deg, rgba(31,28,22,0) 55%, rgba(31,28,22,0.35) 100%);
+}
+.page-hero.has-image .page-hero-inner { position: relative; z-index: 2; min-height: clamp(540px, 78vh, 780px); align-content: end; }
+.page-hero.has-image h1, .page-hero.has-image .lede, .page-hero.has-image .page-hero-issue { text-shadow: 0 1px 24px rgba(31,28,22,0.45); }
+.page-hero.has-image h1 { color: var(--linen-50); }
+.page-hero.has-image h1 em { color: var(--sage-200); }
+.page-hero.has-image .page-hero-issue { color: rgba(251,247,238,0.78); border-bottom-color: rgba(251,247,238,0.25); }
+.page-hero.has-image .lede { color: rgba(251,247,238,0.92); }
+.page-hero.has-image .btn { background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50); }
+.page-hero.has-image .btn:hover { background: var(--sage-200); border-color: var(--sage-200); }
+.page-hero.has-image .btn-ghost { background: transparent; color: var(--linen-50); border-color: rgba(251,247,238,0.55); }
+.page-hero.has-image .btn-ghost:hover { background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50); }
+
+/* Galleries de chambres (chambres.php + bloc cartes) :
+   .ch-room-images > .big (grand) + .sm (vignettes). */
+.ch-room-images { display: grid; gap: 12px; grid-template-columns: 2fr 1fr 1fr; aspect-ratio: 3 / 2; }
+.ch-room-images > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.ch-room-images > img.big { grid-row: span 1; grid-column: 1; }
+.ch-room-images > img.sm  { grid-row: span 1; }
+@media (max-width: 720px) { .ch-room-images { grid-template-columns: 1fr 1fr; aspect-ratio: 4 / 3; } .ch-room-images > img.big { grid-column: 1 / -1; } }
+
+/* Cards villa (.room-card-x > img.img) */
+.room-card-x { position: relative; }
+.room-card-x > img.img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+
+/* Section extérieurs (.ex-space-img). */
+.ex-space { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 3vw, 48px); align-items: center; }
+.ex-space.alt > :first-child { order: 2; }
+.ex-space > img.ex-space-img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+@media (max-width: 720px) { .ex-space { grid-template-columns: 1fr; } .ex-space.alt > :first-child { order: 0; } }
+
+/* Bande de 3 photos en bas d'extérieurs */
+.photo-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.photo-strip > img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+@media (max-width: 720px) { .photo-strip { grid-template-columns: 1fr; } }
+
+/* Plateau petit-déjeuner (chambres) */
+.breakfast-layout > img.breakfast-img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+
+/* Journal grid (cartes éditoriales) */
+.journal-card { position: relative; }
+.journal-card > img.img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+.j-featured > img.img,
+.j-card > img.img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
+.j-card.tall > img.img { aspect-ratio: 3 / 4; }

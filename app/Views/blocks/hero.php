@@ -21,11 +21,14 @@ $ctas     = $ctas     ?? [];
 // Résolution du fond depuis vp_media
 $bgUrl    = $image_id ? ImageService::urlById((int)$image_id) : null;
 $bgAlt    = $image_id ? ImageService::altById((int)$image_id) : '';
+$bgMedia  = $image_id ? ImageService::getById((int)$image_id) : null;
+$bgWidth  = (int)($bgMedia['width']  ?? 2400);
+$bgHeight = (int)($bgMedia['height'] ?? 1600);
 $hasImage = $bgUrl !== null;
 ?>
 <section class="page-hero<?= $hasImage ? ' has-image' : '' ?>">
   <?php if ($hasImage): ?>
-  <div class="bg" style="background-image: url('<?= htmlspecialchars($bgUrl) ?>')" role="img" aria-label="<?= htmlspecialchars($bgAlt) ?>"></div>
+  <img class="bg" src="<?= htmlspecialchars($bgUrl) ?>" alt="<?= htmlspecialchars($bgAlt) ?>" width="<?= $bgWidth ?>" height="<?= $bgHeight ?>" loading="eager" fetchpriority="high" decoding="async">
   <?php endif; ?>
   <div class="page-hero-inner">
     <div>
