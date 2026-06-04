@@ -319,34 +319,35 @@ class CalendarPdfService
                 // Coin arrondi simulé : pas dispo en FPDF, on garde droit.
 
                 if ($full) {
-                    // Bandeau pleine cellule
+                    // Bandeau pleine cellule, AUCUN padding latéral → continuité
+                    // visuelle entre cellules adjacentes d'une même résa.
                     [$rc, $gc, $bc] = self::hexToRgb($full['couleur']['bg']);
                     $pdf->SetFillColor($rc, $gc, $bc);
-                    $pdf->Rect($cellX + 0.5, $bandY, $CELL_W - 1, $BAND_H, 'F');
+                    $pdf->Rect($cellX, $bandY, $CELL_W, $BAND_H, 'F');
                     $pdf->SetTextColor(255, 255, 255);
                     $pdf->SetFont('DejaVuSans', 'B', 6.5);
                     $pdf->SetXY($cellX + 1.5, $bandY + 1);
                     $line = self::enc($full['code'] . ' · ' . $full['nom_client']);
                     $pdf->Cell($CELL_W - 3, $BAND_H - 2, self::truncate($pdf, $line, $CELL_W - 3));
                 } else {
-                    // Slot morning (départ matin, 0 → 46%)
+                    // Slot morning (départ matin, 0 → 46%), pas de padding gauche
                     if ($depart) {
                         [$rc, $gc, $bc] = self::hexToRgb($depart['couleur']['bg']);
                         $pdf->SetFillColor($rc, $gc, $bc);
-                        $pdf->Rect($cellX + 0.5, $bandY, $SLOT_MORNING_W - 0.5, $BAND_H, 'F');
+                        $pdf->Rect($cellX, $bandY, $SLOT_MORNING_W, $BAND_H, 'F');
                         $pdf->SetTextColor(255, 255, 255);
                         $pdf->SetFont('DejaVuSans', 'B', 6.5);
                         $dateStr = (new \DateTimeImmutable($depart['depart']))->format('d/m');
-                        $pdf->SetXY($cellX + 0.5, $bandY + 1);
+                        $pdf->SetXY($cellX, $bandY + 1);
                         // Aligné à droite (côté gouttière)
-                        $pdf->Cell($SLOT_MORNING_W - 2, $BAND_H - 2, self::enc($dateStr), 0, 0, 'R');
+                        $pdf->Cell($SLOT_MORNING_W - 1.5, $BAND_H - 2, self::enc($dateStr), 0, 0, 'R');
                     }
-                    // Slot evening (arrivée soir, 66 → 100%)
+                    // Slot evening (arrivée soir, 66 → 100%), pas de padding droit
                     if ($arrivee) {
                         [$rc, $gc, $bc] = self::hexToRgb($arrivee['couleur']['bg']);
                         $pdf->SetFillColor($rc, $gc, $bc);
                         $evX = $cellX + $SLOT_MORNING_W + $SLOT_GUTTER_W;
-                        $pdf->Rect($evX, $bandY, $SLOT_EVENING_W - 0.5, $BAND_H, 'F');
+                        $pdf->Rect($evX, $bandY, $SLOT_EVENING_W, $BAND_H, 'F');
                         $pdf->SetTextColor(255, 255, 255);
                         $pdf->SetFont('DejaVuSans', 'B', 6.5);
                         $dateStr = (new \DateTimeImmutable($arrivee['arrivee']))->format('d/m');
