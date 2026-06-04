@@ -155,6 +155,10 @@ class SeoService
                 'description' => $desc,
                 'occupancy' => [
                     '@type' => 'QuantitativeValue',
+                    // Google attend `value` (scalaire) plutôt que `maxValue`
+                    // (range) pour la capacité d'une chambre. On garde aussi
+                    // maxValue pour la rétrocompatibilité Schema.org.
+                    'value' => $maxOccupancy,
                     'maxValue' => $maxOccupancy,
                 ],
                 'bed' => [
