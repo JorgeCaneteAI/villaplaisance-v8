@@ -137,11 +137,12 @@ class RedirectController extends AdminBaseController
     {
         if (preg_match('/[\s\r\n\t"\'`\\\\]/', $from)) return false;
         if (preg_match('/[\s\r\n\t"\'`\\\\]/', $to)) return false;
-        if (!preg_match('#^[a-zA-Z0-9._\-/]+$#', $from)) return false;
+        if (!preg_match('~^[a-zA-Z0-9._\-/]+$~', $from)) return false;
         if (str_starts_with($to, '/')) {
-            return (bool) preg_match('#^/[a-zA-Z0-9._\-/?&=#%]*$#', $to);
+            // Délimiteur ~ (le # interne de la classe entrait en conflit avec le délimiteur #).
+            return (bool) preg_match('~^/[a-zA-Z0-9._\-/?&=#%]*$~', $to);
         }
-        if (preg_match('#^https?://#i', $to)) {
+        if (preg_match('~^https?://~i', $to)) {
             return (bool) filter_var($to, FILTER_VALIDATE_URL);
         }
         return false;
