@@ -151,15 +151,17 @@ use App\Services\ReservationConstants;
                             <div class="day-num"><?= (int) $day->format('j') ?></div>
                             <div class="lanes">
                                 <?php for ($lane = 0; $lane < 3; $lane++):
-                                    // Pour cette lane (= propriété), classer les résas :
-                                    // - is_end = true → dernière nuit (départ le lendemain matin) → slot morning
-                                    // - is_start = true → arrivée ce soir → slot evening
-                                    // - sinon → nuit pleine → slot full
+                                    // Pour cette lane (= propriété), classer les résas du jour :
+                                    // - is_departure → jour du check-out (matin, slot morning 0→46%)
+                                    // - is_arrival   → jour du check-in (soir, slot evening 66→100%)
+                                    // - sinon        → nuit pleine (slot full 0→100%)
+                                    // Sur un turnover (départ A + arrivée B le même jour) :
+                                    // les deux coexistent, séparés par la gouttière 46→66%.
                                     $morn = $evn = $full = null;
                                     foreach ($byLane[$lane] as $r) {
-                                        if (!empty($r['is_end']))       $morn = $r;
-                                        elseif (!empty($r['is_start'])) $evn = $r;
-                                        else                             $full = $r;
+                                        if (!empty($r['is_departure']))    $morn = $r;
+                                        elseif (!empty($r['is_arrival']))  $evn  = $r;
+                                        else                                $full = $r;
                                     }
                                 ?>
                                 <div class="lane lane--<?= $lane ?>">

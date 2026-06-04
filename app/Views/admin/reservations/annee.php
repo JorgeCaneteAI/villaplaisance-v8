@@ -2,7 +2,7 @@
 /**
  * Vue : calendrier annuel, 12 mois empilés verticalement,
  * chaque mois rendu avec la même logique que la vue mensuelle
- * (lanes par propriété + slots départ/ménage/arrivée).
+ * (lanes par propriété + slots départ/gouttière/arrivée).
  * @var int $year
  * @var array $mois_data
  * @var \DateTimeImmutable $today
@@ -100,11 +100,12 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
                                 <div class="day-num"><?= (int) $day->format('j') ?></div>
                                 <div class="lanes">
                                     <?php for ($lane = 0; $lane < 3; $lane++):
+                                        // Même logique que la vue mensuelle (cf. index.php).
                                         $morn = $evn = $full = null;
                                         foreach ($byLane[$lane] as $r) {
-                                            if (!empty($r['is_end']))       $morn = $r;
-                                            elseif (!empty($r['is_start'])) $evn = $r;
-                                            else                             $full = $r;
+                                            if (!empty($r['is_departure']))    $morn = $r;
+                                            elseif (!empty($r['is_arrival']))  $evn  = $r;
+                                            else                                $full = $r;
                                         }
                                     ?>
                                     <div class="lane lane--<?= $lane ?>">

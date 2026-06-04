@@ -1146,25 +1146,24 @@ input:disabled, textarea:disabled, select:disabled {
 }
 .calendrier__grid .lane {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr; /* 1/4 départ · 2/4 ménage · 1/4 arrivée */
+  /* Proportions calées sur les horaires réels :
+     46% = 0h→11h (matin, fin de séjour, check-out 11h)
+     20% = 11h→16h (gouttière maison vide entre départ et arrivée)
+     34% = 16h→24h (soir, début de séjour, check-in 16h)
+     → un jour PLEIN occupe 100% (full).
+     → un jour d'arrivée n'occupe que 34% à droite.
+     → un jour de départ n'occupe que 46% à gauche.
+     → un turnover (départ + arrivée même jour) : 46% à gauche
+       + 20% de gouttière vide visible + 34% à droite. */
+  grid-template-columns: 46% 20% 34%;
   min-height: 22px;
 }
 .calendrier__grid .slot { min-height: 22px; overflow: hidden; }
 
-/* Slot "ménage", fond warning doux + label centré, pas de border-radius
-   (collé aux bandeaux de gauche et droite pour fluidité visuelle) */
-.calendrier__grid .slot--day {
-  background: var(--warning-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 600;
-  color: var(--warning);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.calendrier__grid .slot--day::before { content: "ménage"; }
+/* Gouttière centrale : pas de label, fond transparent (laisse voir le fond
+   de la cellule, donc visuellement "maison vide"). C'est cette gouttière
+   qui sépare visuellement un départ et une arrivée le même jour. */
+.calendrier__grid .slot--day { background: transparent; }
 
 /* Résa pleine largeur : pas de border-radius par défaut → continuité avec
    les jours suivants. Le radius est appliqué uniquement sur les bords
@@ -1191,8 +1190,8 @@ input:disabled, textarea:disabled, select:disabled {
 .calendrier__grid .resa-sep { opacity: 0.7; }
 
 /* Slots étroits matin / soir : pas de texte, juste la bande couleur.
-   Le slot morning (départ) finit à droite (côté ménage) → radius à droite.
-   Le slot evening (arrivée) commence à gauche (côté ménage) → radius à gauche.
+   Le slot morning (départ) finit à droite (côté gouttière) → radius à droite.
+   Le slot evening (arrivée) commence à gauche (côté gouttière) → radius à gauche.
    Les bords extérieurs (vers cellule voisine) restent carrés pour la
    continuité avec la résa qui continue. */
 .calendrier__grid .slot--morning .resa,

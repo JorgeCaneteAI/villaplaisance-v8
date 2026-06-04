@@ -189,20 +189,30 @@ class ReservationService
             'Absence'  => ['bg' => '#2C2C2A', 'text' => '#ffffff'],
         ];
 
-        // Exploser les résas en jours couverts (arrivée incluse, départ exclu),
-        // clampées sur la fenêtre grille (pas la fenêtre mois).
+        // Exploser les résas en jours couverts (arrivée ET départ inclus, pour
+        // matérialiser visuellement le check-in 16h le jour d'arrivée et le
+        // check-out 11h le jour de départ). Clampées sur la fenêtre grille.
+        //
+        // Trois flags par jour :
+        //  - is_arrival   : vrai jour d'arrivée (slot evening 16h→24h)
+        //  - is_departure : vrai jour de départ (slot morning 0h→11h)
+        //  - sinon (les deux à false) : nuit pleine occupée → slot full
+        //
+        // is_start/is_end gardés en alias pour compat éventuelle.
         $resaByDay = [];
         foreach ($reservations as $r) {
             $arr = new \DateTimeImmutable($r['arrivee']);
             $dep = new \DateTimeImmutable($r['depart']);
+            if ($dep <= $arr) continue; // résa anormale (0 nuit ou inversée)
 
             $start = $arr > $gridStart ? $arr : $gridStart;
-            $depMinus1 = $dep->modify('-1 day');
-            $end = $depMinus1 < $gridEnd ? $depMinus1 : $gridEnd;
+            $end   = $dep < $gridEnd ? $dep : $gridEnd;
 
             $d = $start;
             while ($d <= $end) {
                 $key = $d->format('Y-m-d');
+                $isArrival   = ($d == $arr);
+                $isDeparture = ($d == $dep);
                 $resaByDay[$key][] = [
                     'id'           => (int) $r['id'],
                     'code'         => $r['code'],
@@ -214,11 +224,10 @@ class ReservationService
                     'couleur'      => $couleurs[$r['source']] ?? ['bg' => '#888780', 'text' => '#ffffff'],
                     'arrivee'      => $r['arrivee'],
                     'depart'       => $r['depart'],
-                    // is_start/is_end pointent les vraies arrivées/départs.
-                    // Plus de clamp au premier/dernier du mois, un débord
-                    // ne doit pas être marqué comme "arrivée" artificielle.
-                    'is_start'     => $d == $arr,
-                    'is_end'       => $d == $depMinus1,
+                    'is_arrival'   => $isArrival,
+                    'is_departure' => $isDeparture,
+                    'is_start'     => $isArrival,
+                    'is_end'       => $isDeparture,
                 ];
                 $d = $d->modify('+1 day');
             }
