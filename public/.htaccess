@@ -41,6 +41,8 @@ RewriteRule ^recommandations/?$ /sur-place [R=301,L]
 RewriteRule ^politique-confidentialite-bedarrides/?$ /politique-confidentialite [R=301,L]
 RewriteRule ^politique-de-cookies-ue/?$ /politique-confidentialite [R=301,L]
 RewriteRule ^hello-world/?$ / [R=301,L]
+RewriteRule ^hamburger-et-convivialite-a-bedarrides/?$ /sur-place/imperial-bus-diner-bedarrides [R=301,L]
+RewriteRule ^maison-hotes/?$ /location-villa-provence [R=301,L]
 
 # ═══ Strip tracking params (UTM, fbclid, gclid…), redirige 301 vers URL propre ═══
 # Évite la pollution Search Console avec des variantes d'URL et garde le canonical seul.
