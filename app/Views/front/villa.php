@@ -217,12 +217,13 @@
   .ch-room-images {
     display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
   }
+  /* Aspect 3/2 partout = iso source 1800×1200, zéro crop vertical. */
   .ch-room-images > img.big {
-    grid-column: 1 / -1; aspect-ratio: 16/10;
+    grid-column: 1 / -1; aspect-ratio: 3/2;
     width: 100%; height: auto; object-fit: cover; object-position: center; display: block;
   }
   .ch-room-images > img.sm {
-    aspect-ratio: 4/5;
+    aspect-ratio: 3/2;
     width: 100%; height: auto; object-fit: cover; object-position: center; display: block;
   }
   .ch-room-num {

@@ -61,8 +61,9 @@
   .ch-room-images {
     display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
   }
-  .ch-room-images .big { grid-column: 1 / -1; aspect-ratio: 16/10; background-size: cover; background-position: center; }
-  .ch-room-images .sm { aspect-ratio: 4/5; background-size: cover; background-position: center; }
+  /* Aspect 3/2 partout = iso source 1800×1200, zéro crop vertical. */
+  .ch-room-images .big { grid-column: 1 / -1; aspect-ratio: 3/2; background-size: cover; background-position: center; }
+  .ch-room-images .sm { aspect-ratio: 3/2; background-size: cover; background-position: center; }
   .ch-room-num {
     font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
     color: var(--stone-500); text-transform: uppercase;
