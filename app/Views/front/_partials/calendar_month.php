@@ -8,7 +8,7 @@ declare(strict_types=1);
  *  @var string $cal_propriete   'VP-BB' ou 'VP-ETE'
  *  @var int    $cal_year        ex: 2026
  *  @var int    $cal_month       1..12
- *  @var string $cal_variant     'bnb' (défaut) ou 'villa' — applique .is-villa
+ *  @var string $cal_variant     'bnb' (défaut) ou 'villa', applique .is-villa
  *
  * Source de design : docs/design-refs/2026-05-24-calendriers.html
  * Source de données : App\Services\PublicAvailabilityService::getMonthGrid()
@@ -32,7 +32,7 @@ $grid = PublicAvailabilityService::getMonthGrid($cal_propriete, $cal_year, $cal_
 
 $firstDay   = new \DateTimeImmutable(sprintf('%04d-%02d-01', $cal_year, $cal_month));
 $daysInMonth = (int) $firstDay->format('t');
-// Offset Lun=0, Mar=1, ..., Dim=6 — pour insérer les cellules vides avant le 1er.
+// Offset Lun=0, Mar=1, ..., Dim=6, pour insérer les cellules vides avant le 1er.
 $leadingEmpty = ((int) $firstDay->format('N')) - 1;
 
 $tag = $cal_variant === 'villa' ? "Villa entière" : "Chambres d'hôtes";

@@ -97,11 +97,11 @@ use App\Services\ReservationConstants;
             'evening' => 'Arrivée soir · ',
             default   => '',
         };
-        $title = ($isAvignon ? 'AVIGNON · ' . ($r['source'] ?? '') . ' — ' : '')
+        $title = ($isAvignon ? 'AVIGNON · ' . ($r['source'] ?? '') . ', ' : '')
                . (!$isCurrentMonth ? '(hors mois) ' : '')
                . $slotLabel
                . ($r['code'] ?? '') . ' · ' . ($r['nom_client'] ?? '')
-               . (!empty($r['commentaire']) ? ' — ' . $r['commentaire'] : '');
+               . (!empty($r['commentaire']) ? ', ' . $r['commentaire'] : '');
         ?>
         <a href="/admin/calendrier/saisie/<?= (int) $r['id'] ?>"
            class="<?= implode(' ', $cls) ?>"

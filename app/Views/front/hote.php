@@ -1,11 +1,11 @@
 <?php declare(strict_types=1); ?>
 <?php /**
- * Vue : Votre hôte (Jorge) — V8 portée sur vp_sections.
+ * Vue : Votre hôte (Jorge), V8 portée sur vp_sections.
  *
  * Préférence : rendre depuis vp_sections (édition unifiée via /admin/sections).
  * Fallback HTML legacy si aucun bloc en BDD pour cette page+langue.
  *
- * Le système legacy lit vp_host_profile + vp_host_blocks + vp_reviews —
+ * Le système legacy lit vp_host_profile + vp_host_blocks + vp_reviews 
  * conservé tant que les blocs vp_sections n'ont pas été seedés.
  *
  * Layout : front-proto.

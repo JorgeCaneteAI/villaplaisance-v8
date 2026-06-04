@@ -187,7 +187,7 @@
                         <span style="color:#ccc;font-style:italic;">Sans commentaire</span>
                     <?php endif; ?>
                 </td>
-                <td style="font-size:0.78rem;color:#888;white-space:nowrap;"><?= $review['review_date'] ? date('m/Y', strtotime($review['review_date'])) : '—' ?></td>
+                <td style="font-size:0.78rem;color:#888;white-space:nowrap;"><?= $review['review_date'] ? date('m/Y', strtotime($review['review_date'])) : '-' ?></td>
                 <td style="font-size:0.7rem;">
                     <?php if ($review['featured']): ?><span class="badge" style="background:#fff3cd;color:#856404;">Star</span> <?php endif; ?>
                     <?php if ($review['home_carousel']): ?><span class="badge" style="background:#d4edda;color:#155724;">Home</span><?php endif; ?>

@@ -8,7 +8,7 @@ $en = $byLang['en'] ?? [];
 $es = $byLang['es'] ?? [];
 ?>
 <div class="admin-page-header">
-    <h1>Votre hôte — Profil</h1>
+    <h1>Votre hôte, Profil</h1>
     <p class="text-muted">Page "Qui suis-je" visible sur le site. Contenu en 3 langues.</p>
 </div>
 

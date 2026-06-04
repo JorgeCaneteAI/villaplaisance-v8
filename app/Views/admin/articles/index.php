@@ -44,7 +44,7 @@
                     <?php endif; ?>
                 </td>
                 <td><span class="badge <?= $article['type'] === 'journal' ? 'badge-info' : 'badge-accent' ?>"><?= htmlspecialchars($article['type']) ?></span></td>
-                <td class="text-sm"><?= htmlspecialchars($article['category'] ?? '—') ?></td>
+                <td class="text-sm"><?= htmlspecialchars($article['category'] ?? '-') ?></td>
                 <td>
                     <span class="badge <?= $langCount >= 3 ? 'badge-success' : ($langCount >= 2 ? 'badge-warning' : 'badge-danger') ?>">
                         <?= $langCount ?>/3
@@ -64,7 +64,7 @@
                     <span class="badge badge-danger" title="SEO incomplet">!</span>
                     <?php endif; ?>
                 </td>
-                <td class="text-sm text-muted"><?= $article['published_at'] ? date('d/m/Y', strtotime($article['published_at'])) : '—' ?></td>
+                <td class="text-sm text-muted"><?= $article['published_at'] ? date('d/m/Y', strtotime($article['published_at'])) : '-' ?></td>
                 <td>
                     <div class="btn-group">
                         <a href="/admin/articles/<?= $article['id'] ?>/edit" class="btn btn-sm">Éditer</a>

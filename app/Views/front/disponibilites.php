@@ -30,7 +30,7 @@ foreach (BlockService::getSections('disponibilites', $lang) as $_s) {
       <h1>Douze <em>mois</em>,<br/>d'un seul tenant.</h1>
     </div>
     <div>
-      <p class="lede" data-en="All our availability for the year ahead — synchronised with Airbnb and Booking, updated every thirty minutes. To book, simply write to us.">Toutes nos disponibilités sur l'année à venir — synchronisées avec Airbnb et Booking, mises à jour toutes les trente minutes. Pour réserver, il suffit de nous écrire.</p>
+      <p class="lede" data-en="All our availability for the year ahead, synchronised with Airbnb and Booking, updated every thirty minutes. To book, simply write to us.">Toutes nos disponibilités sur l'année à venir, synchronisées avec Airbnb et Booking, mises à jour toutes les trente minutes. Pour réserver, il suffit de nous écrire.</p>
       <div class="page-hero-ctas">
         <a class="btn" href="<?= \LangService::url('contact') ?>"><span data-en="Enquire about a stay">Demander un séjour</span> →</a>
       </div>
@@ -45,8 +45,8 @@ foreach (BlockService::getSections('disponibilites', $lang) as $_s) {
     <?php include __DIR__ . '/_partials/calendar_annual.php'; ?>
 
     <div class="legend">
-      <span class="legend-key"><span class="legend-sw open"></span> <span data-en="Available — B&amp;B">Disponible — Chambres</span></span>
-      <span class="legend-key"><span class="legend-sw villa"></span> <span data-en="Available — Villa">Disponible — Villa</span></span>
+      <span class="legend-key"><span class="legend-sw open"></span> <span data-en="Available, B&amp;B">Disponible, Chambres</span></span>
+      <span class="legend-key"><span class="legend-sw villa"></span> <span data-en="Available, Villa">Disponible, Villa</span></span>
       <span class="legend-key"><span class="legend-sw booked"></span> <span data-en="Booked">Réservé</span></span>
     </div>
   </div>
@@ -58,9 +58,9 @@ foreach (BlockService::getSections('disponibilites', $lang) as $_s) {
     <div style="border: var(--hairline); padding: clamp(28px, 4vw, 48px); display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;">
       <div>
         <div class="section-label" style="margin-bottom: 12px;">
-          <span class="numeral" data-en="— A free date?">— Une date libre ?</span>
+          <span class="numeral" data-en=" A free date?"> Une date libre ?</span>
         </div>
-        <h2 class="h-lg" style="margin: 0; max-width: 22ch;" data-en="Write to us — we reply within the day, by hand.">Écrivez-nous — nous répondons dans la journée, à la main.</h2>
+        <h2 class="h-lg" style="margin: 0; max-width: 22ch;" data-en="Write to us, we reply within the day, by hand.">Écrivez-nous, nous répondons dans la journée, à la main.</h2>
       </div>
       <a class="btn" href="<?= \LangService::url('contact') ?>"><span data-en="Contact">Contact</span> →</a>
     </div>

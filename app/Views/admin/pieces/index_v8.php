@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin V8 — liste des chambres & espaces (vp_pieces).
+ * Admin V8, liste des chambres & espaces (vp_pieces).
  *
  * @var array  $pieces       Pieces filtrées par lang + offer
  * @var string $langFilter   'fr'|'en'|'es'
@@ -82,7 +82,7 @@ foreach ($pieces as $p):
         <?php if ($thumbUrl): ?>
         <img src="<?= htmlspecialchars($thumbUrl) ?>" alt="" loading="lazy" decoding="async">
         <?php else: ?>
-        <div class="vp-pc-thumb-empty">—</div>
+        <div class="vp-pc-thumb-empty">-</div>
         <?php endif; ?>
     </div>
     <div class="vp-pc-info">

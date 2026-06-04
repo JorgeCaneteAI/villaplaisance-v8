@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Bloc « hero » V8 (design impeccable — page-hero has-image).
+ * Bloc « hero » V8 (design impeccable, page-hero has-image).
  *
  * @var array       $section      Ligne vp_sections complète
  * @var string|null $title        Mini-md autorisé (*italique*, retour ligne)

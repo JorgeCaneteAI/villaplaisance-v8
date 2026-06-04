@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin V8 — liste des FAQ (vp_faq).
+ * Admin V8, liste des FAQ (vp_faq).
  *
  * @var array  $faqs
  * @var array  $slugs        Liste des page_slugs distinctes

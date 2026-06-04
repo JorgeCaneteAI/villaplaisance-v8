@@ -10,7 +10,7 @@
 ?>
 <div class="liste">
     <header class="liste__header">
-        <h1>Réservations — <?= count($reservations) ?> résultat<?= count($reservations) > 1 ? 's' : '' ?></h1>
+        <h1>Réservations, <?= count($reservations) ?> résultat<?= count($reservations) > 1 ? 's' : '' ?></h1>
         <div class="liste__toolbar">
             <a href="/admin/calendrier" class="btn">Calendrier</a>
             <a href="/admin/calendrier/saisie" class="btn btn-primary">+ Nouvelle résa</a>
@@ -82,7 +82,7 @@
                     <td><?= (int) $r['duree'] ?></td>
                     <td title="Adultes · Enfants · Bébés · Animaux"><?= $totalOcc ?><?= (int) $r['animaux'] ? ' +' . (int) $r['animaux'] . '🐾' : '' ?></td>
                     <td><?= htmlspecialchars($r['statut']) ?></td>
-                    <td class="montant"><?= $r['montant'] !== null ? number_format((float) $r['montant'], 2, ',', ' ') . ' €' : '—' ?></td>
+                    <td class="montant"><?= $r['montant'] !== null ? number_format((float) $r['montant'], 2, ',', ' ') . ' €' : '-' ?></td>
                     <td><a href="/admin/calendrier/saisie/<?= (int) $r['id'] ?>" class="btn btn-sm">Éditer</a></td>
                 </tr>
             <?php endforeach; ?>

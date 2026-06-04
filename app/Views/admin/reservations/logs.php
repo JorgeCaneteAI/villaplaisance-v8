@@ -19,7 +19,7 @@
             <?php foreach ($logs as $log): ?>
                 <tr class="<?= $log['errors'] ? 'row-error' : '' ?>">
                     <td><?= htmlspecialchars($log['started_at']) ?></td>
-                    <td><?= htmlspecialchars($log['ended_at'] ?? '—') ?></td>
+                    <td><?= htmlspecialchars($log['ended_at'] ?? '-') ?></td>
                     <td class="num"><?= (int) $log['created'] ?></td>
                     <td class="num"><?= (int) $log['updated'] ?></td>
                     <td class="num"><?= (int) $log['deleted'] ?></td>

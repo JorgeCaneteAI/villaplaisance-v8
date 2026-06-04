@@ -1,6 +1,6 @@
 <?php
 /**
- * Vue : calendrier annuel — 12 mois empilés verticalement,
+ * Vue : calendrier annuel, 12 mois empilés verticalement,
  * chaque mois rendu avec la même logique que la vue mensuelle
  * (lanes par propriété + slots départ/ménage/arrivée).
  * @var int $year
@@ -11,7 +11,7 @@
  */
 use App\Services\ReservationConstants;
 
-/* Renderer de bandeau partagé entre les 12 mois — identique à la vue mois */
+/* Renderer de bandeau partagé entre les 12 mois, identique à la vue mois */
 $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): void {
     $isAvignon = ($r['propriete'] ?? '') === 'AV-ANN';
     $bg  = $isAvignon ? '#7E57C2' : $r['couleur']['bg'];
@@ -25,11 +25,11 @@ $renderResa = function (array $r, bool $isCurrentMonth, string $slot = 'full'): 
         'evening' => 'Arrivée soir · ',
         default   => '',
     };
-    $title = ($isAvignon ? 'AVIGNON · ' . ($r['source'] ?? '') . ' — ' : '')
+    $title = ($isAvignon ? 'AVIGNON · ' . ($r['source'] ?? '') . ', ' : '')
            . (!$isCurrentMonth ? '(hors mois) ' : '')
            . $slotLabel
            . ($r['code'] ?? '') . ' · ' . ($r['nom_client'] ?? '')
-           . (!empty($r['commentaire']) ? ' — ' . $r['commentaire'] : '');
+           . (!empty($r['commentaire']) ? ', ' . $r['commentaire'] : '');
     ?>
     <a href="/admin/calendrier/saisie/<?= (int) $r['id'] ?>"
        class="<?= implode(' ', $cls) ?>"

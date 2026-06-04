@@ -33,7 +33,7 @@
     <title><?= htmlspecialchars($seo['title'] ?? 'Villa Plaisance') ?></title>
     <meta name="description" content="<?= htmlspecialchars($seo['description'] ?? '') ?>">
 
-    <!-- Robots — autorise un extrait illimité + grande miniature.
+    <!-- Robots, autorise un extrait illimité + grande miniature.
          Sert autant à Google qu'aux LLMs (ChatGPT, Claude, Perplexity, Gemini)
          qui respectent les directives standards. -->
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -41,7 +41,7 @@
     <!-- Canonical -->
     <link rel="canonical" href="<?= htmlspecialchars($seo['canonical'] ?? '') ?>">
 
-    <!-- hreflang — variantes linguistiques.
+    <!-- hreflang, variantes linguistiques.
          x-default pointe sur FR (langue par défaut). -->
     <?php foreach (($seo['hreflang'] ?? []) as $alt): ?>
     <link rel="alternate" hreflang="<?= htmlspecialchars($alt['lang']) ?>" href="<?= htmlspecialchars($alt['url']) ?>">

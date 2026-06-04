@@ -40,7 +40,7 @@ use App\Controllers\Admin\MediaController;
                 <line x1="12" x2="12" y1="3" y2="15"/>
             </svg>
             <p class="media-dropzone-title">Glisse-dépose tes images ici</p>
-            <p class="media-dropzone-hint">ou clique pour parcourir · JPG, PNG, WebP, AVIF — max 5 Mo · conversion auto en WebP</p>
+            <p class="media-dropzone-hint">ou clique pour parcourir · JPG, PNG, WebP, AVIF, max 5 Mo · conversion auto en WebP</p>
             <input type="file" id="file-input" name="images[]" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/avif" hidden>
         </label>
 
@@ -98,7 +98,7 @@ use App\Controllers\Admin\MediaController;
         <a href="/admin/media/<?= $m['id'] ?>/edit" class="media-card-thumb" title="<?= htmlspecialchars($m['filename']) ?>">
             <img src="<?= $src ?>" alt="<?= htmlspecialchars($m['alt_fr'] ?? $m['filename']) ?>" loading="lazy">
             <?php if ($altMissing): ?>
-                <span class="media-card-badge media-card-badge--warn" title="Cette image n'a pas d'attribut alt — important pour le SEO et l'accessibilité">alt manquant</span>
+                <span class="media-card-badge media-card-badge--warn" title="Cette image n'a pas d'attribut alt, important pour le SEO et l'accessibilité">alt manquant</span>
             <?php endif; ?>
         </a>
         <div class="media-card-info">

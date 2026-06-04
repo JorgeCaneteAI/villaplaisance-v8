@@ -1,6 +1,6 @@
 <?php declare(strict_types=1); ?>
 <?php /**
- * Vue : Que faire — directory dynamique.
+ * Vue : Que faire, directory dynamique.
  * Design du proto Claude (porté le 21 mai), grille dynamisée depuis
  * vp_articles WHERE type='sur-place'. Layout : front-proto.
  *
@@ -203,7 +203,7 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
       </div>
       <h1 class="qf-title">Sur place,<br/>tout est <em>là</em>.</h1>
     </div>
-    <p class="qf-lede" data-en="Sites to visit, tables and restaurants, shops, things to do with children — what we'd point to ourselves over breakfast.">Sites à visiter, tables et restaurants, commerces, activités avec les enfants — ce qu'on vous indiquerait nous-mêmes au petit-déjeuner.</p>
+    <p class="qf-lede" data-en="Sites to visit, tables and restaurants, shops, things to do with children, what we'd point to ourselves over breakfast.">Sites à visiter, tables et restaurants, commerces, activités avec les enfants, ce qu'on vous indiquerait nous-mêmes au petit-déjeuner.</p>
   </div>
 </section>
 <?php endif; ?>

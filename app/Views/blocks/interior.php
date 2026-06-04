@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Bloc « interior » V8 — nouveau type.
+ * Bloc « interior » V8, nouveau type.
  *
  * Section avec un header (label + h2) puis une grille `.interior` de cards.
  * Chaque card = image + kicker (mono uppercase) + titre italique serif + texte.
@@ -33,7 +33,7 @@ if ($surface === 'sage-light') $surfaceStyle = 'background: color-mix(in oklab, 
     <div style="margin-bottom: clamp(40px, 5vw, 64px);">
       <?php if ($label_numeral !== '' || $label_text !== ''): ?>
       <div class="section-label">
-        <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+        <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
       </div>
       <?php endif; ?>
       <?php if ($heading !== ''): ?>

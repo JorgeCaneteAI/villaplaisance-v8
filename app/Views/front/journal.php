@@ -232,7 +232,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
       </div>
       <h1 class="j-title">Voyager <em>autrement</em><br/>en Provence.</h1>
     </div>
-    <p class="j-lede" data-en="Five ways of looking at the region — what's changing in contemporary Provence, who keeps it alive, and how to travel through it without ticking boxes.">Cinq façons de regarder la région — ce qui bouge dans la Provence contemporaine, ceux qui la font vivre, et comment la traverser sans cocher de cases.</p>
+    <p class="j-lede" data-en="Five ways of looking at the region, what's changing in contemporary Provence, who keeps it alive, and how to travel through it without ticking boxes.">Cinq façons de regarder la région, ce qui bouge dans la Provence contemporaine, ceux qui la font vivre, et comment la traverser sans cocher de cases.</p>
   </div>
 
   <div class="pl-banner" style="margin-bottom: 28px;">
@@ -361,7 +361,7 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
           <span class="j-date" data-en="December 2025">Décembre 2025</span>
         </div>
         <h3>Trois jours, deux livres,<br/>une <em>piscine</em>.</h3>
-        <p class="excerpt" data-en="A reasoned defence of staying put — what a long, slow weekend really repairs.">Petite défense raisonnée du « ne rien faire » — ce que répare vraiment un week-end immobile.</p>
+        <p class="excerpt" data-en="A reasoned defence of staying put, what a long, slow weekend really repairs.">Petite défense raisonnée du « ne rien faire », ce que répare vraiment un week-end immobile.</p>
       </article>
 
     </div>

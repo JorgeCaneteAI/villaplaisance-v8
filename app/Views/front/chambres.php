@@ -6,7 +6,7 @@
  * @var string $lang  @var array $seo  @var array $jsonLd
  */ ?>
 <style>
-  /* Hero — light/airy variant of the maison-hotes hero */
+  /* Hero, light/airy variant of the maison-hotes hero */
   .ch-hero {
     position: relative;
     min-height: clamp(560px, 86vh, 840px);
@@ -79,7 +79,7 @@
     margin-top: 24px;
   }
 
-  /* Breakfast section — large editorial */
+  /* Breakfast section, large editorial */
   .breakfast-layout {
     display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     gap: clamp(32px, 5vw, 80px);
@@ -126,7 +126,7 @@
     font-family: var(--font-sans); font-size: 15.5px; color: var(--ink-700);
   }
 
-  /* Practical info — reused styling */
+  /* Practical info, reused styling */
   .practical { border-top: var(--hairline-strong); }
   .practical .row {
     display: grid; grid-template-columns: minmax(180px, 1fr) minmax(0, 2fr);
@@ -214,7 +214,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       <h1>Une <em>suite</em>,<br/>deux chambres,<br/>un petit-déjeuner.</h1>
     </div>
     <div>
-      <p class="lede" data-en="From September to June, we welcome guests at Villa Plaisance in two charming bedrooms — homemade breakfast, shared pool, shaded gardens.">De septembre à juin, nous accueillons nos hôtes à Villa Plaisance dans deux chambres de charme — petit-déjeuner maison, piscine partagée, jardins ombragés.</p>
+      <p class="lede" data-en="From September to June, we welcome guests at Villa Plaisance in two charming bedrooms, homemade breakfast, shared pool, shaded gardens.">De septembre à juin, nous accueillons nos hôtes à Villa Plaisance dans deux chambres de charme, petit-déjeuner maison, piscine partagée, jardins ombragés.</p>
       <div class="page-hero-ctas">
         <a class="btn" href="<?= LangService::url('contact') ?>"><span data-en="Enquire about a stay">Demander un séjour</span> →</a>
         <a class="btn btn-ghost" href="#infos"><span data-en="Practical info">Infos pratiques</span></a>
@@ -228,7 +228,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
   <div class="container-wide">
     <div class="section-label" style="margin-bottom: 18px;">
-      <span class="numeral" data-en="— Availability">— Disponibilités</span>
+      <span class="numeral" data-en=" Availability"> Disponibilités</span>
     </div>
     <?php include __DIR__ . '/_partials/calendar_ribbon.php'; ?>
   </div>
@@ -243,16 +243,16 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div class="two-col">
       <div>
         <div class="section-label">
-          <span class="numeral">— 01 / <span data-en="The B&amp;B">Les chambres d'hôtes</span></span>
+          <span class="numeral">01 / <span data-en="The B&amp;B">Les chambres d'hôtes</span></span>
         </div>
         <h2 class="h-xl" style="margin:0; max-width: 14ch;">Chambres<br/>d'hôtes <em>B&amp;B</em><br/>à Bédarrides.</h2>
       </div>
       <div>
         <p class="lede" style="margin: 0 0 24px;" data-en="At Villa Plaisance, we welcome guests from September to June in a private suite of two communicating bedrooms, designed for comfort and Provençal authenticity.">À Villa Plaisance, nous accueillons nos hôtes de septembre à juin dans une suite privée formée de deux chambres communicantes, pensées pour le confort et l'authenticité provençale.</p>
-        <p class="body-lg" style="margin: 0;" data-en="One entrance, one booking — the two rooms are rented as a single unit, for one to five guests. Homemade breakfast, shared pool, shaded gardens, 15 min from Avignon and 8 min from Châteauneuf-du-Pape.">Une seule entrée, une seule réservation — les deux chambres se louent ensemble, pour une à cinq personnes. Petit-déjeuner maison, piscine partagée, jardins ombragés, à 15 min d'Avignon et 8 min de Châteauneuf-du-Pape.</p>
+        <p class="body-lg" style="margin: 0;" data-en="One entrance, one booking, the two rooms are rented as a single unit, for one to five guests. Homemade breakfast, shared pool, shaded gardens, 15 min from Avignon and 8 min from Châteauneuf-du-Pape.">Une seule entrée, une seule réservation, les deux chambres se louent ensemble, pour une à cinq personnes. Petit-déjeuner maison, piscine partagée, jardins ombragés, à 15 min d'Avignon et 8 min de Châteauneuf-du-Pape.</p>
 
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: color-mix(in oklab, var(--ink-900) 14%, transparent); margin-top: clamp(40px, 4vw, 56px); border-top: var(--hairline); border-bottom: var(--hairline);">
-          <div style="background: var(--linen-50); padding: 22px 18px;"><div class="overline" data-en="Capacity">Capacité</div><div class="h-md" style="margin-top: 8px;">1 — 5 <span style="font-size: 13px; color: var(--stone-500);" data-en="guests">pers.</span></div></div>
+          <div style="background: var(--linen-50); padding: 22px 18px;"><div class="overline" data-en="Capacity">Capacité</div><div class="h-md" style="margin-top: 8px;">1, 5 <span style="font-size: 13px; color: var(--stone-500);" data-en="guests">pers.</span></div></div>
           <div style="background: var(--linen-50); padding: 22px 18px;"><div class="overline" data-en="Breakfast">Petit-déjeuner</div><div class="h-md" style="margin-top: 8px;" data-en="Included">Inclus</div></div>
           <div style="background: var(--linen-50); padding: 22px 18px;"><div class="overline" data-en="Pool">Piscine</div><div class="h-md" style="margin-top: 8px;" data-en="Shared">Partagée</div></div>
         </div>
@@ -268,10 +268,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 5vw, 80px); align-items: start;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 02 / <span data-en="How it works">Comment ça fonctionne</span></span>
+          <span class="numeral">02 / <span data-en="How it works">Comment ça fonctionne</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Une <em>suite</em>,<br/>louée d'un seul<br/>tenant.</h2>
-        <p class="body-lg" style="margin: 24px 0 0; max-width: 40ch; color: var(--ink-700);" data-en="The two rooms share a single entrance and one connecting door. They're only rented together — your group has the suite to itself, whether you're one or five.">Les deux chambres partagent une seule entrée et une porte intérieure qui les relie. Elles ne se louent qu'ensemble — votre groupe a la suite pour lui seul, que vous soyez un ou cinq.</p>
+        <p class="body-lg" style="margin: 24px 0 0; max-width: 40ch; color: var(--ink-700);" data-en="The two rooms share a single entrance and one connecting door. They're only rented together, your group has the suite to itself, whether you're one or five.">Les deux chambres partagent une seule entrée et une porte intérieure qui les relie. Elles ne se louent qu'ensemble, votre groupe a la suite pour lui seul, que vous soyez un ou cinq.</p>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 18px;">
@@ -282,7 +282,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
             <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);" data-en="Travelling as a couple">À deux</span>
             <span class="numeral label-terra">1 – 2 <span data-en="guests">pers.</span></span>
           </div>
-          <p class="body" style="margin: 0 0 14px;" data-en="Tell us how you'd like the bedding made up — we prepare one of the rooms, the other stays accessible as a reading lounge.">Dites-nous comment vous préférez le couchage — nous préparons une des chambres, l'autre reste accessible en salon de lecture.</p>
+          <p class="body" style="margin: 0 0 14px;" data-en="Tell us how you'd like the bedding made up, we prepare one of the rooms, the other stays accessible as a reading lounge.">Dites-nous comment vous préférez le couchage, nous préparons une des chambres, l'autre reste accessible en salon de lecture.</p>
           <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
             <li style="display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: baseline;">
               <span style="width: 6px; height: 6px; background: var(--sage-500); border-radius: 50%; align-self: center;"></span>
@@ -305,24 +305,24 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
             <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);" data-en="As a family or small group">En famille, en petit groupe</span>
             <span class="numeral label-terra">3 – 5 <span data-en="guests">pers.</span></span>
           </div>
-          <p class="body" style="margin: 0;" data-en="Both rooms are prepared. The Bleue sofa bed opens for a fifth guest. The connecting door stays where you want it — open, closed, locked from your side.">Les deux chambres sont préparées. Le clic-clac de la Bleue s'ouvre pour une cinquième personne. La porte intérieure reste comme vous voulez — ouverte, fermée, verrouillée de votre côté.</p>
+          <p class="body" style="margin: 0;" data-en="Both rooms are prepared. The Bleue sofa bed opens for a fifth guest. The connecting door stays where you want it, open, closed, locked from your side.">Les deux chambres sont préparées. Le clic-clac de la Bleue s'ouvre pour une cinquième personne. La porte intérieure reste comme vous voulez, ouverte, fermée, verrouillée de votre côté.</p>
         </div>
 
       </div>
     </div>
   </div>
 </section>
-<!-- ============ 3 · Préambule "Chacune sa lumière" (HTML dur — éditorial unique) ============ -->
+<!-- ============ 3 · Préambule "Chacune sa lumière" (HTML dur, éditorial unique) ============ -->
 <section class="section-tight" style="padding-top: clamp(48px, 6vw, 88px);">
   <div class="container-wide">
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 80px); align-items: end;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 03 / <span data-en="The two rooms of the suite">Les deux chambres de la suite</span></span>
+          <span class="numeral">03 / <span data-en="The two rooms of the suite">Les deux chambres de la suite</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;" data-en="Each with its/own light.">Chacune <em>sa</em><br/>lumière.</h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="A single door opens onto both rooms — and onto a shared corridor with a private bathroom. Their characters differ; their guests are the same.">Une seule porte ouvre sur les deux chambres — et sur leur couloir partagé avec salle de bain. Leur caractère diffère ; leurs hôtes sont les mêmes.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="A single door opens onto both rooms, and onto a shared corridor with a private bathroom. Their characters differ; their guests are the same.">Une seule porte ouvre sur les deux chambres, et sur leur couloir partagé avec salle de bain. Leur caractère diffère ; leurs hôtes sont les mêmes.</p>
     </div>
   </div>
 </section>
@@ -400,11 +400,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       <div style="aspect-ratio: 4/5; background: center/cover url('/uploads/villa-plaisance-salle-de-bain-chambre-hotes-01.webp')"></div>
       <div>
         <div class="section-label">
-          <span class="numeral">— 04 / <span data-en="Bath">Salle de bain</span></span>
+          <span class="numeral">04 / <span data-en="Bath">Salle de bain</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0 0 24px; max-width: 16ch;" data-en="A private bath/in each room.">Salle de bain<br/><em>privative</em><br/>dans chaque chambre.</h2>
-        <p class="body-lg" style="margin: 0 0 16px; max-width: 50ch;" data-en="Each bedroom has its own private bathroom — no shared corridor, no waiting at the door.">Chaque chambre dispose de sa propre salle de bain privative — pas de couloir partagé, pas d'attente derrière la porte.</p>
-        <p class="body" style="margin: 0; max-width: 50ch;" data-en="Organic toiletries, generous towels, a walk-in shower or a tub — depending on the room. Hairdryer, mirror lighting, and the small things you'd want to find.">Produits de toilette bio, serviettes généreuses, douche à l'italienne ou baignoire selon la chambre. Sèche-cheveux, éclairage miroir, et les petites attentions qu'on aime trouver.</p>
+        <p class="body-lg" style="margin: 0 0 16px; max-width: 50ch;" data-en="Each bedroom has its own private bathroom, no shared corridor, no waiting at the door.">Chaque chambre dispose de sa propre salle de bain privative, pas de couloir partagé, pas d'attente derrière la porte.</p>
+        <p class="body" style="margin: 0; max-width: 50ch;" data-en="Organic toiletries, generous towels, a walk-in shower or a tub, depending on the room. Hairdryer, mirror lighting, and the small things you'd want to find.">Produits de toilette bio, serviettes généreuses, douche à l'italienne ou baignoire selon la chambre. Sèche-cheveux, éclairage miroir, et les petites attentions qu'on aime trouver.</p>
       </div>
     </div>
   </div>
@@ -421,7 +421,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       <div class="breakfast-img" style="background-image: url('/uploads/villa-plaisance-petit-dejeuner-brioche-01.webp')"></div>
       <div>
         <div class="section-label">
-          <span class="numeral">— 05 / <span data-en="Breakfast">Petit-déjeuner</span></span>
+          <span class="numeral">05 / <span data-en="Breakfast">Petit-déjeuner</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0 0 20px; max-width: 18ch;">Petit-déjeuner<br/><em>maison</em>, inclus.</h2>
         <p class="body-lg" style="margin: 0 0 12px; max-width: 50ch;" data-en="Every morning, from 7:30 to 10 am, on the terrace or in the veranda depending on the season.">Chaque matin, de 7h30 à 10h, en terrasse ou en véranda selon la saison.</p>
@@ -453,11 +453,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
       <div>
         <div class="section-label">
-          <span class="numeral">— 06 / <span data-en="Included">Inclus</span></span>
+          <span class="numeral">06 / <span data-en="Included">Inclus</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 16ch;">Équipements<br/>&amp; <em>services</em> inclus.</h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="The list of what we hand over with the key — nothing fancy, just what makes a stay easy.">Ce qu'on remet avec la clé — rien d'extravagant, juste ce qui rend un séjour simple.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="The list of what we hand over with the key, nothing fancy, just what makes a stay easy.">Ce qu'on remet avec la clé, rien d'extravagant, juste ce qui rend un séjour simple.</p>
     </div>
 
     <div class="equip-grid">
@@ -485,11 +485,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
       <div>
         <div class="section-label">
-          <span class="numeral">— 07 / <span data-en="Practical info">Infos pratiques</span></span>
+          <span class="numeral">07 / <span data-en="Practical info">Infos pratiques</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Tout ce qu'il faut <em>savoir</em>.</h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="Dates, capacity, arrival times, what's included — the essentials at a glance.">Dates, capacité, horaires, ce qui est inclus — l'essentiel d'un coup d'œil.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="Dates, capacity, arrival times, what's included, the essentials at a glance.">Dates, capacité, horaires, ce qui est inclus, l'essentiel d'un coup d'œil.</p>
     </div>
 
     <div class="practical">
@@ -543,30 +543,30 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(32px, 6vw, 96px); align-items: start;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 08 / <span data-en="Frequently asked">Questions fréquentes</span></span>
+          <span class="numeral">08 / <span data-en="Frequently asked">Questions fréquentes</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Les <em>questions</em><br/>qui reviennent.</h2>
       </div>
       <div class="faq">
         <details open>
           <summary><span data-en="Why are the rooms only rented together?">Pourquoi les chambres ne se louent-elles qu'ensemble ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="The two rooms communicate through an inner door and share a single entrance. Renting them separately would mean two parties crossing each other on the same threshold — so we don't. Your group has the suite to itself, whether you're one or five.">Les deux chambres communiquent par une porte intérieure et partagent une seule entrée. Les louer séparément reviendrait à faire se croiser deux groupes sur le même seuil — nous préférons éviter. Votre groupe a la suite pour lui seul, que vous soyez un ou cinq.</div>
+          <div class="answer" data-en="The two rooms communicate through an inner door and share a single entrance. Renting them separately would mean two parties crossing each other on the same threshold, so we don't. Your group has the suite to itself, whether you're one or five.">Les deux chambres communiquent par une porte intérieure et partagent une seule entrée. Les louer séparément reviendrait à faire se croiser deux groupes sur le même seuil, nous préférons éviter. Votre groupe a la suite pour lui seul, que vous soyez un ou cinq.</div>
         </details>
         <details>
           <summary><span data-en="As a couple, which room will be prepared?">À deux, quelle chambre sera préparée ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Whichever you prefer — tell us when you book. The Chambre Verte (double 160×200) or the Chambre Bleue (two singles, joinable into a 180). The other room stays accessible as a reading lounge. If you'd like both rooms prepared so you can each have your own, this is available as a paid option.">Celle que vous préférez — dites-le nous à la réservation. La Chambre Verte (lit double 160×200) ou la Chambre Bleue (deux lits simples, jumelables en 180). L'autre reste accessible en salon de lecture. Si vous souhaitez que les deux chambres soient préparées pour avoir chacun la sienne, cela est disponible en option payante.</div>
+          <div class="answer" data-en="Whichever you prefer, tell us when you book. The Chambre Verte (double 160×200) or the Chambre Bleue (two singles, joinable into a 180). The other room stays accessible as a reading lounge. If you'd like both rooms prepared so you can each have your own, this is available as a paid option.">Celle que vous préférez, dites-le nous à la réservation. La Chambre Verte (lit double 160×200) ou la Chambre Bleue (deux lits simples, jumelables en 180). L'autre reste accessible en salon de lecture. Si vous souhaitez que les deux chambres soient préparées pour avoir chacun la sienne, cela est disponible en option payante.</div>
         </details>
         <details>
           <summary><span data-en="Is breakfast included?">Le petit-déjeuner est-il inclus ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — homemade breakfast is included in the B&amp;B rate. Served from 7:30 to 10 am on the terrace (weather permitting) or in the veranda: artisanal jams, pastries, fresh bread, Provençal cheeses, seasonal fruit, fresh orange juice, coffee, tea and organic infusions.">Oui, le petit-déjeuner maison est inclus dans le tarif B&amp;B. Il est servi de 7h30 à 10h en terrasse (temps le permettant) ou en véranda, avec confitures artisanales, viennoiseries, pain frais, fromages provençaux, fruits de saison, jus d'orange pressé, café, thé et tisanes bio.</div>
+          <div class="answer" data-en="Yes, homemade breakfast is included in the B&amp;B rate. Served from 7:30 to 10 am on the terrace (weather permitting) or in the veranda: artisanal jams, pastries, fresh bread, Provençal cheeses, seasonal fruit, fresh orange juice, coffee, tea and organic infusions.">Oui, le petit-déjeuner maison est inclus dans le tarif B&amp;B. Il est servi de 7h30 à 10h en terrasse (temps le permettant) ou en véranda, avec confitures artisanales, viennoiseries, pain frais, fromages provençaux, fruits de saison, jus d'orange pressé, café, thé et tisanes bio.</div>
         </details>
         <details>
           <summary><span data-en="Are the rooms air-conditioned?">Les chambres sont-elles climatisées ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — both rooms (Verte and Bleue) have reversible air-conditioning and free wifi.">Oui, les deux chambres (Verte et Bleue) sont équipées de climatisation réversible et du wifi gratuit.</div>
+          <div class="answer" data-en="Yes, both rooms (Verte and Bleue) have reversible air-conditioning and free wifi.">Oui, les deux chambres (Verte et Bleue) sont équipées de climatisation réversible et du wifi gratuit.</div>
         </details>
         <details>
           <summary><span data-en="Can we bring children?">Peut-on accueillir des enfants en chambres d'hôtes ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — the Chambre Bleue has a sofa bed that can accommodate an extra guest, which makes it ideal for families.">Oui, la Chambre Bleue dispose d'un clic-clac pouvant accueillir une personne supplémentaire, ce qui en fait une chambre idéale pour les familles.</div>
+          <div class="answer" data-en="Yes, the Chambre Bleue has a sofa bed that can accommodate an extra guest, which makes it ideal for families.">Oui, la Chambre Bleue dispose d'un clic-clac pouvant accueillir une personne supplémentaire, ce qui en fait une chambre idéale pour les familles.</div>
         </details>
         <details>
           <summary><span data-en="When are the B&amp;B rooms open?">À quelle période les chambres d'hôtes sont-elles disponibles ?</span><span class="icon"></span></summary>
@@ -578,7 +578,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="Is there parking?">Y a-t-il un parking ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — free private parking is available on site for all guests.">Oui, un parking privé gratuit est disponible sur place pour tous les hôtes.</div>
+          <div class="answer" data-en="Yes, free private parking is available on site for all guests.">Oui, un parking privé gratuit est disponible sur place pour tous les hôtes.</div>
         </details>
         <details>
           <summary><span data-en="Is the pool open all B&amp;B season?">La piscine est-elle disponible toute la saison B&amp;B ?</span><span class="icon"></span></summary>
@@ -586,7 +586,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="How do I book a B&amp;B room?">Comment réserver les chambres d'hôtes ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Send us your dates and the number of guests through the contact form — we reply within the day. There's no online booking engine; every stay is confirmed by hand.">Envoyez-nous vos dates et le nombre de personnes via le formulaire de contact — nous vous répondons dans la journée. Pas de moteur de réservation en ligne, chaque séjour se confirme à la main.</div>
+          <div class="answer" data-en="Send us your dates and the number of guests through the contact form, we reply within the day. There's no online booking engine; every stay is confirmed by hand.">Envoyez-nous vos dates et le nombre de personnes via le formulaire de contact, nous vous répondons dans la journée. Pas de moteur de réservation en ligne, chaque séjour se confirme à la main.</div>
         </details>
       </div>
     </div>

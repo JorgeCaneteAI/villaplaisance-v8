@@ -35,7 +35,7 @@
 <section class="err-wrap">
   <p class="err-num"><span class="dot"></span><span data-en="404 · Page not found">404 · Page introuvable</span></p>
   <h1 class="err-title" data-en="This page is <em>elsewhere</em>, or no longer here.">Cette page est <em>ailleurs</em>, ou n'existe plus.</h1>
-  <p class="err-lede" data-en="A stale link, a typo — it happens. Pick up the thread from the home page, or write to us directly.">Un lien périmé, une faute de frappe — ça arrive. Reprenez le fil depuis l'accueil, ou écrivez-nous directement.</p>
+  <p class="err-lede" data-en="A stale link, a typo, it happens. Pick up the thread from the home page, or write to us directly.">Un lien périmé, une faute de frappe, ça arrive. Reprenez le fil depuis l'accueil, ou écrivez-nous directement.</p>
   <div class="err-actions">
     <a class="btn" href="<?= LangService::url('/') ?>"><span data-en="Back to home">Retour à l'accueil</span> &rarr;</a>
     <a class="btn btn-ghost" href="<?= LangService::url('contact') ?>" data-en="Contact">Contact</a>

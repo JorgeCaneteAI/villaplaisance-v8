@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Bloc « formula » V8 — nouveau type exclusivement V8.
+ * Bloc « formula » V8, nouveau type exclusivement V8.
  *
  * Section avec un en-tête (label numeral + h2 + intro) puis une grille
  * de cartes « formules » (typiquement 2 : Chambres d'hôtes / Villa).
@@ -54,7 +54,7 @@ $resolveCtaUrl = static function (?string $url): ?string {
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+          <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>

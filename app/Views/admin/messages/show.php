@@ -184,7 +184,7 @@ $datePretty = $ts ? sprintf('%s %d %s %d à %s', $dayLabels[(int) date('w', $ts)
                 </a>
                 <?php endif; ?>
 
-                <p class="info-card-note">Géolocalisation indicative (précision à la ville, peut différer du lieu réel — VPN, mobile en itinérance, etc.).</p>
+                <p class="info-card-note">Géolocalisation indicative (précision à la ville, peut différer du lieu réel, VPN, mobile en itinérance, etc.).</p>
 
                 <?php else: ?>
                 <p class="info-card-empty">

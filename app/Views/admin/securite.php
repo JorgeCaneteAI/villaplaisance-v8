@@ -7,7 +7,7 @@ $csrf = $_SESSION['csrf_token'] ?? ($_SESSION['csrf_token'] = bin2hex(random_byt
 ?>
 <div class="securite">
     <header class="securite__header">
-        <h1>Sécurité — Appareils de confiance</h1>
+        <h1>Sécurité, Appareils de confiance</h1>
     </header>
 
     <p class="securite__intro">
@@ -31,7 +31,7 @@ $csrf = $_SESSION['csrf_token'] ?? ($_SESSION['csrf_token'] = bin2hex(random_byt
                 <tr>
                     <td class="ua"><?= htmlspecialchars($d['user_agent'] ?? '(inconnu)') ?></td>
                     <td><?= htmlspecialchars($d['created_at']) ?></td>
-                    <td><?= htmlspecialchars($d['last_used'] ?? '—') ?></td>
+                    <td><?= htmlspecialchars($d['last_used'] ?? '-') ?></td>
                     <td><?= htmlspecialchars($d['expires_at']) ?></td>
                     <td>
                         <form method="post" action="/admin/securite/revoke/<?= (int) $d['id'] ?>"

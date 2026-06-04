@@ -6,7 +6,7 @@ $today = date('Y-m-d');
 
 // Page-keys FR (= la clé dans slugs.php). LangService::url() les traduit
 // vers le slug local. On émet 3 alternates par page + x-default = FR.
-// Note : changefreq et priority sont volontairement omis — Google les ignore.
+// Note : changefreq et priority sont volontairement omis, Google les ignore.
 $pageKeys = [
     'accueil',
     'chambres-d-hotes',
@@ -43,7 +43,7 @@ $pageImages = [
 ];
 
 // Articles dynamiques (journal + itineraires).
-// On ne ramène QUE les FR (slug unique par article — les EN/ES partagent le
+// On ne ramène QUE les FR (slug unique par article, les EN/ES partagent le
 // même slug) ; les variantes EN/ES sont émises via <xhtml:link rel="alternate">.
 $articles = [];
 try {

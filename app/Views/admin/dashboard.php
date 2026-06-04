@@ -1,6 +1,6 @@
 <?php
 /* ──────────────────────────────────────────────────────────────────────────
-   Dashboard — vitrine de la refonte UI V2 (2026-06-03)
+   Dashboard, vitrine de la refonte UI V2 (2026-06-03)
    Aucune logique métier ici, juste de l'affichage des données préparées par
    DashboardController::index().
    ────────────────────────────────────────────────────────────────────────── */
@@ -85,7 +85,7 @@
         </h2>
         <?php foreach (['en' => 'Anglais', 'es' => 'Espagnol'] as $code => $label): ?>
         <div class="dash-lang-block">
-            <div class="dash-lang-header"><?= strtoupper($code) ?> — <?= $label ?></div>
+            <div class="dash-lang-header"><?= strtoupper($code) ?>, <?= $label ?></div>
 
             <div class="dash-lang-row">
                 <span class="dash-lang-tag">Articles</span>

@@ -102,7 +102,7 @@ $frQualityTotal = count($frQuality);
                     }
                     ?>
                     <select id="category" name="category" data-category-select>
-                        <option value="">— Aucune catégorie —</option>
+                        <option value="">Aucune catégorie</option>
                         <?php foreach ($catGroups as $groupLabel => $cats): ?>
                             <optgroup label="<?= htmlspecialchars($groupLabel) ?>">
                                 <?php foreach ($cats as $cat): ?>
@@ -288,7 +288,7 @@ $frQualityTotal = count($frQuality);
 
             <!-- SEO -->
             <div class="admin-card">
-                <h2 class="article-section-title">SEO — Optimisation moteurs de recherche</h2>
+                <h2 class="article-section-title">SEO, Optimisation moteurs de recherche</h2>
                 <div class="lang-columns">
                     <?php foreach ($langs as $l):
                         $a = $articlesByLang[$l] ?? [];
@@ -333,9 +333,9 @@ $frQualityTotal = count($frQuality);
                 </div>
             </div>
 
-            <!-- GSO — Optimisation IA -->
+            <!-- GSO, Optimisation IA -->
             <div class="admin-card">
-                <h2 class="article-section-title">GSO — Optimisation pour l'IA (ChatGPT, Perplexity…)</h2>
+                <h2 class="article-section-title">GSO, Optimisation pour l'IA (ChatGPT, Perplexity…)</h2>
                 <p class="text-sm text-muted mb-2">Résumé structuré et factuel pour les moteurs de recherche IA. Répondez aux questions que les voyageurs posent aux assistants IA.</p>
                 <div class="lang-columns">
                     <?php foreach ($langs as $l):

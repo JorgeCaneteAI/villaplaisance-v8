@@ -260,10 +260,10 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
   <div class="container-wide">
     <div class="ct-layout">
 
-      <!-- LEFT — FORM -->
+      <!-- LEFT, FORM -->
       <main id="form">
         <div class="section-label" style="margin-bottom: 16px;">
-          <span class="numeral">— 01 / <span data-en="Tell us">Dites-nous</span></span>
+          <span class="numeral">01 / <span data-en="Tell us">Dites-nous</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0 0 32px; max-width: 18ch;" data-en="What kind of stay are you thinking of?">Quel genre de séjour<br/>imaginez-vous ?</h2>
 
@@ -470,7 +470,7 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
         </form>
       </main>
 
-      <!-- RIGHT — INFO -->
+      <!-- RIGHT, INFO -->
       <aside class="ct-info">
         <div class="kicker dark" style="background: transparent; border: 1px solid rgba(var(--linen-50-rgb), 0.25); color: var(--linen-200);">
           <span class="dot" style="background: var(--sage-200);"></span>
@@ -508,7 +508,7 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
   </div>
 </section>
 
-<!-- ============ TABS B&B / VILLA — toggle binding ============ -->
+<!-- ============ TABS B&B / VILLA, toggle binding ============ -->
 <script>
 (function () {
   var tablist = document.querySelector('.ct-tabs[role="tablist"]');

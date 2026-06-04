@@ -353,7 +353,7 @@ $lastTime  = end($steps)['time_label'] ?? '';
             iconSize: [28, 28],
             iconAnchor: [14, 14]
         });
-        var label = (p.time ? p.time + ' — ' : '') + p.title;
+        var label = (p.time ? p.time + ', ' : '') + p.title;
         L.marker([p.lat, p.lng], { icon: icon })
             .bindPopup('<strong>' + label + '</strong>')
             .addTo(map);

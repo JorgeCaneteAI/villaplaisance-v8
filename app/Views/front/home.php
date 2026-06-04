@@ -19,7 +19,7 @@
   }
   .page-hero.has-image .bg::after {
     content: ""; position: absolute; inset: 0;
-    /* Subtle bottom-left scrim — keeps the photo bright while making the text readable */
+    /* Subtle bottom-left scrim, keeps the photo bright while making the text readable */
     background:
       radial-gradient(ellipse 90% 70% at 30% 95%, rgba(31,28,22,0.55) 0%, rgba(31,28,22,0) 60%),
       linear-gradient(180deg, rgba(31,28,22,0) 55%, rgba(31,28,22,0.35) 100%);
@@ -54,7 +54,7 @@
     background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50);
   }
 
-  /* Two formulas — side-by-side cards */
+  /* Two formulas, side-by-side cards */
   .formulas {
     display: grid; grid-template-columns: 1fr 1fr;
     gap: clamp(20px, 2.4vw, 36px);
@@ -95,7 +95,7 @@
   @media (max-width: 720px) { .formulas { grid-template-columns: 1fr; } }
 
   /* World map styles vivent dans style-proto.css (.worldmap-section, .worldmap-svg,
-     .worldmap-pins, .origins-inline, etc.) — section 'WORLD MAP'. */
+     .worldmap-pins, .origins-inline, etc.), section 'WORLD MAP'. */
 
   /* Triangle d'Or list */
   .destinations {
@@ -125,10 +125,10 @@
     color: var(--stone-500); text-transform: uppercase;
   }
 
-  /* (anciens styles .worldmap-section / .worldmap / .origins-list retirés —
+  /* (anciens styles .worldmap-section / .worldmap / .origins-list retirés 
      remplacés par la nouvelle architecture full-bleed dans style-proto.css) */
 
-  /* Testimonials — grid 8 cards compactes + "Lire la suite" inline */
+  /* Testimonials, grid 8 cards compactes + "Lire la suite" inline */
   .testimonials {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -306,7 +306,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       <h1>Villa<br/><em>Plaisance</em></h1>
     </div>
     <div>
-      <p class="lede" data-en="One house, two ways to stay — B&amp;B from September to June, the whole villa in July and August.">Une maison, deux façons d'y séjourner — chambres d'hôtes de septembre à juin, maison d'hôtes en juillet et août.</p>
+      <p class="lede" data-en="One house, two ways to stay, B&amp;B from September to June, the whole villa in July and August.">Une maison, deux façons d'y séjourner, chambres d'hôtes de septembre à juin, maison d'hôtes en juillet et août.</p>
       <div class="page-hero-ctas">
         <a href="<?= LangService::url('chambres-d-hotes') ?>" class="btn"><span data-en="Sept → June · B&amp;B">Sept → Juin · Chambres d'hôtes</span> →</a>
         <a href="<?= LangService::url('location-villa-provence') ?>" class="btn btn-ghost"><span data-en="July → August · Whole villa">Juil → Août · Maison d'hôtes</span> →</a>
@@ -325,12 +325,12 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div class="two-col">
       <div>
         <div class="section-label">
-          <span class="numeral">— 01 / <span data-en="The house">La maison</span></span>
+          <span class="numeral">01 / <span data-en="The house">La maison</span></span>
         </div>
         <h2 class="h-xl" style="margin:0; max-width: 12ch;">Une maison<br/>de <em>charme</em><br/>en Provence.</h2>
       </div>
       <div>
-        <p class="lede" style="margin: 0 0 20px;" data-en="Nestled in the heart of Provence's Golden Triangle, Villa Plaisance is a maison de charme in Bédarrides — 15 min from Avignon, 8 min from Châteauneuf-du-Pape, 18 min from Orange.">Nichée au cœur du Triangle d'Or provençal, Villa Plaisance est une maison de charme à Bédarrides — à 15 min d'Avignon, 8 min de Châteauneuf-du-Pape, 18 min d'Orange.</p>
+        <p class="lede" style="margin: 0 0 20px;" data-en="Nestled in the heart of Provence's Golden Triangle, Villa Plaisance is a maison de charme in Bédarrides, 15 min from Avignon, 8 min from Châteauneuf-du-Pape, 18 min from Orange.">Nichée au cœur du Triangle d'Or provençal, Villa Plaisance est une maison de charme à Bédarrides, à 15 min d'Avignon, 8 min de Châteauneuf-du-Pape, 18 min d'Orange.</p>
         <p class="body-lg" style="margin: 0 0 16px;" data-en="September to June: a B&amp;B with homemade breakfast and shared pool. July to August: the whole villa (4 bedrooms, 10 guests, private 12 × 6 m pool) in full autonomy.">De septembre à juin : chambres d'hôtes B&amp;B avec petit-déjeuner maison et piscine partagée. En juillet–août : la villa entière (4 chambres, 10 personnes, piscine privée 12 × 6 m) en toute autonomie.</p>
         <p class="body-lg" style="margin: 0;" data-en="The place is calm, the village alive, the countryside starts at the doorstep, the TGV is fifteen minutes away.">Le lieu est calme, le village vivant, la campagne à pied, le TGV à quinze minutes.</p>
       </div>
@@ -348,11 +348,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 02 / <span data-en="Two formulas">Deux formules</span></span>
+          <span class="numeral">02 / <span data-en="Two formulas">Deux formules</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 16ch;">Deux façons<br/>de <em>séjourner</em>,<br/>une seule maison.</h2>
       </div>
-      <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="The house lives in two seasons — pick the one that suits you.">La maison vit deux saisons — choisissez celle qui vous va.</p>
+      <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="The house lives in two seasons, pick the one that suits you.">La maison vit deux saisons, choisissez celle qui vous va.</p>
     </div>
 
     <div class="formulas">
@@ -363,7 +363,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
           <span data-en="At the host's place">Chez l'habitant</span>
         </div>
         <h3><em data-en="B&amp;B">Chambres d'hôtes</em></h3>
-        <p class="desc" data-en="You stay at our place. Two communicating, air-conditioned bedrooms with a private bathroom are strictly dedicated to you. Breakfast is included — local produce, homemade jams, fruit from the garden. Shared pool, personalised advice and a warm welcome. A communicating suite ideal for families (1 to 5 guests).">Vous séjournez chez l'habitant. Deux chambres communicantes et climatisées avec salle de bain privée vous sont strictement dédiées. Le petit-déjeuner est inclus : produits locaux, confitures maison, fruits du jardin. Piscine partagée, conseils personnalisés et accueil chaleureux. Suite communicante idéale pour les familles (1 à 5 personnes).</p>
+        <p class="desc" data-en="You stay at our place. Two communicating, air-conditioned bedrooms with a private bathroom are strictly dedicated to you. Breakfast is included, local produce, homemade jams, fruit from the garden. Shared pool, personalised advice and a warm welcome. A communicating suite ideal for families (1 to 5 guests).">Vous séjournez chez l'habitant. Deux chambres communicantes et climatisées avec salle de bain privée vous sont strictement dédiées. Le petit-déjeuner est inclus : produits locaux, confitures maison, fruits du jardin. Piscine partagée, conseils personnalisés et accueil chaleureux. Suite communicante idéale pour les familles (1 à 5 personnes).</p>
         <div class="stats">
           <span class="stat-pill">1 – 5 <span data-en="guests">pers.</span></span>
           <span class="stat-pill" data-en="Breakfast included">Petit-déj inclus</span>
@@ -380,7 +380,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
           <span data-en="On your own">Vous seuls</span>
         </div>
         <h3><em data-en="Whole villa">La Villa en exclusivité</em></h3>
-        <p class="desc" data-en="You stay on your own and have the villa and the outdoors exclusively. 4 bedrooms, 2 bathrooms, fully equipped kitchen, fenced private 12 × 6 m pool and garden under the olive trees. Up to 10 guests in total autonomy — your home in Provence, no neighbours.">Vous séjournez seuls et disposez de la villa et des extérieurs en exclusivité. 4 chambres, 2 salles de bain, cuisine entièrement équipée, piscine privée clôturée 12 × 6 m et jardin sous les oliviers. Jusqu'à 10 personnes en totale autonomie — votre maison en Provence, sans vis-à-vis.</p>
+        <p class="desc" data-en="You stay on your own and have the villa and the outdoors exclusively. 4 bedrooms, 2 bathrooms, fully equipped kitchen, fenced private 12 × 6 m pool and garden under the olive trees. Up to 10 guests in total autonomy, your home in Provence, no neighbours.">Vous séjournez seuls et disposez de la villa et des extérieurs en exclusivité. 4 chambres, 2 salles de bain, cuisine entièrement équipée, piscine privée clôturée 12 × 6 m et jardin sous les oliviers. Jusqu'à 10 personnes en totale autonomie, votre maison en Provence, sans vis-à-vis.</p>
         <div class="stats">
           <span class="stat-pill" data-en="Up to 10 guests">Jusqu'à 10 pers.</span>
           <span class="stat-pill" data-en="Private 12 × 6 m pool">Piscine privée 12 × 6</span>
@@ -405,10 +405,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div class="two-col">
       <div>
         <div class="section-label">
-          <span class="numeral">— 03 / <span data-en="Where we are">Où nous sommes</span></span>
+          <span class="numeral">03 / <span data-en="Where we are">Où nous sommes</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Au cœur du<br/><em>Triangle d'Or</em>.</h2>
-        <p class="body-lg" style="max-width: 40ch; margin: 24px 0 0; color: var(--stone-600);" data-en="The whole region radiates from Bédarrides — Avignon to the south, Orange to the north, Châteauneuf to the west, the Mont Ventoux straight ahead.">Toute la région rayonne depuis Bédarrides — Avignon au sud, Orange au nord, Châteauneuf à l'ouest, le Mont Ventoux droit devant.</p>
+        <p class="body-lg" style="max-width: 40ch; margin: 24px 0 0; color: var(--stone-600);" data-en="The whole region radiates from Bédarrides, Avignon to the south, Orange to the north, Châteauneuf to the west, the Mont Ventoux straight ahead.">Toute la région rayonne depuis Bédarrides, Avignon au sud, Orange au nord, Châteauneuf à l'ouest, le Mont Ventoux droit devant.</p>
       </div>
       <ul class="destinations">
         <li>
@@ -462,9 +462,9 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 </section>
 <?php endif; ?>
 
-<!-- ============ 05 · PROVENANCE / WORLD MAP (Leaflet — vraie carte du monde) ============ -->
+<!-- ============ 05 · PROVENANCE / WORLD MAP (Leaflet, vraie carte du monde) ============ -->
 <?php
-// Origines depuis vp_reviews — données réelles, mises à jour quand on ajoute un avis
+// Origines depuis vp_reviews, données réelles, mises à jour quand on ajoute un avis
 $_mapOrigins = [];
 $_mapCityList = [];
 try {
@@ -477,7 +477,7 @@ try {
     }
 } catch (\Throwable) {}
 
-// Geocoding lookup (lat, lng) — mêmes coordonnées que le bloc mappemonde
+// Geocoding lookup (lat, lng), mêmes coordonnées que le bloc mappemonde
 $_mapGeocode = [
     'France' => [46.6034, 2.3488],
     'Paris, France' => [48.8566, 2.3522],
@@ -503,7 +503,7 @@ $_mapGeocode = [
     'Sydney, Australie' => [-33.8688, 151.2093],
 ];
 
-// Construction des pins — merge des coordonnées identiques
+// Construction des pins, merge des coordonnées identiques
 $_coordMap = [];
 foreach ($_mapOrigins as $_origin => $_count) {
     if (isset($_mapGeocode[$_origin])) {
@@ -740,7 +740,7 @@ $_nPins = count($_mapPins);
   </script>
 </section>
 
-<!-- ============ 06 · TÉMOIGNAGES (vp_reviews — 3 avis) ============ -->
+<!-- ============ 06 · TÉMOIGNAGES (vp_reviews, 3 avis) ============ -->
 <?php if ($_avisHtml = $renderV8BlockAt(6, 'avis')): ?>
 <?= $_avisHtml ?>
 <?php else: ?>
@@ -848,11 +848,11 @@ $_linkifyHost = static function (string $content): string {
     <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 06 / <span data-en="From the journal">Du journal</span></span>
+          <span class="numeral">06 / <span data-en="From the journal">Du journal</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Ce qu'on <em>écrit</em>,<br/>ce qu'on conseille.</h2>
       </div>
-      <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="Two sections — tourism essays, and what to do nearby.">Deux rubriques — articles autour du tourisme, et la sélection sur place.</p>
+      <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="Two sections, tourism essays, and what to do nearby.">Deux rubriques, articles autour du tourisme, et la sélection sur place.</p>
     </div>
 
     <div class="journal-grid">
@@ -861,7 +861,7 @@ $_linkifyHost = static function (string $content): string {
         <div>
           <div class="kicker-mono" data-en="Journal · Tourism">Journal · Tourisme</div>
           <h3>Voyager <em>autrement</em><br/>en Provence.</h3>
-          <p data-en="Five ways of looking at the region — Provence contemporaine, voyager autrement, hosts &amp; hoteliers, land &amp; transition, the art of staying.">Cinq façons de regarder la région — provence contemporaine, voyager autrement, hôtes &amp; hôteliers, territoire &amp; transition, l'art de séjourner.</p>
+          <p data-en="Five ways of looking at the region, Provence contemporaine, voyager autrement, hosts &amp; hoteliers, land &amp; transition, the art of staying.">Cinq façons de regarder la région, provence contemporaine, voyager autrement, hôtes &amp; hôteliers, territoire &amp; transition, l'art de séjourner.</p>
           <span class="btn-link" data-en="Read the journal →">Lire le journal →</span>
         </div>
       </a>
@@ -871,7 +871,7 @@ $_linkifyHost = static function (string $content): string {
         <div>
           <div class="kicker-mono" data-en="Journal · What to do nearby">Journal · Que faire sur place</div>
           <h3>Sur place,<br/>tout est <em>là</em>.</h3>
-          <p data-en="Sites to visit, tables, shops, things to do with children — the house's pick.">Sites à visiter, tables, commerces, activités avec les enfants — la sélection de la maison.</p>
+          <p data-en="Sites to visit, tables, shops, things to do with children, the house's pick.">Sites à visiter, tables, commerces, activités avec les enfants, la sélection de la maison.</p>
           <span class="btn-link" data-en="See the selection →">Voir la sélection →</span>
         </div>
       </a>

@@ -13,8 +13,8 @@ declare(strict_types=1);
  *   - intro
  *   - surface ('default'|'stone'|'sage'|'sage-light')
  *   - page_slug    : slug à filtrer dans vp_faq (défaut: section.page_slug)
- *   - limit        : int (optionnel) — limite le nombre de FAQ affichées
- *   - first_open   : bool (défaut true) — 1ère réponse dépliée
+ *   - limit        : int (optionnel), limite le nombre de FAQ affichées
+ *   - first_open   : bool (défaut true), 1ère réponse dépliée
  */
 
 $label_numeral = $label_numeral ?? '';
@@ -55,7 +55,7 @@ $hasHeader = ($heading !== '' || $intro !== '' || $label_numeral !== '' || $labe
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+          <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>

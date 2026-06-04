@@ -40,7 +40,7 @@ $hasHeader = ($heading !== '' || $intro !== '' || $label_numeral !== '' || $labe
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+          <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>

@@ -43,7 +43,7 @@
                     title="Copier le lien complet">📋</button>
         </td>
         <td style="font-size:0.85rem;color:#888">
-            <?= $it['itinerary_date'] ? date('d/m/Y', strtotime($it['itinerary_date'])) : '—' ?>
+            <?= $it['itinerary_date'] ? date('d/m/Y', strtotime($it['itinerary_date'])) : '-' ?>
         </td>
         <td style="text-align:center"><?= (int)$it['step_count'] ?></td>
         <td style="text-align:center">

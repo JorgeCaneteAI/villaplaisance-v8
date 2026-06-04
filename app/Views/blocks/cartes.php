@@ -1,6 +1,6 @@
 <?php
 /**
- * Bloc V8 `cartes` — affiche les chambres lues depuis vp_pieces.
+ * Bloc V8 `cartes`, affiche les chambres lues depuis vp_pieces.
  *
  * Dispatch sur le champ `offer` du bloc :
  *   - 'bb'    → markup .ch-room (1 section par chambre, alternance normal/alt)
@@ -45,7 +45,7 @@ $pillLines = static function (string $pill): array {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MODE B&B — 1 section par chambre, alternance normal/alt selon meta.layout
+// MODE B&B, 1 section par chambre, alternance normal/alt selon meta.layout
 // ─────────────────────────────────────────────────────────────────────────────
 if ($offer === 'bb' || $offer === 'both'):
     $bbRooms = array_values(array_filter($rooms, fn($r) => in_array($r['offer'], ['bb', 'both'], true)));
@@ -110,7 +110,7 @@ if ($offer === 'bb' || $offer === 'both'):
 endif;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MODE VILLA — grille compacte, wrapper section-label + h2 + intro au dessus
+// MODE VILLA, grille compacte, wrapper section-label + h2 + intro au dessus
 // ─────────────────────────────────────────────────────────────────────────────
 if ($offer === 'villa' || $offer === 'both'):
     $villaRooms = array_values(array_filter($rooms, fn($r) => in_array($r['offer'], ['villa', 'both'], true)));
@@ -123,7 +123,7 @@ if ($offer === 'villa' || $offer === 'both'):
       <div>
         <?php if ($labelNumeral !== '' || $labelText !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($labelNumeral) ?><?= ($labelNumeral !== '' && $labelText !== '') ? ' / ' : '' ?><?= TextService::renderTitle($labelText) ?></span>
+          <span class="numeral"><?= htmlspecialchars($labelNumeral) ?><?= ($labelNumeral !== '' && $labelText !== '') ? ' / ' : '' ?><?= TextService::renderTitle($labelText) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>

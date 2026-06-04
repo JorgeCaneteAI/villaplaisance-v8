@@ -178,7 +178,7 @@
     .practical .row { grid-template-columns: 1fr; gap: 4px; padding: 18px 0; }
   }
 
-  /* FAQ — adapted from contact.html */
+  /* FAQ, adapted from contact.html */
   .faq { border-top: var(--hairline); }
   .faq details { border-bottom: var(--hairline); padding: 20px 0; }
   .faq summary {
@@ -240,7 +240,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       <h1>La villa <em>entière</em>,<br/>en toute autonomie.</h1>
     </div>
     <div>
-      <p class="lede" data-en="In July and August, Villa Plaisance opens its doors as a whole-house rental — four bedrooms, ten guests, a private pool, a fitted kitchen and terraces facing the vines.">En juillet et en août, Villa Plaisance ouvre ses portes en location complète — quatre chambres, dix personnes, piscine privée exclusive, cuisine équipée et terrasses face aux vignes.</p>
+      <p class="lede" data-en="In July and August, Villa Plaisance opens its doors as a whole-house rental, four bedrooms, ten guests, a private pool, a fitted kitchen and terraces facing the vines.">En juillet et en août, Villa Plaisance ouvre ses portes en location complète, quatre chambres, dix personnes, piscine privée exclusive, cuisine équipée et terrasses face aux vignes.</p>
       <div class="page-hero-ctas">
         <a class="btn" href="<?= LangService::url('contact') ?>"><span data-en="Enquire about a week">Demander une semaine</span> →</a>
         <a class="btn btn-ghost" href="#infos"><span data-en="Practical info">Infos pratiques</span></a>
@@ -254,7 +254,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
   <div class="container-wide">
     <div class="section-label" style="margin-bottom: 18px;">
-      <span class="numeral" data-en="— Availability">— Disponibilités</span>
+      <span class="numeral" data-en=" Availability"> Disponibilités</span>
     </div>
     <?php include __DIR__ . '/_partials/calendar_ribbon.php'; ?>
   </div>
@@ -295,11 +295,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display:flex; justify-content:space-between; align-items:flex-end; gap: 32px; margin-bottom: clamp(40px, 5vw, 72px); flex-wrap: wrap;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 01 / <span data-en="The bedrooms">Les chambres</span></span>
+          <span class="numeral">01 / <span data-en="The bedrooms">Les chambres</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 18ch;" data-en="Four bedrooms,<br/>four <em>worlds</em>.">Quatre chambres,<br/>quatre <em>univers</em>.</h2>
       </div>
-      <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="Each room has a personality of its own — books, an arch, the garden, the seventies. None of them lacks for shade or light.">Chaque chambre a sa personnalité — les livres, une arche, le jardin, les seventies. Aucune ne manque ni d'ombre ni de lumière.</p>
+      <p class="body-lg" style="max-width: 38ch; margin: 0;" data-en="Each room has a personality of its own, books, an arch, the garden, the seventies. None of them lacks for shade or light.">Chaque chambre a sa personnalité, les livres, une arche, le jardin, les seventies. Aucune ne manque ni d'ombre ni de lumière.</p>
     </div>
 
     <div class="room-cards">
@@ -327,7 +327,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         <div class="img" style="background-image: url('/uploads/villa-plaisance-chambre-bleue-01.webp')"></div>
         <div class="head">
           <div class="name"><em>Chambre Bleue</em></div>
-          <div class="tagline" data-en="Library — 300 books">Bibliothèque · 300 livres</div>
+          <div class="tagline" data-en="Library, 300 books">Bibliothèque · 300 livres</div>
         </div>
         <p class="desc" data-en="Two 90×200 single beds, joinable as a double. A clic-clac sofa bed and a 300-book library. Reversible air-conditioning.">Deux lits 90×200 jumelables, clic-clac, bibliothèque de 300 livres. Climatisation réversible.</p>
         <div class="pills">
@@ -386,7 +386,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
   <div class="container-wide">
     <div style="margin-bottom: clamp(40px, 5vw, 64px);">
       <div class="section-label">
-        <span class="numeral">— 02 / <span data-en="Inside">L'intérieur</span></span>
+        <span class="numeral">02 / <span data-en="Inside">L'intérieur</span></span>
       </div>
       <h2 class="h-xl" style="margin: 0; max-width: 18ch;">Une <em>cuisine</em>,<br/>un <em>salon</em>, une longue table.</h2>
     </div>
@@ -395,18 +395,18 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       <div>
         <div class="img" style="background-image: url('/uploads/villa-plaisance-cuisine-equipee-01.webp')"></div>
         <div>
-          <div class="numeral" style="margin-bottom: 8px;" data-en="Kitchen — an all-in-one space">CUISINE · UN ESPACE TOUT-COMPRIS</div>
+          <div class="numeral" style="margin-bottom: 8px;" data-en="Kitchen, an all-in-one space">CUISINE · UN ESPACE TOUT-COMPRIS</div>
           <h3 class="h-md" style="margin: 0 0 8px;"><em data-en="Fully equipped">Entièrement équipée</em></h3>
-          <p class="body" style="margin: 0; max-width: 50ch;" data-en="Gas range, dishwasher, XXL fridge, oven, microwave — and everything you need to cook for ten.">Piano gaz, lave-vaisselle, réfrigérateur XXL, four, micro-ondes — et tout ce qu'il faut pour cuisiner à dix.</p>
+          <p class="body" style="margin: 0; max-width: 50ch;" data-en="Gas range, dishwasher, XXL fridge, oven, microwave, and everything you need to cook for ten.">Piano gaz, lave-vaisselle, réfrigérateur XXL, four, micro-ondes, et tout ce qu'il faut pour cuisiner à dix.</p>
         </div>
       </div>
 
       <div>
         <div class="img" style="background-image: url('/uploads/villa-plaisance-salon-salle-a-manger-01.webp')"></div>
         <div>
-          <div class="numeral" style="margin-bottom: 8px;" data-en="Living &amp; dining — conviviality, simple">SALON · SALLE À MANGER · LA CONVIVIALITÉ EN TOUTE SIMPLICITÉ</div>
+          <div class="numeral" style="margin-bottom: 8px;" data-en="Living &amp; dining, conviviality, simple">SALON · SALLE À MANGER · LA CONVIVIALITÉ EN TOUTE SIMPLICITÉ</div>
           <h3 class="h-md" style="margin: 0 0 8px;"><em data-en="Air-conditioned, light, long">Climatisé, clair, long</em></h3>
-          <p class="body" style="margin: 0; max-width: 50ch;" data-en="A large living/dining room — air-conditioned, easy to live in. A long table that ten people can sit at without anyone elbowing anyone else.">Grand salon et salle à manger climatisés, facile à vivre. Une longue table où dix personnes tiennent sans qu'on se gêne du coude.</p>
+          <p class="body" style="margin: 0; max-width: 50ch;" data-en="A large living/dining room, air-conditioned, easy to live in. A long table that ten people can sit at without anyone elbowing anyone else.">Grand salon et salle à manger climatisés, facile à vivre. Une longue table où dix personnes tiennent sans qu'on se gêne du coude.</p>
         </div>
       </div>
     </div>
@@ -421,7 +421,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section" id="piscine">
   <div class="container-wide">
     <div class="section-label">
-      <span class="numeral">— 03 / <span data-en="The pool">La piscine</span></span>
+      <span class="numeral">03 / <span data-en="The pool">La piscine</span></span>
     </div>
     <h2 class="h-xl" style="margin: 0 0 28px; max-width: 18ch;">Piscine privée, <em>12 × 6</em>.<br/>Pour vous seuls.</h2>
     <p class="lede" style="margin: 0; max-width: 52ch;" data-en="Exclusively yours, 24/7. No other family or tenant has access during your stay.">Exclusivement réservée à votre groupe, 24h/24. Aucune autre famille ou locataire n'y a accès pendant votre séjour.</p>
@@ -430,12 +430,12 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 
     <div class="pool-block">
       <div>
-        <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;" data-en="Sunbeds, parasols, garden table, an outdoor lounge and a solar shower — and the option to have the pool heated if you'd like an early-July dip.">Transats, parasols, table de jardin, salon extérieur et douche solaire — et l'option de chauffer la piscine si vous préférez vous baigner dès début juillet.</p>
+        <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;" data-en="Sunbeds, parasols, garden table, an outdoor lounge and a solar shower, and the option to have the pool heated if you'd like an early-July dip.">Transats, parasols, table de jardin, salon extérieur et douche solaire, et l'option de chauffer la piscine si vous préférez vous baigner dès début juillet.</p>
         <p class="body" style="margin: 0; max-width: 56ch; color: var(--stone-600);" data-en="The pool is fenced, as required by law. Children stay close.">La piscine est clôturée, conformément à la réglementation. Les enfants restent à portée d'œil.</p>
       </div>
       <ul class="pool-features">
         <li data-en="12 × 6 m, fenced">12 × 6 m, clôturée</li>
-        <li data-en="Exclusive — 24/7">Exclusive · 24h/24</li>
+        <li data-en="Exclusive, 24/7">Exclusive · 24h/24</li>
         <li data-en="Sunbeds &amp; parasols">Transats &amp; parasols</li>
         <li data-en="Garden table &amp; outdoor lounge">Table de jardin &amp; salon extérieur</li>
         <li data-en="Solar shower">Douche solaire</li>
@@ -455,11 +455,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 72px);">
       <div>
         <div class="section-label">
-          <span class="numeral">— 04 / <span data-en="The spaces">Les espaces</span></span>
+          <span class="numeral">04 / <span data-en="The spaces">Les espaces</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 12ch;">Tout ce que la <em>maison</em> contient.</h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="The complete inventory of the house — bedrooms, bathrooms, kitchen, terrace, garden, parking. So you can plan a long week without surprises.">L'inventaire complet de la maison — chambres, salles de bain, cuisine, terrasse, jardin, parking. De quoi préparer une longue semaine sans surprise.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="The complete inventory of the house, bedrooms, bathrooms, kitchen, terrace, garden, parking. So you can plan a long week without surprises.">L'inventaire complet de la maison, chambres, salles de bain, cuisine, terrasse, jardin, parking. De quoi préparer une longue semaine sans surprise.</p>
     </div>
 
     <div class="espaces">
@@ -496,11 +496,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </div>
         <div class="row">
           <dt data-en="Covered terrace">Terrasse couverte</dt>
-          <dd data-en="40 m² with garden lounge — seats 12">40 m² avec salon de jardin 12 places</dd>
+          <dd data-en="40 m² with garden lounge, seats 12">40 m² avec salon de jardin 12 places</dd>
         </div>
         <div class="row">
           <dt data-en="Garden">Jardin</dt>
-          <dd data-en="Provençal garden — olive trees, charcoal BBQ, pétanque court">Provençal · oliviers, BBQ charbon, terrain de pétanque</dd>
+          <dd data-en="Provençal garden, olive trees, charcoal BBQ, pétanque court">Provençal · oliviers, BBQ charbon, terrain de pétanque</dd>
         </div>
         <div class="row">
           <dt data-en="Laundry">Buanderie</dt>
@@ -529,11 +529,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
       <div>
         <div class="section-label">
-          <span class="numeral">— 05 / <span data-en="Practical info">Infos pratiques</span></span>
+          <span class="numeral">05 / <span data-en="Practical info">Infos pratiques</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Tout ce qu'il faut <em>savoir</em>.</h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="Dates, capacity, arrival times, what's included — the essentials at a glance, before you write to us.">Dates, capacité, horaires, ce qui est inclus — l'essentiel d'un coup d'œil, avant que vous nous écriviez.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="Dates, capacity, arrival times, what's included, the essentials at a glance, before you write to us.">Dates, capacité, horaires, ce qui est inclus, l'essentiel d'un coup d'œil, avant que vous nous écriviez.</p>
     </div>
 
     <div class="practical">
@@ -591,7 +591,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(32px, 6vw, 96px); align-items: start;">
       <div>
         <div class="section-label">
-          <span class="numeral">— 06 / <span data-en="Frequently asked">Questions fréquentes</span></span>
+          <span class="numeral">06 / <span data-en="Frequently asked">Questions fréquentes</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;" data-en="The whole-house questions.">Villa entière,<br/>les <em>questions</em> qui reviennent.</h2>
       </div>
@@ -606,11 +606,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="Is the kitchen fully equipped?">La cuisine est-elle équipée ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — oven, hob, dishwasher, microwave, fridge, plus utensils and crockery for 10.">Oui, la cuisine est entièrement équipée : four, plaques, lave-vaisselle, micro-ondes, réfrigérateur, ustensiles de cuisine et vaisselle pour 10 personnes.</div>
+          <div class="answer" data-en="Yes, oven, hob, dishwasher, microwave, fridge, plus utensils and crockery for 10.">Oui, la cuisine est entièrement équipée : four, plaques, lave-vaisselle, micro-ondes, réfrigérateur, ustensiles de cuisine et vaisselle pour 10 personnes.</div>
         </details>
         <details>
           <summary><span data-en="Are sheets and towels provided?">Le linge de maison est-il fourni ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — sheets, bath towels and pool towels are provided and changed weekly.">Oui, les draps, serviettes de bain et serviettes de piscine sont fournis et changés chaque semaine.</div>
+          <div class="answer" data-en="Yes, sheets, bath towels and pool towels are provided and changed weekly.">Oui, les draps, serviettes de bain et serviettes de piscine sont fournis et changés chaque semaine.</div>
         </details>
         <details>
           <summary><span data-en="What is the minimum stay?">Quelle est la durée minimum de location ?</span><span class="icon"></span></summary>
@@ -618,7 +618,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="Are there shops nearby?">Y a-t-il des commerces à proximité ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Yes — Bédarrides has bakeries, a small grocery, restaurants and a pharmacy. The nearest supermarket is in Sorgues, 5 minutes by car.">Oui, Bédarrides dispose de boulangeries, supérette, restaurants et pharmacie. Le supermarché le plus proche est à Sorgues, à 5 minutes en voiture.</div>
+          <div class="answer" data-en="Yes, Bédarrides has bakeries, a small grocery, restaurants and a pharmacy. The nearest supermarket is in Sorgues, 5 minutes by car.">Oui, Bédarrides dispose de boulangeries, supérette, restaurants et pharmacie. Le supermarché le plus proche est à Sorgues, à 5 minutes en voiture.</div>
         </details>
         <details>
           <summary><span data-en="Is there a cleaning or private-chef service?">Y a-t-il un service de ménage ou de chef à domicile ?</span><span class="icon"></span></summary>
@@ -626,7 +626,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="How do I book the whole villa?">Comment réserver la villa entière ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="Send us your dates and the number of guests through the contact form — we'll get back to you within the day. There is no online booking engine; every stay is confirmed by hand.">Envoyez-nous vos dates et le nombre de personnes via le formulaire de contact — nous vous répondons dans la journée. Pas de moteur de réservation en ligne, chaque séjour se confirme à la main.</div>
+          <div class="answer" data-en="Send us your dates and the number of guests through the contact form, we'll get back to you within the day. There is no online booking engine; every stay is confirmed by hand.">Envoyez-nous vos dates et le nombre de personnes via le formulaire de contact, nous vous répondons dans la journée. Pas de moteur de réservation en ligne, chaque séjour se confirme à la main.</div>
         </details>
       </div>
     </div>

@@ -53,7 +53,7 @@ $paragraphs = array_values(array_filter(
     static fn(string $p): bool => $p !== ''
 ));
 
-// Image (optionnel) — référence vp_media
+// Image (optionnel), référence vp_media
 $imgUrl = $image_id ? ImageService::urlById((int)$image_id) : null;
 $imgAlt = $image_id ? ImageService::altById((int)$image_id) : '';
 
@@ -66,11 +66,11 @@ if ($cta && !empty($cta['url'])) {
     }
 }
 
-// Helper local pour le label "— 01 / La maison"
+// Helper local pour le label " 01 / La maison"
 $_renderLabel = function () use ($label_numeral, $label_text): string {
     if ($label_numeral === '' && $label_text === '') return '';
     $sep = ($label_numeral !== '' && $label_text !== '') ? ' / ' : '';
-    return '<div class="section-label"><span class="numeral">— '
+    return '<div class="section-label"><span class="numeral">'
         . htmlspecialchars($label_numeral)
         . $sep
         . TextService::renderTitle($label_text)
@@ -161,7 +161,7 @@ $_renderStatsBand = function () use ($stats_band): string {
       </div>
     </div>
 
-    <?php else: /* text-image-left|right — markup éditorial asymétrique */ ?>
+    <?php else: /* text-image-left|right, markup éditorial asymétrique */ ?>
     <div class="prose-grid <?= $layout === 'text-image-left' ? 'reverse' : '' ?>">
       <div class="prose-text">
         <?= $_renderLabel() ?>

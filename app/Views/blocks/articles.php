@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Bloc « articles » V8 — extraits d'articles ou cartes éditoriales.
+ * Bloc « articles » V8, extraits d'articles ou cartes éditoriales.
  *
  * Deux modes :
  *   - source='auto'   : lit vp_articles WHERE type IN (...) (filtre par catégorie)
@@ -92,7 +92,7 @@ $resolveUrl = static function (?string $url): ?string {
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+          <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>

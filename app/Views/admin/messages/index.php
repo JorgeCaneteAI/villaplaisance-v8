@@ -20,7 +20,7 @@ $shortDate = static function(string $iso): string {
     if ($ts >= $today) return date('H:i', $ts);
     if ($ts >= $yesterday) return 'Hier';
     if ($ts >= strtotime('-6 days')) {
-        // strftime() est deprecated PHP 8.1 — mapping FR maison.
+        // strftime() est deprecated PHP 8.1, mapping FR maison.
         static $days = [0 => 'dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'];
         return $days[(int) date('w', $ts)];
     }

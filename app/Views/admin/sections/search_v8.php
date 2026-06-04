@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin V8 — recherche globale dans tous les blocs vp_sections.
+ * Admin V8, recherche globale dans tous les blocs vp_sections.
  *
  * @var string $q
  * @var array  $results  Résultats du LIKE %q% sur title + content + page_slug + block_type

@@ -41,7 +41,7 @@ $geocode = [
     'Sydney, Australie' => [-33.8688, 151.2093],
 ];
 
-// Build pins — merge same coordinates
+// Build pins, merge same coordinates
 $coordMap = [];
 foreach ($origins as $origin => $count) {
     if (isset($geocode[$origin])) {
@@ -107,7 +107,7 @@ shuffle($cityList);
             maxZoom: 19
         }).addTo(map);
 
-        // Villa Plaisance pin — no text, just dot
+        // Villa Plaisance pin, no text, just dot
         var homeIcon = L.divIcon({
             className: 'map-pin-home',
             html: '<div class="pin-home-inner"></div>',
@@ -116,9 +116,9 @@ shuffle($cityList);
         });
         L.marker([<?= $villaLat ?>, <?= $villaLng ?>], {icon: homeIcon, zIndexOffset: 1000})
             .addTo(map)
-            .bindTooltip('Villa Plaisance — Bédarrides', {direction: 'top', offset: [0, -10]});
+            .bindTooltip('Villa Plaisance, Bédarrides', {direction: 'top', offset: [0, -10]});
 
-        // Guest origin pins — no text, tooltip on hover
+        // Guest origin pins, no text, tooltip on hover
         var pins = <?= json_encode($pins, JSON_UNESCAPED_UNICODE) ?>;
         var bounds = [[<?= $villaLat ?>, <?= $villaLng ?>]];
         pins.forEach(function(pin) {

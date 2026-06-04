@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Layout admin V2 (2026-06-03) — sidebar + header, refonte radicale.
+   Layout admin V2 (2026-06-03), sidebar + header, refonte radicale.
    ────────────────────────────────────────────────────────────────────────── */
 
 $uri = $_SERVER['REQUEST_URI'] ?? '/admin';
@@ -58,7 +58,7 @@ $dbClass = stripos(DB_NAME, 'prod') !== false ? 'is-prod'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin — Villa Plaisance</title>
+    <title>Admin, Villa Plaisance</title>
     <meta name="robots" content="noindex, nofollow">
 
     <!-- Inter + JetBrains Mono -->

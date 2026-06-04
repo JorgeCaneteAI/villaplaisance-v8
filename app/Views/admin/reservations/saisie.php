@@ -67,7 +67,7 @@ $csrf = $_SESSION['csrf_token'] ?? ($_SESSION['csrf_token'] = bin2hex(random_byt
 
         <div class="row cols-2">
             <label>Code généré (lecture seule)
-                <output id="code-preview" class="code-preview"><?= htmlspecialchars($resa['code'] ?? '—') ?></output>
+                <output id="code-preview" class="code-preview"><?= htmlspecialchars($resa['code'] ?? '-') ?></output>
             </label>
 
             <label>Provenance (ville · pays)
@@ -141,9 +141,9 @@ async function refreshCode() {
         const r = await fetch('/admin/calendrier/api/code?' + params);
         if (r.ok) {
             const j = await r.json();
-            preview.textContent = j.code || '—';
+            preview.textContent = j.code || '-';
         }
-    } catch (e) { /* silent — l'API arrive en Task 14 */ }
+    } catch (e) { /* silent, l'API arrive en Task 14 */ }
 }
 inputIds.forEach(id => document.getElementById(id)?.addEventListener('input', refreshCode));
 refreshCode();

@@ -117,7 +117,7 @@ $csrf = $_SESSION['csrf_token'] ?? '';
         <div class="form-group">
             <label for="seo-filename">Nom du fichier</label>
             <input type="text" id="seo-filename" name="filename" placeholder="humans.txt, ads.txt, security.txt…" required>
-            <p class="form-hint">Sera servi à la racine — par ex. <code class="info-mono">villaplaisance.fr/humans.txt</code></p>
+            <p class="form-hint">Sera servi à la racine, par ex. <code class="info-mono">villaplaisance.fr/humans.txt</code></p>
         </div>
 
         <div class="form-group">
@@ -148,14 +148,14 @@ Sitemap: https://villaplaisance.fr/sitemap.xml
             filename: 'llms.txt',
             content: `# Villa Plaisance
 
-> Chambres d'hôtes et villa de charme à Bédarrides, au cœur du Triangle d'Or provençal (Avignon — Châteauneuf-du-Pape — Orange).
+> Chambres d'hôtes et villa de charme à Bédarrides, au cœur du Triangle d'Or provençal (Avignon, Châteauneuf-du-Pape, Orange).
 
 ## Pages principales
-- [Accueil](https://villaplaisance.fr) — Présentation de la maison
-- [Chambres d'hôtes](https://villaplaisance.fr/chambres-d-hotes) — Réservation B&B
-- [Location villa entière](https://villaplaisance.fr/location-villa-provence) — Villa pour groupes
-- [Avis](https://villaplaisance.fr/avis) — Témoignages clients
-- [Contact](https://villaplaisance.fr/contact) — Coordonnées et réservation
+- [Accueil](https://villaplaisance.fr), Présentation de la maison
+- [Chambres d'hôtes](https://villaplaisance.fr/chambres-d-hotes), Réservation B&B
+- [Location villa entière](https://villaplaisance.fr/location-villa-provence), Villa pour groupes
+- [Avis](https://villaplaisance.fr/avis), Témoignages clients
+- [Contact](https://villaplaisance.fr/contact), Coordonnées et réservation
 
 ## À propos
 Villa Plaisance est une maison provençale du XIXe siècle entièrement rénovée, située à Bédarrides (Vaucluse, 84370). Elle propose 4 chambres d'hôtes en formule B&B ou la location de la villa entière (jusqu'à 10 personnes) avec piscine privée.

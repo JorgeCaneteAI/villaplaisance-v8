@@ -35,7 +35,7 @@ $trendHtml = function(array $t): string {
 <div class="page-header">
     <div>
         <h1>Statistiques</h1>
-        <p>Données internes — fenêtre glissante 30 jours</p>
+        <p>Données internes, fenêtre glissante 30 jours</p>
     </div>
 </div>
 
@@ -101,7 +101,7 @@ $trendHtml = function(array $t): string {
 
 <!-- ═══ Évolution 30 derniers jours ═══ -->
 <div class="admin-card">
-    <h2>Évolution — 30 derniers jours</h2>
+    <h2>Évolution, 30 derniers jours</h2>
     <?php $maxViews = max(array_column($chart, 'views') ?: [1]); ?>
     <div class="chart-bars-v" role="img" aria-label="Évolution sur 30 jours">
         <?php foreach ($chart as $i => $day):
@@ -143,7 +143,7 @@ $trendHtml = function(array $t): string {
                 $pct = $maxHourly > 0 ? round($val / $maxHourly * 100, 1) : 0;
                 $isPeak = ($h === $peakHour);
             ?>
-            <div class="chart-bar-v-col" title="<?= $h ?>h — <?= $val ?> vues">
+            <div class="chart-bar-v-col" title="<?= $h ?>h, <?= $val ?> vues">
                 <div class="chart-bar-v-stack">
                     <div class="chart-bar-v-fill <?= $isPeak ? 'is-peak' : 'is-views' ?>" style="height:<?= $pct ?>%"></div>
                 </div>
@@ -158,7 +158,7 @@ $trendHtml = function(array $t): string {
         <?php if ($maxHourly > 0): ?>
         <p class="card-footer-note">
             Pic de trafic : <strong><?= $peakHour ?>h–<?= $peakHour + 1 ?>h</strong>
-            (<?= $maxHourly ?> vues) — disponibilité recommandée à cette heure.
+            (<?= $maxHourly ?> vues), disponibilité recommandée à cette heure.
         </p>
         <?php endif; ?>
     </div>
@@ -352,9 +352,9 @@ $trendHtml = function(array $t): string {
         </div>
         <p class="card-footer-note">
             <?php if ($mobilePct > 60): ?>
-                Majorité mobile — vérifier le rendu sur petits écrans.
+                Majorité mobile, vérifier le rendu sur petits écrans.
             <?php elseif ($desktopPct > 60): ?>
-                Majorité desktop — audience active en journée de travail.
+                Majorité desktop, audience active en journée de travail.
             <?php else: ?>
                 Mix équilibré mobile / desktop.
             <?php endif; ?>

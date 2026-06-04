@@ -67,7 +67,7 @@
           </div>
           <h1 data-en="Site <em>map</em>.">Plan du <em>site</em>.</h1>
         </div>
-        <p class="lede" data-en="A bird's-eye view of every public page. If something's missing, write to us — we'll add it.">Une vue d'ensemble de toutes les pages publiques. Si quelque chose manque, écrivez-nous, on l'ajoutera.</p>
+        <p class="lede" data-en="A bird's-eye view of every public page. If something's missing, write to us, we'll add it.">Une vue d'ensemble de toutes les pages publiques. Si quelque chose manque, écrivez-nous, on l'ajoutera.</p>
       </div>
     </div>
     <?php endif; ?>

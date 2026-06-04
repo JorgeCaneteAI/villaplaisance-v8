@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin V8 — édition d'une chambre/espace vp_pieces.
+ * Admin V8, édition d'une chambre/espace vp_pieces.
  *
  * @var array  $piece
  * @var string $csrf
@@ -26,7 +26,7 @@ $thumbUrl = function (string $filename): string {
     return file_exists($thumbPath) ? '/uploads/thumb/' . $thumbName : '/uploads/' . $filename;
 };
 
-// Rendu d'un item du repeater images — utilisé pour items existants ET template
+// Rendu d'un item du repeater images, utilisé pour items existants ET template
 $renderImageItem = function (string $filename, $index) use ($thumbUrl) {
     $url = $thumbUrl($filename);
     $inputId = 'img-' . $index;
@@ -169,9 +169,9 @@ $renderImageItem = function (string $filename, $index) use ($thumbUrl) {
         <div class="form-group">
             <label for="meta_layout">Mise en page de la section</label>
             <select id="meta_layout" name="meta_layout">
-                <option value="" <?= $layout === '' ? 'selected' : '' ?>>Auto — alternance selon position</option>
-                <option value="normal" <?= $layout === 'normal' ? 'selected' : '' ?>>Normal — image à droite</option>
-                <option value="alt" <?= $layout === 'alt' ? 'selected' : '' ?>>Alt — image à gauche (fond stone)</option>
+                <option value="" <?= $layout === '' ? 'selected' : '' ?>>Auto, alternance selon position</option>
+                <option value="normal" <?= $layout === 'normal' ? 'selected' : '' ?>>Normal, image à droite</option>
+                <option value="alt" <?= $layout === 'alt' ? 'selected' : '' ?>>Alt, image à gauche (fond stone)</option>
             </select>
         </div>
     </section>

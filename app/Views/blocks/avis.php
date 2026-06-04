@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Bloc « avis » V8 — Témoignages clients.
+ * Bloc « avis » V8, Témoignages clients.
  *
  * Deux modes :
  *   - source='manual' (défaut) : utilise les items[] fournis dans le JSON.
@@ -16,7 +16,7 @@ declare(strict_types=1);
  *   - intro_style    : 'normal' (défaut) | 'placeholder' (badge "pl-inline")
  *   - display        : 'testimonial' (défaut V8) | 'cards' (compatibilité V7)
  *   - source         : 'manual' (défaut) | 'auto'
- *   - limit          : int — si source=auto (défaut 3)
+ *   - limit          : int, si source=auto (défaut 3)
  *   - items          : tableau de { rating, quote, author, location }  (si source=manual)
  *   - surface        : 'default' | 'stone' | 'sage' | 'sage-light'
  */
@@ -74,7 +74,7 @@ if ($source === 'auto') {
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+          <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>
@@ -111,7 +111,7 @@ if ($source === 'auto') {
         <blockquote><?= TextService::renderTitle($quote) ?></blockquote>
         <?php endif; ?>
         <?php if ($author !== '' || $location !== ''): ?>
-        <cite>— <?= htmlspecialchars($author) ?><?= ($author !== '' && $location !== '') ? ' · ' : '' ?><?= htmlspecialchars($location) ?></cite>
+        <cite><?= htmlspecialchars($author) ?><?= ($author !== '' && $location !== '') ? ' · ' : '' ?><?= htmlspecialchars($location) ?></cite>
         <?php endif; ?>
       </article>
       <?php endforeach; ?>

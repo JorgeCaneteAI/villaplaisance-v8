@@ -156,7 +156,7 @@
           </tr>
           <tr>
             <td>_ga, _ga_*</td>
-            <td data-en="Google Analytics 4 — audience measurement">Google Analytics 4 — mesure d'audience</td>
+            <td data-en="Google Analytics 4, audience measurement">Google Analytics 4, mesure d'audience</td>
             <td data-en="Up to 13 months">Jusqu'à 13 mois</td>
             <td data-en="Audience measurement (consent)">Mesure d'audience (consentement)</td>
           </tr>

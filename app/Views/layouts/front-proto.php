@@ -65,7 +65,7 @@
     <!-- CSS proto Claude design -->
     <link rel="stylesheet" href="/assets/css/style-proto.css?v=<?= filemtime(ROOT . '/public/assets/css/style-proto.css') ?>">
 
-    <!-- CSS menu mobile (hamburger + overlay) — inline pour ne pas multiplier les requêtes. -->
+    <!-- CSS menu mobile (hamburger + overlay), inline pour ne pas multiplier les requêtes. -->
     <style>
     .nav-menu-btn { display: none; width: 36px; height: 36px; background: transparent; border: 0; padding: 0; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; color: var(--ink-900); }
     .nav-menu-btn span { display: block; width: 22px; height: 1.5px; background: currentColor; transition: transform .4s ease, opacity .3s ease; }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin V8 — édition d'une FAQ vp_faq (1 langue à la fois).
+ * Admin V8, édition d'une FAQ vp_faq (1 langue à la fois).
  *
  * @var array  $faq
  * @var string $csrf

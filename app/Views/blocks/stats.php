@@ -5,7 +5,7 @@ declare(strict_types=1);
  *
  * Displays supportés :
  *   - 'strip'  (signature V8 : bande pleine largeur sans section padding,
- *               cellules horizontales, separators hairline — utilisé sur villa)
+ *               cellules horizontales, separators hairline, utilisé sur villa)
  *   - 'grid'   (carte de chiffres clés dans une section avec header)
  *
  * Schéma JSON :
@@ -54,7 +54,7 @@ if ($display === 'strip') {
     <?php if ($heading !== '' || $label_numeral !== '' || $label_text !== ''): ?>
     <div style="margin-bottom: clamp(32px, 4vw, 56px);">
       <?php if ($label_numeral !== '' || $label_text !== ''): ?>
-      <div class="section-label"><span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span></div>
+      <div class="section-label"><span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span></div>
       <?php endif; ?>
       <?php if ($heading !== ''): ?>
       <h2 class="h-xl" style="margin: 0; max-width: 18ch;"><?= TextService::renderTitle($heading) ?></h2>

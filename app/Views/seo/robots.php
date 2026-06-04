@@ -2,7 +2,7 @@
 declare(strict_types=1);
 $base = APP_ENV === 'production' ? 'https://villaplaisance.fr' : APP_URL;
 ?>
-# robots.txt — Villa Plaisance
+# robots.txt, Villa Plaisance
 # Politique : tous les bots (Google, Bing, LLMs) ont accès au contenu public.
 # Seules /admin/ et /seeds/ sont bloquées (zones sensibles).
 

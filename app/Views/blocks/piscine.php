@@ -10,7 +10,7 @@ declare(strict_types=1);
  *   - label_numeral, label_text
  *   - heading  (mini-md)
  *   - lede     (paragraphe court sous le titre)
- *   - image_id (vp_media — grande image 21:9 sous le titre)
+ *   - image_id (vp_media, grande image 21:9 sous le titre)
  *   - text     (paragraphe principal du pool-block)
  *   - note     (paragraphe gris sous le text, optionnel)
  *   - features[] : tableau de strings (liste à droite)
@@ -45,7 +45,7 @@ $idAttr = $anchor_id !== '' ? ' id="' . htmlspecialchars($anchor_id) . '"' : '';
 
     <?php if ($label_numeral !== '' || $label_text !== ''): ?>
     <div class="section-label">
-      <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+      <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
     </div>
     <?php endif; ?>
 

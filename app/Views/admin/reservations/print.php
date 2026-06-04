@@ -7,7 +7,7 @@ use App\Services\ReservationConstants;
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Réservations — <?= htmlspecialchars($mois_nom) ?> <?= $year ?></title>
+<title>Réservations, <?= htmlspecialchars($mois_nom) ?> <?= $year ?></title>
 <style>
 @page { size: A4 landscape; margin: 10mm; }
 * { box-sizing: border-box; }
@@ -31,7 +31,7 @@ table.cal td.weekend { background: #fafaf8; }
 </style>
 </head>
 <body>
-<h1>RÉSERVATIONS — <?= htmlspecialchars(strtoupper($mois_nom)) ?> <?= $year ?></h1>
+<h1>RÉSERVATIONS, <?= htmlspecialchars(strtoupper($mois_nom)) ?> <?= $year ?></h1>
 
 <div class="actions">
     <button onclick="window.print()">Imprimer (Cmd+P)</button>

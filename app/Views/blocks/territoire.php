@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * Bloc « territoire » V8 — Triangle d'Or.
+ * Bloc « territoire » V8, Triangle d'Or.
  *
  * Section two-col : label + h2 + intro à gauche, liste de destinations à droite.
  *
@@ -36,7 +36,7 @@ if ($surface === 'sage-light') $surfaceStyle = 'background: color-mix(in oklab, 
       <div>
         <?php if ($label_numeral !== '' || $label_text !== ''): ?>
         <div class="section-label">
-          <span class="numeral">— <?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
+          <span class="numeral"><?= htmlspecialchars($label_numeral) ?><?= ($label_numeral !== '' && $label_text !== '') ? ' / ' : '' ?><?= TextService::renderTitle($label_text) ?></span>
         </div>
         <?php endif; ?>
         <?php if ($heading !== ''): ?>

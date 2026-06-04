@@ -24,7 +24,7 @@ $totalIcons      = count($availableIcons) + count($availableLucide);
 
 function vp_icon_preview(?string $name, int $size = 18): string {
     if ($name === null || $name === '') {
-        return '<span class="icon-empty">—</span>';
+        return '<span class="icon-empty">-</span>';
     }
     return \IconService::svg($name, $size, 'icon-preview');
 }
@@ -32,7 +32,7 @@ function vp_icon_preview(?string $name, int $size = 18): string {
 
 <div class="page-header">
     <div>
-        <h1>Icônes — Lab</h1>
+        <h1>Icônes, Lab</h1>
         <p>Audit + override de la correspondance libellé → icône. Tu peux choisir une icône <strong>custom (sprite Villa)</strong> ou <strong>Lucide</strong> (préfixe <code class="info-mono">lc-</code>). Le mapping admin prend toujours le pas sur le match auto par mots-clés.</p>
     </div>
 </div>

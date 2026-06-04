@@ -1,5 +1,5 @@
 <?php declare(strict_types=1); ?>
-# Villa Plaisance — Bédarrides, Provence
+# Villa Plaisance, Bédarrides, Provence
 
 > Chambres d'hôtes et villa de charme à Bédarrides, Vaucluse (84370), au cœur du Triangle d'Or provençal.
 
@@ -19,7 +19,7 @@
 - Jusqu'à 10 personnes
 - Gestion autonome
 
-## Localisation — Triangle d'Or
+## Localisation, Triangle d'Or
 - Bédarrides, Vaucluse 84370
 - 8 min de Châteauneuf-du-Pape
 - 15 min d'Avignon

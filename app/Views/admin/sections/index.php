@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h1>Sections<?= $page_slug ? ' — ' . htmlspecialchars($page_slug) : '' ?></h1>
+    <h1>Sections<?= $page_slug ? ', ' . htmlspecialchars($page_slug) : '' ?></h1>
     <a href="/admin/pages" class="btn">Retour aux pages</a>
 </div>
 
@@ -206,7 +206,7 @@ foreach ($langs as $l) {
                     </div>
                     <?php elseif ($field['type'] === 'buttons'): ?>
                     <?php
-                    // Parse buttons — support legacy single cta_text/cta_url or button_text/button_url
+                    // Parse buttons, support legacy single cta_text/cta_url or button_text/button_url
                     $btns = [];
                     if (is_array($val)) {
                         $btns = $val;
@@ -371,7 +371,7 @@ foreach ($langs as $l) {
                 </form>
                 <?php else: ?>
                 <div class="lang-column-body" style="padding:0.5rem">
-                    <p class="lang-missing" style="font-size:0.7rem">—</p>
+                    <p class="lang-missing" style="font-size:0.7rem">-</p>
                 </div>
                 <?php endif; ?>
             </div>
@@ -441,7 +441,7 @@ foreach ($langs as $l) {
                 </form>
                 <?php else: ?>
                 <div class="lang-column-body" style="padding:0.5rem">
-                    <p class="lang-missing" style="font-size:0.7rem">—</p>
+                    <p class="lang-missing" style="font-size:0.7rem">-</p>
                 </div>
                 <?php endif; ?>
             </div>
@@ -525,7 +525,7 @@ foreach ($langs as $l) {
                 </form>
                 <?php else: ?>
                 <div class="lang-column-body" style="padding:0.5rem">
-                    <p class="lang-missing" style="font-size:0.7rem">—</p>
+                    <p class="lang-missing" style="font-size:0.7rem">-</p>
                 </div>
                 <?php endif; ?>
             </div>

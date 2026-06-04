@@ -44,7 +44,7 @@
   }
   @media (max-width: 960px) { .ex-hero-bottom { grid-template-columns: 1fr; } }
 
-  /* Space sections — image + text */
+  /* Space sections, image + text */
   .ex-space {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
@@ -146,7 +146,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
       <h1>Dehors, ici,<br/>c'est encore <em>chez vous</em>.</h1>
     </div>
     <div>
-      <p class="lede" data-en="The garden of Villa Plaisance is a natural extension of the house — 1,500 m² of green, century-old olive trees, lavender, old roses and aromatic herbs.">Le jardin de Villa Plaisance est un prolongement naturel de la maison — 1 500 m² de verdure, oliviers centenaires, lavandes, rosiers anciens, herbes aromatiques.</p>
+      <p class="lede" data-en="The garden of Villa Plaisance is a natural extension of the house, 1,500 m² of green, century-old olive trees, lavender, old roses and aromatic herbs.">Le jardin de Villa Plaisance est un prolongement naturel de la maison, 1 500 m² de verdure, oliviers centenaires, lavandes, rosiers anciens, herbes aromatiques.</p>
       <div class="page-hero-ctas">
         <a class="btn" href="<?= LangService::url('contact') ?>"><span data-en="Plan a stay">Préparer un séjour</span> →</a>
         <a class="btn btn-ghost" href="#piscine"><span data-en="Tour the outdoors">Visiter les extérieurs</span></a>
@@ -162,13 +162,13 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
     <div class="two-col">
       <div>
         <div class="section-label">
-          <span class="numeral">— 01 / <span data-en="Outside">Dehors</span></span>
+          <span class="numeral">01 / <span data-en="Outside">Dehors</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Dehors, ici,<br/>c'est encore <em>chez vous</em>.</h2>
       </div>
       <div>
         <p class="lede" style="margin: 0 0 20px;" data-en="The garden of Villa Plaisance is a natural extension of the house. 1,500 m² of green, century-old olive trees, lavender, old roses and aromatic herbs (thyme, rosemary, basil, fresh mint).">Le jardin de Villa Plaisance est un prolongement naturel de la maison. 1 500 m² de verdure, oliviers centenaires, lavandes, rosiers anciens et herbes aromatiques (thym, romarin, basilic, menthe fraîche).</p>
-        <p class="body-lg" style="margin: 0;" data-en="The 12 by 6 m pool, the shaded terraces, the vegetable patch in summer. A place where you spend more time than indoors — between the cicadas and the first rays of sun.">La piscine de 12 mètres sur 6, les terrasses ombragées, le potager en été. Un espace où l'on passe plus de temps qu'à l'intérieur — entre les cigales et les premiers rayons du soleil.</p>
+        <p class="body-lg" style="margin: 0;" data-en="The 12 by 6 m pool, the shaded terraces, the vegetable patch in summer. A place where you spend more time than indoors, between the cicadas and the first rays of sun.">La piscine de 12 mètres sur 6, les terrasses ombragées, le potager en été. Un espace où l'on passe plus de temps qu'à l'intérieur, entre les cigales et les premiers rayons du soleil.</p>
       </div>
     </div>
 
@@ -228,7 +228,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
           <span data-en="Facing the vineyards">Face aux vignes</span>
         </div>
         <h2 class="h-xl" style="margin: 0 0 24px;">Terrasses<br/><em>ombragées</em><br/>face aux vignes.</h2>
-        <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;" data-en="A 40 m² south-facing covered terrace — perfect for outdoor meals, aperitifs facing the vines and long evenings until nightfall. A 12-seat garden lounge, a reading veranda for quiet mornings.">Terrasse couverte de 40 m² orientée sud, parfaite pour les repas en plein air, les apéritifs face aux vignes et les soirées jusqu'à la tombée de la nuit. Salon de jardin 12 places, véranda de lecture pour les matinées calmes.</p>
+        <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;" data-en="A 40 m² south-facing covered terrace, perfect for outdoor meals, aperitifs facing the vines and long evenings until nightfall. A 12-seat garden lounge, a reading veranda for quiet mornings.">Terrasse couverte de 40 m² orientée sud, parfaite pour les repas en plein air, les apéritifs face aux vignes et les soirées jusqu'à la tombée de la nuit. Salon de jardin 12 places, véranda de lecture pour les matinées calmes.</p>
         <p class="body" style="margin: 0; max-width: 56ch;" data-en="In B&amp;B season, breakfast is served here each morning.">Le petit-déjeuner y est servi chaque matin (en saison B&amp;B).</p>
 
         <div class="ex-space-pills">
@@ -282,11 +282,11 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 96px); align-items: end; margin-bottom: clamp(40px, 5vw, 64px);">
       <div>
         <div class="section-label">
-          <span class="numeral">— 05 / <span data-en="Outdoor equipment">Équipements extérieurs</span></span>
+          <span class="numeral">05 / <span data-en="Outdoor equipment">Équipements extérieurs</span></span>
         </div>
         <h2 class="h-xl" style="margin: 0; max-width: 16ch;">Tout ce que <em>le dehors</em><br/>met à votre disposition.</h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="The full list, end to end — pool, terrace, garden, services and the little practicalities you'd want to find.">La liste complète, sans détours — piscine, terrasse, jardin, services et les petites attentions qu'on aime trouver.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="The full list, end to end, pool, terrace, garden, services and the little practicalities you'd want to find.">La liste complète, sans détours, piscine, terrasse, jardin, services et les petites attentions qu'on aime trouver.</p>
     </div>
 
     <div class="equip-grid">
