@@ -136,48 +136,66 @@ class SeoService
     }
 
     /**
-     * Liste des Place qui composent l'hébergement (4 chambres + cuisine + salon
-     * + jardin/piscine). Utilisé en containsPlace par BedAndBreakfast et
-     * VacationRental pour lever le critique GSC "containsPlace manquant".
+     * Liste des Room enrichies pour containsPlace.
+     *
+     * Google n'accepte QUE des Room (pas de Place générique) dans le containsPlace
+     * d'un VacationRental/BedAndBreakfast. Chaque Room doit déclarer au minimum
+     * occupancy (critique) + bed/amenityFeature/numberOfBedrooms/
+     * numberOfBathroomsTotal (warnings) pour passer l'inspection GSC.
+     *
+     * Les espaces communs (cuisine, salon, piscine) sont retirés car non valides
+     * comme containsPlace et déjà couverts par amenityFeature au niveau parent.
      */
     public static function containsPlaces(): array
     {
+        $mkRoom = static function (string $name, string $desc, string $bedType, int $numBeds, int $maxOccupancy, array $features): array {
+            return [
+                '@type' => 'Room',
+                'name' => $name,
+                'description' => $desc,
+                'occupancy' => [
+                    '@type' => 'QuantitativeValue',
+                    'maxValue' => $maxOccupancy,
+                ],
+                'bed' => [
+                    '@type' => 'BedDetails',
+                    'typeOfBed' => $bedType,
+                    'numberOfBeds' => $numBeds,
+                ],
+                'numberOfBedrooms' => 1,
+                'numberOfBathroomsTotal' => 1,
+                'amenityFeature' => array_map(static fn($f) => [
+                    '@type' => 'LocationFeatureSpecification',
+                    'name' => $f,
+                    'value' => true,
+                ], $features),
+            ];
+        };
         return [
-            [
-                '@type' => 'Room',
-                'name' => 'Chambre Verte',
-                'description' => 'Lit 160×200, vue jardin, climatisation, salle de bain privative.',
-            ],
-            [
-                '@type' => 'Room',
-                'name' => 'Chambre Bleue',
-                'description' => 'Deux lits 90×200 jumelables en 180, bibliothèque 300 livres, climatisation.',
-            ],
-            [
-                '@type' => 'Room',
-                'name' => 'Chambre Arche',
-                'description' => 'Lit 140×180 sous arche bleu nuit, bibliothèques sol-plafond, accès jardin.',
-            ],
-            [
-                '@type' => 'Room',
-                'name' => 'Chambre 70',
-                'description' => 'Grand lit double, mobilier vintage années 70, accès direct jardin.',
-            ],
-            [
-                '@type' => 'Place',
-                'name' => 'Cuisine équipée',
-                'description' => 'Cuisine entièrement équipée, lave-vaisselle, four, micro-ondes (offre villa entière).',
-            ],
-            [
-                '@type' => 'Place',
-                'name' => 'Salon et salle à manger',
-                'description' => 'Grande pièce de vie avec longue table commune, cheminée.',
-            ],
-            [
-                '@type' => 'Place',
-                'name' => 'Piscine privée 12 × 6 m',
-                'description' => 'Piscine extérieure clôturée, jardin sous oliviers.',
-            ],
+            $mkRoom(
+                'Chambre Verte',
+                'Lit 160×200, vue jardin, climatisation, salle de bain privative.',
+                'Queen', 1, 2,
+                ['Climatisation', 'Vue jardin', 'Salle de bain privative', 'TV', 'WiFi']
+            ),
+            $mkRoom(
+                'Chambre Bleue',
+                'Deux lits 90×200 jumelables en 180, bibliothèque 300 livres, climatisation.',
+                'Twin', 2, 3,
+                ['Climatisation', 'Bibliothèque 300 livres', 'Clic-clac', 'WiFi']
+            ),
+            $mkRoom(
+                'Chambre Arche',
+                'Lit 140×180 sous arche bleu nuit, bibliothèques sol-plafond, accès jardin.',
+                'Double', 1, 2,
+                ['Climatisation', 'Accès jardin', 'Bibliothèques sol-plafond', 'WiFi']
+            ),
+            $mkRoom(
+                'Chambre 70',
+                'Grand lit double, mobilier vintage années 70, accès direct jardin.',
+                'Double', 1, 2,
+                ['Climatisation', 'Accès direct jardin', 'Mobilier vintage', 'WiFi']
+            ),
         ];
     }
 
@@ -185,7 +203,8 @@ class SeoService
     {
         $base = self::lodgingBusinessJsonLd();
         $base['@type'] = 'BedAndBreakfast';
-        $base['additionalType'] = 'https://schema.org/Accommodation';
+        // additionalType retiré : 'schema.org/Accommodation' refusé comme
+        // énumération invalide par GSC.
         // Points d'ancrage croisés pour confirmer l'entité à Google et aux
         // LLMs. Airbnb (chambres) + Booking (chambres) + Google Business.
         $base['sameAs'] = [
@@ -193,7 +212,8 @@ class SeoService
             'https://www.booking.com/hotel/fr/villa-plaisance-bedarrides',
             'https://maps.app.goo.gl/awAia9UD5BMeiXF26',
         ];
-        // Pour BedAndBreakfast, on expose juste les 2 chambres B&B.
+        // BedAndBreakfast = uniquement les 2 chambres B&B (Verte + Bleue),
+        // chacune enrichie d'occupancy, bed, amenityFeature, etc.
         $base['containsPlace'] = array_slice(self::containsPlaces(), 0, 2);
         $base['amenityFeature'] = [
             ['@type' => 'LocationFeatureSpecification', 'name' => 'Piscine partagée', 'value' => true],
@@ -208,13 +228,19 @@ class SeoService
     {
         $base = self::lodgingBusinessJsonLd();
         $base['@type'] = 'VacationRental';
-        $base['additionalType'] = 'https://schema.org/Accommodation';
+        // additionalType retiré : 'schema.org/Accommodation' refusé comme
+        // énumération invalide par GSC.
         // Airbnb (villa entière) + Google Business (même fiche que B&B).
         // Pas de Booking : ne commercialise que les chambres.
         $base['sameAs'] = [
             'https://www.airbnb.fr/h/villaplaisance-bedarrides',
             'https://maps.app.goo.gl/awAia9UD5BMeiXF26',
         ];
+        // VacationRental = les 4 chambres villa (Verte, Bleue, Arche, 70),
+        // chacune enrichie. Les espaces communs (cuisine, salon, piscine)
+        // ne peuvent pas être dans containsPlace (Google les rejette comme
+        // type invalide) — ils restent couverts par amenityFeature ci-dessous.
+        $base['containsPlace'] = self::containsPlaces();
         // VacationRental = villa entière : on expose les 7 Place (4 chambres
         // + cuisine + salon + piscine).
         $base['containsPlace'] = self::containsPlaces();
