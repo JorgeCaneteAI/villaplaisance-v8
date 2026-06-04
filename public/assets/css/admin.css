@@ -1137,12 +1137,15 @@ input:disabled, textarea:disabled, select:disabled {
 /* Lanes : 3 lignes fixes par cellule (VP-BB / VP-ETE / AV-ANN).
    L'œil suit horizontalement la ligne d'une propriété sur tout le mois.
    Pas de gap horizontal → les bandeaux d'une même propriété sur des jours
-   adjacents se touchent visuellement (continuité). */
+   adjacents se touchent visuellement (continuité).
+   padding-bottom: 8px → air visible entre la lane et la cellule du dessous
+   (= séparation nette entre semaine N et semaine N+1, évite la confusion
+   visuelle entre deux résas successives sur des rangées voisines). */
 .calendrier__grid .lanes {
   display: grid;
   grid-template-rows: repeat(3, 22px);
   gap: 4px;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
 }
 .calendrier__grid .lane {
   display: grid;
@@ -1211,6 +1214,20 @@ input:disabled, textarea:disabled, select:disabled {
 /* Résas hors mois courant : atténuées pour ne pas voler l'attention */
 .calendrier__grid .resa--outside { opacity: 0.45; filter: saturate(0.6); }
 .calendrier__grid .resa--outside:hover { opacity: 0.85; filter: saturate(1); }
+
+/* Bord de semaine : fermer visuellement les tronçons.
+   Une résa qui s'étale sur N semaines apparaît comme N segments distincts,
+   chacun arrondi à ses extrémités externes (lundi gauche, dimanche droit).
+   Évite l'illusion de continuité entre la fin d'une semaine et le début
+   de la suivante, qui faisait confondre 2 résas voisines verticalement. */
+.calendrier__grid td.cell:first-child .resa {
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
+}
+.calendrier__grid td.cell:last-child .resa {
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+}
 
 /* Sync widget */
 .sync-widget {
@@ -1318,7 +1335,7 @@ input:disabled, textarea:disabled, select:disabled {
    1 lane unique au lieu de 3 → on récupère 50% de hauteur verticale.
    12 mois empilés deviennent beaucoup plus rapides à scanner. */
 .calendrier__grid .lanes--1 { grid-template-rows: 22px; }
-.calendrier.annee.is-filtered .calendrier__grid td.cell { height: 56px; }
+.calendrier.annee.is-filtered .calendrier__grid td.cell { height: 64px; }
 
 /* Legacy classes annee__* (au cas où des vues les utilisent encore) */
 .annee__nav, .annee__toolbar {
