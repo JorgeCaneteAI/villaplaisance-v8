@@ -200,10 +200,16 @@
     gap: clamp(20px, 2.4vw, 32px);
     align-items: center;
   }
+  /* <img class="img"> : aspect 3/2 iso source (Pattern A). Le background-size
+     n'a plus d'effet depuis la migration <div> → <img>. */
+  .journal-card img.img,
   .journal-card .img {
-    aspect-ratio: 4/3;
-    background-size: cover; background-position: center;
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
     background-color: var(--linen-200);
+    background-size: cover; background-position: center; /* legacy fallback */
   }
   .journal-card h3 {
     font-family: var(--font-display); font-weight: 400;
