@@ -121,7 +121,7 @@ class CalendarPdfService
         $pdf->SetTextColor(255, 255, 255);
         $pdf->SetFont('DejaVuSans', 'B', 16);
         $pdf->SetXY($MARGIN + 6, $MARGIN + 5);
-        $titre = 'RÉSERVATIONS — ' . mb_strtoupper(ReservationConstants::MOIS_FR[$month], 'UTF-8') . ' ' . $year;
+        $titre = 'RÉSERVATIONS, ' . mb_strtoupper(ReservationConstants::MOIS_FR[$month], 'UTF-8') . ' ' . $year;
         $pdf->Cell($usableW - 12, 10, self::enc($titre));
         $pdf->SetFont('DejaVuSans', '', 8);
         $pdf->SetXY($W - $MARGIN - 80, $MARGIN + 8);

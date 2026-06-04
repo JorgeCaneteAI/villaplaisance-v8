@@ -11,7 +11,7 @@ class ReservationController extends AdminBaseController
 {
     /**
      * Normalise et valide une année. Défaut sur aujourd'hui si null.
-     * 404 explicite si hors range réaliste — on ne veut pas silencieusement
+     * 404 explicite si hors range réaliste, on ne veut pas silencieusement
      * remapper une URL incohérente (ça casserait la mental-model du back-button).
      */
     private static function validateYear(?int $year): int
@@ -40,7 +40,7 @@ class ReservationController extends AdminBaseController
     private static function abort404(string $reason): void
     {
         http_response_code(404);
-        echo '<h1>404 — ' . htmlspecialchars($reason) . '</h1>';
+        echo '<h1>404, ' . htmlspecialchars($reason) . '</h1>';
         echo '<p><a href="/admin/calendrier">Retour au calendrier</a></p>';
         exit;
     }
@@ -197,7 +197,7 @@ class ReservationController extends AdminBaseController
         [$year, $month] = self::validateYearMonth($year, $month);
         $data = ReservationService::buildCalendarData($year, $month);
 
-        // Vue sans layout admin — print.php s'auto-suffit (full page).
+        // Vue sans layout admin, print.php s'auto-suffit (full page).
         extract([
             'year'        => $year,
             'month'       => $month,
@@ -240,7 +240,7 @@ class ReservationController extends AdminBaseController
             (int) ($_GET['animaux'] ?? 0),
             $_GET['propriete'] ?? ''
         );
-        $this->json(['code' => $code ?: '—']);
+        $this->json(['code' => $code ?: '-']);
     }
 
     public function apiQuickUpdate(int $id): void
@@ -310,7 +310,7 @@ class ReservationController extends AdminBaseController
         }
 
         $result = \App\Services\IcalSyncService::syncAll('manual');
-        $msg = sprintf('Sync iCal — %d créée(s), %d mise(s) à jour, %d supprimée(s)',
+        $msg = sprintf('Sync iCal, %d créée(s), %d mise(s) à jour, %d supprimée(s)',
                        $result['created'], $result['updated'], $result['deleted']);
         if (!empty($result['errors'])) {
             $msg .= ' | Erreurs : ' . implode(' / ', $result['errors']);

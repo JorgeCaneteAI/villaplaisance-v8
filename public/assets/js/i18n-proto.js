@@ -18,7 +18,7 @@
       el.innerHTML = lang === 'en' ? en : fr;
     });
     document.querySelectorAll('[data-en-attr]').forEach(el => {
-      // format: "placeholder|English text" — sets el.placeholder when EN
+      // format: "placeholder|English text", sets el.placeholder when EN
       const spec = el.getAttribute('data-en-attr');
       const [attr, val] = spec.split('|');
       if (!el.hasAttribute('data-fr-attr')) {

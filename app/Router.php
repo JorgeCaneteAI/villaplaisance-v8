@@ -92,7 +92,7 @@ class Router
         $normalized = rtrim($uri, '/');
         if ($normalized === '') $normalized = '/';
 
-        // Redirection 301 — /sur-place fusionnée dans /itineraire (2026-05-23).
+        // Redirection 301, /sur-place fusionnée dans /itineraire (2026-05-23).
         // La page liste "Sur place" n'existe plus, son contenu est servi par
         // ItineraryController::index sous l'URL /itineraire (lien "Que faire"
         // de la nav). Les pages détaillées /sur-place/{slug} restent valides.
@@ -219,7 +219,7 @@ class Router
         $normalized = rtrim($uri, '/');
         if ($normalized === '') $normalized = '/admin';
 
-        // Sécurité — appareils de confiance
+        // Sécurité, appareils de confiance
         if ($normalized === '/admin/securite') {
             (new \App\Controllers\Admin\SecuriteController())->index();
             return;
@@ -406,7 +406,7 @@ class Router
             return;
         }
 
-        // Reglages — Booking links
+        // Reglages, Booking links
         if ($normalized === '/admin/reglages/booking/add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\ReglageController', 'addBooking');
             return;
@@ -420,7 +420,7 @@ class Router
             return;
         }
 
-        // Reglages — Social links
+        // Reglages, Social links
         if ($normalized === '/admin/reglages/social/add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\ReglageController', 'addSocial');
             return;
@@ -434,7 +434,7 @@ class Router
             return;
         }
 
-        // Reglages — Amenities
+        // Reglages, Amenities
         if ($normalized === '/admin/reglages/amenity/add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\ReglageController', 'addAmenity');
             return;
@@ -470,7 +470,7 @@ class Router
             return;
         }
 
-        // API — AI article generation
+        // API, AI article generation
         if ($normalized === '/admin/api/generate-article' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             @ini_set('display_errors', '0');
             ob_start();
@@ -505,7 +505,7 @@ class Router
             return;
         }
 
-        // API — media list for picker (legacy : filenames bruts,
+        // API, media list for picker (legacy : filenames bruts,
         // consommé par articles/host/sections/itineraries/pieces).
         if ($normalized === '/admin/api/media-list') {
             header('Content-Type: application/json');
@@ -523,7 +523,7 @@ class Router
             return;
         }
 
-        // API — media records V8 (pour le MediaPicker section admin).
+        // API, media records V8 (pour le MediaPicker section admin).
         // Renvoie les records vp_media enrichis. Filtres : ?folder=&q=&limit=.
         // Format : {media: [{id, filename, url, folder, alt_fr, title, width, height}], folders: [{folder, count}], total}
         if ($normalized === '/admin/api/media') {
@@ -727,7 +727,7 @@ class Router
             return;
         }
 
-        // Icons Lab — gouvernance des icônes (cachée, accessible via nav SEO ▾).
+        // Icons Lab, gouvernance des icônes (cachée, accessible via nav SEO ▾).
         if ($normalized === '/admin/icons-lab') {
             $this->callController('Controllers\\Admin\\IconLabController', 'index');
             return;
@@ -820,7 +820,7 @@ class Router
 
         // 404 admin
         http_response_code(404);
-        echo '<h1>404 — Page admin introuvable</h1>';
+        echo '<h1>404, Page admin introuvable</h1>';
     }
 
     private function callController(string $class, string $method, array $params = []): void
@@ -828,13 +828,13 @@ class Router
         $fullClass = 'App\\' . $class;
         if (!class_exists($fullClass)) {
             http_response_code(500);
-            echo "<h1>500 — Controller introuvable : {$fullClass}</h1>";
+            echo "<h1>500, Controller introuvable : {$fullClass}</h1>";
             return;
         }
         $controller = new $fullClass();
         if (!method_exists($controller, $method)) {
             http_response_code(500);
-            echo "<h1>500 — Méthode introuvable : {$fullClass}::{$method}</h1>";
+            echo "<h1>500, Méthode introuvable : {$fullClass}::{$method}</h1>";
             return;
         }
         $controller->$method(...array_values($params));

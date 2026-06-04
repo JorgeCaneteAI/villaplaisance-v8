@@ -1,5 +1,5 @@
 /**
- * motion-v8.js — Animations T1 du V8 Villa Plaisance.
+ * motion-v8.js, Animations T1 du V8 Villa Plaisance.
  *
  * 1. Stagger reveal sur les cards (.article-card, .av-card, .room-card-x,
  *    .cellule, .chambre, .saison, .qf-card) via IntersectionObserver.

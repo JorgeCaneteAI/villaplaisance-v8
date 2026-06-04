@@ -173,7 +173,7 @@ class ReservationService
         }
 
         // Récupérer toutes les résas qui chevauchent la fenêtre grille
-        // (pas juste celles qui chevauchent le mois — sinon les débords manquent).
+        // (pas juste celles qui chevauchent le mois, sinon les débords manquent).
         $reservations = \Database::fetchAll(
             "SELECT * FROM vp_reservations
              WHERE arrivee <= ? AND depart > ?
@@ -215,7 +215,7 @@ class ReservationService
                     'arrivee'      => $r['arrivee'],
                     'depart'       => $r['depart'],
                     // is_start/is_end pointent les vraies arrivées/départs.
-                    // Plus de clamp au premier/dernier du mois — un débord
+                    // Plus de clamp au premier/dernier du mois, un débord
                     // ne doit pas être marqué comme "arrivée" artificielle.
                     'is_start'     => $d == $arr,
                     'is_end'       => $d == $depMinus1,

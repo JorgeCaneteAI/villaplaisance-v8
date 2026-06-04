@@ -13,7 +13,7 @@ return [
 
     // Común
     'site.name' => 'Villa Plaisance',
-    'site.tagline' => 'Casa de huéspedes y villa con encanto — Bédarrides, Provenza',
+    'site.tagline' => 'Casa de huéspedes y villa con encanto, Bédarrides, Provenza',
     'site.location' => 'Bédarrides, Vaucluse',
 
     // Inicio
@@ -50,7 +50,7 @@ return [
     'chambres.intro.title' => 'Alojarse en casa de huéspedes',
     'chambres.intro.text' => 'De septiembre a junio, Villa Plaisance abre dos habitaciones a los viajeros. El desayuno se prepara cada mañana con productos locales. La piscina se comparte con los huéspedes. La acogida es personal, los consejos también.',
     'chambres.breakfast.title' => 'Desayuno casero',
-    'chambres.faq.title' => 'Preguntas frecuentes — Habitaciones',
+    'chambres.faq.title' => 'Preguntas frecuentes, Habitaciones',
 
     // Villa
     'villa.hero.title' => 'La Villa en exclusiva',
@@ -58,7 +58,7 @@ return [
     'villa.intro.title' => 'Toda la casa para ustedes',
     'villa.intro.text' => 'En julio y agosto, Villa Plaisance se alquila en exclusiva. Cuatro habitaciones, una piscina privada vallada de 12 por 6 metros, una cocina totalmente equipada, un jardín provenzal. Hasta diez personas. La gestión es autónoma, las llaves son suyas.',
     'villa.pool.title' => 'Piscina privada',
-    'villa.faq.title' => 'Preguntas frecuentes — Villa entera',
+    'villa.faq.title' => 'Preguntas frecuentes, Villa entera',
 
     // Exteriores
     'exterieurs.hero.title' => 'Espacios exteriores',
@@ -88,7 +88,7 @@ return [
     'footer.mentions' => 'Aviso legal',
     'footer.confidentialite' => 'Política de privacidad',
     'footer.plan' => 'Mapa del sitio',
-    'footer.rights' => '© :year Villa Plaisance — Bédarrides, Provenza',
+    'footer.rights' => '© :year Villa Plaisance, Bédarrides, Provenza',
 
     // Layout front-proto (nav + footer)
     'proto.nav.chambres' => 'Habitaciones',

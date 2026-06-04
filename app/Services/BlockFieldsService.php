@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * BlockFieldsService — définition des champs JSON pour chaque type de bloc V8.
+ * BlockFieldsService, définition des champs JSON pour chaque type de bloc V8.
  *
  * Sert de source de vérité pour générer le formulaire d'édition d'un bloc
  * dans l'admin, en remplacement du JSON brut.
@@ -28,8 +28,8 @@ class BlockFieldsService
     public static function commonFields(): array
     {
         return [
-            ['name' => 'label_numeral', 'label' => 'Numéro de section', 'type' => 'text', 'help' => 'ex. "01" — affiché en mono italique ("— 01 / …"). Optionnel, auto-calculé sur position si vide.'],
-            ['name' => 'label_text', 'label' => 'Label de section', 'type' => 'text', 'help' => 'ex. "La maison" — mini-md autorisé.'],
+            ['name' => 'label_numeral', 'label' => 'Numéro de section', 'type' => 'text', 'help' => 'ex. "01", affiché en mono italique ("01 / …"). Optionnel, auto-calculé sur position si vide.'],
+            ['name' => 'label_text', 'label' => 'Label de section', 'type' => 'text', 'help' => 'ex. "La maison", mini-md autorisé.'],
             ['name' => 'surface', 'label' => 'Fond de section', 'type' => 'select', 'options' => [
                 'default' => 'Par défaut (linen-50)',
                 'stone' => 'Stone (linen-100)',
@@ -108,7 +108,7 @@ class BlockFieldsService
         return $value;
     }
 
-    /** Définition complète par type — surcharge ou complète commonFields. */
+    /** Définition complète par type, surcharge ou complète commonFields. */
     public static function fieldsFor(string $blockType): array
     {
         $defs = self::registry()[$blockType] ?? null;
@@ -189,8 +189,8 @@ class BlockFieldsService
                     ['name' => 'heading', 'label' => 'Titre (h2, affiché en mode villa)', 'type' => 'textarea'],
                     ['name' => 'intro', 'label' => 'Intro (paragraphe à droite, mode villa)', 'type' => 'textarea'],
                     ['name' => 'offer', 'label' => 'Offre', 'type' => 'select', 'options' => [
-                        'bb' => 'Chambres d\'hôtes (B&B) — markup .ch-room (1 section/chambre)',
-                        'villa' => 'Villa entière — markup .room-card-x (grille)',
+                        'bb' => 'Chambres d\'hôtes (B&B), markup .ch-room (1 section/chambre)',
+                        'villa' => 'Villa entière, markup .room-card-x (grille)',
                         'both' => 'Les deux',
                     ]],
                 ],
@@ -223,7 +223,7 @@ class BlockFieldsService
                         'key-value-two-cols' => '2 colonnes clé/valeur (.espaces)',
                         'columns' => 'Tableau avec entêtes',
                     ], 'default' => 'key-value'],
-                    ['name' => 'anchor_id', 'label' => 'Ancre HTML (id, ex. "infos")', 'type' => 'text', 'help' => 'Optionnel — permet les liens internes #id.'],
+                    ['name' => 'anchor_id', 'label' => 'Ancre HTML (id, ex. "infos")', 'type' => 'text', 'help' => 'Optionnel, permet les liens internes #id.'],
                     ['name' => 'rows', 'label' => 'Lignes', 'type' => 'repeater', 'item_fields' => [
                         ['name' => 'key', 'label' => 'Clé', 'type' => 'text'],
                         ['name' => 'value', 'label' => 'Valeur (mini-md autorisé)', 'type' => 'text'],
@@ -402,7 +402,7 @@ class BlockFieldsService
                 ],
             ],
             // ──────────────────────────────────────────────────────────────
-            // FORMULA (nouveau V8 — la home)
+            // FORMULA (nouveau V8, la home)
             // ──────────────────────────────────────────────────────────────
             'formula' => [
                 'label' => 'Formules (cartes B&B/Villa avec stats + CTA)',
@@ -425,7 +425,7 @@ class BlockFieldsService
                 ],
             ],
             // ──────────────────────────────────────────────────────────────
-            // INTERIOR (nouveau V8 — villa)
+            // INTERIOR (nouveau V8, villa)
             // ──────────────────────────────────────────────────────────────
             'interior' => [
                 'label' => 'Intérieur (cards image + kicker + titre, sans lien)',

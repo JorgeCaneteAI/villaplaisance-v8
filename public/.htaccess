@@ -20,7 +20,7 @@ Options -Indexes
     Header unset Server
 </IfModule>
 
-# ═══ PWA — MIME types + Service Worker scope ═══
+# ═══ PWA, MIME types + Service Worker scope ═══
 AddType application/manifest+json .webmanifest
 <Files "sw.js">
     Header set Service-Worker-Allowed "/"
@@ -42,7 +42,7 @@ RewriteRule ^politique-confidentialite-bedarrides/?$ /politique-confidentialite 
 RewriteRule ^politique-de-cookies-ue/?$ /politique-confidentialite [R=301,L]
 RewriteRule ^hello-world/?$ / [R=301,L]
 
-# ═══ Strip tracking params (UTM, fbclid, gclid…) — redirige 301 vers URL propre ═══
+# ═══ Strip tracking params (UTM, fbclid, gclid…), redirige 301 vers URL propre ═══
 # Évite la pollution Search Console avec des variantes d'URL et garde le canonical seul.
 # Le canonical HTML pointe déjà vers l'URL propre, mais Bing/Yandex ne respectent pas
 # toujours canonical → cette redirection garantit une URL unique.

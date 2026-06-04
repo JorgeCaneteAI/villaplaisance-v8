@@ -81,7 +81,7 @@ class GoogleReviewsController extends AdminBaseController
             $raw = \GoogleBusinessProfileService::fetchAllReviews($location);
             $stats = $this->upsertReviews($raw);
             $this->flash('success', sprintf(
-                'Sync OK — %d insérés, %d mis à jour, %d inchangés.',
+                'Sync OK, %d insérés, %d mis à jour, %d inchangés.',
                 $stats['inserted'], $stats['updated'], $stats['unchanged']
             ));
         } catch (\Throwable $e) {
@@ -99,7 +99,7 @@ class GoogleReviewsController extends AdminBaseController
         }
         $review = \Database::fetchOne("SELECT * FROM vp_reviews WHERE id = ?", [$id]);
         if (!$review || $review['platform'] !== 'google' || empty($review['external_id'])) {
-            $this->flash('error', 'Avis non Google ou external_id manquant — réponse impossible.');
+            $this->flash('error', 'Avis non Google ou external_id manquant, réponse impossible.');
             $this->redirect('/admin/avis');
             return;
         }

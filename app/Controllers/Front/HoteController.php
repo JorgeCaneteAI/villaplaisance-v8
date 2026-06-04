@@ -43,7 +43,7 @@ class HoteController extends BaseController
         } catch (\Throwable) {}
 
         $seo = \SeoService::forPage('votre-hote', $lang,
-            ($profile['name'] ?? 'Jorge') . ' — Votre hôte à Villa Plaisance',
+            ($profile['name'] ?? 'Jorge') . ', Votre hôte à Villa Plaisance',
             $profile['intro'] ?? 'Découvrez votre hôte à Villa Plaisance, chambres d\'hôtes et villa de charme à Bédarrides.'
         );
 

@@ -6,7 +6,7 @@ namespace App\Controllers\Front;
 use App\Controllers\BaseController;
 
 /**
- * Page publique « Disponibilités » — vue annuelle 12 mois.
+ * Page publique « Disponibilités », vue annuelle 12 mois.
  *
  * Pas de données spécifiques à récupérer ici : les partials calendrier
  * (calendar_annual → calendar_month) appellent eux-mêmes
@@ -21,7 +21,7 @@ class DisponibilitesController extends BaseController
         $seo = \SeoService::forPage(
             'disponibilites',
             $lang,
-            'Disponibilités — Villa Plaisance',
+            'Disponibilités, Villa Plaisance',
             "Calendrier sur 12 mois des disponibilités de Villa Plaisance, "
             . "chambres d'hôtes et villa entière à Bédarrides. "
             . "Synchronisé avec Airbnb et Booking."

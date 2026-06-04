@@ -27,7 +27,7 @@ CONTEXTE VILLA PLAISANCE :
 - Note Booking 9.4/10, Superhost Airbnb
 - Environnement : vignobles, villages provençaux, marchés, cigales, oliviers
 
-TON ET STYLE — TRÈS IMPORTANT :
+TON ET STYLE, TRÈS IMPORTANT :
 - Ton SIMPLE, amical, comme un ami qui donne des conseils. Pas expert, pas professoral.
 - Phrases courtes. Pas de formules creuses. Aller droit au but.
 - Parler comme si on discutait autour d'une table. Tutoyer le lecteur ou utiliser "vous" naturellement.
@@ -69,7 +69,7 @@ Génère le résultat au format JSON STRICT suivant (pas de markdown autour, UNI
     "gso_desc": "Résumé factuel GSO : réponse directe en 2-3 phrases. Données concrètes. Citable par une IA."
   },
   "en": {
-    "title": "English title — natural, not literal translation",
+    "title": "English title, natural, not literal translation",
     "excerpt": "English excerpt (100-150 chars)",
     "content": "Full English content, same structure, adapted for English-speaking travelers. NOT a word-for-word translation.",
     "meta_title": "SEO meta title EN (50-60 chars)",
@@ -78,7 +78,7 @@ Génère le résultat au format JSON STRICT suivant (pas de markdown autour, UNI
     "gso_desc": "Factual GSO summary in English. Direct answer. Concrete data."
   },
   "es": {
-    "title": "Título en español — natural, adaptado",
+    "title": "Título en español, natural, adaptado",
     "excerpt": "Extracto ES (100-150 car.)",
     "content": "Contenido completo en español, misma estructura, adaptado para viajeros hispanohablantes. NO traducción literal.",
     "meta_title": "Meta title ES optimizado SEO (50-60 car.)",

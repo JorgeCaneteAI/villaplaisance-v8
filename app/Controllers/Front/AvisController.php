@@ -6,7 +6,7 @@ namespace App\Controllers\Front;
 use App\Controllers\BaseController;
 
 /**
- * Page publique /avis — liste de tous les avis clients (vp_reviews status=published)
+ * Page publique /avis, liste de tous les avis clients (vp_reviews status=published)
  * avec filtres par offre + JSON-LD Review/AggregateRating pour le SEO.
  */
 class AvisController extends BaseController
@@ -56,7 +56,7 @@ class AvisController extends BaseController
         } catch (\Throwable) {}
 
         // SEO (vp_pages avis seedé en 021).
-        // Signature SeoService::forPage(slug, lang, fallbackTitle, fallbackDesc) — paramètres positionnels.
+        // Signature SeoService::forPage(slug, lang, fallbackTitle, fallbackDesc), paramètres positionnels.
         $seo = \SeoService::forPage(
             'avis',
             $lang,

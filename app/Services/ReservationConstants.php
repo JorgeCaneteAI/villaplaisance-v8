@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Constantes partagées du module calendrier de réservations :
- * propriétés, sources, statuts, mois, jours — utilisées par le
+ * propriétés, sources, statuts, mois, jours, utilisées par le
  * controller, les vues, le service de sync iCal et l'export PDF.
  */
 
@@ -12,8 +12,8 @@ namespace App\Services;
 class ReservationConstants
 {
     public const PROPRIETES = [
-        'VP-BB'  => "Villa Plaisance — Chambres d'hôtes",
-        'VP-ETE' => 'Villa Plaisance — Maison entière',
+        'VP-BB'  => "Villa Plaisance, Chambres d'hôtes",
+        'VP-ETE' => 'Villa Plaisance, Maison entière',
         'AV-ANN' => 'Studio Avignon',
     ];
 

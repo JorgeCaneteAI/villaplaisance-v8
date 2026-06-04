@@ -179,7 +179,7 @@ class MediaController extends AdminBaseController
                     'seo_filename' => $seoName,
                 ]);
                 $uploaded++;
-                // Génère la miniature (best-effort — n'échoue jamais l'upload si la thumb plante)
+                // Génère la miniature (best-effort, n'échoue jamais l'upload si la thumb plante)
                 self::generateThumb(self::UPLOAD_DIR . $finalName, self::thumbAbsolutePath($finalName));
             } catch (\Throwable $e) {
                 @unlink(self::UPLOAD_DIR . $finalName);
@@ -437,7 +437,7 @@ class MediaController extends AdminBaseController
         };
         if (!$src) return false;
 
-        // Dimensions cibles — ratio préservé, max sur le côté le plus long
+        // Dimensions cibles, ratio préservé, max sur le côté le plus long
         if ($srcW >= $srcH) {
             $dstW = min($maxSize, $srcW);
             $dstH = max(1, (int) round($dstW * $srcH / $srcW));

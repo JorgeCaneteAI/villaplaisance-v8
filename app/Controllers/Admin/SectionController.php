@@ -65,7 +65,7 @@ class SectionController extends AdminBaseController
             }
         } catch (\Throwable) {}
 
-        // V8 — vue simplifiée list_v8.php quand un page_slug est fourni.
+        // V8, vue simplifiée list_v8.php quand un page_slug est fourni.
         // Sinon (slug vide) : page recherche globale dans tous les blocs.
         if ($page_slug !== '') {
             $this->render('admin/sections/list_v8', compact('pages', 'sections', 'page_slug', 'blockTypes', 'csrf', 'currentLang', 'langs', 'sectionsByLang'));

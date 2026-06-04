@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 /**
- * IconLabController — page admin /admin/icons-lab.
+ * IconLabController, page admin /admin/icons-lab.
  *
  * Liste TOUS les libellés "iconisables" rencontrés dans la base (pills
  * équipements chambres, solid pills, sous-titres) + sources fixes (rows
@@ -139,7 +139,7 @@ class IconLabController extends AdminBaseController
     {
         $bag = [];
 
-        // 1. Pills équipements (vp_pieces.equip) — CSV séparé par virgules,
+        // 1. Pills équipements (vp_pieces.equip), CSV séparé par virgules,
         // sous-séparé par | pour les variantes 2-lignes.
         try {
             $rows = \Database::fetchAll(

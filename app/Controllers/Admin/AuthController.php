@@ -58,7 +58,7 @@ class AuthController extends AdminBaseController
         $_SESSION['admin_user_name'] = $user['name'];
         $_SESSION['admin_user_email'] = $user['email'];
 
-        // Vérifier le cookie d'appareil de confiance — skip PIN si valide
+        // Vérifier le cookie d'appareil de confiance, skip PIN si valide
         $trustToken = $_COOKIE['vp_trust'] ?? '';
         if ($trustToken) {
             $tokenHash = hash('sha256', $trustToken);
@@ -172,7 +172,7 @@ class AuthController extends AdminBaseController
             return;
         }
 
-        // PIN correct — reset compteur + verrou.
+        // PIN correct, reset compteur + verrou.
         \Database::update(
             'vp_users',
             ['pin_attempts' => 0, 'pin_locked_until' => null],
@@ -297,13 +297,13 @@ class AuthController extends AdminBaseController
 
         // Envoyer l'email
         $to = 'jorge@canete.fr';
-        $subject = 'Villa Plaisance — Réinitialisation du mot de passe';
+        $subject = 'Villa Plaisance, Réinitialisation du mot de passe';
         $body = "Bonjour,\n\n"
             . "Une demande de réinitialisation de mot de passe a été effectuée.\n\n"
             . "Cliquez sur le lien ci-dessous (valable 1 heure) :\n"
             . $resetUrl . "\n\n"
             . "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.\n\n"
-            . "— Villa Plaisance";
+            . "Villa Plaisance";
 
         $headers = "From: noreply@villaplaisance.fr\r\n"
             . "Reply-To: noreply@villaplaisance.fr\r\n"

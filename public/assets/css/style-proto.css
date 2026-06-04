@@ -1,10 +1,10 @@
-/* Villa Plaisance — Design tokens
-   Pierre, lin, vert sauge — calme et clair
+/* Villa Plaisance, Design tokens
+   Pierre, lin, vert sauge, calme et clair
    Provençal moderne, chaleureux mais épuré
 */
 
 :root {
-  /* Surfaces — linen & stone */
+  /* Surfaces, linen & stone */
   --linen-50:  #FBF7EE;
   --linen-100: #F4EEE0;
   --linen-200: #EBE2CF;
@@ -15,16 +15,16 @@
   --ink-700:   #3B362D;
   --ink-900:   #1F1C16;
 
-  /* Olive — vert olive très sombre, utilisé pour aplats de footer et boutons */
+  /* Olive, vert olive très sombre, utilisé pour aplats de footer et boutons */
   --olive-900: #1F2814;
 
-  /* Sage — quiet accent */
+  /* Sage, quiet accent */
   --sage-200: #C9D2BD;
   --sage-400: #94A487;
   --sage-500: #6F8466;
   --sage-700: #4D5E47;
 
-  /* Terracotta — logo color, used as a second accent next to sage */
+  /* Terracotta, logo color, used as a second accent next to sage */
   --terra-500: #C44C24;
   --terra-600: #A23A18;
 
@@ -123,7 +123,7 @@ a { color: inherit; text-decoration: none; }
 .divider { height: 1px; background: color-mix(in oklab, var(--ink-900) 12%, transparent); border: 0; }
 
 /* ============ PAGE MASTHEAD ============
-   Text-only hero used on every page. No background image — typography first. */
+   Text-only hero used on every page. No background image, typography first. */
 
 .page-hero {
   background: var(--linen-50);
@@ -750,7 +750,7 @@ a { color: inherit; text-decoration: none; }
   background: color-mix(in oklab, var(--terra-500) 12%, var(--linen-50));
 }
 
-/* Style B — 3 mois côte à côte */
+/* Style B, 3 mois côte à côte */
 .focus-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -760,7 +760,7 @@ a { color: inherit; text-decoration: none; }
   .focus-grid { grid-template-columns: 1fr; }
 }
 
-/* Style C — ruban saisonnier */
+/* Style C, ruban saisonnier */
 .season-ribbon {
   display: flex;
   gap: 4px;
@@ -816,7 +816,7 @@ a { color: inherit; text-decoration: none; }
 .legend-sw.villa  { background: color-mix(in oklab, var(--terra-500) 14%, var(--linen-50)); }
 .legend-sw.booked { background: var(--ink-900); }
 
-/* Style A — vue annuelle 12 mois (4×3 desktop, 2 tablet, 1 mobile) */
+/* Style A, vue annuelle 12 mois (4×3 desktop, 2 tablet, 1 mobile) */
 .annual-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -829,7 +829,7 @@ a { color: inherit; text-decoration: none; }
   .annual-grid { grid-template-columns: 1fr; }
 }
 
-/* Legend : variante "fermé" (rayée) — utilisée si on ajoute des blocages manuels */
+/* Legend : variante "fermé" (rayée), utilisée si on ajoute des blocages manuels */
 .legend-sw.closed {
   background: var(--linen-100);
   background-image: repeating-linear-gradient(
@@ -840,7 +840,7 @@ a { color: inherit; text-decoration: none; }
   );
 }
 
-/* ============ WORLD MAP — SVG vectoriel au trait (home section 05) ============
+/* ============ WORLD MAP, SVG vectoriel au trait (home section 05) ============
    Refonte selon trio impeccable + emil-design-eng + gpt-taste :
    - Padding section cinématique (×3 vs version naive)
    - Fond radial wash chaud (terra + olive) au lieu de plat
@@ -1118,7 +1118,7 @@ a { color: inherit; text-decoration: none; }
   .worldmap-tooltip.is-visible { transform: translate(-50%, calc(-100% - 16px)); }
 }
 
-/* Pin focus state (accessibility — focus via tabindex) */
+/* Pin focus state (accessibility, focus via tabindex) */
 .worldmap-pins .pin-guest:focus,
 .worldmap-pins .pin-home:focus { outline: none; }
 .worldmap-pins .pin-guest:focus circle { fill: var(--terra-500); }
@@ -1156,7 +1156,7 @@ a { color: inherit; text-decoration: none; }
 .map-legend .swatch-home  { background: var(--terra-500); }
 .map-legend .swatch-guest { background: var(--ink-700); }
 
-/* Liste des villes / pays sous la carte — Barlow Condensed uppercase tracking large */
+/* Liste des villes / pays sous la carte, Barlow Condensed uppercase tracking large */
 .origins-inline {
   list-style: none;
   margin: 0;

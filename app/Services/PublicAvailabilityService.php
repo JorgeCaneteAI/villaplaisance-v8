@@ -13,7 +13,7 @@ namespace App\Services;
  *  - exclut AV-ANN (Studio Avignon, hors villaplaisance.fr)
  *  - exclut les résas statut = 'Annulée'
  *
- * Convention de jour bloqué : [arrivee, depart) — le jour de départ est libre
+ * Convention de jour bloqué : [arrivee, depart), le jour de départ est libre
  * (un nouveau check-in est possible le soir). Cohérent avec Airbnb/Booking.
  */
 class PublicAvailabilityService

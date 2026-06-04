@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * IconService — renvoie un <svg> qui pointe sur le sprite SVG centralisé
+ * IconService, renvoie un <svg> qui pointe sur le sprite SVG centralisé
  * `/public/assets/img/icons.svg` (55 symbols, stroke 1.5, currentColor).
  *
  * Pattern HTML :
@@ -190,7 +190,7 @@ class IconService
      * Retourne null si pas de match.
      *
      * Ordre de résolution :
-     *   1. Table vp_icon_mapping (libellé exact, lowercase) — override admin.
+     *   1. Table vp_icon_mapping (libellé exact, lowercase), override admin.
      *      Si icon_name est vide en BDD → null (pas d'icône, volontaire).
      *   2. Fallback regex maison (mots-clés FR courants).
      */

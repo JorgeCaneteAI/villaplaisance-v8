@@ -1,4 +1,4 @@
-// Villa Plaisance V7 — Editorial Radical
+// Villa Plaisance V7, Editorial Radical
 'use strict';
 
 const VP = {
@@ -54,7 +54,7 @@ const VP = {
         });
     },
 
-    // ─── Header — transparent → solid on scroll ───
+    // ─── Header, transparent → solid on scroll ───
     headerScroll() {
         const header = document.querySelector('.site-header');
         if (!header) return;
@@ -401,7 +401,7 @@ const VP = {
 document.addEventListener('DOMContentLoaded', () => {
     VP.init();
 
-    // Equip cloud — staggered bounce on scroll
+    // Equip cloud, staggered bounce on scroll
     const equipLists = document.querySelectorAll('.room-equip, .block-list-check');
     if (equipLists.length) {
         const eqObs = new IntersectionObserver((entries) => {

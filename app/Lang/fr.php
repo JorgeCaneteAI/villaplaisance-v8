@@ -13,7 +13,7 @@ return [
 
     // Common
     'site.name' => 'Villa Plaisance',
-    'site.tagline' => 'Chambres d\'hôtes et villa de charme — Bédarrides, Provence',
+    'site.tagline' => 'Chambres d\'hôtes et villa de charme, Bédarrides, Provence',
     'site.location' => 'Bédarrides, Vaucluse',
 
     // Home
@@ -50,7 +50,7 @@ return [
     'chambres.intro.title' => 'Séjourner en chambres d\'hôtes',
     'chambres.intro.text' => 'De septembre à juin, Villa Plaisance ouvre deux chambres aux voyageurs. Le petit-déjeuner est préparé chaque matin avec des produits locaux. La piscine est partagée avec les hôtes. L\'accueil est personnel, les conseils aussi.',
     'chambres.breakfast.title' => 'Petit-déjeuner maison',
-    'chambres.faq.title' => 'Questions fréquentes — Chambres d\'hôtes',
+    'chambres.faq.title' => 'Questions fréquentes, Chambres d\'hôtes',
 
     // Villa
     'villa.hero.title' => 'La Villa en exclusivité',
@@ -58,7 +58,7 @@ return [
     'villa.intro.title' => 'Toute la maison pour vous',
     'villa.intro.text' => 'En juillet et août, Villa Plaisance se loue en exclusivité. Quatre chambres, une piscine privée clôturée de 12 mètres sur 6, une cuisine entièrement équipée, un jardin provençal. Jusqu\'à dix personnes. La gestion est autonome, les clés sont à vous.',
     'villa.pool.title' => 'Piscine privée',
-    'villa.faq.title' => 'Questions fréquentes — Villa entière',
+    'villa.faq.title' => 'Questions fréquentes, Villa entière',
 
     // Extérieurs
     'exterieurs.hero.title' => 'Espaces extérieurs',
@@ -88,7 +88,7 @@ return [
     'footer.mentions' => 'Mentions légales',
     'footer.confidentialite' => 'Politique de confidentialité',
     'footer.plan' => 'Plan du site',
-    'footer.rights' => '© :year Villa Plaisance — Bédarrides, Provence',
+    'footer.rights' => '© :year Villa Plaisance, Bédarrides, Provence',
 
     // Livret d'accueil
     'livret.title' => 'Livret d\'accueil',

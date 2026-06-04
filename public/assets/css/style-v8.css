@@ -1,5 +1,5 @@
 /* =========================================================================
-   Villa Plaisance V2 — home
+   Villa Plaisance V2, home
    Restrained palette, neutres tintés terre/sauge/ivoire + accent or vieilli.
    Direction : éditorial habité (Cabana) + cinematic méditerranéen (CMBYN)
    ========================================================================= */
@@ -47,7 +47,7 @@
   --ease-out-expo: cubic-bezier(.16, 1, .3, 1);
   --reveal-time:   1.4s;
 
-  /* Motion T1 — durées + stagger pour cards/boutons/form */
+  /* Motion T1, durées + stagger pour cards/boutons/form */
   --dur-quick:     0.4s;
   --dur-base:      0.6s;
   --dur-slow:      1s;
@@ -55,7 +55,7 @@
   --stagger-card:  0.12s;
   --stagger-item:  0.08s;
 
-  /* Couleurs derived — channels RGB pour rgba() avec alpha dynamique.
+  /* Couleurs derived, channels RGB pour rgba() avec alpha dynamique.
      Évite les rgba(251,247,238,X) ad-hoc disséminés dans les Views. */
   --linen-50-rgb:  251, 247, 238;
   --ink-900-rgb:   31, 28, 22;
@@ -172,7 +172,7 @@ p { margin: 0; }
 .frame__lang a[aria-disabled="true"] { opacity: 0.3; cursor: not-allowed; }
 .frame__lang a:hover:not([aria-disabled="true"]) { opacity: 1; }
 
-/* Bouton menu mobile (3 traits) — caché en desktop */
+/* Bouton menu mobile (3 traits), caché en desktop */
 .frame__menu-btn {
   display: none;
   align-items: center;
@@ -382,7 +382,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Acte 0 — Opening cinematic
+   Acte 0, Opening cinematic
    ========================================================================= */
 
 .opening {
@@ -505,7 +505,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Acte 1 — Manifesto (paragraphe identité)
+   Acte 1, Manifesto (paragraphe identité)
    ========================================================================= */
 
 .manifesto {
@@ -541,7 +541,7 @@ body.menu-open { overflow: hidden; }
 .plate--portrait { aspect-ratio: 4 / 5; }
 
 /* =========================================================================
-   Acte 2 — Diptyque saisons enrichi
+   Acte 2, Diptyque saisons enrichi
    ========================================================================= */
 
 .diptyque {
@@ -662,7 +662,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Acte 3 — Interlude (silence photographique)
+   Acte 3, Interlude (silence photographique)
    ========================================================================= */
 
 .interlude {
@@ -689,7 +689,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Acte 4 — Triangle d'Or (distances) + mappemonde
+   Acte 4, Triangle d'Or (distances) + mappemonde
    ========================================================================= */
 
 .lieu {
@@ -848,7 +848,7 @@ body.menu-open { overflow: hidden; }
 .mappemonde__villes .sep { color: var(--ink-mute); margin: 0 0.7ch; font-style: normal; }
 
 /* =========================================================================
-   Acte 5 — Voix d'hôtes (langue originale)
+   Acte 5, Voix d'hôtes (langue originale)
    ========================================================================= */
 
 .voix {
@@ -889,7 +889,7 @@ body.menu-open { overflow: hidden; }
 .voix__citation::after  { content: close-quote; color: var(--terre); margin-left: 0.05em; }
 
 /* =========================================================================
-   Acte 6 — Le Journal
+   Acte 6, Le Journal
    ========================================================================= */
 
 .journal {
@@ -981,7 +981,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Acte 7 — Quelques questions (FAQ inline dialogue)
+   Acte 7, Quelques questions (FAQ inline dialogue)
    ========================================================================= */
 
 .questions {
@@ -1014,7 +1014,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Acte 8 — Contact
+   Acte 8, Contact
    ========================================================================= */
 
 .contact {
@@ -1927,7 +1927,7 @@ body.menu-open { overflow: hidden; }
 .post__retour:hover { gap: 1.2rem; color: var(--terre); }
 
 /* =========================================================================
-   PAGE EXTÉRIEURS — galerie photos asymétrique
+   PAGE EXTÉRIEURS, galerie photos asymétrique
    ========================================================================= */
 
 .galerie {
@@ -2331,7 +2331,7 @@ body.menu-open { overflow: hidden; }
 }
 
 /* =========================================================================
-   Motion T1 — Stagger cards, boutons CTA, form focus, submit feedback
+   Motion T1, Stagger cards, boutons CTA, form focus, submit feedback
    Activé par motion-v8.js (ajoute .is-in sur les cards et .has-focus
    sur les .champ/.field). Respecte prefers-reduced-motion (override en bas).
    ========================================================================= */
@@ -2486,7 +2486,7 @@ button.is-loading::after {
 }
 
 /* =========================================================================
-   Motion T3 — Footer reveal, empty states pulse, loading pulse.
+   Motion T3, Footer reveal, empty states pulse, loading pulse.
    ========================================================================= */
 
 /* Footer : fade-up doux quand .is-in (ajouté par motion-v8.js).
@@ -2527,7 +2527,7 @@ button.is-loading::after {
 }
 
 /* =========================================================================
-   Polish accessibilité — focus-within sur details, skip-ink sur underlines,
+   Polish accessibilité, focus-within sur details, skip-ink sur underlines,
    focus-visible sur la sitemap. Petits ajouts qui ne touchent pas au design.
    ========================================================================= */
 
@@ -2553,7 +2553,7 @@ a {
 }
 
 /* =========================================================================
-   Motion T2 — Heroes fade-in au load, calendars subtle reveal, nav underline
+   Motion T2, Heroes fade-in au load, calendars subtle reveal, nav underline
    Animations passives (CSS keyframes), pas de dépendance JS.
    ========================================================================= */
 
@@ -2586,7 +2586,7 @@ a {
 .focus-grid .cal-month:nth-child(3) { animation-delay: 160ms; }
 
 /* =========================================================================
-   Icônes — préfixes utilitaires utilisés via IconService::svg()
+   Icônes, préfixes utilitaires utilisés via IconService::svg()
    ========================================================================= */
 
 /* Icône à gauche d'une pill (équipements chambres). */

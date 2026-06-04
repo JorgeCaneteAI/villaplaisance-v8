@@ -11,7 +11,7 @@ class ExterieursController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('espaces-exterieurs', $lang,
-            'Espaces extérieurs — Villa Plaisance, Bédarrides',
+            'Espaces extérieurs, Villa Plaisance, Bédarrides',
             'Piscine privée 12×6m, jardin provençal, terrasses ombragées. Les espaces extérieurs de Villa Plaisance à Bédarrides.'
         );
 

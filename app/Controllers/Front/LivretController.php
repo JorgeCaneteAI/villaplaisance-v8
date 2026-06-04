@@ -49,7 +49,7 @@ class LivretController extends BaseController
         }
 
         $seo = [
-            'title' => t('livret.title') . ' — Villa Plaisance',
+            'title' => t('livret.title') . ', Villa Plaisance',
             'description' => '',
             'canonical' => '',
             'robots' => 'noindex, nofollow',
@@ -101,7 +101,7 @@ class LivretController extends BaseController
         } catch (\Throwable) {}
 
         $seo = [
-            'title' => t('livret.title') . ' — Aperçu — Villa Plaisance',
+            'title' => t('livret.title') . ', Aperçu, Villa Plaisance',
             'description' => 'Aperçu du livret d\'accueil Villa Plaisance.',
             'canonical' => '',
             'robots' => 'noindex, nofollow',

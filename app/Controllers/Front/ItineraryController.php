@@ -8,7 +8,7 @@ use App\Controllers\BaseController;
 class ItineraryController extends BaseController
 {
     /**
-     * Page "Que faire" — directory dynamique des recommandations.
+     * Page "Que faire", directory dynamique des recommandations.
      * Liste les articles vp_articles WHERE type='sur-place'. Le lien
      * de la nav "Que faire" pointe ici. Distincte de show($slug) qui
      * affiche un itinéraire personnalisé nominatif.
@@ -17,7 +17,7 @@ class ItineraryController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('itineraire', $lang,
-            'Que faire en Provence autour de Bédarrides — Villa Plaisance',
+            'Que faire en Provence autour de Bédarrides, Villa Plaisance',
             'Sites à visiter, tables et restaurants, commerces, activités enfants. La sélection que nous donnons à nos hôtes au petit-déjeuner.'
         );
 
@@ -56,7 +56,7 @@ class ItineraryController extends BaseController
 
         if (!$itinerary) {
             http_response_code(404);
-            $seo = \SeoService::forPage('404', $lang, '404 — Itinéraire introuvable', '');
+            $seo = \SeoService::forPage('404', $lang, '404, Itinéraire introuvable', '');
             $jsonLd = [];
             $this->render('front/404', compact('seo', 'jsonLd', 'lang'), 'front-proto');
             return;
@@ -79,7 +79,7 @@ class ItineraryController extends BaseController
         } catch (\Throwable) {}
 
         // SEO
-        $seoTitle = 'Itinéraire Provence : ' . $itinerary['guest_name'] . ' — Villa Plaisance';
+        $seoTitle = 'Itinéraire Provence : ' . $itinerary['guest_name'] . ', Villa Plaisance';
         $seoDesc  = !empty($itinerary['intro_text'])
             ? mb_substr($itinerary['intro_text'], 0, 160)
             : 'Itinéraire de visite en Provence préparé par Villa Plaisance, chambres d\'hôtes à Bédarrides.';

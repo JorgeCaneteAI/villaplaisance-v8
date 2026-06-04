@@ -1,4 +1,4 @@
-/* === Villa Plaisance V7 — Editorial Radical === */
+/* === Villa Plaisance V7, Editorial Radical === */
 
 /* ─── Tokens ─── */
 :root {
@@ -100,7 +100,7 @@ a:hover { color: var(--accent); }
 @media (pointer: coarse) { .custom-cursor { display: none; } }
 
 /* ═══════════════════════════════════════════════
-   HEADER — Invisible, editorial
+   HEADER, Invisible, editorial
    ═══════════════════════════════════════════════ */
 .site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -228,7 +228,7 @@ a:hover { color: var(--accent); }
 }
 
 /* ═══════════════════════════════════════════════
-   TYPOGRAPHY — Editorial, graphique
+   TYPOGRAPHY, Editorial, graphique
    ═══════════════════════════════════════════════ */
 h1, h2, h3 {
   font-family: 'Cormorant Garamond', serif;
@@ -274,17 +274,17 @@ h3 {
 }
 
 /* ═══════════════════════════════════════════════
-   SECTIONS — Massive whitespace
+   SECTIONS, Massive whitespace
    ═══════════════════════════════════════════════ */
 .section { padding-block: var(--section-py); }
 .section-alt { background: var(--bg-soft); }
 .section-compact { padding-block: var(--space-4); }
 
-/* Section heading — no decorative line, pure typography */
+/* Section heading, no decorative line, pure typography */
 .section > .container > h2 { position: relative; }
 .section > .container > h2::before { display: none; }
 
-/* Section CTA — full dark, split layout */
+/* Section CTA, full dark, split layout */
 .section-cta {
   background: var(--dark); color: rgba(255,255,255,0.7);
   padding-block: var(--section-py);
@@ -311,7 +311,7 @@ h3 {
 @media (min-width: 768px) { .cta-action { text-align: right; } .cta-action p { margin-left: auto; } }
 
 /* ═══════════════════════════════════════════════
-   HERO — Cinematic, typographie plein écran
+   HERO, Cinematic, typographie plein écran
    ═══════════════════════════════════════════════ */
 .hero {
   position: relative;
@@ -349,12 +349,12 @@ h3 {
 .hero-slide.active { opacity: 1; transform: scale(1); }
 .hero-slide img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Overlay — removed, raw image */
+/* Overlay, removed, raw image */
 .hero-overlay {
   display: none;
 }
 
-/* Hero content — bottom-left, OVERFLOWING */
+/* Hero content, bottom-left, OVERFLOWING */
 .hero-content {
   position: relative; z-index: 2;
   color: #fff;
@@ -373,7 +373,7 @@ h3 {
   text-shadow: 0 4px 60px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.2);
 }
 
-/* Hero title — 100% width, alternating typography */
+/* Hero title, 100% width, alternating typography */
 .hero-title-wrap {
   width: 100%;
 }
@@ -391,7 +391,7 @@ h3 {
   letter-spacing: 0.05em;
 }
 
-/* Hero badges, subtitle, cta — 50% width */
+/* Hero badges, subtitle, cta, 50% width */
 .hero-badges {
   width: 75%;
   display: flex;
@@ -451,7 +451,7 @@ h3 {
   display: none;
 }
 
-/* Hero word animation — staggered reveal */
+/* Hero word animation, staggered reveal */
 .hero-content h1 .word {
   display: inline-block;
   opacity: 0;
@@ -547,7 +547,7 @@ h3 {
 }
 
 /* ═══════════════════════════════════════════════
-   BUTTONS — Ligne, ultra-minimal
+   BUTTONS, Ligne, ultra-minimal
    ═══════════════════════════════════════════════ */
 .btn-primary {
   display: inline-flex; align-items: center; gap: var(--space-3);
@@ -620,7 +620,7 @@ h3 {
 .mt-1 { margin-top: var(--space-8); }
 
 /* ═══════════════════════════════════════════════
-   SCROLL REVEAL — Cinematic
+   SCROLL REVEAL, Cinematic
    ═══════════════════════════════════════════════ */
 .reveal {
   opacity: 0;
@@ -660,7 +660,7 @@ h3 {
 .reveal-stagger.in-view > *:nth-child(6) { transition-delay: 0.5s; }
 .reveal-stagger.in-view > * { opacity: 1; transform: translateY(0); }
 
-/* Image reveal — curtain wipe */
+/* Image reveal, curtain wipe */
 .img-reveal { position: relative; overflow: hidden; }
 .img-reveal::after {
   content: '';
@@ -682,7 +682,7 @@ h3 {
 .img-scale.in-view img { transform: scale(1); }
 
 /* ═══════════════════════════════════════════════
-   TYPOGRAPHIC INTERLUDE — Hors-cadre statement
+   TYPOGRAPHIC INTERLUDE, Hors-cadre statement
    ═══════════════════════════════════════════════ */
 .typo-interlude {
   overflow: hidden;
@@ -725,7 +725,7 @@ h3 {
 }
 
 /* ═══════════════════════════════════════════════
-   PROSE — Asymmetric editorial layout
+   PROSE, Asymmetric editorial layout
    ═══════════════════════════════════════════════ */
 .prose-section { max-width: none; margin-inline: auto; padding-left: 7%; padding-right: 7%; }
 .prose-grid {
@@ -813,7 +813,7 @@ h3 {
 }
 
 /* ═══════════════════════════════════════════════
-   STATS — Chiffres géants, pleine largeur
+   STATS, Chiffres géants, pleine largeur
    ═══════════════════════════════════════════════ */
 .stats-grid {
   display: grid; grid-template-columns: repeat(2, 1fr);
@@ -859,7 +859,7 @@ h3 {
 .stat-sublabel { display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: var(--space-2); }
 
 /* ═══════════════════════════════════════════════
-   OFFERS — Cartes full bleed
+   OFFERS, Cartes full bleed
    ═══════════════════════════════════════════════ */
 .offers-grid { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: var(--space-8); }
 @media (min-width: 768px) { .offers-grid { grid-template-columns: 1fr 1fr; } }
@@ -886,7 +886,7 @@ h3 {
 .offer-card:hover .offer-image img { transform: scale(1.05); }
 
 /* ═══════════════════════════════════════════════
-   TERRITOIRE — Grille typographique
+   TERRITOIRE, Grille typographique
    ═══════════════════════════════════════════════ */
 .territoire-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
 @media (min-width: 768px) { .territoire-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -923,12 +923,12 @@ h3 {
 }
 
 /* ═══════════════════════════════════════════════
-   REVIEWS — Citation plein écran, editorial
+   REVIEWS, Citation plein écran, editorial
    ═══════════════════════════════════════════════ */
 .reviews-header { margin-bottom: var(--space-16); }
 .section-reviews { background: var(--bg-soft); }
-/* Single column — one review at a time, maximum impact */
-/* Reviews — carousel carte postale */
+/* Single column, one review at a time, maximum impact */
+/* Reviews, carousel carte postale */
 .postcard-carousel {
   max-width: 800px;
   margin-inline: auto;
@@ -1078,7 +1078,7 @@ h3 {
 }
 
 /* ═══════════════════════════════════════════════
-   ARTICLES — Magazine grid
+   ARTICLES, Magazine grid
    ═══════════════════════════════════════════════ */
 .articles-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-8); }
 @media (min-width: 768px) { .articles-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -1269,7 +1269,7 @@ h3 {
 .category-tag.active, .category-tag:hover { background: var(--accent); color: #fff; }
 
 /* ═══════════════════════════════════════════════
-   ROOMS — Cartes éditoriales
+   ROOMS, Cartes éditoriales
    ═══════════════════════════════════════════════ */
 .rooms-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-12); }
 @media (min-width: 768px) { .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-8); } }
@@ -1412,7 +1412,7 @@ h3 {
 .gallery-item:hover img { transform: scale(1.05); }
 
 /* ═══════════════════════════════════════════════
-   FAQ — Clean, typographic
+   FAQ, Clean, typographic
    ═══════════════════════════════════════════════ */
 .faq-list { max-width: 720px; margin-inline: auto; }
 .faq-item { border-bottom: 1px solid var(--bg-line); }
@@ -1525,7 +1525,7 @@ details[open] .faq-question::after { content: '\2212'; }
 .sitemap-list a { font-size: 1rem; font-weight: 300; }
 
 /* ═══════════════════════════════════════════════
-   MARQUEE — Typographic band
+   MARQUEE, Typographic band
    ═══════════════════════════════════════════════ */
 .marquee {
   overflow: hidden; white-space: nowrap;
@@ -1601,7 +1601,7 @@ details[open] .faq-question::after { content: '\2212'; }
 }
 
 /* ─── Livret d'accueil ─── */
-/* ─── Hôte — Page CV ─── */
+/* ─── Hôte, Page CV ─── */
 .hote-intro { padding-top: var(--space-12); }
 .hote-intro-grid {
   display: grid;
@@ -1742,7 +1742,7 @@ details[open] .faq-question::after { content: '\2212'; }
   letter-spacing: 0.1em;
 }
 
-/* ─── Livret — Password gate ─── */
+/* ─── Livret, Password gate ─── */
 .livret-gate {
   min-height: 100svh; display: flex; align-items: center; justify-content: center;
   background: var(--bg);
@@ -1798,7 +1798,7 @@ details[open] .faq-question::after { content: '\2212'; }
 .livret-gate-type a { color: var(--text-muted); transition: color 0.3s; }
 .livret-gate-type a.active { color: var(--accent); font-weight: 600; }
 
-/* ─── Livret — Content page ─── */
+/* ─── Livret, Content page ─── */
 .livret-header { padding-top: var(--space-16); padding-bottom: var(--space-8); }
 .livret-header h1 { margin-bottom: 0.5rem; }
 .livret-welcome {
@@ -1860,7 +1860,7 @@ details[open] .faq-question::after { content: '\2212'; }
 .livret-message-section .btn-primary:hover { background: var(--dark); color: #fff; }
 
 /* ═══════════════════════════════════════════════
-   FOOTER — Dark, giant typographic name
+   FOOTER, Dark, giant typographic name
    ═══════════════════════════════════════════════ */
 .site-footer {
   background: var(--accent); color: var(--dark);
@@ -1892,7 +1892,7 @@ details[open] .faq-question::after { content: '\2212'; }
 }
 .site-footer nav a:hover { color: #fff; }
 
-/* Giant footer name — Drop Edition style, MASSIVE */
+/* Giant footer name, Drop Edition style, MASSIVE */
 .footer-giant {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(5rem, 20vw, 18rem);

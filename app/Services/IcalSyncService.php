@@ -7,7 +7,7 @@ namespace App\Services;
  * Service de synchronisation des flux iCal (Airbnb + Booking) vers vp_reservations.
  * Parseur iCal maison (portage direct de sync_ical.py de l'app Flask legacy).
  *
- * Méthodes publiques *Public suffixées pour les tests — pas d'API officielle.
+ * Méthodes publiques *Public suffixées pour les tests, pas d'API officielle.
  */
 class IcalSyncService
 {

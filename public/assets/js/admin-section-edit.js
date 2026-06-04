@@ -1,7 +1,7 @@
 /**
- * Admin / sections / edit — interactions V8.
+ * Admin / sections / edit, interactions V8.
  *
- * MediaPicker (Phase 4 Session 2 — L1) :
+ * MediaPicker (Phase 4 Session 2, L1) :
  *   Ouvre un modal listant /admin/api/media (records vp_media), permet
  *   de filtrer par dossier + recherche texte, et au clic place l'ID
  *   dans l'input cible + met à jour la miniature voisine.
@@ -13,7 +13,7 @@
  *   <span class="vp-mp-preview-label" data-for="f-image_id">id=42</span>  (optionnel)
  *
  * Le modal lui-même est rendu une seule fois en bas de edit.php
- * (id="vp-media-picker"). Une seule instance par page suffit — l'état
+ * (id="vp-media-picker"). Une seule instance par page suffit, l'état
  * « quel input cibler » est stocké en module-private.
  */
 (function () {
@@ -352,7 +352,7 @@
         preview.innerHTML = renderMd(source.value);
     }
 
-    // Délégation sur input — couvre les champs rendus côté serveur et ceux
+    // Délégation sur input, couvre les champs rendus côté serveur et ceux
     // injectés au runtime par le repeater (template cloné)
     document.addEventListener('input', e => {
         const src = e.target;

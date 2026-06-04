@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * IpInfoService — enrichit une IP en pays / ville / FAI via ipapi.co.
+ * IpInfoService, enrichit une IP en pays / ville / FAI via ipapi.co.
  *
  * - Gratuit, HTTPS, sans clé, ~1k requêtes/jour.
  * - Cache fichier 30 jours dans app/cache/ip/<sha1>.json pour ne pas spammer.

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * BlockFormRenderer — rend le formulaire d'édition d'un bloc V8 dans l'admin.
+ * BlockFormRenderer, rend le formulaire d'édition d'un bloc V8 dans l'admin.
  *
  * Méthodes statiques récursives qui consomment les définitions de
  * BlockFieldsService et produisent les inputs HTML adaptés à chaque type.
@@ -13,7 +13,7 @@ declare(strict_types=1);
  * Pour les repeaters, deux sous-formats :
  *   - 'item_type' => 'string' | 'int'  → liste plate de scalaires
  *   - 'item_fields' => [...]            → liste d'objets, chaque item rend ses
- *                                         propres sub-fields (récursivement —
+ *                                         propres sub-fields (récursivement,
  *                                         supporte les sub-repeaters de profondeur 2)
  *
  * Naming pattern HTML :
@@ -24,7 +24,7 @@ declare(strict_types=1);
  *
  * Côté SectionController::save(), PHP désérialise tout ça en arrays nested.
  * Les indices peuvent contenir des trous (après suppression d'un item côté
- * JS sans re-numérotation) — le save() côté serveur re-séquence et caste
+ * JS sans re-numérotation), le save() côté serveur re-séquence et caste
  * récursivement selon les item_fields.
  */
 class BlockFormRenderer
@@ -241,7 +241,7 @@ class BlockFormRenderer
         }
         echo '</div>';
 
-        // Template d'item vierge — utilisé par le JS pour ajouter
+        // Template d'item vierge, utilisé par le JS pour ajouter
         // L'index __INDEX__ est remplacé par le JS au moment du clone
         echo '<template class="vp-rp-tpl">';
         self::renderRepeaterItem($field, $isScalar ? '' : [], $namePrefix, $idPrefix, '__INDEX__');

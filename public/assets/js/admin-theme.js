@@ -1,4 +1,4 @@
-/* admin-theme.js — toggle light/dark persisté en localStorage.
+/* admin-theme.js, toggle light/dark persisté en localStorage.
    Auto par défaut (suit prefers-color-scheme), override manuel possible. */
 (function () {
   'use strict';
@@ -48,7 +48,7 @@
   }
 })();
 
-/* admin-sidebar.js — drawer mobile */
+/* admin-sidebar.js, drawer mobile */
 (function () {
   'use strict';
   function init() {
@@ -80,7 +80,7 @@
   }
 })();
 
-/* admin-sidebar-groups.js — collapsible des groupes "Contenu" / "SEO" */
+/* admin-sidebar-groups.js, collapsible des groupes "Contenu" / "SEO" */
 (function () {
   'use strict';
   function init() {

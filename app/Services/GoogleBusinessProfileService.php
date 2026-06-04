@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * GoogleBusinessProfileService — accès à l'API Google Business Profile
+ * GoogleBusinessProfileService, accès à l'API Google Business Profile
  * (anciennement Google My Business) pour synchroniser les avis et y répondre.
  *
  * Flow OAuth :

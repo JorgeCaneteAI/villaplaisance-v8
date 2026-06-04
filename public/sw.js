@@ -1,4 +1,4 @@
-// Service worker minimal — rend l'app installable (PWA).
+// Service worker minimal, rend l'app installable (PWA).
 // Stratégie : network-first (l'app admin doit TOUJOURS être à jour).
 // Fallback offline uniquement sur /admin/login (les autres pages dépendent de la BDD).
 

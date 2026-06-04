@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Villa Plaisance — Admin V2 (2026-06-03)
-   Refonte radicale — Minimalism + Swiss
+   Villa Plaisance, Admin V2 (2026-06-03)
+   Refonte radicale, Minimalism + Swiss
    Stack tokens : slate + indigo + Inter/JetBrains Mono
    Toggle theme : auto (prefers-color-scheme) + override [data-theme]
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -11,7 +11,7 @@
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  /* Spacing — 4pt grid, échelle confortable */
+  /* Spacing, 4pt grid, échelle confortable */
   --sp-1:  4px;
   --sp-2:  8px;
   --sp-3:  12px;
@@ -34,7 +34,7 @@
   --sidebar-w: 244px;
   --header-h: 60px;
 
-  /* Light theme — défaut */
+  /* Light theme, défaut */
   --bg:           #FAFAFA;
   --surface:      #FFFFFF;
   --surface-2:    #F5F5F4;
@@ -64,7 +64,7 @@
   --shadow-md: 0 4px 8px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.10), 0 4px 10px rgba(15, 23, 42, 0.04);
 
-  /* Compat — anciennes variables référencées ailleurs */
+  /* Compat, anciennes variables référencées ailleurs */
   --admin-bg: var(--bg);
   --admin-text: var(--text);
   --admin-border: var(--border);
@@ -86,7 +86,7 @@
   --font-display: var(--font-sans);
 }
 
-/* Dark theme — auto via OS */
+/* Dark theme, auto via OS */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg:           #09090B;
@@ -425,7 +425,7 @@ code, kbd, pre, .mono { font-family: var(--font-mono); font-size: 0.9em; }
 .admin-card--flush .admin-table thead th { padding-left: var(--sp-5); padding-right: var(--sp-5); }
 .admin-card--flush .admin-table tbody td { padding-left: var(--sp-5); padding-right: var(--sp-5); }
 
-/* Form livret — accord 3 langues */
+/* Form livret, accord 3 langues */
 .livret-form { display: flex; flex-direction: column; gap: var(--sp-3); }
 .livret-form-foot { display: flex; align-items: center; gap: var(--sp-3); justify-content: space-between; }
 .livret-form-foot label { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
@@ -778,7 +778,7 @@ input:disabled, textarea:disabled, select:disabled {
 .admin-topbar { display: none; } /* obsolète : le header v2 prend la suite */
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   COMPOSANTS MÉTIER — restyle à partir des nouveaux tokens.
+   COMPOSANTS MÉTIER, restyle à partir des nouveaux tokens.
    Les classes existaient déjà dans les vues, on les recâble proprement.
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -815,7 +815,7 @@ input:disabled, textarea:disabled, select:disabled {
 .mail-count { font-size: 13px; color: var(--text-2); }
 .mail-count strong { color: var(--text); font-weight: 600; }
 
-/* ── 17.2 MESSAGES — liste type "inbox" ──────────────────────────────────── */
+/* ── 17.2 MESSAGES, liste type "inbox" ──────────────────────────────────── */
 .mail-list {
   display: flex;
   flex-direction: column;
@@ -1070,7 +1070,7 @@ input:disabled, textarea:disabled, select:disabled {
   .message-layout { grid-template-columns: 1fr; }
 }
 
-/* ── 17.3 CALENDRIER — grille mensuelle + sync widget ────────────────────── */
+/* ── 17.3 CALENDRIER, grille mensuelle + sync widget ────────────────────── */
 .calendrier { display: flex; flex-direction: column; gap: var(--sp-5); }
 .calendrier__nav {
   display: flex; align-items: center; justify-content: space-between;
@@ -1151,7 +1151,7 @@ input:disabled, textarea:disabled, select:disabled {
 }
 .calendrier__grid .slot { min-height: 22px; overflow: hidden; }
 
-/* Slot "ménage" — fond warning doux + label centré, pas de border-radius
+/* Slot "ménage", fond warning doux + label centré, pas de border-radius
    (collé aux bandeaux de gauche et droite pour fluidité visuelle) */
 .calendrier__grid .slot--day {
   background: var(--warning-soft);
@@ -1247,7 +1247,7 @@ input:disabled, textarea:disabled, select:disabled {
 .sync-widget-note { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
 .sync-widget-actions { display: flex; gap: var(--sp-2); }
 
-/* Vue annuelle — 12 mois empilés verticalement, mêmes lanes/slots
+/* Vue annuelle, 12 mois empilés verticalement, mêmes lanes/slots
    que la vue mensuelle. Chaque mois est une card autonome. */
 .annee-stack { display: flex; flex-direction: column; gap: var(--sp-8); }
 .annee-mois {
@@ -1400,7 +1400,7 @@ input:disabled, textarea:disabled, select:disabled {
 .vp-pc-note { color: var(--text-3); }
 .vp-pc-actions { display: flex; gap: var(--sp-2); align-items: center; }
 
-/* ── 17.5 LIVRET — tabs + grille trilingue ───────────────────────────────── */
+/* ── 17.5 LIVRET, tabs + grille trilingue ───────────────────────────────── */
 .tab-nav {
   display: flex;
   gap: 0;
@@ -1490,7 +1490,7 @@ input:disabled, textarea:disabled, select:disabled {
   font-size: 13px;
 }
 
-/* Pastilles de langue (présent/manquant) — petite mono carrée */
+/* Pastilles de langue (présent/manquant), petite mono carrée */
 .lang-pills { display: inline-flex; gap: 4px; }
 .lang-pill {
   display: inline-flex; align-items: center; justify-content: center;
@@ -1658,7 +1658,7 @@ input:disabled, textarea:disabled, select:disabled {
   margin: var(--sp-6) 0 var(--sp-5);
 }
 
-/* Liste de réglages (booking links, social links) — rangées éditables inline */
+/* Liste de réglages (booking links, social links), rangées éditables inline */
 .settings-list { display: flex; flex-direction: column; gap: var(--sp-2); }
 .settings-row {
   display: flex; align-items: center; gap: var(--sp-2);
@@ -1694,7 +1694,7 @@ input:disabled, textarea:disabled, select:disabled {
   .settings-row-form, .settings-add-row { grid-template-columns: 1fr; }
 }
 
-/* Équipements multilingues — bloc par catégorie + 3 colonnes lang par item */
+/* Équipements multilingues, bloc par catégorie + 3 colonnes lang par item */
 .amenity-category-block { margin-bottom: var(--sp-6); }
 
 .amenity-row {
@@ -1808,7 +1808,7 @@ input:disabled, textarea:disabled, select:disabled {
 
 /* ── ICONS LAB (/admin/icons-lab) ───────────────────────────────────────── */
 
-/* Stats — variante 4 colonnes (utilisée aussi ailleurs) */
+/* Stats, variante 4 colonnes (utilisée aussi ailleurs) */
 .stats-cards-4 { grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 1024px) { .stats-cards-4 { grid-template-columns: repeat(2, 1fr); } }
 
@@ -2048,7 +2048,7 @@ input:disabled, textarea:disabled, select:disabled {
   margin-bottom: var(--sp-2);
 }
 
-/* ── 17.7 ANALYTICS / STATS — chart engine V2 ───────────────────────────── */
+/* ── 17.7 ANALYTICS / STATS, chart engine V2 ───────────────────────────── */
 
 /* KPI extras */
 .stats-cards-5 { grid-template-columns: repeat(5, 1fr); }
@@ -2076,7 +2076,7 @@ input:disabled, textarea:disabled, select:disabled {
 .stat-split-a { background: var(--success); }
 .stat-split-b { background: var(--warning); opacity: 0.55; }
 
-/* Barres verticales — chart "Évolution 30j" + "Heures de pointe" */
+/* Barres verticales, chart "Évolution 30j" + "Heures de pointe" */
 .chart-bars-v {
   display: flex;
   align-items: flex-end;
@@ -2150,7 +2150,7 @@ input:disabled, textarea:disabled, select:disabled {
 .legend-swatch.is-views   { background: var(--accent); opacity: 0.85; }
 .legend-swatch.is-uniques { background: var(--accent); opacity: 0.35; }
 
-/* Barres horizontales — Jours actifs, Sources, Géo, Langues, Appareils */
+/* Barres horizontales, Jours actifs, Sources, Géo, Langues, Appareils */
 .chart-rows { display: flex; flex-direction: column; gap: var(--sp-3); }
 .chart-row {
   display: grid;
@@ -2193,7 +2193,7 @@ input:disabled, textarea:disabled, select:disabled {
   color: var(--text-2);
 }
 
-/* Cells utility — alignement texte/troncature dans tables */
+/* Cells utility, alignement texte/troncature dans tables */
 .admin-table td.cell-right, .admin-table th.cell-right { text-align: right; }
 .admin-table td.cell-truncate {
   max-width: 220px;
@@ -2202,7 +2202,7 @@ input:disabled, textarea:disabled, select:disabled {
   white-space: nowrap;
 }
 
-/* Legacy classes — conservées pour compat mais neutralisées */
+/* Legacy classes, conservées pour compat mais neutralisées */
 .analytics-chart { display: flex; flex-direction: column; gap: var(--sp-2); }
 .analytics-bar-wrap { display: flex; align-items: center; gap: var(--sp-3); font-size: 13px; }
 .analytics-bar-label { color: var(--text); font-weight: 500; min-width: 100px; }
@@ -2221,7 +2221,7 @@ input:disabled, textarea:disabled, select:disabled {
 
 /* ── 17.8 ARTICLES (layout + form) ───────────────────────────────────────── */
 /* Sidebar à GAUCHE (paramètres, qualité, médias annexes) compacte (300 px),
-   Main à DROITE prend tout l'espace restant — c'est là qu'on rédige. */
+   Main à DROITE prend tout l'espace restant, c'est là qu'on rédige. */
 .article-layout {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
@@ -2271,7 +2271,7 @@ input:disabled, textarea:disabled, select:disabled {
   margin-bottom: var(--sp-2);
 }
 
-/* ── 17.10 RESERVATIONS — tables et saisie ──────────────────────────────── */
+/* ── 17.10 RESERVATIONS, tables et saisie ──────────────────────────────── */
 .table-resa, .table-logs, .table-devices {
   width: 100%;
   border-collapse: separate;
@@ -2318,7 +2318,7 @@ input:disabled, textarea:disabled, select:disabled {
   color: var(--accent);
 }
 
-/* ── 17.12 SEO — serp preview ────────────────────────────────────────────── */
+/* ── 17.12 SEO, serp preview ────────────────────────────────────────────── */
 .serp-preview {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -2485,7 +2485,7 @@ input:disabled, textarea:disabled, select:disabled {
   color: var(--text-3);
 }
 
-/* Pieces : repeater images — layout compact thumbnail + input + bouton */
+/* Pieces : repeater images, layout compact thumbnail + input + bouton */
 .piece-image-item { /* hérite de .vp-rp-item */ }
 .piece-image-body {
   display: grid;
@@ -2939,7 +2939,7 @@ input:disabled, textarea:disabled, select:disabled {
   font-style: italic;
 }
 
-/* Item du repeater : grid 3 colonnes — handle + body + actions */
+/* Item du repeater : grid 3 colonnes, handle + body + actions */
 .vp-rp-item {
   display: grid;
   grid-template-columns: 32px 1fr 96px;
@@ -3018,7 +3018,7 @@ input:disabled, textarea:disabled, select:disabled {
   .cols-2, .cols-3 { grid-template-columns: 1fr; }
 }
 
-/* ── 18. RESPONSIVE — TABLETTE ───────────────────────────────────────────── */
+/* ── 18. RESPONSIVE, TABLETTE ───────────────────────────────────────────── */
 @media (max-width: 1024px) {
   :root { --sidebar-w: 220px; }
   .admin-main { padding: var(--sp-6); }
@@ -3027,7 +3027,7 @@ input:disabled, textarea:disabled, select:disabled {
   .chart-row { grid-template-columns: 100px 1fr 100px; }
 }
 
-/* ── 19. RESPONSIVE — MOBILE ─────────────────────────────────────────────── */
+/* ── 19. RESPONSIVE, MOBILE ─────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .admin-shell { grid-template-columns: 1fr; }
   .admin-sidebar {

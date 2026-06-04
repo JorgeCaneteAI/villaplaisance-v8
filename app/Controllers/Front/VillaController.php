@@ -11,7 +11,7 @@ class VillaController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('location-villa-provence', $lang,
-            'Location villa Provence — Villa Plaisance, Bédarrides',
+            'Location villa Provence, Villa Plaisance, Bédarrides',
             '4 chambres, piscine privée 12×6m, jardin provençal. Villa entière en exclusivité juillet-août, jusqu\'à 10 personnes, entre Avignon et Orange.'
         );
 

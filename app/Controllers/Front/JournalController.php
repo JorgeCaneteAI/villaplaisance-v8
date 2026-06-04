@@ -11,7 +11,7 @@ class JournalController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('journal', $lang,
-            'Journal — Villa Plaisance, Provence',
+            'Journal, Villa Plaisance, Provence',
             'Récits, conseils et regards sur la Provence. Le journal de Villa Plaisance à Bédarrides, entre Avignon et Orange.'
         );
 
@@ -49,7 +49,7 @@ class JournalController extends BaseController
 
         if (!$article) {
             http_response_code(404);
-            $seo = \SeoService::forPage('404', $lang, '404 — Article introuvable', '');
+            $seo = \SeoService::forPage('404', $lang, '404, Article introuvable', '');
             $jsonLd = [];
             $this->render('front/404', compact('seo', 'jsonLd', 'lang'), 'front-proto');
             return;

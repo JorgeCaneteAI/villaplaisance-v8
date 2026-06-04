@@ -11,7 +11,7 @@ class LegalController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('mentions-legales', $lang,
-            'Mentions légales — Villa Plaisance',
+            'Mentions légales, Villa Plaisance',
             'Mentions légales du site Villa Plaisance, chambres d\'hôtes et villa à Bédarrides, Provence.'
         );
         $jsonLd = [
@@ -27,7 +27,7 @@ class LegalController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('politique-confidentialite', $lang,
-            'Politique de confidentialité — Villa Plaisance',
+            'Politique de confidentialité, Villa Plaisance',
             'Politique de confidentialité et protection des données personnelles de Villa Plaisance.'
         );
         $jsonLd = [
@@ -43,7 +43,7 @@ class LegalController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('plan-du-site', $lang,
-            'Plan du site — Villa Plaisance',
+            'Plan du site, Villa Plaisance',
             'Plan du site Villa Plaisance. Toutes les pages du site.'
         );
         $jsonLd = [

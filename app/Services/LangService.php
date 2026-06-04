@@ -88,7 +88,7 @@ class LangService
             return self::url('accueil', $targetLang) . $query;
         }
 
-        // Cas /journal/{slug}, /itineraire/{slug}, /sur-place/{slug} — détail d'article
+        // Cas /journal/{slug}, /itineraire/{slug}, /sur-place/{slug}, détail d'article
         // Slug d'article = donnée DB partagée entre langues, on garde tel quel.
         foreach (['/journal/', '/itineraire/', '/sur-place/'] as $prefix) {
             if (str_starts_with($path, $prefix)) {

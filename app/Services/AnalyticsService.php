@@ -75,7 +75,7 @@ class AnalyticsService
                 'country' => $country,
             ]);
         } catch (\Throwable) {
-            // Silently fail — analytics should never break the site
+            // Silently fail, analytics should never break the site
         }
     }
 

@@ -17,7 +17,7 @@ class ContactController extends BaseController
         }
 
         $seo = \SeoService::forPage('contact', $lang,
-            'Contact — Villa Plaisance, Bédarrides',
+            'Contact, Villa Plaisance, Bédarrides',
             'Contactez Villa Plaisance pour organiser votre séjour en Provence. Chambres d\'hôtes ou villa entière à Bédarrides.'
         );
 

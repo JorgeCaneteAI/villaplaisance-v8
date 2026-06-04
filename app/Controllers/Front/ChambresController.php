@@ -11,7 +11,7 @@ class ChambresController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('chambres-d-hotes', $lang,
-            'Chambres d\'hôtes à Bédarrides — Villa Plaisance, Provence',
+            'Chambres d\'hôtes à Bédarrides, Villa Plaisance, Provence',
             'Deux chambres climatisées avec petit-déjeuner maison et piscine partagée. De septembre à juin, entre Avignon et Orange.'
         );
 

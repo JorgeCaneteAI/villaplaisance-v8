@@ -122,7 +122,7 @@ class BlockService
             'petit-dejeuner' => 'Petit-déjeuner',
             'piscine' => 'Piscine',
             'mappemonde' => 'Mappemonde (origines clients)',
-            // ── V8 — types ajoutés ──
+            // ── V8, types ajoutés ──
             'formula'  => 'Formules (cartes B&B/Villa avec stats + CTA)',
             'interior' => 'Intérieur (cards image + kicker + titre + texte, sans lien)',
         ];

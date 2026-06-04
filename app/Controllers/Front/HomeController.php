@@ -11,7 +11,7 @@ class HomeController extends BaseController
     {
         $lang = \LangService::get();
         $seo = \SeoService::forPage('accueil', $lang,
-            'Villa Plaisance — Chambres d\'hôtes et villa de charme à Bédarrides, Provence',
+            'Villa Plaisance, Chambres d\'hôtes et villa de charme à Bédarrides, Provence',
             'Chambres d\'hôtes de septembre à juin, villa entière en juillet-août. Piscine privée, 4 chambres, entre Avignon et Orange. Bédarrides, Vaucluse.'
         );
 
@@ -36,7 +36,7 @@ class HomeController extends BaseController
             $jsonLd[] = \SeoService::faqJsonLd($faqs);
         }
 
-        // Add aggregate rating — normalise Booking (/10) → /5 avant moyenne,
+        // Add aggregate rating, normalise Booking (/10) → /5 avant moyenne,
         // sinon ratingValue peut dépasser bestRating=5 (rejeté par Google).
         $reviews = [];
         try {
@@ -73,7 +73,7 @@ class HomeController extends BaseController
     {
         http_response_code(404);
         $lang = \LangService::get();
-        $seo = \SeoService::forPage('404', $lang, '404 — Page introuvable', 'Cette page n\'existe pas.');
+        $seo = \SeoService::forPage('404', $lang, '404, Page introuvable', 'Cette page n\'existe pas.');
         $jsonLd = [];
         $this->render('front/404', compact('seo', 'jsonLd', 'lang'), 'front-proto');
     }

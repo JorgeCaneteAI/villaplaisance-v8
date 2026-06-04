@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * UnsplashService — recherche + import d'images depuis Unsplash.
+ * UnsplashService, recherche + import d'images depuis Unsplash.
  *
  * - Clé API gratuite : 50 req/heure en mode Demo, 5000/h en mode Production.
  * - L'import télécharge l'image sur le serveur dans /uploads/, l'enregistre
