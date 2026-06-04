@@ -1194,6 +1194,11 @@ input:disabled, textarea:disabled, select:disabled {
 }
 .calendrier__grid .resa:hover { opacity: 0.85; }
 .calendrier__grid .resa-sep { opacity: 0.7; }
+.calendrier__grid .resa-dates {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.92;
+  font-weight: 500;
+}
 
 /* Slots étroits matin / soir : pas de texte, juste la bande couleur.
    Le slot morning (départ) finit à droite (côté gouttière) → radius à droite.

@@ -107,10 +107,15 @@ use App\Services\ReservationConstants;
            class="<?= implode(' ', $cls) ?>"
            title="<?= htmlspecialchars($title) ?>"
            style="background: <?= htmlspecialchars($bg) ?>; color: <?= htmlspecialchars($txt) ?>;">
-            <?php if ($slot === 'full'): ?>
+            <?php if ($slot === 'full'):
+                $arrFmt = (new \DateTimeImmutable($r['arrivee']))->format('d/m');
+                $depFmt = (new \DateTimeImmutable($r['depart']))->format('d/m');
+            ?>
                 <strong><?= htmlspecialchars($r['code']) ?></strong>
                 <span class="resa-sep">·</span>
                 <?= htmlspecialchars($r['nom_client']) ?>
+                <span class="resa-sep">·</span>
+                <span class="resa-dates"><?= $arrFmt ?> → <?= $depFmt ?></span>
             <?php endif; ?>
         </a>
         <?php
