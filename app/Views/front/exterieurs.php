@@ -53,8 +53,15 @@
   }
   .ex-space.alt { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
   .ex-space.alt .ex-space-text { order: 2; }
+  /* <img class="ex-space-img"> : aspect 3/2 iso source (Pattern A).
+     Le background-size n'a plus d'effet depuis la migration <div> → <img>. */
+  .ex-space img.ex-space-img,
   .ex-space-img {
-    aspect-ratio: 4/3; background-size: cover; background-position: center;
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
+    background-size: cover; background-position: center; /* legacy fallback */
   }
   .ex-space-num {
     font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
@@ -109,7 +116,14 @@
   .photo-strip {
     display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 12px;
   }
-  .photo-strip > div { aspect-ratio: 4/3; background-size: cover; background-position: center; }
+  .photo-strip > img,
+  .photo-strip > div {
+    aspect-ratio: 3/2;
+    width: 100%; height: auto;
+    object-fit: cover; object-position: center;
+    display: block;
+    background-size: cover; background-position: center; /* legacy fallback */
+  }
 
   @media (max-width: 720px) {
     .ex-space, .ex-space.alt { grid-template-columns: 1fr; }
