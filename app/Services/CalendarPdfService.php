@@ -43,14 +43,17 @@ class CalendarPdfService
         $pdf = new \FPDF('L', 'mm', 'A4');
         $pdf->SetAutoPageBreak(false);
         self::registerFonts($pdf);
-        $pdf->SetTitle(self::enc("Reservations $year"));
+        $pdf->SetTitle(self::enc("Villa Plaisance $year"));
 
+        // PDF annuel = vue villa uniquement (VP-BB + VP-ETE cumulés), pas
+        // d'Avignon. Reproduit la sémantique slots morning/full/evening
+        // de la vue annuelle web filtrée.
         for ($m = 1; $m <= 12; $m++) {
             $pdf->AddPage();
-            self::drawMonth($pdf, $year, $m);
+            self::drawMonthVilla($pdf, $year, $m);
         }
 
-        $path = self::EXPORTS_DIR . "/reservations_{$year}.pdf";
+        $path = self::EXPORTS_DIR . "/villa_plaisance_{$year}.pdf";
         $pdf->Output('F', $path);
         return $path;
     }
@@ -187,6 +190,175 @@ class CalendarPdfService
         }
 
         // ── LÉGENDE ──
+        $legY = $H - $MARGIN - 6;
+        $legX = $MARGIN;
+        foreach (ReservationConstants::SOURCES as $src => $c) {
+            [$rl, $gl, $bl] = self::hexToRgb($c['bg']);
+            $pdf->SetFillColor($rl, $gl, $bl);
+            $pdf->Rect($legX, $legY, 22, 5, 'F');
+            $pdf->SetTextColor(255, 255, 255);
+            $pdf->SetFont('DejaVuSans', 'B', 7);
+            $pdf->SetXY($legX, $legY + 0.5);
+            $pdf->Cell(22, 4, self::enc('● ' . $src), 0, 0, 'C');
+            $legX += 24;
+        }
+    }
+
+    /**
+     * Rendu d'un mois pour le PDF annuel "Villa" : reproduit la vue web
+     * annuelle filtrée villa (VP-BB + VP-ETE cumulés sur 1 lane, AV-ANN
+     * exclu). Slots morning/full/evening calés sur 46% / 20% / 34%,
+     * date d'arrivée/départ dans les demi-bandeaux, séparateur épais
+     * entre rangées de semaines.
+     */
+    private static function drawMonthVilla(\FPDF $pdf, int $year, int $month): void
+    {
+        $W = 297.0;
+        $H = 210.0;
+        $MARGIN = 12.0;
+        $usableW = $W - 2 * $MARGIN;
+        $usableH = $H - 2 * $MARGIN;
+
+        $data = ReservationService::buildCalendarData($year, $month);
+        $weeks = $data['weeks'];
+        $resaByDay = $data['resa_by_day'];
+        $nWeeks = count($weeks);
+
+        $TITLE_H = 20.0;
+        $HEADER_H = 7.0;
+        $LEGEND_H = 8.0;
+        $CELL_H = ($usableH - $TITLE_H - $HEADER_H - $LEGEND_H) / max(1, $nWeeks);
+        $CELL_W = $usableW / 7.0;
+
+        // ── TITRE ──
+        [$r, $g, $b] = self::hexToRgb('#2C2C2A');
+        $pdf->SetFillColor($r, $g, $b);
+        $pdf->Rect($MARGIN, $MARGIN, $usableW, $TITLE_H, 'F');
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->SetFont('DejaVuSans', 'B', 16);
+        $pdf->SetXY($MARGIN + 6, $MARGIN + 5);
+        $titre = 'VILLA PLAISANCE, ' . mb_strtoupper(ReservationConstants::MOIS_FR[$month], 'UTF-8') . ' ' . $year;
+        $pdf->Cell($usableW - 12, 10, self::enc($titre));
+        $pdf->SetFont('DejaVuSans', '', 8);
+        $pdf->SetXY($W - $MARGIN - 80, $MARGIN + 8);
+        $pdf->Cell(76, 5, self::enc('Chambres & Maison entière'), 0, 0, 'R');
+
+        // ── EN-TÊTES JOURS ──
+        $headerY = $MARGIN + $TITLE_H;
+        foreach (ReservationConstants::JOURS_FR as $i => $jour) {
+            $x = $MARGIN + $i * $CELL_W;
+            [$rh, $gh, $bh] = self::hexToRgb($i >= 5 ? '#3d3d3a' : '#2C2C2A');
+            $pdf->SetFillColor($rh, $gh, $bh);
+            $pdf->Rect($x, $headerY, $CELL_W, $HEADER_H, 'F');
+            $pdf->SetTextColor(255, 255, 255);
+            $pdf->SetFont('DejaVuSans', 'B', 8);
+            $pdf->SetXY($x, $headerY + 1);
+            $pdf->Cell($CELL_W, $HEADER_H - 2, self::enc($jour), 0, 0, 'C');
+        }
+
+        // ── CELLULES ──
+        $SLOT_MORNING_W = $CELL_W * 0.46;
+        $SLOT_GUTTER_W  = $CELL_W * 0.20;
+        $SLOT_EVENING_W = $CELL_W * 0.34;
+        $BAND_H = 6.0;
+        $SEP_H  = 1.5; // séparateur horizontal entre semaines
+
+        foreach ($weeks as $weekIdx => $week) {
+            $cellY = $MARGIN + $TITLE_H + $HEADER_H + $weekIdx * $CELL_H;
+            foreach ($week as $dayIdx => $day) {
+                $cellX = $MARGIN + $dayIdx * $CELL_W;
+                $isCurrent = (int) $day->format('n') === $month;
+                $isWeekStart = ($dayIdx === 0);
+                $isWeekEnd   = ($dayIdx === 6);
+
+                // Fond cellule
+                $bgHex = !$isCurrent ? '#f5f5f5' : ($dayIdx >= 5 ? '#fafaf8' : '#ffffff');
+                [$rb, $gb, $bb] = self::hexToRgb($bgHex);
+                $pdf->SetFillColor($rb, $gb, $bb);
+                $pdf->Rect($cellX, $cellY, $CELL_W, $CELL_H, 'F');
+
+                // Séparateur épais en bas (sauf dernière rangée)
+                if ($weekIdx < $nWeeks - 1) {
+                    [$rs, $gs, $bs] = self::hexToRgb('#e5e5e0');
+                    $pdf->SetFillColor($rs, $gs, $bs);
+                    $pdf->Rect($cellX, $cellY + $CELL_H - $SEP_H, $CELL_W, $SEP_H, 'F');
+                }
+                // Bordure droite cellule (sauf dim)
+                if (!$isWeekEnd) {
+                    $pdf->SetDrawColor(221, 221, 221);
+                    $pdf->SetLineWidth(0.2);
+                    $pdf->Line($cellX + $CELL_W, $cellY, $cellX + $CELL_W, $cellY + $CELL_H);
+                }
+
+                // Numéro du jour
+                $grey = $isCurrent ? 34 : 187;
+                $pdf->SetTextColor($grey, $grey, $grey);
+                $pdf->SetFont('DejaVuSans', 'B', 8);
+                $pdf->SetXY($cellX + 2, $cellY + 1);
+                $pdf->Cell(10, 4, (string) (int) $day->format('j'));
+
+                // Rendu de LA résa (lane villa unique)
+                $key = $day->format('Y-m-d');
+                if (!isset($resaByDay[$key])) continue;
+
+                // Filtre : VP-BB + VP-ETE uniquement (AV-ANN exclu).
+                $villa = array_filter($resaByDay[$key], fn($r) =>
+                    in_array($r['propriete'] ?? '', ['VP-BB', 'VP-ETE'], true)
+                );
+                if (empty($villa)) continue;
+
+                // Tri par type de slot (max 1 de chaque dans une lane)
+                $arrivee = $depart = $full = null;
+                foreach ($villa as $r) {
+                    if (!empty($r['is_departure']))    $depart  = $r;
+                    elseif (!empty($r['is_arrival']))  $arrivee = $r;
+                    else                                $full    = $r;
+                }
+
+                $bandY = $cellY + 6;
+                // Coin arrondi simulé : pas dispo en FPDF, on garde droit.
+
+                if ($full) {
+                    // Bandeau pleine cellule
+                    [$rc, $gc, $bc] = self::hexToRgb($full['couleur']['bg']);
+                    $pdf->SetFillColor($rc, $gc, $bc);
+                    $pdf->Rect($cellX + 0.5, $bandY, $CELL_W - 1, $BAND_H, 'F');
+                    $pdf->SetTextColor(255, 255, 255);
+                    $pdf->SetFont('DejaVuSans', 'B', 6.5);
+                    $pdf->SetXY($cellX + 1.5, $bandY + 1);
+                    $line = self::enc($full['code'] . ' · ' . $full['nom_client']);
+                    $pdf->Cell($CELL_W - 3, $BAND_H - 2, self::truncate($pdf, $line, $CELL_W - 3));
+                } else {
+                    // Slot morning (départ matin, 0 → 46%)
+                    if ($depart) {
+                        [$rc, $gc, $bc] = self::hexToRgb($depart['couleur']['bg']);
+                        $pdf->SetFillColor($rc, $gc, $bc);
+                        $pdf->Rect($cellX + 0.5, $bandY, $SLOT_MORNING_W - 0.5, $BAND_H, 'F');
+                        $pdf->SetTextColor(255, 255, 255);
+                        $pdf->SetFont('DejaVuSans', 'B', 6.5);
+                        $dateStr = (new \DateTimeImmutable($depart['depart']))->format('d/m');
+                        $pdf->SetXY($cellX + 0.5, $bandY + 1);
+                        // Aligné à droite (côté gouttière)
+                        $pdf->Cell($SLOT_MORNING_W - 2, $BAND_H - 2, self::enc($dateStr), 0, 0, 'R');
+                    }
+                    // Slot evening (arrivée soir, 66 → 100%)
+                    if ($arrivee) {
+                        [$rc, $gc, $bc] = self::hexToRgb($arrivee['couleur']['bg']);
+                        $pdf->SetFillColor($rc, $gc, $bc);
+                        $evX = $cellX + $SLOT_MORNING_W + $SLOT_GUTTER_W;
+                        $pdf->Rect($evX, $bandY, $SLOT_EVENING_W - 0.5, $BAND_H, 'F');
+                        $pdf->SetTextColor(255, 255, 255);
+                        $pdf->SetFont('DejaVuSans', 'B', 6.5);
+                        $dateStr = (new \DateTimeImmutable($arrivee['arrivee']))->format('d/m');
+                        $pdf->SetXY($evX + 1.5, $bandY + 1);
+                        // Aligné à gauche (côté gouttière)
+                        $pdf->Cell($SLOT_EVENING_W - 2, $BAND_H - 2, self::enc($dateStr), 0, 0, 'L');
+                    }
+                }
+            }
+        }
+
+        // ── LÉGENDE (sources, sans Avignon qui n'est pas dans ce PDF) ──
         $legY = $H - $MARGIN - 6;
         $legX = $MARGIN;
         foreach (ReservationConstants::SOURCES as $src => $c) {
