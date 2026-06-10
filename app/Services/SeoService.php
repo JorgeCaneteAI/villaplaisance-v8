@@ -243,10 +243,7 @@ class SeoService
         // VacationRental = les 4 chambres villa (Verte, Bleue, Arche, 70),
         // chacune enrichie. Les espaces communs (cuisine, salon, piscine)
         // ne peuvent pas être dans containsPlace (Google les rejette comme
-        // type invalide) — ils restent couverts par amenityFeature ci-dessous.
-        $base['containsPlace'] = self::containsPlaces();
-        // VacationRental = villa entière : on expose les 7 Place (4 chambres
-        // + cuisine + salon + piscine).
+        // type invalide), ils restent couverts par amenityFeature ci-dessous.
         $base['containsPlace'] = self::containsPlaces();
         $base['numberOfRooms'] = 4;
         $base['occupancy'] = [
