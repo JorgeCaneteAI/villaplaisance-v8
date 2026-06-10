@@ -118,6 +118,7 @@ class Router
             '/mentions-legales' => ['Controllers\\Front\\LegalController', 'mentions'],
             '/politique-confidentialite' => ['Controllers\\Front\\LegalController', 'confidentialite'],
             '/plan-du-site' => ['Controllers\\Front\\LegalController', 'planDuSite'],
+            '/calendar.ics' => ['Controllers\\Front\\CalendarIcalController', 'export'],
         ];
 
         // Multilingual slug resolution
