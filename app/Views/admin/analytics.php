@@ -157,7 +157,7 @@ $trendHtml = function(array $t): string {
         </div>
         <?php if ($maxHourly > 0): ?>
         <p class="card-footer-note">
-            Pic de trafic : <strong><?= $peakHour ?>h–<?= $peakHour + 1 ?>h</strong>
+            Pic de trafic : <strong><?= $peakHour ?>h-<?= $peakHour + 1 ?>h</strong>
             (<?= $maxHourly ?> vues), disponibilité recommandée à cette heure.
         </p>
         <?php endif; ?>

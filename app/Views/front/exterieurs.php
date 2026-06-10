@@ -215,7 +215,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
         </div>
         <h2 class="h-xl" style="margin: 0 0 24px;">Piscine <em>12 × 6 m</em>,<br/>clôturée et sécurisée.</h2>
         <p class="body-lg" style="margin: 0 0 16px; max-width: 56ch;" data-en="The pool is 12 by 6 metres, fully fenced for children's safety. Sunbeds, parasols, a solar shower and a garden lounge are available.">Le bassin mesure 12 mètres sur 6, entièrement clôturé pour la sécurité des enfants. Transats, parasols, douche solaire et salon de jardin sont à disposition.</p>
-        <p class="body" style="margin: 0; max-width: 56ch;" data-en="In B&amp;B season (Sept–June): shared pool, accessible from 9 am to 9 pm. As a whole-villa rental (July–Aug): exclusive private pool, 24/7. Heating available on request.">En chambres d'hôtes (sept–juin) : piscine partagée, accessible de 9h à 21h. En villa entière (juil–août) : piscine privée exclusive, 24h/24. Chauffage disponible sur demande.</p>
+        <p class="body" style="margin: 0; max-width: 56ch;" data-en="In B&amp;B season (Sept-June): shared pool, accessible from 9 am to 9 pm. As a whole-villa rental (July-Aug): exclusive private pool, 24/7. Heating available on request.">En chambres d'hôtes (sept-juin) : piscine partagée, accessible de 9h à 21h. En villa entière (juil-août) : piscine privée exclusive, 24h/24. Chauffage disponible sur demande.</p>
 
         <div class="ex-space-pills">
           <span class="pill">12 × 6 m</span>
@@ -223,7 +223,7 @@ foreach (BlockService::getSections('espaces-exterieurs', $lang) as $_s) {
           <span class="pill" data-en="Sunbeds &amp; parasols">Transats &amp; parasols</span>
           <span class="pill" data-en="Solar shower">Douche solaire</span>
           <span class="pill" data-en="Heating on request">Chauffage sur demande</span>
-          <span class="pill solid" data-en="Shared (Sept–June) or private (July–Aug)">Partagée (sept–juin) · privée (juil–août)</span>
+          <span class="pill solid" data-en="Shared (Sept-June) or private (July-Aug)">Partagée (sept-juin) · privée (juil-août)</span>
         </div>
       </div>
       <?= ImageService::imgFromBg('villa-plaisance-piscine-privee-01.webp', 'ex-space-img') ?>

@@ -281,7 +281,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         <div style="border: var(--hairline); background: var(--linen-50); padding: 26px 28px;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: var(--hairline); padding-bottom: 14px; margin-bottom: 18px;">
             <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);" data-en="Travelling as a couple">À deux</span>
-            <span class="numeral label-terra">1 – 2 <span data-en="guests">pers.</span></span>
+            <span class="numeral label-terra">1 - 2 <span data-en="guests">pers.</span></span>
           </div>
           <p class="body" style="margin: 0 0 14px;" data-en="Tell us how you'd like the bedding made up, we prepare one of the rooms, the other stays accessible as a reading lounge.">Dites-nous comment vous préférez le couchage, nous préparons une des chambres, l'autre reste accessible en salon de lecture.</p>
           <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
@@ -304,7 +304,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         <div style="border: var(--hairline); background: var(--linen-50); padding: 26px 28px;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: var(--hairline); padding-bottom: 14px; margin-bottom: 18px;">
             <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);" data-en="As a family or small group">En famille, en petit groupe</span>
-            <span class="numeral label-terra">3 – 5 <span data-en="guests">pers.</span></span>
+            <span class="numeral label-terra">3 - 5 <span data-en="guests">pers.</span></span>
           </div>
           <p class="body" style="margin: 0;" data-en="Both rooms are prepared. The Bleue sofa bed opens for a fifth guest. The connecting door stays where you want it, open, closed, locked from your side.">Les deux chambres sont préparées. Le clic-clac de la Bleue s'ouvre pour une cinquième personne. La porte intérieure reste comme vous voulez, ouverte, fermée, verrouillée de votre côté.</p>
         </div>

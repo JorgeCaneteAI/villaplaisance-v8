@@ -339,7 +339,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
       </div>
       <div>
         <p class="lede" style="margin: 0 0 20px;" data-en="Nestled in the heart of Provence's Golden Triangle, Villa Plaisance is a maison de charme in Bédarrides, 15 min from Avignon, 8 min from Châteauneuf-du-Pape, 18 min from Orange.">Nichée au cœur du Triangle d'Or provençal, Villa Plaisance est une maison de charme à Bédarrides, à 15 min d'Avignon, 8 min de Châteauneuf-du-Pape, 18 min d'Orange.</p>
-        <p class="body-lg" style="margin: 0 0 16px;" data-en="September to June: a B&amp;B with homemade breakfast and shared pool. July to August: the whole villa (4 bedrooms, 10 guests, private 12 × 6 m pool) in full autonomy.">De septembre à juin : chambres d'hôtes B&amp;B avec petit-déjeuner maison et piscine partagée. En juillet–août : la villa entière (4 chambres, 10 personnes, piscine privée 12 × 6 m) en toute autonomie.</p>
+        <p class="body-lg" style="margin: 0 0 16px;" data-en="September to June: a B&amp;B with homemade breakfast and shared pool. July to August: the whole villa (4 bedrooms, 10 guests, private 12 × 6 m pool) in full autonomy.">De septembre à juin : chambres d'hôtes B&amp;B avec petit-déjeuner maison et piscine partagée. En juillet-août : la villa entière (4 chambres, 10 personnes, piscine privée 12 × 6 m) en toute autonomie.</p>
         <p class="body-lg" style="margin: 0;" data-en="The place is calm, the village alive, the countryside starts at the doorstep, the TGV is fifteen minutes away.">Le lieu est calme, le village vivant, la campagne à pied, le TGV à quinze minutes.</p>
       </div>
     </div>
@@ -373,7 +373,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         <h3><em data-en="B&amp;B">Chambres d'hôtes</em></h3>
         <p class="desc" data-en="You stay at our place. Two communicating, air-conditioned bedrooms with a private bathroom are strictly dedicated to you. Breakfast is included, local produce, homemade jams, fruit from the garden. Shared pool, personalised advice and a warm welcome. A communicating suite ideal for families (1 to 5 guests).">Vous séjournez chez l'habitant. Deux chambres communicantes et climatisées avec salle de bain privée vous sont strictement dédiées. Le petit-déjeuner est inclus : produits locaux, confitures maison, fruits du jardin. Piscine partagée, conseils personnalisés et accueil chaleureux. Suite communicante idéale pour les familles (1 à 5 personnes).</p>
         <div class="stats">
-          <span class="stat-pill">1 – 5 <span data-en="guests">pers.</span></span>
+          <span class="stat-pill">1 - 5 <span data-en="guests">pers.</span></span>
           <span class="stat-pill" data-en="Breakfast included">Petit-déj inclus</span>
           <span class="stat-pill" data-en="Shared pool">Piscine partagée</span>
         </div>

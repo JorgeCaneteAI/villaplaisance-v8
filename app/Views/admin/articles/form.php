@@ -73,7 +73,7 @@ $frQualityTotal = count($frQuality);
                     <li class="<?= $frQuality['content'] ? 'ok' : 'missing' ?>">Contenu rédigé</li>
                     <li class="<?= $frQuality['cover'] ? 'ok' : 'missing' ?>">Image de couverture</li>
                     <li class="<?= $frQuality['meta_title'] ? 'ok' : 'missing' ?>">Meta title ≤ 60 car.</li>
-                    <li class="<?= $frQuality['meta_desc'] ? 'ok' : 'missing' ?>">Meta desc 120–160 car.</li>
+                    <li class="<?= $frQuality['meta_desc'] ? 'ok' : 'missing' ?>">Meta desc 120-160 car.</li>
                     <li class="<?= $frQuality['category'] ? 'ok' : 'missing' ?>">Catégorie définie</li>
                 </ul>
             </div>
@@ -194,10 +194,10 @@ $frQualityTotal = count($frQuality);
                     <code>- Item de liste</code><br>
                     <p style="margin-top:0.5rem"><strong>Recommandations SEO :</strong></p>
                     <ul>
-                        <li>Title : 50–60 caractères</li>
-                        <li>Description : 120–160 car.</li>
+                        <li>Title : 50-60 caractères</li>
+                        <li>Description : 120-160 car.</li>
                         <li>1 seul H1 (= titre article)</li>
-                        <li>2–4 H2 dans le contenu</li>
+                        <li>2-4 H2 dans le contenu</li>
                         <li>Au moins 1 image avec alt</li>
                     </ul>
                     <p style="margin-top:0.5rem"><strong>Recommandations GSO :</strong></p>
@@ -313,7 +313,7 @@ $frQualityTotal = count($frQuality);
                                 <small class="char-count <?= $mtLen > 60 ? 'text-danger' : 'text-muted' ?>" data-target="meta_title_<?= $l ?>"><?= $mtLen ?>/60</small>
                             </div>
                             <div class="form-group">
-                                <label>Meta Description <small class="text-muted">(120–160)</small></label>
+                                <label>Meta Description <small class="text-muted">(120-160)</small></label>
                                 <textarea name="meta_desc_<?= $l ?>" rows="2" maxlength="170" placeholder="Description pour Google"><?= htmlspecialchars($a['meta_desc'] ?? '') ?></textarea>
                                 <small class="char-count <?= ($mdLen < 120 || $mdLen > 160) && $mdLen > 0 ? 'text-danger' : 'text-muted' ?>" data-target="meta_desc_<?= $l ?>"><?= $mdLen ?>/160</small>
                             </div>

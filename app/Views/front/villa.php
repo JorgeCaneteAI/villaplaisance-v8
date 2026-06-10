@@ -283,7 +283,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
   <div class="page-hero-inner">
     <div>
       <div class="page-hero-issue">
-        <span data-en="02 · Maison d'hôtes · July – August">02 · Maison d'hôtes · Juillet – août</span>
+        <span data-en="02 · Maison d'hôtes · July to August">02 · Maison d'hôtes · Juillet à août</span>
         <span data-en="Saturday to Saturday">Du samedi au samedi</span>
       </div>
       <h1>La villa <em>entière</em>,<br/>en toute autonomie.</h1>
@@ -705,7 +705,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         </details>
         <details>
           <summary><span data-en="What is the minimum stay?">Quelle est la durée minimum de location ?</span><span class="icon"></span></summary>
-          <div class="answer" data-en="In high season (July–August), the minimum is one week, Saturday to Saturday.">En haute saison (juillet-août), la durée minimum est d'une semaine, du samedi au samedi.</div>
+          <div class="answer" data-en="In high season (July-August), the minimum is one week, Saturday to Saturday.">En haute saison (juillet-août), la durée minimum est d'une semaine, du samedi au samedi.</div>
         </details>
         <details>
           <summary><span data-en="Are there shops nearby?">Y a-t-il des commerces à proximité ?</span><span class="icon"></span></summary>
