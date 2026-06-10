@@ -98,6 +98,12 @@ class CalendarPdfService
         return $text;
     }
 
+    /**
+     * Rendu d'un mois pour le PDF mensuel global : reproduit la vue web
+     * (index.php), 3 lanes par cellule (VP-BB / VP-ETE / AV-ANN), slots
+     * morning/full/evening calés sur 46% / 20% / 34% comme la vue web.
+     * Date d'arrivée/départ dans les demi-bandeaux.
+     */
     private static function drawMonth(\FPDF $pdf, int $year, int $month): void
     {
         $W = 297.0;           // A4 landscape mm
@@ -144,21 +150,43 @@ class CalendarPdfService
         }
 
         // ── CELLULES ──
+        $LANES = ['VP-BB' => 0, 'VP-ETE' => 1, 'AV-ANN' => 2];
+        $N_LANES = 3;
+        $BAND_H   = 4.5;  // hauteur d'une lane
+        $LANE_GAP = 0.7;
+        $SEP_H    = 1.5;  // séparateur entre semaines
+        $DAY_NUM_H = 4.5; // hauteur réservée au numéro de jour
+        $SLOT_MORNING_W = $CELL_W * 0.46;
+        $SLOT_GUTTER_W  = $CELL_W * 0.20;
+        $SLOT_EVENING_W = $CELL_W * 0.34;
+
         foreach ($weeks as $weekIdx => $week) {
             $cellY = $MARGIN + $TITLE_H + $HEADER_H + $weekIdx * $CELL_H;
             foreach ($week as $dayIdx => $day) {
                 $cellX = $MARGIN + $dayIdx * $CELL_W;
                 $isCurrent = (int) $day->format('n') === $month;
+                $isWeekEnd   = ($dayIdx === 6);
 
+                // Fond cellule
                 $bgHex = !$isCurrent ? '#f5f5f5' : ($dayIdx >= 5 ? '#fafaf8' : '#ffffff');
                 [$rb, $gb, $bb] = self::hexToRgb($bgHex);
                 $pdf->SetFillColor($rb, $gb, $bb);
                 $pdf->Rect($cellX, $cellY, $CELL_W, $CELL_H, 'F');
 
-                $pdf->SetDrawColor(221, 221, 221);
-                $pdf->SetLineWidth(0.3);
-                $pdf->Rect($cellX, $cellY, $CELL_W, $CELL_H);
+                // Séparateur épais en bas (sauf dernière rangée)
+                if ($weekIdx < $nWeeks - 1) {
+                    [$rs, $gs, $bs] = self::hexToRgb('#e5e5e0');
+                    $pdf->SetFillColor($rs, $gs, $bs);
+                    $pdf->Rect($cellX, $cellY + $CELL_H - $SEP_H, $CELL_W, $SEP_H, 'F');
+                }
+                // Bordure droite cellule (sauf dim)
+                if (!$isWeekEnd) {
+                    $pdf->SetDrawColor(221, 221, 221);
+                    $pdf->SetLineWidth(0.2);
+                    $pdf->Line($cellX + $CELL_W, $cellY, $cellX + $CELL_W, $cellY + $CELL_H);
+                }
 
+                // Numéro du jour
                 $grey = $isCurrent ? 34 : 187;
                 $pdf->SetTextColor($grey, $grey, $grey);
                 $pdf->SetFont('DejaVuSans', 'B', 8);
@@ -166,24 +194,64 @@ class CalendarPdfService
                 $pdf->Cell(10, 4, (string) (int) $day->format('j'));
 
                 $key = $day->format('Y-m-d');
-                if ($isCurrent && isset($resaByDay[$key])) {
-                    $resas = $resaByDay[$key];
-                    $bandH = min(4.0, ($CELL_H - 6) / max(1, count($resas)));
-                    $bandH = max(3.0, $bandH);
-                    $textW = $CELL_W - 4;
-                    $bandY = $cellY + 5;
+                if (!$isCurrent || !isset($resaByDay[$key])) continue;
 
-                    foreach ($resas as $resa) {
-                        if ($bandY + $bandH > $cellY + $CELL_H - 1) break;
-                        [$rc, $gc, $bc] = self::hexToRgb($resa['couleur']['bg']);
+                // Range les résas par lane (= propriété). Ordre fixe pour
+                // que l'œil suive horizontalement chaque propriété.
+                $byLane = [0 => [], 1 => [], 2 => []];
+                foreach ($resaByDay[$key] as $r) {
+                    $l = $LANES[$r['propriete'] ?? ''] ?? null;
+                    if ($l === null) continue;
+                    $byLane[$l][] = $r;
+                }
+
+                // Empile les 3 lanes, chacune avec son slot morning/full/evening.
+                for ($lane = 0; $lane < $N_LANES; $lane++) {
+                    $bandY = $cellY + $DAY_NUM_H + $lane * ($BAND_H + $LANE_GAP);
+
+                    // Classement des résas de la lane
+                    $morn = $evn = $full = null;
+                    foreach ($byLane[$lane] as $r) {
+                        if (!empty($r['is_departure']))    $morn = $r;
+                        elseif (!empty($r['is_arrival']))  $evn  = $r;
+                        else                                $full = $r;
+                    }
+
+                    if ($full) {
+                        // Bandeau pleine cellule, pas de padding latéral
+                        // → continuité visuelle entre cellules adjacentes.
+                        [$rc, $gc, $bc] = self::hexToRgb($full['couleur']['bg']);
                         $pdf->SetFillColor($rc, $gc, $bc);
-                        $pdf->Rect($cellX + 1, $bandY, $CELL_W - 2, $bandH - 0.5, 'F');
+                        $pdf->Rect($cellX, $bandY, $CELL_W, $BAND_H, 'F');
                         $pdf->SetTextColor(255, 255, 255);
                         $pdf->SetFont('DejaVuSans', 'B', 6);
-                        $pdf->SetXY($cellX + 1.5, $bandY + 0.3);
-                        $line = self::enc($resa['code'] . ' · ' . $resa['nom_client']);
-                        $pdf->Cell($textW, 2, self::truncate($pdf, $line, $textW));
-                        $bandY += $bandH;
+                        $pdf->SetXY($cellX + 1.2, $bandY + 0.7);
+                        $line = self::enc($full['code'] . ' · ' . $full['nom_client']);
+                        $pdf->Cell($CELL_W - 2.4, $BAND_H - 1.5, self::truncate($pdf, $line, $CELL_W - 2.4));
+                    } else {
+                        if ($morn) {
+                            // Slot morning, demi-cellule gauche (0 → 46%), date alignée à droite (côté gouttière)
+                            [$rc, $gc, $bc] = self::hexToRgb($morn['couleur']['bg']);
+                            $pdf->SetFillColor($rc, $gc, $bc);
+                            $pdf->Rect($cellX, $bandY, $SLOT_MORNING_W, $BAND_H, 'F');
+                            $pdf->SetTextColor(255, 255, 255);
+                            $pdf->SetFont('DejaVuSans', 'B', 6);
+                            $dateStr = (new \DateTimeImmutable($morn['depart']))->format('d/m');
+                            $pdf->SetXY($cellX, $bandY + 0.7);
+                            $pdf->Cell($SLOT_MORNING_W - 1.2, $BAND_H - 1.5, self::enc($dateStr), 0, 0, 'R');
+                        }
+                        if ($evn) {
+                            // Slot evening, demi-cellule droite (66 → 100%), date alignée à gauche (côté gouttière)
+                            [$rc, $gc, $bc] = self::hexToRgb($evn['couleur']['bg']);
+                            $pdf->SetFillColor($rc, $gc, $bc);
+                            $evX = $cellX + $SLOT_MORNING_W + $SLOT_GUTTER_W;
+                            $pdf->Rect($evX, $bandY, $SLOT_EVENING_W, $BAND_H, 'F');
+                            $pdf->SetTextColor(255, 255, 255);
+                            $pdf->SetFont('DejaVuSans', 'B', 6);
+                            $dateStr = (new \DateTimeImmutable($evn['arrivee']))->format('d/m');
+                            $pdf->SetXY($evX + 1.2, $bandY + 0.7);
+                            $pdf->Cell($SLOT_EVENING_W - 1.8, $BAND_H - 1.5, self::enc($dateStr), 0, 0, 'L');
+                        }
                     }
                 }
             }
@@ -202,6 +270,11 @@ class CalendarPdfService
             $pdf->Cell(22, 4, self::enc('● ' . $src), 0, 0, 'C');
             $legX += 24;
         }
+        // Légende complémentaire arrivée/départ
+        $pdf->SetTextColor(110, 110, 110);
+        $pdf->SetFont('DejaVuSans', '', 6.5);
+        $pdf->SetXY($MARGIN, $legY + 5.5);
+        $pdf->Cell($usableW, 3, self::enc('Demi-cellule gauche = départ matin (avant 11h) · Demi-cellule droite = arrivée soir (après 16h)'), 0, 0, 'L');
     }
 
     /**
