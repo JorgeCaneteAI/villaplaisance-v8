@@ -11,8 +11,9 @@
   --linen-300: #DCD0B7;
   --stone-400: #B8AC91;
   /* #8C8167 à l'origine : 3.3-3.6:1 sur les fonds linen, sous le seuil
-     WCAG AA (4.5:1). Assombri à teinte constante, 4.6:1 sur linen-100. */
-  --stone-500: #746B56;
+     WCAG AA (4.5:1). Assombri à teinte constante, 4.6:1 sur le fond le
+     plus sombre où il sert de texte (#EDEDE0, surfaces sage-light). */
+  --stone-500: #726954;
   --stone-600: #6B6253;
   --ink-700:   #3B362D;
   --ink-900:   #1F1C16;
@@ -26,8 +27,10 @@
   --sage-500: #6F8466;
   --sage-700: #4D5E47;
 
-  /* Terracotta, logo color, used as a second accent next to sage */
-  --terra-500: #C44C24;
+  /* Terracotta, logo color, used as a second accent next to sage.
+     #C44C24 à l'origine : 4.0-4.4:1 en texte sur les fonds linen, sous
+     le seuil WCAG AA. Assombri à teinte constante, 4.6:1 sur #EDEDE0. */
+  --terra-500: #B54621;
   --terra-600: #A23A18;
 
   /* Type */

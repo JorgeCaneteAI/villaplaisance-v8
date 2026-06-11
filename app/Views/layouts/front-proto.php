@@ -285,8 +285,8 @@
     .cookie-btn{padding:0.5rem 1.25rem;border-radius:2px;font-size:0.85rem;font-family:inherit;cursor:pointer;border:none;transition:background 0.2s}
     .cookie-btn-refuse{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.3)}
     .cookie-btn-refuse:hover{background:rgba(255,255,255,0.1);color:#fff}
-    .cookie-btn-accept{background:var(--sage-500);color:#fff}
-    .cookie-btn-accept:hover{background:var(--sage-700)}
+    .cookie-btn-accept{background:var(--sage-700);color:#fff}/* sage-500 : 4.06:1 avec le blanc, sous AA ; sage-700 : 6.98:1 */
+    .cookie-btn-accept:hover{background:var(--olive-900)}
     @media(max-width:600px){.cookie-inner{flex-direction:column;text-align:center}.cookie-actions{width:100%;justify-content:center}}
     </style>
     <script>
