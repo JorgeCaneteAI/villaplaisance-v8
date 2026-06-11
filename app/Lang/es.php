@@ -20,6 +20,7 @@ return [
     'home.hero.title' => 'Villa Plaisance',
     'home.hero.subtitle' => 'Casa de huéspedes y villa con encanto en Bédarrides',
     'home.hero.cta' => 'Descubrir la casa',
+    'home.hero.h1_suffix' => ', casa de huéspedes y villa en Bédarrides, Provenza',
     'home.identity.title' => 'Una casa, dos formas de alojarse',
     'home.identity.text' => 'Villa Plaisance es una casa provenzal abierta a los viajeros, en Bédarrides, entre Aviñón y Orange. De septiembre a junio, recibimos en régimen de alojamiento con desayuno casero y piscina compartida. En julio y agosto, la villa entera se alquila en exclusiva: cuatro habitaciones, una piscina privada de 12 por 6 metros, un jardín bajo los olivos. El lugar es tranquilo. El pueblo está vivo. El campo queda a pie, el TGV a quince minutos.',
     'home.offers.title' => 'Dos ofertas, dos temporadas',
@@ -68,6 +69,7 @@ return [
     // Diario
     'journal.hero.title' => 'Diario',
     'journal.hero.subtitle' => 'Relatos, consejos y miradas sobre la Provenza',
+    'journal.updated_on' => 'Actualizado el',
 
     // Alrededores
     'surplace.hero.title' => 'Alrededores',

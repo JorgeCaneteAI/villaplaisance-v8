@@ -20,6 +20,22 @@ Options -Indexes
     Header unset Server
 </IfModule>
 
+# ═══ Cache navigateur des assets statiques ═══
+# /uploads héritait déjà d'un cache 30 j (config serveur o2switch sur les
+# images) mais /assets (CSS, JS, SVG) partait sans Cache-Control. Le CSS
+# est versionné par query param (?v=), un cache long est donc sans risque.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 30 days"
+    ExpiresByType application/javascript "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType image/x-icon "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 365 days"
+</IfModule>
+
 # ═══ PWA, MIME types + Service Worker scope ═══
 AddType application/manifest+json .webmanifest
 <Files "sw.js">

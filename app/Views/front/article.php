@@ -113,9 +113,36 @@ $kickerEn    = $isOnSite ? '07 · On site'       : '05 · Journal';
         <div>
           <div class="page-hero-issue">
             <span data-en="<?= htmlspecialchars($kickerEn) ?>"><?= htmlspecialchars($kicker) ?></span>
-            <?php if (!empty($article['published_at'])): ?>
+            <?php
+              // Mois localisés : date('j F Y') rendait les mois en anglais
+              // sur les pages FR/ES ("1 July 2025"). Préfixe $art (scope
+              // partagé des partials).
+              $artMonths = [
+                  'fr' => ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+                  'en' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                  'es' => ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+              ];
+              $artFmtDate = static function (int $ts) use ($artMonths, $lang): string {
+                  $m = ($artMonths[$lang] ?? $artMonths['fr'])[(int)date('n', $ts) - 1];
+                  $j = (int)date('j', $ts);
+                  $y = date('Y', $ts);
+                  return $lang === 'es' ? "$j de $m de $y" : "$j $m $y";
+              };
+              // Timestamps calculés une seule fois ; strtotime renvoie false
+              // sur une date invalide ('0000-00-00'…) → false devient null et
+              // la date n'est pas affichée (TypeError sinon, strict_types).
+              $artPubTs = ($artP = (string)($article['published_at'] ?? '')) !== '' ? (strtotime($artP) ?: null) : null;
+              $artUpdTs = ($artU = (string)($article['updated_at'] ?? '')) !== '' ? (strtotime($artU) ?: null) : null;
+              // « Mis à jour le » : signal de fraîcheur visible (les moteurs IA
+              // pondèrent fortement la récence), affiché si la mise à jour est
+              // postérieure au jour de publication.
+              $artShowUpdated = $artPubTs !== null && $artUpdTs !== null
+                  && date('Y-m-d', $artUpdTs) > date('Y-m-d', $artPubTs);
+            ?>
+            <?php if ($artPubTs !== null): ?>
             <span>
-              <time datetime="<?= htmlspecialchars($article['published_at']) ?>"><?= date('j F Y', strtotime($article['published_at'])) ?></time>
+              <time datetime="<?= date('Y-m-d', $artPubTs) ?>"><?= $artFmtDate($artPubTs) ?></time>
+              <?php if ($artShowUpdated): ?> &middot; <?= t('journal.updated_on') ?> <time datetime="<?= date('Y-m-d', $artUpdTs) ?>"><?= $artFmtDate($artUpdTs) ?></time><?php endif; ?>
               <?php if (!empty($article['category'])): ?> &middot; <?= htmlspecialchars($article['category']) ?><?php endif; ?>
             </span>
             <?php elseif (!empty($article['category'])): ?>

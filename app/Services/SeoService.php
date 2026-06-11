@@ -27,7 +27,7 @@ class SeoService
             'og' => [
                 'title' => $seo['og_title'] ?? $title,
                 'description' => $seo['og_desc'] ?? $description,
-                'image' => $seo['og_image'] ?? APP_URL . '/assets/img/og-default.webp',
+                'image' => $seo['og_image'] ?? APP_URL . '/assets/img/og-default.jpg',
                 'url' => $canonical,
                 'type' => 'website',
                 'locale' => self::locale($lang),
@@ -119,10 +119,8 @@ class SeoService
                 $base . '/uploads/villa-plaisance-petit-dejeuner-brioche-01.webp',
             ],
             'priceRange' => '€€',
-            'starRating' => [
-                '@type' => 'Rating',
-                'ratingValue' => '5',
-            ],
+            // Pas de starRating : c'est un classement officiel (étoiles hôtelières),
+            // pas une note d'avis. L'auto-déclarer expose à un warning GSC.
             // Note moyenne agrégée depuis Google Business Profile (5.0 / 11 avis).
             // À synchroniser quand le nombre d'avis évolue.
             'aggregateRating' => [
@@ -281,28 +279,67 @@ class SeoService
 
     public static function blogPostingJsonLd(array $article): array
     {
-        return [
+        $base = APP_ENV === 'production' ? 'https://villaplaisance.fr' : APP_URL;
+
+        // Image en URL absolue obligatoire (un nom de fichier nu est
+        // irrésoluble par Google → rich results article inéligibles).
+        $image = !empty($article['cover_image'])
+            ? ImageService::url($article['cover_image'])
+            : '/assets/img/og-default.jpg';
+        if (!str_starts_with($image, 'http')) {
+            $image = $base . $image;
+        }
+
+        $jsonLd = [
             '@context' => 'https://schema.org',
             '@type' => 'BlogPosting',
             'headline' => $article['title'],
             'description' => $article['excerpt'] ?? '',
+            // Auteur humain identifié plutôt qu'Organization : signal
+            // E-E-A-T, et les moteurs IA citent davantage les contenus
+            // avec auteur nommé. L'URL ancre l'entité sur /votre-hote.
             'author' => [
-                '@type' => 'Organization',
-                'name' => 'Villa Plaisance',
+                '@type' => 'Person',
+                'name' => 'Jorge Cañete',
+                'url' => $base . '/votre-hote',
             ],
             'publisher' => [
                 '@type' => 'Organization',
                 'name' => 'Villa Plaisance',
-                'url' => APP_URL,
+                'url' => $base,
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => $base . '/assets/img/logo-proto.png',
+                ],
             ],
-            'datePublished' => $article['published_at'] ?? $article['created_at'] ?? '',
-            'dateModified' => $article['updated_at'] ?? $article['created_at'] ?? '',
-            'image' => $article['cover_image'] ?? APP_URL . '/assets/img/og-default.webp',
+            'image' => $image,
             'mainEntityOfPage' => [
                 '@type' => 'WebPage',
-                '@id' => APP_URL . '/journal/' . ($article['slug'] ?? ''),
+                '@id' => $base . '/journal/' . ($article['slug'] ?? ''),
             ],
         ];
+
+        // Dates en ISO 8601 (le format SQL "Y-m-d H:i:s" est rejeté).
+        // Omises proprement si absentes plutôt qu'émises vides.
+        $published = self::isoDate($article['published_at'] ?? $article['created_at'] ?? null);
+        $modified = self::isoDate($article['updated_at'] ?? $article['created_at'] ?? null);
+        if ($published !== null) {
+            $jsonLd['datePublished'] = $published;
+        }
+        if ($modified !== null) {
+            $jsonLd['dateModified'] = $modified;
+        }
+
+        return $jsonLd;
+    }
+
+    private static function isoDate(?string $sqlDate): ?string
+    {
+        if ($sqlDate === null || $sqlDate === '') {
+            return null;
+        }
+        $ts = strtotime($sqlDate);
+        return $ts === false ? null : date('c', $ts);
     }
 
     public static function breadcrumbJsonLd(array $items): array

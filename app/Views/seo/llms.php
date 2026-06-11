@@ -29,11 +29,28 @@
 - 42 min de Gordes
 - 45 min des Baux-de-Provence
 
+## Pages
+- [Accueil](https://villaplaisance.fr/) : présentation de la maison et des deux formules
+- [Chambres d'hôtes](https://villaplaisance.fr/chambres-d-hotes) : les 2 chambres, petit-déjeuner, FAQ séjour
+- [Location villa](https://villaplaisance.fr/location-villa-provence) : la villa entière, équipements, FAQ location
+- [Espaces extérieurs](https://villaplaisance.fr/espaces-exterieurs) : piscine, jardin, terrasses
+- [Avis clients](https://villaplaisance.fr/avis) : témoignages des hôtes (Booking, Airbnb, Google)
+- [Votre hôte](https://villaplaisance.fr/votre-hote) : Jorge Cañete, l'hôte des lieux
+- [Journal](https://villaplaisance.fr/journal) : récits et conseils sur la Provence
+- [Disponibilités](https://villaplaisance.fr/disponibilites) : calendrier public des disponibilités
+- [Contact](https://villaplaisance.fr/contact) : formulaire et coordonnées
+
+## Réservation
+- Pas de réservation en ligne sur le site : demande par formulaire de contact, téléphone ou plateformes
+- Airbnb : https://www.airbnb.fr/h/villaplaisance
+- Booking : https://www.booking.com/hotel/fr/villa-plaisance-bedarrides
+
 ## Contact
 - Site : https://villaplaisance.fr
 - Email : contact@villaplaisance.fr
+- Téléphone : +33 4 90 33 00 49
 
 ## Langues
 - Français (langue principale)
-- English
-- Español
+- English : https://villaplaisance.fr/en/
+- Español : https://villaplaisance.fr/es/

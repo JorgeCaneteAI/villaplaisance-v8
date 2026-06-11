@@ -40,7 +40,10 @@ $hasImage = $bgUrl !== null;
       </div>
       <?php endif; ?>
       <?php if ($title !== ''): ?>
-      <h1><?= TextService::renderTitle($title) ?></h1>
+      <?php // Home : le H1 visible est le wordmark seul. On le complète pour les
+            // lecteurs d'écran et les moteurs avec l'offre + la géo (reprend ce
+            // que l'issue-line et le lede adjacents affichent déjà à l'écran). ?>
+      <h1><?= TextService::renderTitle($title) ?><?php if (($section['page_slug'] ?? '') === 'accueil'): ?><span class="sr-only"><?= htmlspecialchars(t('home.hero.h1_suffix')) ?></span><?php endif; ?></h1>
       <?php endif; ?>
     </div>
     <?php if ($lede !== '' || !empty($ctas)): ?>

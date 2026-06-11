@@ -64,37 +64,46 @@ class AvisController extends BaseController
             'Découvrez les témoignages de nos hôtes, chambres d\'hôtes et villa entière à Bédarrides en Provence.'
         );
 
-        // JSON-LD : LodgingBusiness + Breadcrumb + AggregateRating + Reviews
+        // JSON-LD : LodgingBusiness (@id) + Breadcrumb + Reviews référencées.
+        // L'aggregateRating vit DANS l'entité principale (un AggregateRating
+        // top-level séparé ferait doublon avec le fallback de SeoService) et
+        // chaque Review pointe l'entité par @id au lieu de la redéclarer.
+        $base = APP_ENV === 'production' ? 'https://villaplaisance.fr' : APP_URL;
+        $entityId = $base . '/#villa-plaisance';
+
+        $lodging = \SeoService::lodgingBusinessJsonLd();
+        $lodging['@id'] = $entityId;
+        if ($stats['total'] > 0) {
+            $lodging['aggregateRating'] = \SeoService::aggregateRatingJsonLd(
+                (float)$stats['avg'],
+                (int)$stats['total']
+            );
+        }
+
         $jsonLd = [
-            \SeoService::lodgingBusinessJsonLd(),
+            $lodging,
             \SeoService::breadcrumbJsonLd([
                 ['name' => t('nav.home'), 'url' => APP_URL . '/'],
                 ['name' => 'Avis clients'],
             ]),
         ];
         if ($stats['total'] > 0) {
-            $jsonLd[] = [
-                '@context' => 'https://schema.org',
-                '@type' => 'AggregateRating',
-                'itemReviewed' => [
-                    '@type' => 'LodgingBusiness',
-                    'name' => 'Villa Plaisance',
-                ],
-                'ratingValue' => $stats['avg'],
-                'reviewCount' => $stats['total'],
-                'bestRating' => 5,
-                'worstRating' => 1,
-            ];
             // Échantillon des 10 meilleurs/plus récents avis en Review[]
             $sampleSize = min(10, count($reviews));
             for ($i = 0; $i < $sampleSize; $i++) {
                 $r = $reviews[$i];
                 $rating = (float)$r['rating'];
                 if ($r['platform'] === 'booking' && $rating > 5) $rating = $rating / 2;
-                $jsonLd[] = [
+                $review = [
                     '@context' => 'https://schema.org',
                     '@type' => 'Review',
-                    'itemReviewed' => ['@type' => 'LodgingBusiness', 'name' => 'Villa Plaisance'],
+                    // @id + type + name : dédoublonné pour Google, résoluble
+                    // même par les parseurs qui ne suivent pas les références.
+                    'itemReviewed' => [
+                        '@type' => 'LodgingBusiness',
+                        '@id' => $entityId,
+                        'name' => 'Villa Plaisance',
+                    ],
                     'author' => ['@type' => 'Person', 'name' => $r['author']],
                     'reviewRating' => [
                         '@type' => 'Rating',
@@ -103,8 +112,15 @@ class AvisController extends BaseController
                         'worstRating' => 1,
                     ],
                     'reviewBody' => $r['content'],
-                    'datePublished' => $r['review_date'] ?? null,
                 ];
+                // Omise si absente ou invalide plutôt qu'émise null (même
+                // règle que les breadcrumbs : Google refuse les propriétés
+                // null ; strtotime false → TypeError sous strict_types).
+                $reviewTs = !empty($r['review_date']) ? strtotime((string)$r['review_date']) : false;
+                if ($reviewTs !== false) {
+                    $review['datePublished'] = date('Y-m-d', $reviewTs);
+                }
+                $jsonLd[] = $review;
             }
         }
 

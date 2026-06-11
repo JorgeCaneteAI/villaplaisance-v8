@@ -31,6 +31,25 @@ class JournalController extends BaseController
             ]),
         ];
 
+        // ItemList des articles : structure la page liste pour Google et les
+        // moteurs IA (la page n'avait qu'un Breadcrumb, aucun schema de liste).
+        if ($articles !== []) {
+            $items = [];
+            foreach ($articles as $i => $a) {
+                $items[] = [
+                    '@type' => 'ListItem',
+                    'position' => $i + 1,
+                    'name' => $a['title'],
+                    'url' => \SeoService::canonical('journal/' . $a['slug'], $lang),
+                ];
+            }
+            $jsonLd[] = [
+                '@context' => 'https://schema.org',
+                '@type' => 'ItemList',
+                'itemListElement' => $items,
+            ];
+        }
+
         // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
         $this->render('front/journal', compact('seo', 'articles', 'categories', 'jsonLd', 'lang'), 'front-proto');
     }
@@ -62,7 +81,7 @@ class JournalController extends BaseController
             'og' => [
                 'title' => $article['meta_title'] ?: $article['title'],
                 'description' => $article['meta_desc'] ?: ($article['excerpt'] ?? ''),
-                'image' => $article['og_image'] ?: (APP_URL . '/assets/img/og-default.webp'),
+                'image' => $article['og_image'] ?: (APP_URL . '/assets/img/og-default.jpg'),
                 'url' => \SeoService::canonical('journal/' . $slug, $lang),
                 'type' => 'article',
                 'locale' => \SeoService::locale($lang),

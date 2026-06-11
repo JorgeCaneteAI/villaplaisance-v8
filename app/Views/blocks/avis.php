@@ -102,7 +102,7 @@ if ($source === 'auto') {
       ?>
       <article class="testimonial">
         <?php if ($rating > 0): ?>
-        <div class="stars" aria-label="<?= $rating ?> sur 5">
+        <div class="stars" role="img" aria-label="<?= $rating ?> sur 5">
           <?php for ($s = 0; $s < $rating; $s++): ?><svg class="star" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
           <?php for ($s = $rating; $s < 5; $s++): ?><svg class="star star-empty" width="14" height="14" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile"/></svg><?php endfor; ?>
         </div>

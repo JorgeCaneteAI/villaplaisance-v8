@@ -20,6 +20,8 @@ return [
     'home.hero.title' => 'Villa Plaisance',
     'home.hero.subtitle' => 'Chambres d\'hôtes et villa de charme à Bédarrides',
     'home.hero.cta' => 'Découvrir la maison',
+    // Suffixe lecteur d'écran du H1 home (reprend l'issue-line + le lede visibles)
+    'home.hero.h1_suffix' => ', chambres d\'hôtes et villa à Bédarrides, en Provence',
     'home.identity.title' => 'Une maison, deux façons d\'y séjourner',
     'home.identity.text' => 'Villa Plaisance est une maison provençale ouverte aux voyageurs, à Bédarrides, entre Avignon et Orange. De septembre à juin, nous accueillons en chambres d\'hôtes, avec petit-déjeuner maison et piscine partagée. En juillet et août, la villa entière se loue en exclusivité : quatre chambres, une piscine privée de 12 mètres sur 6, un jardin sous les oliviers. Le lieu est calme. Le village est vivant. La campagne est à pied, le TGV à quinze minutes.',
     'home.offers.title' => 'Deux offres, deux saisons',
@@ -68,6 +70,7 @@ return [
     // Journal
     'journal.hero.title' => 'Journal',
     'journal.hero.subtitle' => 'Récits, conseils et regards sur la Provence',
+    'journal.updated_on' => 'Mis à jour le',
 
     // Sur place
     'surplace.hero.title' => 'Sur place',

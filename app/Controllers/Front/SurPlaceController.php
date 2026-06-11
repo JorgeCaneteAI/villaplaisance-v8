@@ -43,7 +43,7 @@ class SurPlaceController extends BaseController
             'og' => [
                 'title' => $article['meta_title'] ?: $article['title'],
                 'description' => $article['meta_desc'] ?: ($article['excerpt'] ?? ''),
-                'image' => $article['og_image'] ?: (APP_URL . '/assets/img/og-default.webp'),
+                'image' => $article['og_image'] ?: (APP_URL . '/assets/img/og-default.jpg'),
                 'url' => \SeoService::canonical('sur-place/' . $slug, $lang),
                 'type' => 'article',
                 'locale' => \SeoService::locale($lang),

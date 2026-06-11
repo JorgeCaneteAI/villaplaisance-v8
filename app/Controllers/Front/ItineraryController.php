@@ -91,7 +91,7 @@ class ItineraryController extends BaseController
             'og' => [
                 'title' => $seoTitle,
                 'description' => $seoDesc,
-                'image' => APP_URL . '/assets/img/og-default.webp',
+                'image' => APP_URL . '/assets/img/og-default.jpg',
                 'url' => APP_URL . '/itineraire/' . $slug,
                 'type' => 'article',
                 'locale' => \SeoService::locale($lang),

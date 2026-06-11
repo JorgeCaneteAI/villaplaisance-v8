@@ -10,7 +10,9 @@
   --linen-200: #EBE2CF;
   --linen-300: #DCD0B7;
   --stone-400: #B8AC91;
-  --stone-500: #8C8167;
+  /* #8C8167 à l'origine : 3.3-3.6:1 sur les fonds linen, sous le seuil
+     WCAG AA (4.5:1). Assombri à teinte constante, 4.6:1 sur linen-100. */
+  --stone-500: #746B56;
   --stone-600: #6B6253;
   --ink-700:   #3B362D;
   --ink-900:   #1F1C16;
@@ -46,6 +48,17 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+
+/* Texte réservé aux lecteurs d'écran (pattern standard, hors flux visuel) */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
@@ -578,7 +591,7 @@ a { color: inherit; text-decoration: none; }
   padding-top: 56px; border-top: 1px solid rgba(251,247,238,0.12);
   margin-top: 56px;
 }
-.footer-grid h4 {
+.footer-grid h2 {
   font-family: var(--font-sans); font-size: 11.5px; font-weight: 500;
   letter-spacing: 0.18em; text-transform: uppercase; color: rgba(251,247,238,0.55);
   margin: 0 0 16px;
@@ -932,22 +945,24 @@ a { color: inherit; text-decoration: none; }
   aspect-ratio: 1000 / 500;
   color: var(--stone-500);
 }
-.worldmap-svg-frame > svg {
+.worldmap-svg-frame > svg,
+.worldmap-svg-frame > img.worldmap-countries {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
 }
-.worldmap-countries .countries {
+/* La carte est une <img> externe (cacheable) : le fade-in scroll-triggered
+   porte sur l'élément entier. L'opacité de trait 0.85 vit dans le SVG. */
+img.worldmap-countries {
   opacity: 0;
   transform: translateY(8px);
   transition:
     opacity 1100ms cubic-bezier(0.23, 1, 0.32, 1),
     transform 1100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
-.worldmap-countries .countries path { opacity: 0.85; }
-.worldmap-section.is-in-view .worldmap-countries .countries {
+.worldmap-section.is-in-view img.worldmap-countries {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1016,7 +1031,7 @@ a { color: inherit; text-decoration: none; }
   .worldmap-pins .pin-home circle.pin-home-halo-3 { animation: none; opacity: 0; }
   .worldmap-pins .pin-guest,
   .worldmap-pins .pin-guest circle,
-  .worldmap-countries .countries {
+  img.worldmap-countries {
     transition: none;
     transform: none;
     opacity: 1;

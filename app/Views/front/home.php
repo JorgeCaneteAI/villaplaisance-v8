@@ -557,22 +557,14 @@ $_nPins = count($_mapPins);
       [$_x, $_y] = $_proj((float)$_p['lng'], (float)$_p['lat']);
       $_pinsXY[] = ['x' => $_x, 'y' => $_y, 'label' => $_p['label']];
   }
-  $_worldSvg = @file_get_contents(ROOT . '/public/assets/img/world-equirectangular.svg');
-  // Strip XML prolog si présent (on l'inline dans du HTML)
-  if ($_worldSvg) {
-      $_worldSvg = preg_replace('/^<\?xml[^?]*\?>\s*/i', '', $_worldSvg);
-  }
   ?>
-  <!-- Carte du monde SVG au trait (Natural Earth 110m, projection equirectangulaire) -->
+  <!-- Carte du monde SVG au trait (Natural Earth 110m, projection equirectangulaire).
+       Servie en <img> externe et lazy : ~142 Ko sortis du HTML de la home,
+       mis en cache navigateur (stroke + opacity portés par le fichier). -->
   <div class="worldmap-svg" role="img" aria-label="<?= t('home.map.kicker') ?>">
-    <?php if ($_worldSvg): ?>
     <div class="worldmap-svg-frame">
-      <?= preg_replace(
-        '/<svg([^>]*)>/i',
-        '<svg$1 class="worldmap-countries">',
-        $_worldSvg,
-        1
-      ) ?>
+      <img class="worldmap-countries" src="/assets/img/world-equirectangular.svg"
+           alt="" width="1000" height="500" loading="lazy" decoding="async">
       <svg class="worldmap-pins" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" aria-hidden="true"
            data-villa-x="<?= $_villaX ?>" data-villa-y="<?= $_villaY ?>">
         <!-- Arc trajet aérien (dessiné par JS au hover, sous les pins pour que les pins restent au-dessus) -->
@@ -611,7 +603,6 @@ $_nPins = count($_mapPins);
         <span class="worldmap-tooltip-label"></span>
       </div>
     </div>
-    <?php endif; ?>
   </div>
 
   <div class="container-wide map-legend-wrap">
@@ -804,7 +795,7 @@ $_linkifyHost = static function (string $content): string {
         $_fullStars = (int)floor($_rating);
       ?>
       <article class="testimonial">
-        <div class="stars" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
+        <div class="stars" role="img" aria-label="<?= number_format($_rating, 1, ',', '') ?> sur 5">
           <?php for ($_s = 0; $_s < $_fullStars; $_s++): ?><svg class="star" width="12" height="12" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
         </div>
         <blockquote>« <?= $_linkifyHost((string)$_r['content']) ?> »</blockquote>

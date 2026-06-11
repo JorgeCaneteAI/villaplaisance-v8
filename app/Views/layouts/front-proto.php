@@ -46,6 +46,11 @@
     <meta property="og:title" content="<?= htmlspecialchars($seo['og']['title'] ?? '') ?>">
     <meta property="og:description" content="<?= htmlspecialchars($seo['og']['description'] ?? '') ?>">
     <meta property="og:image" content="<?= htmlspecialchars($seo['og']['image'] ?? '') ?>">
+    <?php if (str_contains($seo['og']['image'] ?? '', 'og-default')): ?>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <?php endif; ?>
+    <meta property="og:image:alt" content="<?= htmlspecialchars($seo['og']['title'] ?? 'Villa Plaisance') ?>">
     <meta property="og:url" content="<?= htmlspecialchars($seo['og']['url'] ?? '') ?>">
     <meta property="og:type" content="<?= htmlspecialchars($seo['og']['type'] ?? 'website') ?>">
     <meta property="og:locale" content="<?= htmlspecialchars($seo['og']['locale'] ?? 'fr_FR') ?>">
@@ -124,7 +129,7 @@
     <header class="nav">
         <div class="nav-inner">
             <a href="<?= LangService::url('/') ?>" class="brand" aria-label="Villa Plaisance, accueil">
-                <img src="/assets/img/logo-proto.png" alt="" />
+                <img src="/assets/img/logo-proto-64.png" alt="" width="32" height="32" />
                 <span class="brand-wordmark">Villa Plaisance<span class="brand-mark">Bédarrides · 84</span></span>
             </a>
             <nav class="nav-links" aria-label="<?= t('proto.nav.menu_principal') ?>">
@@ -222,7 +227,9 @@
                     <p style="margin: 0; max-width: 36ch; color: rgba(251,247,238,0.65); font-size: 14px; line-height: 1.6;"><?= t('proto.footer.tagline') ?></p>
                 </div>
                 <div>
-                    <h4><?= t('proto.footer.col_house') ?></h4>
+                    <!-- h2 plutôt que h4 : un h4 après le dernier heading de page
+                         créait un saut de niveau (audit Lighthouse heading-order). -->
+                    <h2><?= t('proto.footer.col_house') ?></h2>
                     <ul>
                         <li><a href="<?= LangService::url('chambres-d-hotes') ?>"><?= t('proto.footer.chambres') ?></a></li>
                         <li><a href="<?= LangService::url('location-villa-provence') ?>"><?= t('proto.footer.villa') ?></a></li>
@@ -231,14 +238,14 @@
                     </ul>
                 </div>
                 <div>
-                    <h4><?= t('proto.footer.col_journal') ?></h4>
+                    <h2><?= t('proto.footer.col_journal') ?></h2>
                     <ul>
                         <li><a href="<?= LangService::url('journal') ?>"><?= t('proto.footer.journal') ?></a></li>
                         <li><a href="<?= LangService::url('itineraire') ?>"><?= t('proto.footer.itineraire') ?></a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4><?= t('proto.footer.col_stay_close') ?></h4>
+                    <h2><?= t('proto.footer.col_stay_close') ?></h2>
                     <ul>
                         <li><a href="<?= LangService::url('contact') ?>"><?= t('proto.footer.contact') ?></a></li>
                         <li><a href="<?= LangService::url('avis') ?>"><?= t('proto.footer.avis') ?></a></li>

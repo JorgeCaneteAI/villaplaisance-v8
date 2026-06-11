@@ -205,7 +205,7 @@ foreach ($blocks as $block):
             $rRating  = (int)($r['rating'] ?? 5);
         ?>
         <article class="review">
-            <div class="stars" aria-label="<?= $rRating ?> sur 5">
+            <div class="stars" role="img" aria-label="<?= $rRating ?> sur 5">
                 <?php for ($i = 0; $i < $rRating; $i++) echo '★'; ?>
             </div>
             <blockquote><?= htmlspecialchars(mb_strimwidth($rContent, 0, 280, '…', 'UTF-8')) ?></blockquote>

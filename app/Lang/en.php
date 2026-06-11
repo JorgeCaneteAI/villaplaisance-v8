@@ -17,6 +17,7 @@ return [
     'home.hero.title' => 'Villa Plaisance',
     'home.hero.subtitle' => 'Bed & Breakfast and charming villa in Bédarrides',
     'home.hero.cta' => 'Discover the house',
+    'home.hero.h1_suffix' => ', bed and breakfast and villa in Bédarrides, Provence',
     'home.identity.title' => 'One house, two ways to stay',
     'home.identity.text' => 'Villa Plaisance is a Provençal house welcoming travellers in Bédarrides, between Avignon and Orange. From September to June, we offer bed & breakfast with homemade breakfast and shared pool. In July and August, the entire villa is rented exclusively: four bedrooms, a private 12×6m pool, a garden under the olive trees. The place is quiet. The village is alive. The countryside is on foot, the TGV fifteen minutes away.',
     'home.offers.title' => 'Two offers, two seasons',
@@ -61,6 +62,7 @@ return [
 
     'journal.hero.title' => 'Journal',
     'journal.hero.subtitle' => 'Stories, tips and Provençal perspectives',
+    'journal.updated_on' => 'Updated on',
 
     'surplace.hero.title' => 'Nearby',
     'surplace.hero.subtitle' => 'Our addresses and recommendations around Bédarrides',
