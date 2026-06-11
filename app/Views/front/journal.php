@@ -286,13 +286,18 @@ $catClass = static function (string $cat, bool $solid = false): string {
     if (str_contains($cat, 'Hôtes')) return 'j-cat sage';
     return 'j-cat';
 };
-// Date FR "Mai 2026", fallback vide si null.
-$frMonths = ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-$dateFr = static function (?string $iso) use ($frMonths): string {
+// Date "Mai 2026" localisée par langue (les mois FR s'affichaient
+// aussi sur /en/ et /es/), fallback vide si null.
+$jMonths = [
+    'fr' => ['', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+    'en' => ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    'es' => ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+];
+$dateFr = static function (?string $iso) use ($jMonths, $lang): string {
     if (!$iso) return '';
     $ts = strtotime($iso);
     if ($ts === false) return '';
-    return $frMonths[(int)date('n', $ts)] . ' ' . date('Y', $ts);
+    return ($jMonths[$lang] ?? $jMonths['fr'])[(int)date('n', $ts)] . ' ' . date('Y', $ts);
 };
 // Cover image fallback pour les articles sans cover.
 $coverOf = static function (array $a): string {
@@ -323,7 +328,9 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
   <div class="container-wide">
 
     <?php if ($featured): ?>
-    <a class="j-featured" href="/journal/<?= htmlspecialchars($featured['slug']) ?>" data-cat="<?= htmlspecialchars($catSlug((string)$featured['category'])) ?>">
+    <?php // LangService::url et non un chemin en dur : sur /en/ et /es/, les
+          // cards renvoyaient vers les articles FR (fuite de langue). ?>
+    <a class="j-featured" href="<?= htmlspecialchars(LangService::url('journal/' . $featured['slug'])) ?>" data-cat="<?= htmlspecialchars($catSlug((string)$featured['category'])) ?>">
       <?= ImageService::imgFromBg($coverOf($featured), 'img', true) ?>
       <div>
         <div class="meta">
@@ -344,7 +351,7 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
     <?php if (!empty($rest)): ?>
     <div class="j-grid" id="grid">
       <?php foreach ($rest as $a): ?>
-      <a class="j-card" data-cat="<?= htmlspecialchars($catSlug((string)$a['category'])) ?>" href="/journal/<?= htmlspecialchars($a['slug']) ?>">
+      <a class="j-card" data-cat="<?= htmlspecialchars($catSlug((string)$a['category'])) ?>" href="<?= htmlspecialchars(LangService::url('journal/' . $a['slug'])) ?>">
         <?= ImageService::imgFromBg($coverOf($a), 'img') ?>
         <div class="meta">
           <span class="<?= $catClass((string)$a['category']) ?>"><?= htmlspecialchars((string)$a['category']) ?></span>
