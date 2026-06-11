@@ -71,6 +71,18 @@ return [
     'journal.hero.title' => 'Journal',
     'journal.hero.subtitle' => 'Récits, conseils et regards sur la Provence',
     'journal.updated_on' => 'Mis à jour le',
+    // Journal (liste, chrome statique)
+    'journal.filter_all' => 'Tous',
+    'journal.count' => ':n articles',
+    'journal.featured' => 'À la une',
+    'journal.read_article' => 'Lire l\'article →',
+    'journal.empty' => 'Aucun article publié pour l\'instant. Revenez bientôt.',
+    'journal.nl_label' => 'La lettre',
+    'journal.nl_title' => 'Le journal, une fois<br/>par saison, dans <em>votre</em> boîte.',
+    'journal.nl_desc' => 'Quatre lettres par an. Les articles, les petites nouvelles de la maison, ce qu\'on glisserait au petit-déjeuner.',
+    'journal.nl_placeholder' => 'votre@adresse.fr',
+    'journal.nl_subscribe' => 'S\'inscrire →',
+    'journal.nl_thanks' => 'Merci ·',
 
     // Sur place
     'surplace.hero.title' => 'Sur place',

@@ -246,17 +246,9 @@ foreach (BlockService::getSections('journal', $lang) as $_s) {
         <span data-en="Journal · 04 / Tourism">Journal · 04 / Tourisme</span>
         <span data-en="N° 01 · 2026">N° 01 · 2026</span>
       </div>
-      <h1 class="j-title">Voyager <em>autrement</em><br/>en Provence.</h1>
+      <h1 class="j-title"><?= t('journal.hero.title') ?></h1>
     </div>
-    <p class="j-lede" data-en="Five ways of looking at the region, what's changing in contemporary Provence, who keeps it alive, and how to travel through it without ticking boxes.">Cinq façons de regarder la région, ce qui bouge dans la Provence contemporaine, ceux qui la font vivre, et comment la traverser sans cocher de cases.</p>
-  </div>
-
-  <div class="pl-banner" style="margin-bottom: 28px;">
-    <span class="dot"></span>
-    <div class="txt">
-      <span class="lbl" data-en="DESIGN MOCKUP">ÉBAUCHE GRAPHIQUE</span>
-      Articles d'exemple. L'organisation et les filtres sont définitifs, le contenu sera remplacé par vos vrais articles.
-    </div>
+    <p class="j-lede"><?= htmlspecialchars(t('journal.hero.subtitle')) ?></p>
   </div>
 </section>
 <?php endif; ?>
@@ -314,11 +306,11 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
 <?php if (!empty($cats)): ?>
 <div class="j-filter">
   <div class="j-filter-inner" role="tablist">
-    <button data-cat="all" aria-pressed="true">Tous</button>
+    <button data-cat="all" aria-pressed="true"><?= htmlspecialchars(t('journal.filter_all')) ?></button>
     <?php foreach ($cats as $c): ?>
     <button data-cat="<?= htmlspecialchars($catSlug($c)) ?>" aria-pressed="false"><?= htmlspecialchars($c) ?></button>
     <?php endforeach; ?>
-    <span class="count" id="filter-count"><?= count($articlesList) ?> articles</span>
+    <span class="count" id="filter-count"><?= htmlspecialchars(t('journal.count', ['n' => count($articlesList)])) ?></span>
   </div>
 </div>
 <?php endif; ?>
@@ -339,11 +331,11 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
           <span class="j-date"><?= htmlspecialchars($d) ?></span>
           <?php endif; ?>
         </div>
-        <h2><em>À la une</em><br/><?= htmlspecialchars((string)$featured['title']) ?></h2>
+        <h2><em><?= htmlspecialchars(t('journal.featured')) ?></em><br/><?= htmlspecialchars((string)$featured['title']) ?></h2>
         <?php if (!empty($featured['excerpt'])): ?>
         <p class="excerpt"><?= htmlspecialchars((string)$featured['excerpt']) ?></p>
         <?php endif; ?>
-        <span class="btn-link">Lire l'article →</span>
+        <span class="btn-link"><?= htmlspecialchars(t('journal.read_article')) ?></span>
       </div>
     </a>
     <?php endif; ?>
@@ -369,7 +361,7 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
     <?php endif; ?>
 
     <?php if (empty($articlesList)): ?>
-    <p class="body-lg" style="text-align: center; padding: clamp(40px, 6vw, 80px) 0; color: var(--stone-500);">Aucun article publié pour l'instant. Revenez bientôt.</p>
+    <p class="body-lg" style="text-align: center; padding: clamp(40px, 6vw, 80px) 0; color: var(--stone-500);"><?= htmlspecialchars(t('journal.empty')) ?></p>
     <?php endif; ?>
 
   </div>
@@ -378,12 +370,12 @@ $cats = array_values(array_filter($categories ?? [], fn($c) => $c !== null && $c
 <!-- ============ NEWSLETTER ============ -->
 <section class="newsletter">
   <div class="nl-inner">
-    <div class="kicker dark" style="display: inline-flex; margin-bottom: 24px;"><span class="dot" style="background: var(--sage-200);"></span><span data-en="The letter">La lettre</span></div>
-    <h2 data-en="The journal,/once a season, in your inbox.">Le journal, une fois<br/>par saison, dans <em>votre</em> boîte.</h2>
-    <p class="body-lg" style="color: rgba(var(--linen-50-rgb), 0.7); max-width: 44ch; margin: 16px auto 0;" data-en="Four letters a year. The articles, the small news of the house, the things we'd whisper at breakfast.">Quatre lettres par an. Les articles, les petites nouvelles de la maison, ce qu'on glisserait au petit-déjeuner.</p>
-    <form class="nl-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Merci ·';">
-      <input type="email" placeholder="votre@adresse.fr" required />
-      <button type="submit" class="btn" style="background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50);" data-en="Subscribe →">S'inscrire →</button>
+    <div class="kicker dark" style="display: inline-flex; margin-bottom: 24px;"><span class="dot" style="background: var(--sage-200);"></span><span><?= htmlspecialchars(t('journal.nl_label')) ?></span></div>
+    <h2><?= t('journal.nl_title') ?></h2>
+    <p class="body-lg" style="color: rgba(var(--linen-50-rgb), 0.7); max-width: 44ch; margin: 16px auto 0;"><?= htmlspecialchars(t('journal.nl_desc')) ?></p>
+    <form class="nl-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent=<?= json_encode(t('journal.nl_thanks'), JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;">
+      <input type="email" placeholder="<?= htmlspecialchars(t('journal.nl_placeholder')) ?>" required />
+      <button type="submit" class="btn" style="background: var(--linen-50); color: var(--ink-900); border-color: var(--linen-50);"><?= htmlspecialchars(t('journal.nl_subscribe')) ?></button>
     </form>
   </div>
 </section>

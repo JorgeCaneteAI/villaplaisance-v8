@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 class SeoService
 {
+    /** Mémoïsation de la note agrégée (1 SELECT par requête HTTP max). */
+    private static ?array $reviewRatingCache = null;
+
     public static function forPage(string $slug, string $lang, string $fallbackTitle = '', string $fallbackDesc = ''): array
     {
         // Try to get SEO data from database
@@ -72,10 +75,53 @@ class SeoService
         };
     }
 
+    /**
+     * Note agrégée réelle, calculée une fois depuis TOUS les avis publiés
+     * (mêmes règles que la page /avis : normalisation Booking /10 → /5).
+     *
+     * Source unique : avant, le fallback hardcodait 5.0/11 (ancienne note
+     * Google Business), la home comptait les seuls avis featured (5.0/34) et
+     * /avis comptait tout (4.9/104). Trois valeurs pour la même entité @id →
+     * signal contradictoire pour Google. Désormais toutes les pages héritent
+     * de cette valeur unique. Retourne null si la table est vide/injoignable
+     * (mode hors-ligne), auquel cas l'aggregateRating est omis proprement.
+     *
+     * @return array{avg: float, count: int}|null
+     */
+    public static function aggregateRatingFromReviews(): ?array
+    {
+        if (self::$reviewRatingCache !== null) {
+            return self::$reviewRatingCache['count'] > 0 ? self::$reviewRatingCache : null;
+        }
+        $sum = 0.0;
+        $n = 0;
+        try {
+            $rows = Database::fetchAll(
+                "SELECT rating, platform FROM vp_reviews WHERE status = 'published'"
+            );
+            foreach ($rows as $r) {
+                $rating = (float)($r['rating'] ?? 0);
+                if (($r['platform'] ?? '') === 'booking' && $rating > 5) {
+                    $rating = $rating / 2;
+                }
+                if ($rating > 0 && $rating <= 5) {
+                    $sum += $rating;
+                    $n++;
+                }
+            }
+        } catch (\Throwable) {
+            // DB indisponible : on ne ment pas, on cache un count=0 et on omet.
+        }
+        self::$reviewRatingCache = $n > 0
+            ? ['avg' => min(5.0, max(0.0, round($sum / $n, 1))), 'count' => $n]
+            : ['avg' => 0.0, 'count' => 0];
+        return $n > 0 ? self::$reviewRatingCache : null;
+    }
+
     public static function lodgingBusinessJsonLd(): array
     {
         $base = APP_ENV === 'production' ? 'https://villaplaisance.fr' : APP_URL;
-        return [
+        $ld = [
             '@context' => 'https://schema.org',
             '@type' => 'LodgingBusiness',
             // Identifiant stable pour Google (lève le critique "identifier manquant"
@@ -121,16 +167,14 @@ class SeoService
             'priceRange' => '€€',
             // Pas de starRating : c'est un classement officiel (étoiles hôtelières),
             // pas une note d'avis. L'auto-déclarer expose à un warning GSC.
-            // Note moyenne agrégée depuis Google Business Profile (5.0 / 11 avis).
-            // À synchroniser quand le nombre d'avis évolue.
-            'aggregateRating' => [
-                '@type' => 'AggregateRating',
-                'ratingValue' => '5.0',
-                'reviewCount' => 11,
-                'bestRating' => '5',
-                'worstRating' => '1',
-            ],
         ];
+        // aggregateRating depuis la source unique (tous les avis publiés),
+        // identique sur toutes les pages portant cette entité @id.
+        $rating = self::aggregateRatingFromReviews();
+        if ($rating !== null) {
+            $ld['aggregateRating'] = self::aggregateRatingJsonLd($rating['avg'], $rating['count']);
+        }
+        return $ld;
     }
 
     /**

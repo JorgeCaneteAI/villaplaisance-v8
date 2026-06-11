@@ -63,6 +63,18 @@ return [
     'journal.hero.title' => 'Journal',
     'journal.hero.subtitle' => 'Stories, tips and Provençal perspectives',
     'journal.updated_on' => 'Updated on',
+    // Journal (list, static chrome)
+    'journal.filter_all' => 'All',
+    'journal.count' => ':n articles',
+    'journal.featured' => 'Featured',
+    'journal.read_article' => 'Read the article →',
+    'journal.empty' => 'No articles published yet. Check back soon.',
+    'journal.nl_label' => 'The letter',
+    'journal.nl_title' => 'The journal, once<br/>a season, in <em>your</em> inbox.',
+    'journal.nl_desc' => 'Four letters a year. The articles, the small news of the house, the things we\'d whisper at breakfast.',
+    'journal.nl_placeholder' => 'your@email.com',
+    'journal.nl_subscribe' => 'Subscribe →',
+    'journal.nl_thanks' => 'Thank you ·',
 
     'surplace.hero.title' => 'Nearby',
     'surplace.hero.subtitle' => 'Our addresses and recommendations around Bédarrides',

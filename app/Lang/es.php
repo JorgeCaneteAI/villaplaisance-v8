@@ -70,6 +70,18 @@ return [
     'journal.hero.title' => 'Diario',
     'journal.hero.subtitle' => 'Relatos, consejos y miradas sobre la Provenza',
     'journal.updated_on' => 'Actualizado el',
+    // Journal (lista, cromo estático)
+    'journal.filter_all' => 'Todos',
+    'journal.count' => ':n artículos',
+    'journal.featured' => 'Destacado',
+    'journal.read_article' => 'Leer el artículo →',
+    'journal.empty' => 'Aún no hay artículos publicados. Vuelve pronto.',
+    'journal.nl_label' => 'La carta',
+    'journal.nl_title' => 'El diario, una vez<br/>por temporada, en <em>tu</em> buzón.',
+    'journal.nl_desc' => 'Cuatro cartas al año. Los artículos, las pequeñas novedades de la casa, lo que susurraríamos en el desayuno.',
+    'journal.nl_placeholder' => 'tu@correo.es',
+    'journal.nl_subscribe' => 'Suscribirse →',
+    'journal.nl_thanks' => 'Gracias ·',
 
     // Alrededores
     'surplace.hero.title' => 'Alrededores',
