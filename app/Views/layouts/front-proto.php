@@ -165,8 +165,8 @@
     <div class="mobile-menu" id="mobile-menu" hidden data-menu-overlay>
         <button class="mobile-menu__close" type="button" aria-label="Fermer le menu" data-menu-close></button>
         <nav class="mobile-menu__nav" aria-label="<?= t('proto.nav.menu_principal') ?>">
-            <a href="<?= LangService::url('/') ?>">Accueil</a>
-            <a href="<?= LangService::url('chambres-d-hotes') ?>"><?= t('proto.nav.chambres') ?></a>
+            <a href="<?= LangService::url('/') ?>"><?= htmlspecialchars(t('nav.home')) ?></a>
+            <a href="<?= LangService::url('chambres-d-hotes') ?>"><?= htmlspecialchars(t('proto.nav.chambres')) ?></a>
             <a href="<?= LangService::url('location-villa-provence') ?>"><?= t('proto.nav.villa') ?></a>
             <a href="<?= LangService::url('disponibilites') ?>"><?= t('proto.nav.disponibilites') ?></a>
             <a href="<?= LangService::url('espaces-exterieurs') ?>"><?= t('proto.nav.exterieurs') ?></a>
@@ -234,7 +234,7 @@
                          créait un saut de niveau (audit Lighthouse heading-order). -->
                     <h2><?= t('proto.footer.col_house') ?></h2>
                     <ul>
-                        <li><a href="<?= LangService::url('chambres-d-hotes') ?>"><?= t('proto.footer.chambres') ?></a></li>
+                        <li><a href="<?= LangService::url('chambres-d-hotes') ?>"><?= htmlspecialchars(t('proto.footer.chambres')) ?></a></li>
                         <li><a href="<?= LangService::url('location-villa-provence') ?>"><?= t('proto.footer.villa') ?></a></li>
                         <li><a href="<?= LangService::url('disponibilites') ?>"><?= t('proto.footer.disponibilites') ?></a></li>
                         <li><a href="<?= LangService::url('espaces-exterieurs') ?>"><?= t('proto.footer.exterieurs') ?></a></li>

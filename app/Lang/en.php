@@ -220,7 +220,7 @@ return [
     'footer.rights' => '© :year Villa Plaisance, Bédarrides, Provence',
 
     // Layout front-proto (nav + footer)
-    'proto.nav.chambres' => 'B&amp;B rooms',
+    'proto.nav.chambres' => 'B&B rooms',
     'proto.nav.villa' => 'Whole house',
     'proto.nav.disponibilites' => 'Availability',
     'proto.nav.exterieurs' => 'Outdoors',
@@ -235,7 +235,7 @@ return [
     'proto.footer.col_house' => 'The house',
     'proto.footer.col_journal' => 'Journal',
     'proto.footer.col_stay_close' => 'Stay close',
-    'proto.footer.chambres' => 'B&amp;B rooms (Sept → June)',
+    'proto.footer.chambres' => 'B&B rooms (Sept → June)',
     'proto.footer.villa' => 'Whole house',
     'proto.footer.disponibilites' => 'Availability',
     'proto.footer.exterieurs' => 'The outdoors',
