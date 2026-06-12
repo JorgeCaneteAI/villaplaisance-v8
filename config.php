@@ -33,6 +33,7 @@ require ROOT . '/app/Services/BlockService.php';
 require ROOT . '/app/Services/BlockFieldsService.php';
 require ROOT . '/app/Services/BlockFormRenderer.php';
 require ROOT . '/app/Services/ImageService.php';
+require ROOT . '/app/Services/SocialService.php';
 require ROOT . '/app/Services/TextService.php';
 require ROOT . '/app/Services/IconService.php';
 require ROOT . '/app/Services/AnthropicService.php';

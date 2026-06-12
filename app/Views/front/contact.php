@@ -498,10 +498,15 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
           <div class="sub"><?= htmlspecialchars(t('contact.info.reply_sub')) ?></div>
         </div>
 
+        <?php $_socials = SocialService::all(); ?>
+        <?php if ($_socials): ?>
         <div class="row">
           <div class="lbl"><?= IconService::svg('instagram', 14, 'row-icon') ?> <?= htmlspecialchars(t('contact.info.follow_lbl')) ?></div>
-          <a href="#">Instagram · @villaplaisance</a>
+          <?php foreach ($_socials as $_social): ?>
+          <a href="<?= htmlspecialchars($_social['url']) ?>" target="_blank" rel="noopener"><?= htmlspecialchars($_social['name']) ?><?= $_social['handle'] !== '' ? ' · @' . htmlspecialchars($_social['handle']) : '' ?></a>
+          <?php endforeach; ?>
         </div>
+        <?php endif; ?>
       </aside>
 
     </div>

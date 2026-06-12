@@ -255,7 +255,9 @@
                         <li><a href="<?= LangService::url('votre-hote') ?>"><?= t('proto.footer.votre_hote') ?></a></li>
                         <li><a href="tel:+33490330049">04 90 33 00 49</a></li>
                         <li><a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a></li>
-                        <li><a href="#"><?= t('proto.footer.instagram') ?></a></li>
+                        <?php foreach (SocialService::all() as $_social): ?>
+                        <li><a href="<?= htmlspecialchars($_social['url']) ?>" target="_blank" rel="noopener"><?= htmlspecialchars($_social['name']) ?></a></li>
+                        <?php endforeach; ?>
                         <li style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(251,247,238,0.12);"><a href="<?= LangService::url('livret') ?>"><?= t('proto.footer.livret') ?></a></li>
                     </ul>
                 </div>
