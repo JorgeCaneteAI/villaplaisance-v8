@@ -799,7 +799,7 @@ $_linkifyHost = static function (string $content): string {
           <?php for ($_s = 0; $_s < $_fullStars; $_s++): ?><svg class="star" width="12" height="12" aria-hidden="true"><use xlink:href="/assets/img/icons.svg#icon-etoile-pleine"/></svg><?php endfor; ?>
         </div>
         <blockquote>« <?= $_linkifyHost((string)$_r['content']) ?> »</blockquote>
-        <button type="button" class="t-expand" hidden aria-expanded="false">Lire la suite &rarr;</button>
+        <button type="button" class="t-expand" hidden aria-expanded="false"><?= htmlspecialchars(t('avis.read_more')) ?></button>
         <cite>
           <strong><?= htmlspecialchars((string)$_r['author']) ?></strong><?php
           if (!empty($_r['origin'])): ?>, <?= htmlspecialchars((string)$_r['origin']) ?><?php endif; ?>
@@ -810,8 +810,8 @@ $_linkifyHost = static function (string $content): string {
     <script>
     (function () {
       var cards = document.querySelectorAll('.reviews-section .testimonial');
-      var labelOpen  = 'Réduire ↑';
-      var labelShut  = 'Lire la suite →';
+      var labelOpen  = <?= json_encode(t('avis.read_less'), JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+      var labelShut  = <?= json_encode(t('avis.read_more'), JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
       cards.forEach(function (card) {
         var bq  = card.querySelector('blockquote');
         var btn = card.querySelector('.t-expand');
