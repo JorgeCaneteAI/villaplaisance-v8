@@ -15,9 +15,9 @@ $platformLabels = [
     'direct'  => 'Direct',
 ];
 $offerLabels = [
-    'bb'    => "Chambres d'hôtes",
-    'villa' => 'Villa entière',
-    'both'  => 'Les deux',
+    'bb'    => t('avis.offer_bb'),
+    'villa' => t('avis.offer_villa'),
+    'both'  => t('avis.offer_both'),
 ];
 
 $normalizeRating = static function (float $rating, string $platform): float {
@@ -29,12 +29,9 @@ $formatDate = static function (?string $d): string {
     if (!$d) return '';
     $ts = strtotime($d);
     if (!$ts) return $d;
-    // strftime() est deprecated PHP 8.1 et supprimé PHP 8.4, mapping FR maison.
-    static $months = [
-        1 => 'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-        'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
-    ];
-    return $months[(int) date('n', $ts)] . ' ' . date('Y', $ts);
+    // strftime() deprecated PHP 8.1+ ; mois longs localisés (clé cal.months_long).
+    $months = explode(',', t('cal.months_long'));
+    return ($months[(int) date('n', $ts) - 1] ?? '') . ' ' . date('Y', $ts);
 };
 
 // Linkifie la 1re mention de Jorge ou Georges vers /votre-hote
@@ -146,9 +143,9 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
 <?php else: ?>
 <section class="av-hero-section">
   <div class="av-hero-inner av-hero">
-    <p class="av-overline">07 · Avis clients</p>
-    <h1>Ce qu'ils en <em>disent</em>.</h1>
-    <p class="lede">Les mots laissés par nos hôtes au fil des saisons : Airbnb, Booking, Google et nos propres carnets de séjour.</p>
+    <p class="av-overline"><?= htmlspecialchars(t('avis.hero_overline')) ?></p>
+    <h1><?= t('avis.hero_title') ?></h1>
+    <p class="lede"><?= htmlspecialchars(t('avis.hero_lede')) ?></p>
   </div>
 </section>
 <?php endif; ?>
@@ -158,34 +155,34 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
 <section class="av-stats">
   <div class="av-stat">
     <div class="num"><em><?= number_format($stats['avg'], 1, ',', ' ') ?></em></div>
-    <div class="lbl" data-en="Average rating">Note moyenne / 5</div>
+    <div class="lbl"><?= htmlspecialchars(t('avis.stat_avg')) ?></div>
   </div>
   <div class="av-stat">
     <div class="num"><?= $stats['total'] ?></div>
-    <div class="lbl" data-en="Reviews collected">Avis collectés</div>
+    <div class="lbl"><?= htmlspecialchars(t('avis.stat_total')) ?></div>
   </div>
   <div class="av-stat">
     <div class="num"><?= (int)$stats['by_offer']['bb'] ?></div>
-    <div class="lbl" data-en="B&amp;B reviews">Chambres d'hôtes</div>
+    <div class="lbl"><?= htmlspecialchars(t('avis.stat_bb')) ?></div>
   </div>
   <div class="av-stat">
     <div class="num"><?= (int)$stats['by_offer']['villa'] ?></div>
-    <div class="lbl" data-en="Villa reviews">Villa entière</div>
+    <div class="lbl"><?= htmlspecialchars(t('avis.stat_villa')) ?></div>
   </div>
 </section>
 <?php endif; ?>
 
 <!-- FILTRES -->
 <div class="av-filters">
-  <span class="lbl" data-en="Filter">Filtrer</span>
-  <?php foreach (['all' => 'Toutes', 'bb' => "Chambres d'hôtes", 'villa' => 'Villa entière'] as $key => $label): ?>
+  <span class="lbl"><?= htmlspecialchars(t('avis.filter')) ?></span>
+  <?php foreach (['all' => t('avis.filter_all'), 'bb' => t('avis.offer_bb'), 'villa' => t('avis.offer_villa')] as $key => $label): ?>
     <a class="av-filter <?= $offerFilter === $key ? 'active' : '' ?>" href="?<?= $key === 'all' ? '' : 'offer=' . $key ?>"><?= htmlspecialchars($label) ?></a>
   <?php endforeach; ?>
 </div>
 
 <!-- GRID -->
 <?php if (empty($reviews)): ?>
-<div class="av-empty">Aucun avis pour ce filtre.</div>
+<div class="av-empty"><?= htmlspecialchars(t('avis.empty')) ?></div>
 <?php else: ?>
 <div class="av-grid">
   <?php foreach ($reviews as $r):
@@ -203,7 +200,7 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
       <span class="av-card-platform"><?= htmlspecialchars($platformLabels[$platform] ?? ucfirst($platform)) ?></span>
     </div>
     <blockquote class="av-card-quote">« <?= $linkifyHost((string)$r['content']) ?> »</blockquote>
-    <button type="button" class="av-card-expand" hidden aria-expanded="false">Lire la suite &rarr;</button>
+    <button type="button" class="av-card-expand" hidden aria-expanded="false"><?= htmlspecialchars(t('avis.read_more')) ?></button>
     <div class="av-card-meta">
       <span class="av-card-author">
         <strong><?= htmlspecialchars((string)$r['author']) ?></strong>
@@ -220,8 +217,8 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
 <script>
 (function () {
   var cards = document.querySelectorAll('.av-grid .av-card');
-  var labelOpen = 'Réduire ↑';
-  var labelShut = 'Lire la suite →';
+  var labelOpen = <?= json_encode(t('avis.read_less'), JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+  var labelShut = <?= json_encode(t('avis.read_more'), JSON_UNESCAPED_UNICODE | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
   cards.forEach(function (card) {
     var bq  = card.querySelector('.av-card-quote');
     var btn = card.querySelector('.av-card-expand');
@@ -241,7 +238,7 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
 
 <!-- CTA -->
 <section class="av-cta">
-  <h2>Préparer votre <em>séjour</em>.</h2>
-  <p>Une lettre, un appel, et nous vous répondons à la main, dans la journée.</p>
-  <a href="<?= \LangService::url('contact') ?>" class="btn">Demander un séjour →</a>
+  <h2><?= t('avis.cta_title') ?></h2>
+  <p><?= htmlspecialchars(t('avis.cta_text')) ?></p>
+  <a href="<?= \LangService::url('contact') ?>" class="btn"><?= htmlspecialchars(t('avis.cta_btn')) ?></a>
 </section>

@@ -229,7 +229,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
   <div class="container-wide">
     <div class="section-label" style="margin-bottom: 18px;">
-      <span class="numeral" data-en=" Availability"> Disponibilités</span>
+      <span class="numeral"><?= htmlspecialchars(t('cha.availability')) ?></span>
     </div>
     <?php include __DIR__ . '/_partials/calendar_ribbon.php'; ?>
   </div>
@@ -269,10 +269,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 5vw, 80px); align-items: start;">
       <div>
         <div class="section-label">
-          <span class="numeral">02 / <span data-en="How it works">Comment ça fonctionne</span></span>
+          <span class="numeral">02 / <span><?= htmlspecialchars(t('cha.how_step')) ?></span></span>
         </div>
-        <h2 class="h-xl" style="margin: 0; max-width: 14ch;">Une <em>suite</em>,<br/>louée d'un seul<br/>tenant.</h2>
-        <p class="body-lg" style="margin: 24px 0 0; max-width: 40ch; color: var(--ink-700);" data-en="The two rooms share a single entrance and one connecting door. They're only rented together, your group has the suite to itself, whether you're one or five.">Les deux chambres partagent une seule entrée et une porte intérieure qui les relie. Elles ne se louent qu'ensemble, votre groupe a la suite pour lui seul, que vous soyez un ou cinq.</p>
+        <h2 class="h-xl" style="margin: 0; max-width: 14ch;"><?= t('cha.how_title') ?></h2>
+        <p class="body-lg" style="margin: 24px 0 0; max-width: 40ch; color: var(--ink-700);"><?= htmlspecialchars(t('cha.how_lede')) ?></p>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 18px;">
@@ -280,22 +280,22 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         <!-- 1-2 pers config -->
         <div style="border: var(--hairline); background: var(--linen-50); padding: 26px 28px;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: var(--hairline); padding-bottom: 14px; margin-bottom: 18px;">
-            <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);" data-en="Travelling as a couple">À deux</span>
-            <span class="numeral label-terra">1 - 2 <span data-en="guests">pers.</span></span>
+            <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);"><?= htmlspecialchars(t('cha.config_couple')) ?></span>
+            <span class="numeral label-terra">1 - 2 <span><?= htmlspecialchars(t('cha.guests')) ?></span></span>
           </div>
-          <p class="body" style="margin: 0 0 14px;" data-en="Tell us how you'd like the bedding made up, we prepare one of the rooms, the other stays accessible as a reading lounge.">Dites-nous comment vous préférez le couchage, nous préparons une des chambres, l'autre reste accessible en salon de lecture.</p>
+          <p class="body" style="margin: 0 0 14px;"><?= htmlspecialchars(t('cha.couple_help')) ?></p>
           <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
             <li style="display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: baseline;">
               <span style="width: 6px; height: 6px; background: var(--sage-500); border-radius: 50%; align-self: center;"></span>
-              <span class="body" data-en="Double bed prepared <span style='color: var(--stone-500);'>(Chambre Verte)</span>">Lit double préparé <span style="color: var(--stone-500);">(Chambre Verte)</span></span>
+              <span class="body"><?= t('cha.couple_li1') ?></span>
             </li>
             <li style="display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: baseline;">
               <span style="width: 6px; height: 6px; background: var(--sage-500); border-radius: 50%; align-self: center;"></span>
-              <span class="body" data-en="Two singles prepared <span style='color: var(--stone-500);'>(Chambre Bleue)</span>">Deux lits simples préparés <span style="color: var(--stone-500);">(Chambre Bleue)</span></span>
+              <span class="body"><?= t('cha.couple_li2') ?></span>
             </li>
             <li style="display: grid; grid-template-columns: 8px 1fr; gap: 12px; align-items: baseline;">
               <span style="width: 6px; height: 6px; background: var(--terra-500); border-radius: 50%; align-self: center;"></span>
-              <span class="body" data-en="Both rooms prepared, a bedroom each <span style='color: var(--terra-600); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-left: 6px;'>OPTION PAYANTE</span>">Les deux chambres préparées, une chambre chacun <span style="color: var(--terra-600); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; margin-left: 6px;">OPTION PAYANTE</span></span>
+              <span class="body"><?= t('cha.couple_li3') ?></span>
             </li>
           </ul>
         </div>
@@ -303,10 +303,10 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
         <!-- 3-5 pers config -->
         <div style="border: var(--hairline); background: var(--linen-50); padding: 26px 28px;">
           <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: var(--hairline); padding-bottom: 14px; margin-bottom: 18px;">
-            <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);" data-en="As a family or small group">En famille, en petit groupe</span>
-            <span class="numeral label-terra">3 - 5 <span data-en="guests">pers.</span></span>
+            <span style="font-family: var(--font-display); font-style: italic; font-size: clamp(22px, 2vw, 28px); color: var(--ink-900);"><?= htmlspecialchars(t('cha.config_family')) ?></span>
+            <span class="numeral label-terra">3 - 5 <span><?= htmlspecialchars(t('cha.guests')) ?></span></span>
           </div>
-          <p class="body" style="margin: 0;" data-en="Both rooms are prepared. The Bleue sofa bed opens for a fifth guest. The connecting door stays where you want it, open, closed, locked from your side.">Les deux chambres sont préparées. Le clic-clac de la Bleue s'ouvre pour une cinquième personne. La porte intérieure reste comme vous voulez, ouverte, fermée, verrouillée de votre côté.</p>
+          <p class="body" style="margin: 0;"><?= htmlspecialchars(t('cha.family_help')) ?></p>
         </div>
 
       </div>
@@ -319,11 +319,11 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
     <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(32px, 5vw, 80px); align-items: end;">
       <div>
         <div class="section-label">
-          <span class="numeral">03 / <span data-en="The two rooms of the suite">Les deux chambres de la suite</span></span>
+          <span class="numeral">03 / <span><?= htmlspecialchars(t('cha.rooms_step')) ?></span></span>
         </div>
-        <h2 class="h-xl" style="margin: 0; max-width: 14ch;" data-en="Each with its/own light.">Chacune <em>sa</em><br/>lumière.</h2>
+        <h2 class="h-xl" style="margin: 0; max-width: 14ch;"><?= t('cha.rooms_title') ?></h2>
       </div>
-      <p class="body-lg" style="margin: 0; max-width: 44ch;" data-en="A single door opens onto both rooms, and onto a shared corridor with a private bathroom. Their characters differ; their guests are the same.">Une seule porte ouvre sur les deux chambres, et sur leur couloir partagé avec salle de bain. Leur caractère diffère ; leurs hôtes sont les mêmes.</p>
+      <p class="body-lg" style="margin: 0; max-width: 44ch;"><?= htmlspecialchars(t('cha.rooms_lede')) ?></p>
     </div>
   </div>
 </section>
