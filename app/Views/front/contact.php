@@ -245,12 +245,12 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
   <div class="page-hero-inner">
     <div>
       <div class="page-hero-issue">
-        <span data-en="06 · Contact">06 · Contact</span>
-        <span data-en="Reply within the day">Réponse dans la journée</span>
+        <span>06 · Contact</span>
+        <span><?= htmlspecialchars(t('contact.hero.badge')) ?></span>
       </div>
-      <h1>Une lettre,<br/>un <em>appel</em>.</h1>
+      <h1><?= t('contact.hero.title') ?></h1>
     </div>
-    <p class="lede" data-en="No booking engine, no automatic confirmation. Tell us what you'd like, we check the calendar, we write back, by hand, within the day.">Pas de moteur de réservation, pas de confirmation automatique. Dites-nous ce que vous souhaitez, on vérifie le calendrier, on vous répond, à la main, dans la journée.</p>
+    <p class="lede"><?= htmlspecialchars(t('contact.hero.lede')) ?></p>
   </div>
 </section>
 <?php endif; ?>
@@ -263,19 +263,19 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
       <!-- LEFT, FORM -->
       <main id="form">
         <div class="section-label" style="margin-bottom: 16px;">
-          <span class="numeral">01 / <span data-en="Tell us">Dites-nous</span></span>
+          <span class="numeral">01 / <span><?= htmlspecialchars(t('contact.form.step')) ?></span></span>
         </div>
-        <h2 class="h-xl" style="margin: 0 0 32px; max-width: 18ch;" data-en="What kind of stay are you thinking of?">Quel genre de séjour<br/>imaginez-vous ?</h2>
+        <h2 class="h-xl" style="margin: 0 0 32px; max-width: 18ch;"><?= t('contact.form.title') ?></h2>
 
         <!-- Mode tabs -->
         <div class="ct-tabs" role="tablist">
           <button role="tab" data-tab="bnb" aria-pressed="true">
-            <span class="t-when" data-en="Sept → June">Sept → Juin</span>
-            <span class="t-name" data-en="A room or two"><em>Chambres d'hôtes</em></span>
+            <span class="t-when"><?= htmlspecialchars(t('contact.tab.bnb_when')) ?></span>
+            <span class="t-name"><?= t('contact.tab.bnb_name') ?></span>
           </button>
           <button role="tab" data-tab="villa" aria-pressed="false">
-            <span class="t-when" data-en="July → August">Juil → Août</span>
-            <span class="t-name" data-en="The whole villa"><em>Villa entière</em></span>
+            <span class="t-when"><?= htmlspecialchars(t('contact.tab.villa_when')) ?></span>
+            <span class="t-name"><?= t('contact.tab.villa_name') ?></span>
           </button>
         </div>
 
@@ -290,26 +290,26 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                 include __DIR__ . '/_partials/calendar_focus.php';
               ?>
               <div class="legend">
-                <span class="legend-key"><span class="legend-sw open"></span> Disponible</span>
-                <span class="legend-key"><span class="legend-sw booked"></span> Réservé</span>
+                <span class="legend-key"><span class="legend-sw open"></span> <?= htmlspecialchars(t('contact.cal.available')) ?></span>
+                <span class="legend-key"><span class="legend-sw booked"></span> <?= htmlspecialchars(t('contact.cal.booked')) ?></span>
               </div>
             </div>
 
             <div class="form-grid">
               <div class="field">
-                <label data-en="Arrival">Arrivée</label>
+                <label><?= htmlspecialchars(t('contact.field.arrival')) ?></label>
                 <input type="date" name="arrival_bnb" />
               </div>
               <div class="field">
-                <label data-en="Departure">Départ</label>
+                <label><?= htmlspecialchars(t('contact.field.departure')) ?></label>
                 <input type="date" name="departure_bnb" />
               </div>
               <div class="field full field-bedding">
                 <div class="bedding-heading">
-                  <span class="bedding-kicker" data-en="Your bedding">Votre couchage</span>
-                  <span class="bedding-title" data-en="How would you like the rooms made up?">Configuration du couchage</span>
+                  <span class="bedding-kicker"><?= htmlspecialchars(t('contact.bedding.kicker')) ?></span>
+                  <span class="bedding-title"><?= htmlspecialchars(t('contact.bedding.title')) ?></span>
                 </div>
-                <p class="bedding-help" data-en="The two communicating bedrooms form a single suite, rented as one for 1 to 5 guests.">Les deux chambres communicantes forment une seule suite, louée d'un seul tenant pour 1 à 5 personnes.</p>
+                <p class="bedding-help"><?= htmlspecialchars(t('contact.bedding.help')) ?></p>
                 <!--
                   Échelle stricte pour les icônes :
                     - 1 lit simple = 9 unités de large × 20 unités de long
@@ -329,9 +329,9 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                       <rect x="25" y="8" width="20" height="20" rx="1.5"/>
                       <line x1="25" y1="13" x2="45" y2="13"/>
                     </svg>
-                    <span class="rn" data-en="As a couple">À deux</span>
-                    <span class="nm" data-en="Double bed">Lit double</span>
-                    <span class="det" data-en="Chambre Verte prepared, Bleue stays as a lounge">Chambre Verte préparée, Bleue en salon</span>
+                    <span class="rn"><?= htmlspecialchars(t('contact.room.couple')) ?></span>
+                    <span class="nm"><?= htmlspecialchars(t('contact.room.double')) ?></span>
+                    <span class="det"><?= htmlspecialchars(t('contact.room.double_det')) ?></span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="lits-simples" />
@@ -343,9 +343,9 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                       <line x1="25" y1="13" x2="34" y2="13"/>
                       <line x1="36" y1="13" x2="45" y2="13"/>
                     </svg>
-                    <span class="rn" data-en="As a couple">À deux</span>
-                    <span class="nm" data-en="Two single beds">Deux lits simples</span>
-                    <span class="det" data-en="Chambre Bleue prepared, Verte stays as a lounge">Chambre Bleue préparée, Verte en salon</span>
+                    <span class="rn"><?= htmlspecialchars(t('contact.room.couple')) ?></span>
+                    <span class="nm"><?= htmlspecialchars(t('contact.room.twin')) ?></span>
+                    <span class="det"><?= htmlspecialchars(t('contact.room.twin_det')) ?></span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="chacun" />
@@ -358,9 +358,9 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                       <line x1="8" y1="13" x2="28" y2="13"/>
                       <line x1="42" y1="13" x2="62" y2="13"/>
                     </svg>
-                    <span class="rn" data-en="As a couple · Paid option">À deux &middot; <strong>option payante</strong></span>
-                    <span class="nm" data-en="A room each">Une chambre chacun</span>
-                    <span class="det" data-en="Both rooms prepared">Les deux chambres préparées</span>
+                    <span class="rn"><?= t('contact.room.couple_paid') ?></span>
+                    <span class="nm"><?= htmlspecialchars(t('contact.room.each')) ?></span>
+                    <span class="det"><?= htmlspecialchars(t('contact.room.each_det')) ?></span>
                   </label>
                   <label>
                     <input type="radio" name="config" value="famille" />
@@ -375,18 +375,18 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                       <line x1="42" y1="13" x2="51" y2="13"/>
                       <line x1="53" y1="13" x2="62" y2="13"/>
                     </svg>
-                    <span class="rn" data-en="3 to 5 guests">À 3, 4 ou 5</span>
-                    <span class="nm" data-en="Family / small group">Famille / groupe</span>
-                    <span class="det" data-en="Both rooms prepared, sofa bed if needed">Les deux chambres, clic-clac si besoin</span>
+                    <span class="rn"><?= htmlspecialchars(t('contact.room.family_who')) ?></span>
+                    <span class="nm"><?= htmlspecialchars(t('contact.room.family')) ?></span>
+                    <span class="det"><?= htmlspecialchars(t('contact.room.family_det')) ?></span>
                   </label>
                 </div>
               </div>
               <div class="field">
-                <label data-en="Adults">Adultes</label>
+                <label><?= htmlspecialchars(t('contact.field.adults')) ?></label>
                 <input type="number" name="adults" min="1" max="5" value="2" />
               </div>
               <div class="field">
-                <label data-en="Children">Enfants</label>
+                <label><?= htmlspecialchars(t('contact.field.children')) ?></label>
                 <input type="number" name="children" min="0" max="3" value="0" />
               </div>
             </div>
@@ -402,27 +402,27 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
                 include __DIR__ . '/_partials/calendar_focus.php';
               ?>
               <div class="legend">
-                <span class="legend-key"><span class="legend-sw villa"></span> Disponible</span>
-                <span class="legend-key"><span class="legend-sw booked"></span> Réservé</span>
+                <span class="legend-key"><span class="legend-sw villa"></span> <?= htmlspecialchars(t('contact.cal.available')) ?></span>
+                <span class="legend-key"><span class="legend-sw booked"></span> <?= htmlspecialchars(t('contact.cal.booked')) ?></span>
               </div>
             </div>
 
             <div class="form-grid">
               <div class="field">
-                <label data-en="Arrival (Saturday)">Arrivée (samedi)</label>
+                <label><?= htmlspecialchars(t('contact.field.arrival_sat')) ?></label>
                 <input type="date" name="arrival_villa" />
               </div>
               <div class="field">
-                <label data-en="Departure (Saturday)">Départ (samedi)</label>
+                <label><?= htmlspecialchars(t('contact.field.departure_sat')) ?></label>
                 <input type="date" name="departure_villa" />
               </div>
               <div class="field full">
-                <label data-en="Total guests (max. 10)">Personnes au total (max. 10)</label>
+                <label><?= htmlspecialchars(t('contact.field.total_guests')) ?></label>
                 <input type="number" name="villa_guests" min="2" max="10" value="8" />
               </div>
               <div class="field full">
-                <label data-en="The occasion?">L'occasion ?</label>
-                <input type="text" name="occasion" data-en-attr="placeholder|Family reunion, birthday, just a long week…" placeholder="Réunion de famille, anniversaire, juste une longue semaine…" />
+                <label><?= htmlspecialchars(t('contact.field.occasion')) ?></label>
+                <input type="text" name="occasion" placeholder="<?= htmlspecialchars(t('contact.field.occasion_ph')) ?>" />
               </div>
             </div>
           </div>
@@ -430,42 +430,42 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
           <!-- Shared fields -->
           <div class="form-grid" style="margin-top: 28px;">
             <div class="field">
-              <label data-en="Your name">Votre nom</label>
+              <label><?= htmlspecialchars(t('contact.field.name')) ?></label>
               <input type="text" name="name" required autocomplete="name" aria-required="true" />
             </div>
             <div class="field">
-              <label data-en="Email">Courriel</label>
+              <label><?= htmlspecialchars(t('contact.field.email')) ?></label>
               <input type="email" name="email" required autocomplete="email" inputmode="email" aria-required="true" />
             </div>
             <div class="field">
-              <label data-en="Phone (optional)">Téléphone (facultatif)</label>
+              <label><?= htmlspecialchars(t('contact.field.phone')) ?></label>
               <input type="tel" name="phone" autocomplete="tel" inputmode="tel" />
             </div>
             <div class="field">
-              <label data-en="How did you find us?">Comment nous avez-vous trouvés ?</label>
+              <label><?= htmlspecialchars(t('contact.field.source')) ?></label>
               <select name="source">
-                <option data-en="A friend">Un ami</option>
-                <option data-en="Instagram">Instagram</option>
-                <option data-en="A magazine">Un magazine</option>
-                <option data-en="Search">Recherche</option>
-                <option data-en="Came back">Revenu(e)</option>
+                <option><?= htmlspecialchars(t('contact.source.friend')) ?></option>
+                <option>Instagram</option>
+                <option><?= htmlspecialchars(t('contact.source.magazine')) ?></option>
+                <option><?= htmlspecialchars(t('contact.source.search')) ?></option>
+                <option><?= htmlspecialchars(t('contact.source.return')) ?></option>
               </select>
             </div>
             <div class="field full">
-              <label data-en="Anything you'd like us to know?">Quelque chose qu'on devrait savoir ?</label>
-              <textarea name="note" data-en-attr="placeholder|Dietary preferences, a celebration to plan, a transfer to organise…" placeholder="Régimes particuliers, une occasion à préparer, un transfert à organiser…"></textarea>
+              <label><?= htmlspecialchars(t('contact.field.note')) ?></label>
+              <textarea name="note" placeholder="<?= htmlspecialchars(t('contact.field.note_ph')) ?>"></textarea>
             </div>
           </div>
 
           <div class="submit-bar">
-            <div class="note" data-en="No payment at this stage, only an enquiry.">Aucun paiement à cette étape, uniquement une demande.</div>
-            <button type="submit" class="btn" data-en="Send →">Envoyer →</button>
+            <div class="note"><?= htmlspecialchars(t('contact.submit.note')) ?></div>
+            <button type="submit" class="btn"><?= htmlspecialchars(t('contact.submit.send')) ?></button>
           </div>
 
           <div class="success" id="success">
-            <div class="numeral" style="margin-bottom: 14px;" data-en="Got it.">Bien reçu.</div>
-            <h3 class="h-lg" style="margin: 0 0 14px;" data-en="A reply is on its way.">Notre réponse <em>est en route</em>.</h3>
-            <p class="body-lg" style="margin: 0;" data-en="We'll write you back within the day from contact@villaplaisance.fr; please check your spam folder, just in case.">Nous vous répondons dans la journée depuis contact@villaplaisance.fr ; pensez aux indésirables, au cas où.</p>
+            <div class="numeral" style="margin-bottom: 14px;"><?= htmlspecialchars(t('contact.success.tag')) ?></div>
+            <h3 class="h-lg" style="margin: 0 0 14px;"><?= t('contact.success.title') ?></h3>
+            <p class="body-lg" style="margin: 0;"><?= htmlspecialchars(t('contact.success.body')) ?></p>
           </div>
         </form>
       </main>
@@ -474,33 +474,33 @@ foreach (BlockService::getSections('contact', $lang) as $_s) {
       <aside class="ct-info">
         <div class="kicker dark" style="background: transparent; border: 1px solid rgba(var(--linen-50-rgb), 0.25); color: var(--linen-200);">
           <span class="dot" style="background: var(--sage-200);"></span>
-          <span data-en="Contact">Coordonnées</span>
+          <span><?= htmlspecialchars(t('contact.info.kicker')) ?></span>
         </div>
 
-        <h2 data-en="Three ways/to reach us.">Trois façons<br/>de <em>nous joindre</em>.</h2>
-        <p class="body-lg" data-en="Email is best: we keep the conversation written so nothing gets lost.">L'écrit, idéalement : la conversation reste écrite, rien ne se perd.</p>
+        <h2><?= t('contact.info.title') ?></h2>
+        <p class="body-lg"><?= htmlspecialchars(t('contact.info.lede')) ?></p>
 
         <div class="row">
-          <div class="lbl" data-en="By email"><?= IconService::svg('email', 14, 'row-icon') ?> Par courriel</div>
+          <div class="lbl"><?= IconService::svg('email', 14, 'row-icon') ?> <?= htmlspecialchars(t('contact.info.email_lbl')) ?></div>
           <a href="mailto:contact@villaplaisance.fr">contact@villaplaisance.fr</a>
-          <div class="sub" data-en="The fastest way to a real answer.">Le chemin le plus court vers une vraie réponse.</div>
+          <div class="sub"><?= htmlspecialchars(t('contact.info.email_sub')) ?></div>
         </div>
 
         <div class="row">
-          <div class="lbl" data-en="In person"><?= IconService::svg('localisation', 14, 'row-icon') ?> Sur place</div>
+          <div class="lbl"><?= IconService::svg('localisation', 14, 'row-icon') ?> <?= htmlspecialchars(t('contact.info.place_lbl')) ?></div>
           <span class="v">Bédarrides<br/>Vaucluse · 84</span>
-          <div class="sub" data-en="The full address is sent with your booking confirmation.">L'adresse complète est transmise avec la confirmation de séjour.</div>
+          <div class="sub"><?= htmlspecialchars(t('contact.info.place_sub')) ?></div>
         </div>
 
         <div class="row">
-          <div class="lbl" data-en="Reply time"><?= IconService::svg('horloge', 14, 'row-icon') ?> Délai de réponse</div>
-          <span class="v" data-en="Within the day"><em>Dans la journée</em></span>
-          <div class="sub" data-en="Every enquiry is read and answered by hand, not by a bot.">Chaque demande est lue et signée à la main, jamais par un robot.</div>
+          <div class="lbl"><?= IconService::svg('horloge', 14, 'row-icon') ?> <?= htmlspecialchars(t('contact.info.reply_lbl')) ?></div>
+          <span class="v"><?= t('contact.info.reply_val') ?></span>
+          <div class="sub"><?= htmlspecialchars(t('contact.info.reply_sub')) ?></div>
         </div>
 
         <div class="row">
-          <div class="lbl" data-en="And to follow along"><?= IconService::svg('instagram', 14, 'row-icon') ?> Et pour suivre</div>
-          <a href="#" data-en="Instagram · @villaplaisance">Instagram · @villaplaisance</a>
+          <div class="lbl"><?= IconService::svg('instagram', 14, 'row-icon') ?> <?= htmlspecialchars(t('contact.info.follow_lbl')) ?></div>
+          <a href="#">Instagram · @villaplaisance</a>
         </div>
       </aside>
 

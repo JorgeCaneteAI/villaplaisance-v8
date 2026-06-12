@@ -21,12 +21,11 @@ use App\Services\PublicAvailabilityService;
 
 $cal_variant = $cal_variant ?? 'bnb';
 
-// Labels mois alignés sur le fichier de design (mois longs raccourcis).
-$moisLabels = [
-    1 => 'Jan.', 2 => 'Févr.', 3 => 'Mars', 4 => 'Avril',
-    5 => 'Mai',  6 => 'Juin',  7 => 'Juil.', 8 => 'Août',
-    9 => 'Sept.', 10 => 'Oct.', 11 => 'Nov.', 12 => 'Déc.',
-];
+// Mois courts + jours de semaine localisés (le calendrier s'affichait en FR
+// sur /en/ et /es/). Listes CSV dans les fichiers Lang (clés cal.months / cal.dow).
+$moisLabels = array_values(array_filter(explode(',', t('cal.months'))));
+array_unshift($moisLabels, ''); // index 1-based (1 => Janvier)
+$dowLabels = explode(',', t('cal.dow'));
 
 $grid = PublicAvailabilityService::getMonthGrid($cal_propriete, $cal_year, $cal_month);
 
@@ -35,7 +34,7 @@ $daysInMonth = (int) $firstDay->format('t');
 // Offset Lun=0, Mar=1, ..., Dim=6, pour insérer les cellules vides avant le 1er.
 $leadingEmpty = ((int) $firstDay->format('N')) - 1;
 
-$tag = $cal_variant === 'villa' ? "Villa entière" : "Chambres d'hôtes";
+$tag = $cal_variant === 'villa' ? t('cal.tag_villa') : t('cal.tag_bnb');
 $monthClass = 'cal-month' . ($cal_variant === 'villa' ? ' is-villa' : '');
 ?>
 <div class="<?= $monthClass ?>">
@@ -44,7 +43,7 @@ $monthClass = 'cal-month' . ($cal_variant === 'villa' ? ' is-villa' : '');
         <span class="cal-month-tag"><?= $tag ?></span>
     </div>
     <div class="cal-dow">
-        <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+        <?php foreach ($dowLabels as $_dow): ?><span><?= htmlspecialchars(trim($_dow)) ?></span><?php endforeach; ?>
     </div>
     <div class="cal-grid">
 <?php /* Variables nommées explicitement pour ne pas piétiner le $i d'un
