@@ -276,6 +276,15 @@ return [
     'itin.shortcut_title' => 'El camino más corto<br/>es preguntarnos<br/><em>en el desayuno</em>.',
     'itin.shortcut_lede' => 'Una lista es una lista. Sabemos lo que vale su mañana, su tarde, su desvío. Pregúntenos, ese es todo el sentido de alojarse con quienes viven aquí.',
     'itin.write_us' => 'Escríbanos',
+    // Banda de calendario (estados + segmentos de temporada)
+    'cal.ribbon_full' => 'Completo',
+    'cal.ribbon_some' => 'Algunas fechas',
+    'cal.ribbon_open' => 'Disponible',
+    'cal.seg_may_jun' => 'Mayo · Junio',
+    'cal.seg_jul' => 'Julio',
+    'cal.seg_aug' => 'Agosto',
+    'cal.seg_sep_dec' => 'Sept. → Dic.',
+    'cal.seg_jan_apr' => 'Ene. → Abr.',
 
     // Alrededores
     'surplace.hero.title' => 'Alrededores',

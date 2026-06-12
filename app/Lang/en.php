@@ -269,6 +269,15 @@ return [
     'itin.shortcut_title' => 'The shortest way<br/>is to ask us<br/><em>at breakfast</em>.',
     'itin.shortcut_lede' => 'A list is a list. We know what\'s worth your morning, your evening, your detour. Ask us, that\'s the whole point of staying with people who live here.',
     'itin.write_us' => 'Write to us',
+    // Calendar ribbon (statuses + season segments)
+    'cal.ribbon_full' => 'Full',
+    'cal.ribbon_some' => 'A few dates',
+    'cal.ribbon_open' => 'Available',
+    'cal.seg_may_jun' => 'May · June',
+    'cal.seg_jul' => 'July',
+    'cal.seg_aug' => 'August',
+    'cal.seg_sep_dec' => 'Sept. → Dec.',
+    'cal.seg_jan_apr' => 'Jan. → Apr.',
 
     'surplace.hero.title' => 'Nearby',
     'surplace.hero.subtitle' => 'Our addresses and recommendations around Bédarrides',

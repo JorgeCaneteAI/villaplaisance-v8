@@ -30,11 +30,11 @@ $currentYear  = (int) $today->format('Y');
 $currentMonth = (int) $today->format('n');
 
 $segments = [
-    ['label' => 'Mai · Juin',    'months' => [5, 6],          'intent' => 'bnb'],
-    ['label' => 'Juillet',       'months' => [7],             'intent' => 'villa'],
-    ['label' => 'Août',          'months' => [8],             'intent' => 'villa'],
-    ['label' => 'Sept. → Déc.',  'months' => [9, 10, 11, 12], 'intent' => 'bnb'],
-    ['label' => 'Jan. → Avril',  'months' => [1, 2, 3, 4],    'intent' => 'bnb'],
+    ['label' => t('cal.seg_may_jun'), 'months' => [5, 6],          'intent' => 'bnb'],
+    ['label' => t('cal.seg_jul'),     'months' => [7],             'intent' => 'villa'],
+    ['label' => t('cal.seg_aug'),     'months' => [8],             'intent' => 'villa'],
+    ['label' => t('cal.seg_sep_dec'), 'months' => [9, 10, 11, 12], 'intent' => 'bnb'],
+    ['label' => t('cal.seg_jan_apr'), 'months' => [1, 2, 3, 4],    'intent' => 'bnb'],
 ];
 
 $computed = [];
@@ -59,8 +59,8 @@ foreach ($segments as $seg) {
     $ratio = $bookedDays / $totalDays;
     $full  = $ratio >= 0.8;
     $statusLabel = $full
-        ? 'Complet'
-        : ($ratio >= 0.2 ? 'Quelques dates' : 'Disponible');
+        ? t('cal.ribbon_full')
+        : ($ratio >= 0.2 ? t('cal.ribbon_some') : t('cal.ribbon_open'));
 
     $computed[] = [
         'label'       => $seg['label'],

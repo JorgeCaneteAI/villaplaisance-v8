@@ -277,6 +277,15 @@ return [
     'itin.shortcut_title' => 'Le plus court chemin<br/>reste de nous demander<br/><em>au petit-déjeuner</em>.',
     'itin.shortcut_lede' => 'Une liste est une liste. Nous savons ce qui vaut votre matinée, votre soirée, votre détour. Demandez, c\'est tout l\'intérêt de dormir chez ceux qui vivent ici.',
     'itin.write_us' => 'Nous écrire',
+    // Ruban calendrier (statuts + segments de saison)
+    'cal.ribbon_full' => 'Complet',
+    'cal.ribbon_some' => 'Quelques dates',
+    'cal.ribbon_open' => 'Disponible',
+    'cal.seg_may_jun' => 'Mai · Juin',
+    'cal.seg_jul' => 'Juillet',
+    'cal.seg_aug' => 'Août',
+    'cal.seg_sep_dec' => 'Sept. → Déc.',
+    'cal.seg_jan_apr' => 'Jan. → Avril',
 
     // Sur place
     'surplace.hero.title' => 'Sur place',
