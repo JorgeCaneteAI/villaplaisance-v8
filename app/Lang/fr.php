@@ -149,6 +149,7 @@ return [
     'cal.tag_villa' => 'Villa entière',
     'cal.dow' => 'L,M,M,J,V,S,D',
     'cal.months' => 'Jan.,Févr.,Mars,Avril,Mai,Juin,Juil.,Août,Sept.,Oct.,Nov.,Déc.',
+    'schema.lodging_desc' => 'Chambres d\'hôtes et villa de charme à Bédarrides, au cœur du Triangle d\'Or provençal.',
 
     // Sur place
     'surplace.hero.title' => 'Sur place',

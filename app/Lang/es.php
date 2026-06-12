@@ -148,6 +148,7 @@ return [
     'cal.tag_villa' => 'Villa entera',
     'cal.dow' => 'L,M,X,J,V,S,D',
     'cal.months' => 'Ene.,Feb.,Mar.,Abr.,May.,Jun.,Jul.,Ago.,Sept.,Oct.,Nov.,Dic.',
+    'schema.lodging_desc' => 'Casa de huéspedes y villa con encanto en Bédarrides, en el corazón del Triángulo de Oro provenzal.',
 
     // Alrededores
     'surplace.hero.title' => 'Alrededores',

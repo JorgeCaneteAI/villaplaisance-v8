@@ -141,6 +141,7 @@ return [
     'cal.tag_villa' => 'The whole villa',
     'cal.dow' => 'M,T,W,T,F,S,S',
     'cal.months' => 'Jan.,Feb.,Mar.,Apr.,May,Jun.,Jul.,Aug.,Sep.,Oct.,Nov.,Dec.',
+    'schema.lodging_desc' => 'Bed and breakfast and charming villa in Bédarrides, in the heart of Provence\'s Golden Triangle.',
 
     'surplace.hero.title' => 'Nearby',
     'surplace.hero.subtitle' => 'Our addresses and recommendations around Bédarrides',

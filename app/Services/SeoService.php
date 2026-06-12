@@ -128,7 +128,7 @@ class SeoService
             // remonté par l'inspection GSC sur VacationRental/BedAndBreakfast).
             'identifier' => $base . '#villa-plaisance-bedarrides',
             'name' => 'Villa Plaisance',
-            'description' => 'Chambres d\'hôtes et villa de charme à Bédarrides, au cœur du Triangle d\'Or provençal.',
+            'description' => t('schema.lodging_desc'),
             'url' => $base,
             // Format E.164 (international) recommandé par Schema.org.
             'telephone' => '+33490330049',
