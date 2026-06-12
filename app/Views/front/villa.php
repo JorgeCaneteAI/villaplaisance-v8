@@ -303,7 +303,7 @@ $renderV8BlockAt = static function (int $pos, string $expectedType) use ($_v8Sec
 <section class="section-tight" style="padding-top: clamp(40px, 5vw, 64px); padding-bottom: clamp(8px, 1vw, 16px);">
   <div class="container-wide">
     <div class="section-label" style="margin-bottom: 18px;">
-      <span class="numeral" data-en=" Availability"> Disponibilités</span>
+      <span class="numeral"><?= htmlspecialchars(t('cha.availability')) ?></span>
     </div>
     <?php include __DIR__ . '/_partials/calendar_ribbon.php'; ?>
   </div>
