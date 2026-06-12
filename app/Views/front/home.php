@@ -779,11 +779,11 @@ $_linkifyHost = static function (string $content): string {
   <div class="container-wide">
     <div class="reviews-intro">
       <div>
-        <div class="reviews-kicker">Avis</div>
-        <h2 class="h-xl reviews-title">Quelques <em>mots</em><br/>laissés au départ.</h2>
+        <div class="reviews-kicker"><?= htmlspecialchars(t('home.reviews_kicker')) ?></div>
+        <h2 class="h-xl reviews-title"><?= t('home.reviews_title') ?></h2>
       </div>
       <a class="reviews-cta" href="<?= LangService::url('avis') ?>">
-        <?= count($_homeReviews) > 0 ? 'Lire tous les avis' : 'Découvrir la maison' ?>
+        <?= htmlspecialchars(count($_homeReviews) > 0 ? t('home.reviews_cta_all') : t('home.reviews_cta_none')) ?>
         <span aria-hidden="true">&rarr;</span>
       </a>
     </div>
@@ -830,8 +830,8 @@ $_linkifyHost = static function (string $content): string {
     </script>
     <?php else: ?>
     <p class="reviews-empty">
-      Les premiers mots des voyageurs arriveront bientôt sur cette page.
-      <a href="<?= LangService::url('contact') ?>">Écrivez-nous</a> en attendant.
+      <?= htmlspecialchars(t('home.reviews_empty1')) ?>
+      <a href="<?= LangService::url('contact') ?>"><?= htmlspecialchars(t('home.reviews_write')) ?></a> <?= htmlspecialchars(t('home.reviews_empty2')) ?>
     </p>
     <?php endif; ?>
   </div>

@@ -25,6 +25,16 @@ $catSlug = function(string $c): string {
 };
 
 $totalCount = ($featured ? 1 : 0) + count($articles);
+
+// Date courte localisée ("1 juil. 2025" / "1 Jul. 2025"), sinon date('M')
+// rendait les mois en anglais sur les pages FR/ES.
+$itinDate = static function (?string $d): string {
+    if (!$d) return '';
+    $ts = strtotime($d);
+    if (!$ts) return '';
+    $months = explode(',', t('cal.months'));
+    return (int)date('j', $ts) . ' ' . ($months[(int)date('n', $ts) - 1] ?? '') . ' ' . date('Y', $ts);
+};
 ?>
 <style>
   /* Masthead */
@@ -222,12 +232,12 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
   <div class="qf-masthead-inner">
     <div>
       <div class="qf-issue">
-        <span data-en="Journal · 05 / What to do nearby">Journal · 05 / Que faire sur place</span>
-        <span data-en="The house's pick">La sélection de la maison</span>
+        <span><?= htmlspecialchars(t('itin.hero_issue')) ?></span>
+        <span><?= htmlspecialchars(t('itin.hero_pick')) ?></span>
       </div>
-      <h1 class="qf-title">Sur place,<br/>tout est <em>là</em>.</h1>
+      <h1 class="qf-title"><?= t('itin.hero_title') ?></h1>
     </div>
-    <p class="qf-lede" data-en="Sites to visit, tables and restaurants, shops, things to do with children, what we'd point to ourselves over breakfast.">Sites à visiter, tables et restaurants, commerces, activités avec les enfants, ce qu'on vous indiquerait nous-mêmes au petit-déjeuner.</p>
+    <p class="qf-lede"><?= htmlspecialchars(t('itin.hero_lede')) ?></p>
   </div>
 </section>
 <?php endif; ?>
@@ -236,11 +246,11 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
 <?php if (!empty($categories) && $totalCount > 0): ?>
 <div class="qf-filter">
   <div class="qf-filter-inner" role="tablist">
-    <button data-cat="all" aria-pressed="true" data-en="All">Tous</button>
+    <button data-cat="all" aria-pressed="true"><?= htmlspecialchars(t('itin.filter_all')) ?></button>
     <?php foreach ($categories as $cat): if ($cat === null || $cat === '') continue; ?>
     <button data-cat="<?= htmlspecialchars($catSlug($cat)) ?>" aria-pressed="false"><?= htmlspecialchars($cat) ?></button>
     <?php endforeach; ?>
-    <span class="count" id="filter-count"><?= $totalCount ?> <?= $totalCount > 1 ? 'adresses' : 'adresse' ?></span>
+    <span class="count" id="filter-count"><?= htmlspecialchars(t($totalCount > 1 ? 'itin.address_many' : 'itin.address_one', ['n' => $totalCount])) ?></span>
   </div>
 </div>
 <?php endif; ?>
@@ -250,7 +260,7 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
   <div class="container-wide">
 
     <?php if ($totalCount === 0): ?>
-      <div class="qf-empty" data-en="No address yet. Come back soon.">Aucune adresse pour l'instant. À bientôt.</div>
+      <div class="qf-empty"><?= htmlspecialchars(t('itin.empty')) ?></div>
     <?php else: ?>
     <div class="qf-grid" id="grid">
 
@@ -265,7 +275,7 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
             <?php if (!empty($featured['category'])): ?>
             <span class="badge <?= htmlspecialchars($catSlug($featured['category'])) ?>"><?= htmlspecialchars($featured['category']) ?></span>
             <?php endif; ?>
-            <span style="font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--stone-500);" data-en="Editor's pick">CHOIX DE LA MAISON</span>
+            <span style="font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; color: var(--stone-500);"><?= htmlspecialchars(t('itin.editors_pick')) ?></span>
           </div>
           <h3><?= htmlspecialchars($featured['title']) ?></h3>
           <?php if (!empty($featured['excerpt'])): ?>
@@ -273,11 +283,11 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
           <?php endif; ?>
           <div class="footer-row" style="margin-top: 18px;">
             <?php if (!empty($featured['published_at'])): ?>
-            <span><time datetime="<?= htmlspecialchars($featured['published_at']) ?>"><?= date('j M Y', strtotime($featured['published_at'])) ?></time></span>
+            <span><time datetime="<?= htmlspecialchars($featured['published_at']) ?>"><?= htmlspecialchars($itinDate($featured['published_at'])) ?></time></span>
             <?php else: ?>
             <span></span>
             <?php endif; ?>
-            <span class="more-link" data-en="More info →">Plus d'infos →</span>
+            <span class="more-link"><?= htmlspecialchars(t('itin.more')) ?></span>
           </div>
         </div>
       </a>
@@ -300,11 +310,11 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
         <?php endif; ?>
         <div class="footer-row">
           <?php if (!empty($a['published_at'])): ?>
-          <span><time datetime="<?= htmlspecialchars($a['published_at']) ?>"><?= date('j M Y', strtotime($a['published_at'])) ?></time></span>
+          <span><time datetime="<?= htmlspecialchars($a['published_at']) ?>"><?= htmlspecialchars($itinDate($a['published_at'])) ?></time></span>
           <?php else: ?>
           <span></span>
           <?php endif; ?>
-          <span class="more-link" data-en="More info →">Plus d'infos →</span>
+          <span class="more-link"><?= htmlspecialchars(t('itin.more')) ?></span>
         </div>
       </a>
       <?php endforeach; ?>
@@ -318,11 +328,11 @@ foreach (BlockService::getSections('itineraire', $lang) as $_s) {
 <!-- ============ ASK US STRIP ============ -->
 <section class="section surface-ink" style="background: var(--olive-900); color: var(--linen-100); padding: clamp(64px, 8vw, 112px) 0;">
   <div class="container-wide" style="text-align: center;">
-    <div class="kicker dark" style="display: inline-flex; margin-bottom: 24px;"><span class="dot" style="background: var(--sage-200);"></span><span data-en="The shortcut">Le raccourci</span></div>
-    <h2 class="h-xl" style="margin: 0 auto; max-width: 22ch; color: var(--linen-50);" data-en="The shortest way is/to ask us at breakfast.">Le plus court chemin<br/>reste de nous demander<br/><em>au petit-déjeuner</em>.</h2>
-    <p class="body-lg" style="color: rgba(var(--linen-50-rgb), 0.72); max-width: 50ch; margin: 24px auto 32px;" data-en="A list is a list. We know what's worth your morning, your evening, your detour. Ask us, that's the whole point of staying with people who live here.">Une liste est une liste. Nous savons ce qui vaut votre matinée, votre soirée, votre détour. Demandez, c'est tout l'intérêt de dormir chez ceux qui vivent ici.</p>
+    <div class="kicker dark" style="display: inline-flex; margin-bottom: 24px;"><span class="dot" style="background: var(--sage-200);"></span><span><?= htmlspecialchars(t('itin.shortcut')) ?></span></div>
+    <h2 class="h-xl" style="margin: 0 auto; max-width: 22ch; color: var(--linen-50);"><?= t('itin.shortcut_title') ?></h2>
+    <p class="body-lg" style="color: rgba(var(--linen-50-rgb), 0.72); max-width: 50ch; margin: 24px auto 32px;"><?= htmlspecialchars(t('itin.shortcut_lede')) ?></p>
     <div style="display:flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-      <a class="btn" style="background: var(--linen-50); color: var(--olive-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span data-en="Write to us">Nous écrire</span> →</a>
+      <a class="btn" style="background: var(--linen-50); color: var(--olive-900); border-color: var(--linen-50);" href="<?= LangService::url('contact') ?>"><span><?= htmlspecialchars(t('itin.write_us')) ?></span> →</a>
     </div>
   </div>
 </section>
