@@ -11,8 +11,10 @@ Thumbs.db
 .vscode/
 *.swp
 
-# Config locale Claude Code
+# Config locale Claude Code + artefacts outil `npx skills`
 .claude/
+.agents/
+skills-lock.json
 
 # Uploads (gérés hors git, transfert manuel)
 public/uploads/
