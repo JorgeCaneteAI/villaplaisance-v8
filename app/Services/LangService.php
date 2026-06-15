@@ -48,6 +48,24 @@ class LangService
     public static function url(string $page, ?string $lang = null): string
     {
         $lang = $lang ?? self::$currentLang;
+
+        // Chemin composé "section/reste" (ex. article "journal/<slug>") : on
+        // localise UNIQUEMENT le slug de section via le slugMap, le reste (slug
+        // d'article, partagé entre langues) est préservé tel quel. Sans ça la
+        // section gardait son slug FR (ex. /es/journal/x au lieu de /es/diario/x)
+        // → canonical/hreflang divergents = "Autre page avec balise canonique
+        // correcte" dans Search Console.
+        $trimmed = trim($page, '/');
+        if (str_contains($trimmed, '/')) {
+            [$section, $rest] = explode('/', $trimmed, 2);
+            $sectionSlug = self::$slugMap[$lang][$section]
+                ?? self::$slugMap[DEFAULT_LANG][$section]
+                ?? $section;
+            $prefix = $sectionSlug === '/' ? '' : ltrim($sectionSlug, '/') . '/';
+            $path = $prefix . $rest;
+            return $lang === DEFAULT_LANG ? '/' . $path : '/' . $lang . '/' . $path;
+        }
+
         // $page = slug FR canonique (clé du Router). On résout le slug localisé.
         $slug = self::$slugMap[$lang][$page] ?? self::$slugMap[DEFAULT_LANG][$page] ?? $page;
 

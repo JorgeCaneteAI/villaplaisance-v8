@@ -74,7 +74,11 @@ try {
 <?php endforeach; ?>
 
 <?php foreach ($articles as $art):
-    $section = $art['type'] === 'journal' ? 'journal' : 'itineraire';
+    // Les articles type='sur-place' sont servis sous /sur-place/{slug}
+    // (SurPlaceController). /itineraire/{slug} lit une autre table
+    // (vp_itineraries, itinéraires privés) → émettre 'itineraire' ici
+    // produisait des <loc> en 404. Seuls types en base : journal, sur-place.
+    $section = $art['type'] === 'journal' ? 'journal' : 'sur-place';
     $frUrl = $base . LangService::url($section, 'fr') . '/' . $art['slug'];
     $img = !empty($art['cover_image'])
         ? $base . '/uploads/' . $art['cover_image']
