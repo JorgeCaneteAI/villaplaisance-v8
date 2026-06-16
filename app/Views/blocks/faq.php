@@ -45,6 +45,35 @@ try {
     $faqs = [];
 }
 
+if (!function_exists('vp_faq_render_answer')) {
+    /**
+     * Rendu d'une réponse FAQ : on échappe tout (anti-XSS), on convertit les
+     * liens en syntaxe [texte](url) vers des <a>, puis nl2br. Seuls les schémas
+     * http(s):// (externe) et les chemins internes /… (hors //) sont acceptés ;
+     * tout le reste est laissé en texte brut.
+     */
+    function vp_faq_render_answer(string $raw): string
+    {
+        $html = htmlspecialchars($raw, ENT_QUOTES, 'UTF-8');
+        $html = preg_replace_callback(
+            '/\[([^\]]+)\]\(([^)\s]+)\)/',
+            static function (array $m): string {
+                $text = $m[1];
+                $url  = $m[2];
+                if (preg_match('#^https?://#', $url)) {
+                    return '<a href="' . $url . '" target="_blank" rel="noopener nofollow">' . $text . '</a>';
+                }
+                if (preg_match('#^/[^/]#', $url)) { // chemin interne, pas de // protocole-relatif
+                    return '<a href="' . $url . '">' . $text . '</a>';
+                }
+                return $m[0]; // schéma non autorisé : on laisse tel quel
+            },
+            $html
+        );
+        return nl2br($html, false);
+    }
+}
+
 $hasHeader = ($heading !== '' || $intro !== '' || $label_numeral !== '' || $label_text !== '');
 ?>
 <section class="section <?= htmlspecialchars($surfaceClass) ?>"<?= $surfaceStyle ? ' style="' . htmlspecialchars($surfaceStyle) . '"' : '' ?>>
@@ -72,7 +101,7 @@ $hasHeader = ($heading !== '' || $intro !== '' || $label_numeral !== '' || $labe
         <?php foreach ($faqs as $i => $faq): ?>
         <details<?= ($first_open && $i === 0) ? ' open' : '' ?>>
           <summary><span><?= htmlspecialchars((string)$faq['question']) ?></span><span class="icon"></span></summary>
-          <div class="answer"><?= nl2br(htmlspecialchars((string)$faq['answer']), false) ?></div>
+          <div class="answer"><?= vp_faq_render_answer((string)$faq['answer']) ?></div>
         </details>
         <?php endforeach; ?>
       </div>

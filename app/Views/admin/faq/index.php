@@ -94,6 +94,11 @@ foreach ($faqs as $f):
     FAQ côté visiteur. Suppression et création s'appliquent à <strong>toutes les langues</strong> ;
     l'édition est sur la langue sélectionnée ci-dessus.
 </p>
+<p class="text-sm text-muted mt-1">
+    🔗 Lien dans une réponse : <code>[texte cliquable](https://adresse)</code> —
+    ex. <code>[Airbnb](https://airbnb.fr/h/villaplaisance)</code>. Lien interne :
+    <code>[nous contacter](/contact)</code>.
+</p>
 
 <style>
 /* ── FAQ : édition en place ── */
