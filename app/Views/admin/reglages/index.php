@@ -455,7 +455,22 @@ form[data-ajax-save] .is-changed{
         updateBar();
     });
 
-    // Garde anti-perte : prévient avant de quitter avec des modifs non sauvegardées.
+    // Actions de page (Supprimer / Ajouter / PIN) : on enregistre d'abord les
+    // modifs en attente, puis on laisse la navigation se faire. Plus de dialogue
+    // « quitter la page » parasite, et aucune saisie perdue.
+    document.querySelectorAll('form:not([data-ajax-save]):not([data-toggle-form])').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            if (e.defaultPrevented) return;        // confirm annulé ou champ requis vide
+            if (!dirtyForms().length) return;       // rien en attente : navigation normale
+            e.preventDefault();
+            await Promise.all(dirtyForms().map(f => saveForm(f, true)));
+            updateBar();
+            form.submit();                          // relance sans re-déclencher submit/confirm
+        });
+    });
+
+    // Garde anti-perte sur une vraie sortie (fermeture d'onglet, F5, autre URL)
+    // s'il reste — exceptionnellement — des modifs non enregistrées.
     window.addEventListener('beforeunload', (e) => {
         if (dirtyForms().length) { e.preventDefault(); e.returnValue = ''; }
     });
