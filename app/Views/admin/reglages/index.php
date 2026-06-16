@@ -22,7 +22,7 @@
 <!-- ═══ 1. INFORMATIONS GÉNÉRALES ═══ -->
 <section class="admin-card">
     <h2>Informations générales</h2>
-    <form method="POST" action="/admin/reglages/save" class="admin-form">
+    <form method="POST" action="/admin/reglages/save" class="admin-form" data-ajax-save>
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
         <div class="form-row">
             <div class="form-group">
@@ -98,7 +98,7 @@
             <div class="settings-list">
                 <?php foreach ($list as $link): ?>
                 <div class="settings-row">
-                    <form method="POST" action="/admin/reglages/booking/<?= $link['id'] ?>/update" class="settings-row-form">
+                    <form method="POST" action="/admin/reglages/booking/<?= $link['id'] ?>/update" class="settings-row-form" data-ajax-save>
                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                         <input type="text" name="platform_name" value="<?= htmlspecialchars($link['platform_name']) ?>" placeholder="Nom (Booking, Airbnb…)" class="settings-name">
                         <input type="url" name="url" value="<?= htmlspecialchars($link['url']) ?>" placeholder="https://…" class="settings-url">
@@ -137,7 +137,7 @@
     <div class="settings-list mb-2">
         <?php foreach ($socials as $social): ?>
         <div class="settings-row">
-            <form method="POST" action="/admin/reglages/social/<?= $social['id'] ?>/update" class="settings-row-form">
+            <form method="POST" action="/admin/reglages/social/<?= $social['id'] ?>/update" class="settings-row-form" data-ajax-save>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                 <input type="text" name="name" value="<?= htmlspecialchars($social['name']) ?>" placeholder="Nom" class="settings-name">
                 <input type="url" name="url" value="<?= htmlspecialchars($social['url']) ?>" placeholder="https://…" class="settings-url">
@@ -214,7 +214,7 @@
                     <div class="amenity-lang">
                         <div class="amenity-lang-label"><?= htmlspecialchars($langLabels[$l]) ?></div>
                         <?php if ($a): ?>
-                        <form method="POST" action="/admin/reglages/amenity/<?= $a['id'] ?>/update" class="amenity-lang-form">
+                        <form method="POST" action="/admin/reglages/amenity/<?= $a['id'] ?>/update" class="amenity-lang-form" data-ajax-save>
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
                             <input type="hidden" name="category" value="<?= htmlspecialchars($a['category']) ?>">
                             <input type="text" name="name" value="<?= htmlspecialchars($a['name'] ?? '') ?>" placeholder="Nom" class="amenity-lang-name">
@@ -257,6 +257,59 @@
     <?php endif; ?>
 </section>
 
+<style>
+/* ── Sauvegarde Réglages : feedback en place + barre « Tout enregistrer » ── */
+form[data-ajax-save] button[type="submit"]{
+    transition: transform 140ms cubic-bezier(.16,1,.3,1),
+                background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+form[data-ajax-save] button[type="submit"]:active{ transform: scale(.97); }
+form[data-ajax-save] button[type="submit"].is-saving{ opacity:.6; cursor:progress; }
+form[data-ajax-save] button[type="submit"].is-saved{
+    background:var(--success); border-color:var(--success); color:#fff;
+}
+form[data-ajax-save] button[type="submit"].is-error{
+    background:var(--error); border-color:var(--error); color:#fff;
+}
+form[data-ajax-save] .is-changed{
+    border-color:var(--accent) !important;
+    box-shadow:0 0 0 3px var(--accent-soft);
+}
+
+.save-all-bar{
+    position:fixed; left:50%; bottom:24px;
+    transform:translateX(-50%) translateY(160%);
+    z-index:300; display:flex; align-items:center; gap:16px;
+    padding:9px 9px 9px 20px;
+    background:var(--surface); border:1px solid var(--border-strong);
+    border-radius:9999px; box-shadow:var(--shadow-lg);
+    opacity:0; pointer-events:none;
+    transition:transform 280ms cubic-bezier(.16,1,.3,1), opacity 200ms ease;
+}
+.save-all-bar.is-visible{
+    transform:translateX(-50%) translateY(0); opacity:1; pointer-events:auto;
+}
+.save-all-bar__text{ font-size:13.5px; color:var(--text-2); white-space:nowrap; }
+.save-all-bar__text strong{ color:var(--text); font-weight:600; }
+.save-all-bar .btn:active{ transform:scale(.97); }
+@media (max-width:560px){
+    .save-all-bar{ left:12px; right:12px; bottom:12px; transform:translateY(160%);
+        justify-content:space-between; }
+    .save-all-bar.is-visible{ transform:translateY(0); }
+    .save-all-bar__text{ white-space:normal; }
+}
+@media (prefers-reduced-motion: reduce){
+    .save-all-bar,
+    .save-all-bar.is-visible{ transition:opacity 200ms ease; transform:translateX(-50%); }
+    form[data-ajax-save] button[type="submit"]:active{ transform:none; }
+}
+</style>
+
+<div class="save-all-bar" id="saveAllBar" role="status" aria-live="polite">
+    <span class="save-all-bar__text" id="saveAllText"></span>
+    <button type="button" class="btn btn-primary" id="saveAllBtn">Tout enregistrer</button>
+</div>
+
 <script>
 (function () {
     'use strict';
@@ -295,6 +348,116 @@
                 btn.disabled = false;
             }
         });
+    });
+
+    /* ───── Sauvegarde AJAX en place + barre « Tout enregistrer » ─────
+       Chaque form[data-ajax-save] enregistre sans recharger la page.
+       La barre flottante n'apparaît que s'il reste des modifs et les
+       sauve toutes d'un coup en réutilisant les mêmes endpoints. */
+    const forms = Array.from(document.querySelectorAll('form[data-ajax-save]'));
+    if (!forms.length) return;
+
+    const bar     = document.getElementById('saveAllBar');
+    const barText = document.getElementById('saveAllText');
+    const barBtn  = document.getElementById('saveAllBtn');
+    // En fixed : remonter la barre sur <body> pour éviter tout ancêtre transformé.
+    if (bar && bar.parentNode !== document.body) document.body.appendChild(bar);
+
+    // Champs pertinents d'un form (hors hidden / submit / bouton).
+    const controls = (form) => Array.from(form.elements).filter(el =>
+        el.name && el.type !== 'hidden' && el.type !== 'submit' && el.type !== 'button');
+
+    const snapshot = (form) => {
+        form._saved = {};
+        controls(form).forEach(el => { form._saved[el.name] = el.value; });
+    };
+    forms.forEach(snapshot);
+
+    const refreshDirty = (form) => {
+        let dirty = false;
+        controls(form).forEach(el => {
+            const changed = form._saved[el.name] !== el.value;
+            el.classList.toggle('is-changed', changed);
+            if (changed) dirty = true;
+        });
+        form.classList.toggle('is-dirty', dirty);
+        return dirty;
+    };
+
+    const dirtyForms = () => forms.filter(f => f.classList.contains('is-dirty'));
+
+    const updateBar = () => {
+        const n = dirtyForms().length;
+        if (!n) { bar.classList.remove('is-visible'); return; }
+        barText.innerHTML = '<strong>' + n + '</strong> modification' + (n > 1 ? 's' : '')
+            + ' non enregistrée' + (n > 1 ? 's' : '');
+        bar.classList.add('is-visible');
+    };
+
+    const flashBtn = (btn, cls, label, ms) => {
+        btn.classList.remove('is-saving');
+        btn.classList.add(cls);
+        btn.textContent = label;
+        btn.disabled = false;
+        window.setTimeout(() => {
+            btn.classList.remove(cls);
+            btn.textContent = btn.dataset.label;
+        }, ms);
+    };
+
+    const saveForm = async (form, bulk) => {
+        const btn = form.querySelector('button[type="submit"]');
+        if (btn) {
+            if (!btn.dataset.label) btn.dataset.label = btn.textContent.trim();
+            btn.disabled = true;
+            btn.classList.add('is-saving');
+        }
+        try {
+            const r = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                credentials: 'same-origin',
+                redirect: 'follow',
+            });
+            if (!r.ok && r.status >= 400) throw new Error('HTTP ' + r.status);
+            snapshot(form);
+            refreshDirty(form);
+            if (btn) flashBtn(btn, 'is-saved', '✓ Enregistré', 1500);
+            return true;
+        } catch (err) {
+            console.error('Save failed:', err);
+            if (btn) flashBtn(btn, 'is-error', 'Erreur', 2400);
+            return false;
+        } finally {
+            if (!bulk) updateBar();
+        }
+    };
+
+    forms.forEach(form => {
+        form.addEventListener('input', () => { refreshDirty(form); updateBar(); });
+        form.addEventListener('submit', (e) => { e.preventDefault(); saveForm(form, false); });
+    });
+
+    barBtn.addEventListener('click', async () => {
+        const targets = dirtyForms();
+        if (!targets.length) return;
+        barBtn.disabled = true;
+        barText.innerHTML = 'Enregistrement…';
+        const results = await Promise.all(targets.map(f => saveForm(f, true)));
+        const failed = results.filter(ok => !ok).length;
+        if (!failed) {
+            barText.innerHTML = '✓ Tout est enregistré';
+            window.setTimeout(() => bar.classList.remove('is-visible'), 1200);
+        } else {
+            barText.innerHTML = failed + ' échec' + (failed > 1 ? 's' : '') + ' — réessaie';
+        }
+        barBtn.disabled = false;
+        updateBar();
+    });
+
+    // Garde anti-perte : prévient avant de quitter avec des modifs non sauvegardées.
+    window.addEventListener('beforeunload', (e) => {
+        if (dirtyForms().length) { e.preventDefault(); e.returnValue = ''; }
     });
 })();
 </script>
