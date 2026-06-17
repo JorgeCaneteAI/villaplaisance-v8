@@ -40,16 +40,7 @@ $thumbUrl = function (?string $filename): ?string {
 
     <form method="POST" action="/admin/pieces/create" class="vp-pc-create">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf) ?>">
-        <select name="offer" required>
-            <?php foreach ($offerLabels as $k => $lbl): ?>
-            <option value="<?= $k ?>"><?= htmlspecialchars($lbl) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <select name="type" required>
-            <option value="chambre">Chambre</option>
-            <option value="espace">Espace</option>
-        </select>
-        <button type="submit" class="btn btn-primary btn-sm">+ Nouveau</button>
+        <button type="submit" class="btn btn-primary btn-sm">+ Ajouter une pièce</button>
     </form>
 </div>
 
