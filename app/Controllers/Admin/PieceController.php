@@ -7,24 +7,105 @@ class PieceController extends AdminBaseController
 {
     public function index(): void
     {
-        $langFilter = $_GET['lang'] ?? 'fr';
         $offerFilter = $_GET['offer'] ?? '';
-        if (!in_array($langFilter, SUPPORTED_LANGS, true)) $langFilter = 'fr';
 
-        // Load filtered pieces
-        $sql = "SELECT * FROM vp_pieces WHERE lang = ?";
-        $params = [$langFilter];
+        // Toutes les langues : on les regroupe par (offer, position) pour
+        // afficher FR/EN/ES côte à côte et éditer en place.
+        $sql = "SELECT * FROM vp_pieces";
+        $params = [];
         if ($offerFilter !== '' && in_array($offerFilter, ['bb', 'villa', 'both'], true)) {
-            $sql .= " AND offer = ?";
+            $sql .= " WHERE offer = ?";
             $params[] = $offerFilter;
         }
-        $sql .= " ORDER BY offer ASC, position ASC";
-        $pieces = \Database::fetchAll($sql, $params);
+        $sql .= " ORDER BY offer ASC, position ASC, lang ASC";
+        $rows = \Database::fetchAll($sql, $params);
+
+        $groups = [];
+        foreach ($rows as $r) {
+            $key = $r['offer'] . ':' . $r['position'];
+            if (!isset($groups[$key])) {
+                $groups[$key] = [
+                    'offer'    => $r['offer'],
+                    'position' => (int)$r['position'],
+                    'type'     => $r['type'],
+                    'ref'      => $r,   // ligne de référence (FR si dispo)
+                    'langs'    => [],
+                ];
+            }
+            $groups[$key]['langs'][$r['lang']] = $r;
+            if ($r['lang'] === 'fr') {
+                $groups[$key]['ref']  = $r;
+                $groups[$key]['type'] = $r['type'];
+            }
+        }
 
         $csrf = $this->csrf();
         $langLabels = ['fr' => "\u{1F1EB}\u{1F1F7} Français", 'en' => "\u{1F1EC}\u{1F1E7} English", 'es' => "\u{1F1EA}\u{1F1F8} Español"];
 
-        $this->render('admin/pieces/index_v8', compact('pieces', 'langFilter', 'offerFilter', 'langLabels', 'csrf'));
+        $this->render('admin/pieces/index_v8', compact('groups', 'offerFilter', 'langLabels', 'csrf'));
+    }
+
+    /**
+     * Sauvegarde en place des 3 langues d'une pièce d'un coup.
+     * Champs traduits par langue (name, sous_titre, description, equip, note,
+     * meta label_a/label_b) ; champs partagés propagés aux 3 lignes (offer
+     * dérivé des cases B&B/Villa, type, meta layout). Les images ne sont PAS
+     * touchées ici (gérées via la page d'édition dédiée).
+     */
+    public function saveGroup(int $id): void
+    {
+        if (!$this->verifyCsrf()) {
+            $this->flash('error', 'Token CSRF invalide');
+            $this->redirect('/admin/pieces');
+            return;
+        }
+
+        $ids = is_array($_POST['ids'] ?? null) ? $_POST['ids'] : [];
+
+        // Offre dérivée des cases ; si aucune cochée, on garde l'offre actuelle.
+        $bb    = isset($_POST['offer_bb']);
+        $villa = isset($_POST['offer_villa']);
+        if ($bb && $villa)      $offer = 'both';
+        elseif ($villa)         $offer = 'villa';
+        elseif ($bb)            $offer = 'bb';
+        else {
+            $cur   = \Database::fetchOne("SELECT offer FROM vp_pieces WHERE id = ?", [$id]);
+            $offer = $cur['offer'] ?? 'bb';
+        }
+
+        $type   = in_array($_POST['type'] ?? '', ['chambre', 'espace'], true) ? $_POST['type'] : 'chambre';
+        $layout = in_array($_POST['meta_layout'] ?? '', ['normal', 'alt'], true) ? $_POST['meta_layout'] : '';
+
+        // Lecture sûre d'un champ par langue (les inputs sont des tableaux name[lang]).
+        $field = static function (string $key, string $lang): string {
+            $v = $_POST[$key] ?? null;
+            return is_array($v) ? trim((string)($v[$lang] ?? '')) : '';
+        };
+
+        foreach (SUPPORTED_LANGS as $lang) {
+            $rowId = (int)($ids[$lang] ?? 0);
+            if ($rowId <= 0) continue;
+
+            $meta = array_filter([
+                'label_a' => $field('meta_label_a', $lang),
+                'label_b' => $field('meta_label_b', $lang),
+                'layout'  => $layout,
+            ], static fn($v) => $v !== '');
+
+            \Database::update('vp_pieces', [
+                'name'        => $field('name', $lang),
+                'sous_titre'  => $field('sous_titre', $lang),
+                'description' => $field('description', $lang),
+                'equip'       => $field('equip', $lang),
+                'note'        => $field('note', $lang),
+                'offer'       => $offer,
+                'type'        => $type,
+                'meta'        => !empty($meta) ? json_encode($meta, JSON_UNESCAPED_UNICODE) : null,
+            ], 'id = ?', [$rowId]);
+        }
+
+        $this->flash('success', 'Pièce mise à jour (FR/EN/ES).');
+        $this->redirect('/admin/pieces');
     }
 
     public function edit(int $id): void

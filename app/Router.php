@@ -462,6 +462,10 @@ class Router
             $this->callController('Controllers\\Admin\\PieceController', 'save', ['id' => (int)$m[1]]);
             return;
         }
+        if (preg_match('#^/admin/pieces/(\d+)/save-group$#', $normalized, $m) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->callController('Controllers\\Admin\\PieceController', 'saveGroup', ['id' => (int)$m[1]]);
+            return;
+        }
         if ($normalized === '/admin/pieces/create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->callController('Controllers\\Admin\\PieceController', 'create');
             return;
