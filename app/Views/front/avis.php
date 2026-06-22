@@ -90,6 +90,10 @@ $linkifyHost = static function (string $content): string {
   .av-grid { max-width: var(--container-wide); margin: 0 auto; padding: 0 var(--gutter) clamp(48px, 6vw, 96px); columns: 3; column-gap: clamp(24px, 3vw, 40px); }
   @media (max-width: 960px) { .av-grid { columns: 2; } }
   @media (max-width: 640px) { .av-grid { columns: 1; } }
+  /* Masonry JS : colonnes flex alignées en haut (premier rang aligné). */
+  .av-grid.is-js { columns: auto; display: flex; align-items: flex-start; gap: clamp(24px, 3vw, 40px); }
+  .av-grid.is-js .av-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(24px, 3vw, 40px); }
+  .av-grid.is-js .av-card { margin-bottom: 0; }
 
   .av-card { background: var(--linen-50); border: var(--hairline); padding: clamp(20px, 2.5vw, 32px); display: flex; flex-direction: column; gap: 14px; break-inside: avoid; margin-bottom: clamp(24px, 3vw, 40px); }
   .av-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
@@ -248,6 +252,40 @@ $sitesAvail = array_values(array_filter(
   </article>
   <?php endforeach; ?>
 </div>
+<script>
+(function () {
+  var grid = document.querySelector('.av-grid');
+  if (!grid) return;
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.av-card'));
+  if (!cards.length) return;
+  var current = 0;
+  function colCount() { var w = window.innerWidth; return w <= 640 ? 1 : (w <= 960 ? 2 : 3); }
+  function build() {
+    var n = colCount();
+    if (n === current && grid.classList.contains('is-js')) return;
+    current = n;
+    grid.classList.add('is-js');
+    grid.innerHTML = '';
+    var cols = [];
+    for (var i = 0; i < n; i++) {
+      var c = document.createElement('div');
+      c.className = 'av-col';
+      grid.appendChild(c);
+      cols.push(c);
+    }
+    cards.forEach(function (card) {
+      var shortest = cols[0];
+      for (var j = 1; j < cols.length; j++) {
+        if (cols[j].offsetHeight < shortest.offsetHeight) shortest = cols[j];
+      }
+      shortest.appendChild(card);
+    });
+  }
+  build();
+  var t;
+  window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 150); });
+})();
+</script>
 <?php endif; ?>
 
 <!-- CTA -->
