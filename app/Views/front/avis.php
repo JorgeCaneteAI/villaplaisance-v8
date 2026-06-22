@@ -66,11 +66,26 @@ $linkifyHost = static function (string $content): string {
   .av-stat .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; margin-top: 10px; }
   @media (max-width: 720px) { .av-stats { grid-template-columns: repeat(2, 1fr); } .av-stat { border-right: 0; border-bottom: var(--hairline); } }
 
-  .av-filters { max-width: var(--container-wide); margin: 0 auto; padding: 36px var(--gutter) 24px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .av-filters .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; margin-right: 12px; }
-  .av-filter { padding: 8px 18px; border: 1px solid var(--admin-border); background: transparent; cursor: pointer; font: inherit; font-size: 14px; color: var(--ink-700); border-radius: 4px; text-decoration: none; }
+  .av-controls { max-width: var(--container-wide); margin: 0 auto; padding: 36px var(--gutter) 24px; display: flex; gap: 18px 36px; flex-wrap: wrap; align-items: flex-end; }
+  .av-fgroup { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .av-fgroup .lbl, .av-sort .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; margin-right: 6px; }
+  .av-filter { padding: 8px 18px; border: 1px solid var(--admin-border); background: transparent; cursor: pointer; font: inherit; font-size: 14px; color: var(--ink-700); border-radius: 4px; text-decoration: none; transition: background .2s, color .2s, border-color .2s; }
   .av-filter:hover { background: var(--linen-100); }
   .av-filter.active { background: var(--ink-900); color: var(--linen-50); border-color: var(--ink-900); }
+  .av-filter:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 2px; }
+
+  .av-sort { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .av-sort select {
+    font: inherit; font-size: 14px; color: var(--ink-900); background-color: transparent;
+    border: 1px solid var(--admin-border); border-radius: 4px; padding: 8px 38px 8px 14px;
+    cursor: pointer; -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238a8178' stroke-width='1.5' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat; background-position: right 13px center;
+    transition: border-color .2s;
+  }
+  .av-sort select:hover { border-color: var(--stone-500); }
+  .av-sort select:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 2px; }
+  @media (max-width: 640px) { .av-controls { gap: 16px; } .av-sort { margin-left: 0; width: 100%; } .av-sort select { flex: 1; } }
 
   .av-grid { max-width: var(--container-wide); margin: 0 auto; padding: 0 var(--gutter) clamp(48px, 6vw, 96px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 40px); }
   @media (max-width: 960px) { .av-grid { grid-template-columns: 1fr 1fr; } }
@@ -172,12 +187,55 @@ foreach (\BlockService::getSections('avis', $lang) as $_s) {
 </section>
 <?php endif; ?>
 
-<!-- FILTRES -->
-<div class="av-filters">
-  <span class="lbl"><?= htmlspecialchars(t('avis.filter')) ?></span>
-  <?php foreach (['all' => t('avis.filter_all'), 'bb' => t('avis.offer_bb'), 'villa' => t('avis.offer_villa')] as $key => $label): ?>
-    <a class="av-filter <?= $offerFilter === $key ? 'active' : '' ?>" href="?<?= $key === 'all' ? '' : 'offer=' . $key ?>"><?= htmlspecialchars($label) ?></a>
-  <?php endforeach; ?>
+<!-- FILTRES + TRI -->
+<?php
+// URL de la page en préservant offre / plateforme / tri, avec surcharges ciblées.
+$avisUrl = static function (array $over) use ($offerFilter, $platformFilter, $sort): string {
+    $p = [];
+    if ($offerFilter !== 'all')    $p['offer'] = $offerFilter;
+    if ($platformFilter !== 'all') $p['platform'] = $platformFilter;
+    if ($sort !== 'recent')        $p['sort'] = $sort;
+    foreach ($over as $k => $v) {
+        if ($v === null || $v === 'all' || ($k === 'sort' && $v === 'recent')) unset($p[$k]);
+        else $p[$k] = $v;
+    }
+    return $p ? '?' . http_build_query($p) : '?';
+};
+// Plateformes réellement présentes (ordre fixe), pour n'afficher que des filtres utiles.
+$sitesAvail = array_values(array_filter(
+    ['airbnb', 'booking', 'google', 'direct'],
+    static fn ($pf) => !empty($stats['by_platform'][$pf])
+));
+?>
+<div class="av-controls">
+  <div class="av-fgroup">
+    <span class="lbl"><?= htmlspecialchars(t('avis.offer_label')) ?></span>
+    <?php foreach (['all' => t('avis.filter_all'), 'bb' => t('avis.offer_bb'), 'villa' => t('avis.offer_villa')] as $key => $label): ?>
+      <a class="av-filter <?= $offerFilter === $key ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['offer' => $key])) ?>"><?= htmlspecialchars($label) ?></a>
+    <?php endforeach; ?>
+  </div>
+
+  <?php if (count($sitesAvail) > 1): ?>
+  <div class="av-fgroup">
+    <span class="lbl"><?= htmlspecialchars(t('avis.site_label')) ?></span>
+    <a class="av-filter <?= $platformFilter === 'all' ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['platform' => 'all'])) ?>"><?= htmlspecialchars(t('avis.filter_all')) ?></a>
+    <?php foreach ($sitesAvail as $pf): ?>
+      <a class="av-filter <?= $platformFilter === $pf ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['platform' => $pf])) ?>"><?= htmlspecialchars($platformLabels[$pf] ?? ucfirst($pf)) ?></a>
+    <?php endforeach; ?>
+  </div>
+  <?php endif; ?>
+
+  <form class="av-sort" method="get">
+    <?php if ($offerFilter !== 'all'): ?><input type="hidden" name="offer" value="<?= htmlspecialchars($offerFilter) ?>"><?php endif; ?>
+    <?php if ($platformFilter !== 'all'): ?><input type="hidden" name="platform" value="<?= htmlspecialchars($platformFilter) ?>"><?php endif; ?>
+    <label class="lbl" for="av-sort-select"><?= htmlspecialchars(t('avis.sort')) ?></label>
+    <select id="av-sort-select" name="sort" onchange="this.form.submit()">
+      <?php foreach (['recent' => t('avis.sort_recent'), 'old' => t('avis.sort_old'), 'rating_high' => t('avis.sort_rating_high'), 'rating_low' => t('avis.sort_rating_low')] as $key => $label): ?>
+        <option value="<?= $key ?>"<?= $sort === $key ? ' selected' : '' ?>><?= htmlspecialchars($label) ?></option>
+      <?php endforeach; ?>
+    </select>
+    <noscript><button type="submit" class="av-filter">OK</button></noscript>
+  </form>
 </div>
 
 <!-- GRID -->

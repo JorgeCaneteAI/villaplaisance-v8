@@ -17,14 +17,35 @@ class AvisController extends BaseController
         $offerFilter = $_GET['offer'] ?? 'all';
         if (!in_array($offerFilter, ['all', 'bb', 'villa', 'both'], true)) $offerFilter = 'all';
 
-        // Tous les avis published, filtrés par offre côté SQL si demandé
+        $platformFilter = $_GET['platform'] ?? 'all';
+        if (!in_array($platformFilter, ['all', 'airbnb', 'booking', 'google', 'direct'], true)) $platformFilter = 'all';
+
+        $sort = $_GET['sort'] ?? 'recent';
+        if (!in_array($sort, ['recent', 'old', 'rating_high', 'rating_low'], true)) $sort = 'recent';
+
+        // Tri demandé. Les valeurs sont en liste blanche ci-dessus, donc leur
+        // interpolation dans ORDER BY est sûre (aucune entrée utilisateur brute).
+        // La note est normalisée (Booking sur 10 ramené sur 5) pour un classement juste.
+        $ratingExpr = "(CASE WHEN platform = 'booking' AND rating > 5 THEN rating / 2 ELSE rating END)";
+        $orderBy = match ($sort) {
+            'old'         => 'review_date ASC, id ASC',
+            'rating_high' => "{$ratingExpr} DESC, review_date DESC, id DESC",
+            'rating_low'  => "{$ratingExpr} ASC, review_date DESC, id DESC",
+            default       => 'review_date DESC, id DESC',
+        };
+
+        // Avis published, filtrés par offre et par plateforme côté SQL si demandé
         $sql = "SELECT * FROM vp_reviews WHERE status = 'published'";
         $params = [];
         if ($offerFilter !== 'all') {
             $sql .= " AND offer IN (?, 'both')";
             $params[] = $offerFilter;
         }
-        $sql .= " ORDER BY featured DESC, review_date DESC, id DESC";
+        if ($platformFilter !== 'all') {
+            $sql .= " AND platform = ?";
+            $params[] = $platformFilter;
+        }
+        $sql .= " ORDER BY {$orderBy}";
 
         $reviews = [];
         try { $reviews = \Database::fetchAll($sql, $params); } catch (\Throwable) {}
@@ -124,6 +145,6 @@ class AvisController extends BaseController
             }
         }
 
-        $this->render('front/avis', compact('seo', 'reviews', 'stats', 'offerFilter', 'jsonLd', 'lang'), 'front-proto');
+        $this->render('front/avis', compact('seo', 'reviews', 'stats', 'offerFilter', 'platformFilter', 'sort', 'jsonLd', 'lang'), 'front-proto');
     }
 }
