@@ -233,6 +233,7 @@ return [
     'avis.stat_villa' => 'Villa entera',
     'avis.filter' => 'Filtrar',
     'avis.filter_all' => 'Todas',
+    'avis.filter_all_m' => 'Todos',
     'avis.offer_bb' => 'Habitaciones',
     'avis.offer_villa' => 'Villa entera',
     'avis.offer_both' => 'Las dos',

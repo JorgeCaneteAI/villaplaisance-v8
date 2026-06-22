@@ -66,13 +66,13 @@ $linkifyHost = static function (string $content): string {
   .av-stat .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; margin-top: 10px; }
   @media (max-width: 720px) { .av-stats { grid-template-columns: repeat(2, 1fr); } .av-stat { border-right: 0; border-bottom: var(--hairline); } }
 
-  .av-controls { max-width: var(--container-wide); margin: 0 auto; padding: 36px var(--gutter) 24px; display: flex; gap: 18px 36px; flex-wrap: wrap; align-items: flex-end; }
-  .av-fgroup { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .av-fgroup .lbl, .av-sort .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--stone-500); text-transform: uppercase; margin-right: 6px; }
-  .av-filter { padding: 8px 18px; border: 1px solid var(--admin-border); background: transparent; cursor: pointer; font: inherit; font-size: 14px; color: var(--ink-700); border-radius: 4px; text-decoration: none; transition: background .2s, color .2s, border-color .2s; }
-  .av-filter:hover { background: var(--linen-100); }
-  .av-filter.active { background: var(--ink-900); color: var(--linen-50); border-color: var(--ink-900); }
-  .av-filter:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 2px; }
+  .av-controls { max-width: var(--container-wide); margin: 0 auto; padding: 36px var(--gutter) 24px; display: flex; gap: 18px 40px; flex-wrap: wrap; align-items: baseline; scroll-margin-top: 90px; }
+  .av-fgroup { display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline; }
+  .av-fgroup .lbl, .av-sort .lbl { font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: var(--terra-500); text-transform: uppercase; margin-right: 4px; }
+  .av-filter { padding: 2px 0; border: 0; background: transparent; cursor: pointer; font: inherit; font-size: 15px; color: var(--ink-700); text-decoration: none; transition: color .2s; }
+  .av-filter:hover { color: var(--ink-900); }
+  .av-filter.active { color: var(--ink-900); text-decoration: underline; text-decoration-color: var(--terra-500); text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+  .av-filter:focus-visible { outline: 2px solid var(--terra-500); outline-offset: 3px; border-radius: 2px; }
 
   .av-sort { margin-left: auto; display: flex; align-items: center; gap: 8px; }
   .av-sort select {
@@ -207,35 +207,32 @@ $sitesAvail = array_values(array_filter(
     static fn ($pf) => !empty($stats['by_platform'][$pf])
 ));
 ?>
-<div class="av-controls">
+<div class="av-controls" id="av-controls">
   <div class="av-fgroup">
     <span class="lbl"><?= htmlspecialchars(t('avis.offer_label')) ?></span>
     <?php foreach (['all' => t('avis.filter_all'), 'bb' => t('avis.offer_bb'), 'villa' => t('avis.offer_villa')] as $key => $label): ?>
-      <a class="av-filter <?= $offerFilter === $key ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['offer' => $key])) ?>"><?= htmlspecialchars($label) ?></a>
+      <a class="av-filter <?= $offerFilter === $key ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['offer' => $key]) . '#av-controls') ?>"><?= htmlspecialchars($label) ?></a>
     <?php endforeach; ?>
   </div>
 
   <?php if (count($sitesAvail) > 1): ?>
   <div class="av-fgroup">
     <span class="lbl"><?= htmlspecialchars(t('avis.site_label')) ?></span>
-    <a class="av-filter <?= $platformFilter === 'all' ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['platform' => 'all'])) ?>"><?= htmlspecialchars(t('avis.filter_all')) ?></a>
+    <a class="av-filter <?= $platformFilter === 'all' ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['platform' => 'all']) . '#av-controls') ?>"><?= htmlspecialchars(t('avis.filter_all_m')) ?></a>
     <?php foreach ($sitesAvail as $pf): ?>
-      <a class="av-filter <?= $platformFilter === $pf ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['platform' => $pf])) ?>"><?= htmlspecialchars($platformLabels[$pf] ?? ucfirst($pf)) ?></a>
+      <a class="av-filter <?= $platformFilter === $pf ? 'active' : '' ?>" href="<?= htmlspecialchars($avisUrl(['platform' => $pf]) . '#av-controls') ?>"><?= htmlspecialchars($platformLabels[$pf] ?? ucfirst($pf)) ?></a>
     <?php endforeach; ?>
   </div>
   <?php endif; ?>
 
-  <form class="av-sort" method="get">
-    <?php if ($offerFilter !== 'all'): ?><input type="hidden" name="offer" value="<?= htmlspecialchars($offerFilter) ?>"><?php endif; ?>
-    <?php if ($platformFilter !== 'all'): ?><input type="hidden" name="platform" value="<?= htmlspecialchars($platformFilter) ?>"><?php endif; ?>
+  <div class="av-sort">
     <label class="lbl" for="av-sort-select"><?= htmlspecialchars(t('avis.sort')) ?></label>
-    <select id="av-sort-select" name="sort" onchange="this.form.submit()">
+    <select id="av-sort-select" onchange="if (this.value) window.location.href = this.value;">
       <?php foreach (['recent' => t('avis.sort_recent'), 'old' => t('avis.sort_old'), 'rating_high' => t('avis.sort_rating_high'), 'rating_low' => t('avis.sort_rating_low')] as $key => $label): ?>
-        <option value="<?= $key ?>"<?= $sort === $key ? ' selected' : '' ?>><?= htmlspecialchars($label) ?></option>
+        <option value="<?= htmlspecialchars($avisUrl(['sort' => $key]) . '#av-controls') ?>"<?= $sort === $key ? ' selected' : '' ?>><?= htmlspecialchars($label) ?></option>
       <?php endforeach; ?>
     </select>
-    <noscript><button type="submit" class="av-filter">OK</button></noscript>
-  </form>
+  </div>
 </div>
 
 <!-- GRID -->

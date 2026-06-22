@@ -226,6 +226,7 @@ return [
     'avis.stat_villa' => 'Villa reviews',
     'avis.filter' => 'Filter',
     'avis.filter_all' => 'All',
+    'avis.filter_all_m' => 'All',
     'avis.offer_bb' => 'B&B',
     'avis.offer_villa' => 'Whole house',
     'avis.offer_both' => 'Both',

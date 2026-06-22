@@ -234,6 +234,7 @@ return [
     'avis.stat_villa' => 'Villa entière',
     'avis.filter' => 'Filtrer',
     'avis.filter_all' => 'Toutes',
+    'avis.filter_all_m' => 'Tous',
     'avis.offer_bb' => 'Chambres d\'hôtes',
     'avis.offer_villa' => 'Villa entière',
     'avis.offer_both' => 'Les deux',
