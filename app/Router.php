@@ -22,6 +22,20 @@ class Router
             if ($requestUri === '') $requestUri = '/';
         }
 
+        // Alias courts du livret villa (QR codes imprimés / partage rapide).
+        // /livret sert déjà la villa FR par défaut. /guide et /guia servent
+        // le même livret villa en EN et ES, en gardant l'URL courte dans la
+        // barre d'adresse (réécriture interne vers /livret, pas de redirection).
+        if ($requestUri === '/guide') {
+            $this->lang = 'en';
+            $requestUri = '/livret';
+            $_GET['type'] = 'villa';
+        } elseif ($requestUri === '/guia') {
+            $this->lang = 'es';
+            $requestUri = '/livret';
+            $_GET['type'] = 'villa';
+        }
+
         \LangService::init($this->lang);
         $this->uri = $requestUri;
 

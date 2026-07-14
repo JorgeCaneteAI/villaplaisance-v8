@@ -10,9 +10,9 @@ class LivretController extends BaseController
     public function index(): void
     {
         $lang = \LangService::get();
-        $type = $_GET['type'] ?? 'bb';
+        $type = $_GET['type'] ?? 'villa';
         if (!in_array($type, ['bb', 'villa'], true)) {
-            $type = 'bb';
+            $type = 'villa';
         }
 
         // Le livret n'est plus protégé par mot de passe (accès direct, pour les QR).
