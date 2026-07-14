@@ -15,37 +15,16 @@ class LivretController extends BaseController
             $type = 'bb';
         }
 
-        $password = '';
-        try {
-            $row = \Database::fetchOne("SELECT setting_value FROM vp_settings WHERE setting_key = 'livret_password'");
-            $password = $row['setting_value'] ?? '';
-        } catch (\Throwable) {}
-
-        // Handle POST (password check or message)
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Le livret n'est plus protégé par mot de passe (accès direct, pour les QR).
+        // Seul POST restant : le formulaire de message en bas de page.
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
             if (!$this->verifyCsrf()) {
                 $this->flash('error', 'Token CSRF invalide.');
                 $this->redirect(\LangService::url('livret') . '?type=' . $type);
                 return;
             }
-
-            // Password submission
-            if (isset($_POST['livret_password'])) {
-                $submitted = trim($_POST['livret_password']);
-                if ($submitted === $password) {
-                    $_SESSION['livret_authenticated'] = true;
-                } else {
-                    $this->flash('error', t('livret.password_error'));
-                }
-                $this->redirect(\LangService::url('livret') . '?type=' . $type);
-                return;
-            }
-
-            // Message submission
-            if (isset($_POST['message'])) {
-                $this->handleMessage($lang, $type);
-                return;
-            }
+            $this->handleMessage($lang, $type);
+            return;
         }
 
         $seo = [
@@ -60,14 +39,6 @@ class LivretController extends BaseController
         $flash = $this->getFlash();
         $csrf = $this->csrf();
 
-        // Not authenticated: show password gate
-        if (empty($_SESSION['livret_authenticated'])) {
-            // Layout 'front-proto' = design Claude (Cormorant Garamond + style-proto.css).
-            $this->render('front/livret/password', compact('seo', 'flash', 'csrf', 'jsonLd', 'lang', 'type'), 'front-proto');
-            return;
-        }
-
-        // Authenticated: show booklet
         $sections = [];
         try {
             $sections = \Database::fetchAll(
