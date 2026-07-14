@@ -25,7 +25,7 @@
 .booklet-section .sec-num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--stone-500); text-transform: uppercase; margin-bottom: 14px; }
 .booklet-section h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 4vw, 52px); line-height: 1.0; letter-spacing: -0.02em; color: var(--ink-900); margin: 0 0 28px; }
 .booklet-section h2 em { font-style: italic; color: var(--sage-700); }
-.booklet-section .content { font-size: 18px; line-height: 1.72; color: var(--ink-700); max-width: 75ch; }
+.booklet-section .content { font-size: 18px; line-height: 1.72; color: var(--ink-700); max-width: none; }
 .booklet-section .content p { margin: 0 0 14px; }
 
 .booklet-empty { max-width: 64ch; margin: 0 auto; padding: 4rem var(--gutter); text-align: center; font-family: var(--font-display); font-style: italic; font-size: 22px; color: var(--stone-500); }
