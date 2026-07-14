@@ -49,11 +49,6 @@
 <section class="booklet-hero">
     <p class="welcome">Bienvenue chez vous</p>
     <h1><?= t('livret.title') ?> <em>Plaisance</em></h1>
-    <div class="type-nav">
-        <a href="<?= \LangService::url('livret') ?>?type=bb" class="<?= $type === 'bb' ? 'active' : '' ?>"><?= t('livret.type_bb') ?></a>
-        <span>&middot;</span>
-        <a href="<?= \LangService::url('livret') ?>?type=villa" class="<?= $type === 'villa' ? 'active' : '' ?>"><?= t('livret.type_villa') ?></a>
-    </div>
 </section>
 
 <?php if (!empty($flash['success'])): ?>
