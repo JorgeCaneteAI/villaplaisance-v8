@@ -147,3 +147,28 @@ function t(string $key, array $params = []): string
 {
     return LangService::t($key, $params);
 }
+
+/**
+ * Rendu texte enrichi pour le livret d'accueil.
+ * Échappe d'abord tout le HTML (sécurité), puis réactive un markdown minimal :
+ * **gras**, liens [libellé](https://...), et sauts de ligne.
+ * Le contenu vient de l'admin (auteur de confiance) mais on reste défensif.
+ */
+function livret_richtext(string $raw): string
+{
+    $safe = htmlspecialchars($raw, ENT_QUOTES, 'UTF-8');
+
+    // Liens [libellé](url) — uniquement http/https
+    $safe = preg_replace_callback(
+        '/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/',
+        static fn (array $m): string =>
+            '<a href="' . $m[2] . '" target="_blank" rel="noopener noreferrer">' . $m[1] . '</a>',
+        $safe
+    );
+
+    // Gras **texte**
+    $safe = preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $safe);
+
+    // Sauts de ligne
+    return nl2br($safe, false);
+}

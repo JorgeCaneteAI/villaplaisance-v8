@@ -69,7 +69,7 @@
     <section class="booklet-section">
         <div class="sec-num"><?= str_pad((string)($i + 1), 2, '0', STR_PAD_LEFT) ?> &middot; Villa Plaisance</div>
         <h2><?= htmlspecialchars($section['section_title']) ?></h2>
-        <div class="content"><?= nl2br(htmlspecialchars($section['content'])) ?></div>
+        <div class="content"><?= livret_richtext($section['content']) ?></div>
     </section>
     <?php endforeach; ?>
 </div>
